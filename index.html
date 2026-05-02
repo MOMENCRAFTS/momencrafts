@@ -87,7 +87,7 @@
   <nav id="nav" role="navigation" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="#hero" class="nav-logo" id="nav-logo-link">
-        <span class="logo-mark">✦</span>
+        <img src="logo.png" alt="MomenCrafts" class="nav-logo-img" />
         <span class="logo-text">MOMENCRAFTS</span>
       </a>
       <ul class="nav-links" id="nav-links" role="list">
@@ -179,8 +179,8 @@
           <p class="card-desc">A voice-first, push-to-talk intelligence platform for executives and high-performers. Persistent memory, proactive briefings, IoT control, and bilingual Arabic/English — engineered for the MENA professional class.</p>
           <div class="card-tags">
             <span class="tag">Voice-First</span>
-            <span class="tag">GPT-5.5</span>
             <span class="tag">iOS · Android</span>
+            <span class="tag">Bilingual</span>
           </div>
           <a href="#contact" class="card-link" id="roger-link">Learn more →</a>
         </article>
@@ -376,14 +376,14 @@
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.44-4.14Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.44-4.14Z"/></svg>
           </div>
           <h3>Artificial Intelligence</h3>
-          <p>GPT-5.5, Whisper, TTS — voice pipelines, memory graphs, and proactive reasoning systems built for production.</p>
+          <p>AI voice pipelines, persistent memory, and proactive reasoning systems — built for production-grade applications.</p>
         </div>
         <div class="cap-card reveal delay-200" id="cap-mobile">
           <div class="cap-icon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
           </div>
           <h3>Mobile Applications</h3>
-          <p>iOS & Android via Capacitor and React Native — production-grade apps with native bridge layers and App Store deployment.</p>
+          <p>iOS & Android — production-grade native apps with full App Store deployment and deep device integration.</p>
         </div>
         <div class="cap-card reveal delay-300" id="cap-hardware">
           <div class="cap-icon">
@@ -397,7 +397,7 @@
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
           </div>
           <h3>Full-Stack Platforms</h3>
-          <p>React, Next.js, TypeScript, Supabase — multi-tenant SaaS with edge functions, real-time subscriptions, and RBAC.</p>
+          <p>End-to-end web platforms — multi-tenant architecture with real-time data, role-based access control, and scalable cloud infrastructure.</p>
         </div>
         <div class="cap-card reveal delay-500" id="cap-saas">
           <div class="cap-icon">
@@ -495,7 +495,18 @@
       <div class="section-label reveal">GET IN TOUCH</div>
       <h2 id="contact-heading" class="section-title reveal delay-100">Let's Build<br /><em>Together</em></h2>
       <p class="section-sub reveal delay-200">Whether you have a project idea, partnership, or investment inquiry — we'd love to hear from you.</p>
-      <div class="contact-links reveal delay-300">
+      <form class="contact-form reveal delay-300" action="https://formsubmit.co/momen@momencrafts.com" method="POST" id="contact-form">
+        <input type="hidden" name="_subject" value="New inquiry from momencrafts.com" />
+        <input type="hidden" name="_next" value="https://momencrafts.com/?sent=1" />
+        <input type="hidden" name="_captcha" value="false" />
+        <div class="form-row">
+          <input type="text" name="name" placeholder="Your Name" required id="form-name" />
+          <input type="email" name="email" placeholder="Your Email" required id="form-email" />
+        </div>
+        <textarea name="message" placeholder="Tell us about your project or inquiry..." rows="5" required id="form-message"></textarea>
+        <button type="submit" class="btn btn-primary" id="form-submit">Send Message <span class="btn-arrow">→</span></button>
+      </form>
+      <div class="contact-links reveal delay-400">
         <a href="mailto:momen@momencrafts.com" id="contact-email" class="contact-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           momen@momencrafts.com
@@ -508,6 +519,11 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
           MomenCrafts on Facebook
         </a>
+        <a href="https://x.com/MOMENCRAFTS" target="_blank" rel="noopener" id="contact-twitter" class="contact-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l16 16M4 20L20 4"/><path d="M20 4h-5l-11 16h5"/></svg>
+          @MOMENCRAFTS on X
+        </a>
+      </div>
         <a href="https://x.com/MOMENCRAFTS" target="_blank" rel="noopener" id="contact-twitter" class="contact-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l16 16M4 20L20 4"/><path d="M20 4h-5l-11 16h5"/></svg>
           @MOMENCRAFTS on X
