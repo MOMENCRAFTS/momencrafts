@@ -1,50 +1,17 @@
-/* MOMENCRAFTS — Retro Saudi · White + Green */
+/* MOMENCRAFTS — Dark Premium · Saudi Green */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --bg:#FFFFFF;
-  --bg-off:#F4FBF7;
-  --bg-card:#FFFFFF;
-  --green:#006C35;
-  --green-bright:#00A651;
-  --green-pale:#E8F5EE;
-  --green-border:rgba(0,108,53,.25);
-  --gold:#C8A96E;
-  --text:#0A1A0F;
-  --text-2:#3D5247;
-  --text-3:#7A9485;
-  --amber:#D4863A;
-  --teal:#006C35;
-  --blue:#1A4FA0;
-  --crimson:#B5000F;
-  --pearl:#8A9E94;
-  --saudi-green:#006C35;
-  --saudi-green-bright:#00A651;
-  --retro-shadow:5px 5px 0 var(--green);
-  --retro-shadow-sm:3px 3px 0 var(--green);
-  --retro-shadow-lg:8px 8px 0 var(--green);
-  --ff-serif:'Playfair Display',Georgia,serif;
-  --ff-mono:'JetBrains Mono',monospace;
-  --ff-sans:'Inter',system-ui,sans-serif;
-  --ease:cubic-bezier(.25,.46,.45,.94);
-  --ease-bounce:cubic-bezier(.34,1.56,.64,1);
-  --container:1200px;
-  --gutter:clamp(1.25rem,5vw,2.5rem);
+  --bg:#07090E;--bg-off:#0B0F16;--bg-card:rgba(255,255,255,.03);
+  --green:#006C35;--green-bright:#00A651;--green-pale:rgba(0,108,53,.08);--green-border:rgba(0,108,53,.3);
+  --gold:#C8A96E;--text:#EDE8DC;--text-2:#9A9485;--text-3:#5C5650;
+  --amber:#C8A96E;--teal:#00A651;--blue:#3A74C4;--crimson:#B5000F;--pearl:#8A9E94;
+  --saudi-green:#006C35;--saudi-green-bright:#00A651;
+  --retro-shadow:none;--retro-shadow-sm:none;--retro-shadow-lg:none;
+  --ff-serif:'Playfair Display',Georgia,serif;--ff-mono:'JetBrains Mono',monospace;--ff-sans:'Inter',system-ui,sans-serif;
+  --ease:cubic-bezier(.25,.46,.45,.94);--ease-bounce:cubic-bezier(.34,1.56,.64,1);--container:1200px;--gutter:clamp(1.25rem,5vw,2.5rem);
 }
-
 html{scroll-behavior:smooth}
-body{
-  font-family:var(--ff-sans);
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.7;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-  background-image:
-    linear-gradient(rgba(0,108,53,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,108,53,.04) 1px,transparent 1px);
-  background-size:32px 32px;
-}
+body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
 /* UTILITY */
 .container{max-width:var(--container);margin-inline:auto;padding-inline:var(--gutter)}
