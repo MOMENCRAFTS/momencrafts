@@ -4,7 +4,7 @@
   --bg:#07090E;--bg-off:#0B0F16;--bg-card:rgba(255,255,255,.03);
   --green:#006C35;--green-bright:#00A651;--green-pale:rgba(0,108,53,.08);--green-border:rgba(0,108,53,.3);
   --gold:#C8A96E;--text:#EDE8DC;--text-2:#9A9485;--text-3:#5C5650;
-  --amber:#C8A96E;--teal:#00A651;--blue:#3A74C4;--crimson:#B5000F;--pearl:#8A9E94;
+  --amber:#C8A96E;--teal:#00A651;--blue:#3A74C4;--crimson:#B5000F;--pearl:#8A9E94;--mint:#8FCFB3;
   --saudi-green:#006C35;--saudi-green-bright:#00A651;
   --retro-shadow:none;--retro-shadow-sm:none;--retro-shadow-lg:none;
   --ff-serif:'Playfair Display',Georgia,serif;--ff-mono:'JetBrains Mono',monospace;--ff-sans:'Inter',system-ui,sans-serif;
@@ -88,10 +88,11 @@ body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);line-heig
 [data-accent="crimson"] .card-accent-bar{background:var(--crimson)}
 [data-accent="gold"] .card-accent-bar{background:var(--gold)}
 [data-accent="pearl"] .card-accent-bar{background:var(--pearl)}
+[data-accent="mint"] .card-accent-bar{background:var(--mint)}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
 .card-icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--green-pale);border:2px solid var(--green);transition:transform .25s var(--ease-bounce),background .2s}
 .product-card:hover .card-icon{transform:scale(1.1) rotate(-3deg);background:var(--green);color:#fff!important}
-.amber-icon{color:var(--amber)}.teal-icon,.green-icon{color:var(--green)}.blue-icon{color:var(--blue)}.crimson-icon{color:var(--crimson)}.gold-icon{color:var(--green)}.pearl-icon{color:var(--pearl)}
+.amber-icon{color:var(--amber)}.teal-icon,.green-icon{color:var(--green)}.blue-icon{color:var(--blue)}.crimson-icon{color:var(--crimson)}.gold-icon{color:var(--green)}.pearl-icon{color:var(--pearl)}.mint-icon{color:var(--mint)}
 .card-status{font-family:var(--ff-mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .65rem;font-weight:700;border:2px solid;border-radius:0}
 .card-status.testing{color:var(--green);border-color:var(--green);background:var(--green-pale)}
 .card-status.dev{color:var(--text-2);border-color:var(--text-3);background:#f5f5f5}

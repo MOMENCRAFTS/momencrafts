@@ -59,11 +59,12 @@ body{background:#fff;color:var(--txt);background-image:none}
 [data-accent="crimson"] .card-accent-bar{background:var(--cr)}
 [data-accent="gold"] .card-accent-bar{background:#B8860B}
 [data-accent="pearl"] .card-accent-bar{background:#8A9E94}
+[data-accent="mint"] .card-accent-bar{background:#8FCFB3}
 .card-icon{background:var(--cr-pale);border:none;border-radius:8px}
 .product-card:hover .card-icon{transform:none;background:var(--cr-pale);color:inherit!important}
 .amber-icon,.crimson-icon,.gold-icon{color:var(--cr)!important}
 .teal-icon,.green-icon{color:var(--gr)!important}
-.blue-icon{color:#1A4FA0!important}.pearl-icon{color:#5A7A6A!important}
+.blue-icon{color:#1A4FA0!important}.pearl-icon{color:#5A7A6A!important}.mint-icon{color:#8FCFB3!important}
 .card-status{border-radius:20px;border:none!important;font-weight:500}
 .card-status.testing{color:var(--gr);background:rgba(0,108,53,.08);border:1px solid rgba(0,108,53,.2)!important}
 .card-status.dev{color:var(--cr);background:rgba(181,0,15,.07);border:1px solid rgba(181,0,15,.18)!important}

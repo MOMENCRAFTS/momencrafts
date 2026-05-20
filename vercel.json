@@ -1,4 +1,7 @@
 {
   "version": 2,
-  "builds": [{ "src": "**/*", "use": "@vercel/static" }]
+  "builds": [{ "src": "**/*", "use": "@vercel/static" }],
+  "rewrites": [
+    { "source": "/ummi-wallet/(.*)", "destination": "/ummi-wallet/index.html" }
+  ]
 }
