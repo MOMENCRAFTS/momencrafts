@@ -47,7 +47,7 @@
       font-family: 'Inter', -apple-system, sans-serif;
       background: var(--page-bg);
       color: #f0ede9;
-      overflow-x: hidden;
+      /* NOTE: no overflow-x:hidden — it breaks mobile layout in Android Chrome */
     }
 
     /* ═══ TOP NAV ═══ */
@@ -227,7 +227,7 @@
     .phone-device {
       flex-shrink: 0;
       position: relative;
-      width: var(--phone-w);
+      width: min(var(--phone-w), calc(100vw - 48px));
       height: var(--phone-h);
       background: #111;
       border-radius: var(--radius-phone);
@@ -264,6 +264,40 @@
       overflow: hidden;
       position: relative;
       background: var(--cream);
+    }
+
+    /* ═══ MOBILE LAYOUT (< 600px) — Full-screen immersive ═══ */
+    @media (max-width: 600px) {
+      .demo-hero { padding: 12px 16px 0; }
+      .demo-hero h1 { font-size: 18px; }
+      .demo-hero .hero-ar { font-size: 13px; }
+      .demo-hero .hero-sub { font-size: 11px; margin-top: 4px; }
+      .role-tabs { padding: 10px 12px 0; gap: 6px; justify-content: flex-start; }
+      .role-tab { padding: 8px 12px; min-width: 68px; }
+      .role-tab .tab-icon { font-size: 18px; }
+      .role-tab .tab-label { font-size: 10px; }
+      .showcase-wrap { padding: 0 12px; margin-top: 12px; }
+      /* On mobile: hide phone device frame, expand screen to fill */
+      .phone-device {
+        width: 100%;
+        height: calc(100vw * 2);
+        max-height: calc(100vh - 280px);
+        min-height: 400px;
+        border-radius: 20px;
+        padding: 0;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      }
+      .phone-notch { display: none; }
+      .phone-screen-wrap { border-radius: 20px; }
+      .s-status { padding: 16px 16px 6px; }
+      .screen-dots { padding: 10px 0 4px; }
+      .swipe-hint { font-size: 10px; }
+      .demo-cta { padding: 12px 16px 24px; gap: 8px; }
+      .cta-primary { font-size: 13px; padding: 10px 20px; }
+      .cta-secondary { font-size: 13px; padding: 10px 20px; }
+      .mobile-role-info { padding: 4px 16px 8px; }
+      .mobile-role-info .role-name { font-size: 14px; }
+      .mobile-role-info .role-blurb { font-size: 11px; }
     }
 
     /* Right panel (desktop only) */
