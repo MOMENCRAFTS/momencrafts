@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>MomentCraft Studios — Admin</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="admin-header">
+  <div class="admin-header-inner">
+    <div class="admin-logo">
+      <span class="admin-logo-mark">✦</span>
+      <span class="admin-logo-text">MOMENTCRAFT STUDIOS</span>
+      <span class="admin-logo-badge">ADMIN</span>
+    </div>
+    <div class="admin-header-right">
+      <div class="live-indicator" id="liveIndicator">
+        <span class="live-dot"></span>
+        <span>Live</span>
+      </div>
+      <button class="admin-signout" id="signOutBtn" onclick="signOut()">Sign Out</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── TABS ── -->
+<nav class="admin-tabs" role="tablist" aria-label="Admin sections">
+  <button class="tab-btn active" data-tab="overview" role="tab" onclick="switchTab('overview')">Overview</button>
+  <button class="tab-btn" data-tab="investors" role="tab" onclick="switchTab('investors')">Investors</button>
+  <button class="tab-btn" data-tab="sections" role="tab" onclick="switchTab('sections')">Sections</button>
+  <button class="tab-btn" data-tab="tokens" role="tab" onclick="switchTab('tokens')">Tokens</button>
+  <button class="tab-btn" data-tab="alerts" role="tab" onclick="switchTab('alerts')">
+    Alerts <span class="tab-badge" id="alertBadge"></span>
+  </button>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 1 — OVERVIEW
+════════════════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="panel-overview" role="tabpanel">
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Active Tokens</div>
+      <div class="kpi-value" id="kpiActiveTokens">—</div>
+      <div class="kpi-sub" id="kpiActiveTokensSub"></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Sessions Today</div>
+      <div class="kpi-value" id="kpiSessionsToday">—</div>
+      <div class="kpi-sub" id="kpiSessionsTodaySub"></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Time in Room</div>
+      <div class="kpi-value" id="kpiAvgTime">—</div>
+      <div class="kpi-sub">across all sessions</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Docs Downloaded</div>
+      <div class="kpi-value" id="kpiDocsDownloaded">—</div>
+      <div class="kpi-sub">total across all investors</div>
+    </div>
+  </div>
+
+  <!-- Investor Heat Table -->
+  <div class="panel-heading">Investor Activity</div>
+  <table class="heat-table" id="overviewHeatTable">
+    <thead>
+      <tr>
+        <th>Investor</th>
+        <th>Token Type</th>
+        <th>Sessions</th>
+        <th>Last Seen</th>
+        <th>Dwell</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="heatTableBody">
+      <tr><td colspan="6" class="empty-state"><div class="empty-icon">📊</div><div class="empty-text">Loading investor data...</div></td></tr>
+    </tbody>
+  </table>
+
+  <!-- Section Mini-Heatmap -->
+  <div class="panel-heading">Section Engagement</div>
+  <div class="section-heatmap" id="sectionHeatmap">
+    <div class="section-heat-card"><div class="shc-num">01</div><div class="shc-name">Vision</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">02</div><div class="shc-name">Portfolio</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">03</div><div class="shc-name">Traction</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">04</div><div class="shc-name">Financials</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">05</div><div class="shc-name">Founder</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">06</div><div class="shc-name">Documents</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">07</div><div class="shc-name">Close</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+  </div>
+
+  <!-- Key Signals -->
+  <div class="panel-heading">Key Signals</div>
+  <div class="signal-feed" id="overviewSignals">
+    <div class="empty-state"><div class="empty-icon">🔔</div><div class="empty-text">No signals yet</div><div class="empty-sub">Signals appear when investors engage with the room</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 2 — INVESTORS (Drilldown)
+════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-investors" role="tabpanel">
+  <div class="drilldown-layout">
+    <div>
+      <div class="panel-heading">All Investors</div>
+      <div class="drilldown-list" id="investorList">
+        <div class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">No investors yet</div></div>
+      </div>
+    </div>
+    <div class="drilldown-detail" id="investorDetail">
+      <div class="empty-state">
+        <div class="empty-icon">←</div>
+        <div class="empty-text">Select an investor to view their timeline</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 3 — SECTIONS
+════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-sections" role="tabpanel">
+  <div class="panel-heading">Section Engagement Breakdown</div>
+  <div class="section-heatmap" id="sectionsDetail" style="margin-bottom:2rem;"></div>
+
+  <div class="panel-heading">Drop-Off Analysis</div>
+  <table class="heat-table" id="dropoffTable">
+    <thead>
+      <tr><th>Investor</th><th>Last Section Viewed</th><th>Total Dwell</th><th>Drop-off Point</th></tr>
+    </thead>
+    <tbody id="dropoffBody">
+      <tr><td colspan="4" class="empty-state"><div class="empty-text">No session data yet</div></td></tr>
+    </tbody>
+  </table>
+
+  <div class="panel-heading" style="margin-top:2rem;">Most Expanded Product Cards</div>
+  <table class="heat-table" id="cardExpandTable">
+    <thead>
+      <tr><th>Product</th><th>Times Expanded</th><th>Unique Investors</th></tr>
+    </thead>
+    <tbody id="cardExpandBody">
+      <tr><td colspan="3" class="empty-state"><div class="empty-text">No card interactions yet</div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 4 — TOKENS
+════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-tokens" role="tabpanel">
+
+  <!-- Generate Panel -->
+  <div class="gen-panel">
+    <div class="gen-title">Generate New Token</div>
+    <div class="gen-form">
+      <div class="gen-field">
+        <label class="gen-label">Investor Name</label>
+        <input type="text" class="gen-input" id="genName" placeholder="Ahmed Al-Rashidi — STV" />
+      </div>
+      <div class="gen-field">
+        <label class="gen-label">Email (optional)</label>
+        <input type="email" class="gen-input" id="genEmail" placeholder="ahmed@stv.vc" />
+      </div>
+      <div class="gen-field">
+        <label class="gen-label">Duration</label>
+        <select class="gen-select" id="genDuration">
+          <option value="HOUR">1 Hour</option>
+          <option value="WEEK">1 Week</option>
+          <option value="MONTH" selected>1 Month</option>
+          <option value="PERMANENT">Permanent</option>
+        </select>
+      </div>
+      <div class="gen-field">
+        <label class="gen-label">Notes (optional)</label>
+        <input type="text" class="gen-input" id="genNotes" placeholder="Met at LEAP 2026" />
+      </div>
+      <button class="gen-btn" onclick="generateToken()">Generate →</button>
+    </div>
+  </div>
+
+  <!-- Token Table -->
+  <div class="panel-heading">All Tokens</div>
+  <table class="token-table" id="tokenTable">
+    <thead>
+      <tr>
+        <th>Investor</th>
+        <th>Type</th>
+        <th>Token</th>
+        <th>Created</th>
+        <th>Expires</th>
+        <th>Sessions</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tokenTableBody">
+      <tr><td colspan="8" class="empty-state"><div class="empty-icon">🔑</div><div class="empty-text">No tokens generated yet</div><div class="empty-sub">Use the form above to create your first investor token</div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAB 5 — ALERTS
+════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-alerts" role="tabpanel">
+  <div class="panel-heading">Signal Feed</div>
+  <div class="signal-feed" id="alertsFeed">
+    <div class="empty-state">
+      <div class="empty-icon">🔔</div>
+      <div class="empty-text">No alerts yet</div>
+      <div class="empty-sub">Alerts fire in real-time when investors enter the room, download docs, or click CTAs</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Token Reveal ── -->
+<div class="modal-overlay" id="tokenRevealModal">
+  <div class="modal-card">
+    <div class="modal-title">Token Generated</div>
+    <div class="modal-body">
+      <p>This token will not be shown again. Copy it now and send it to the investor.</p>
+      <div class="token-reveal">
+        <span class="token-reveal-code" id="revealedToken">MCR-XXXXXXXX</span>
+        <button class="token-reveal-copy" onclick="copyToken()">⧉ Copy</button>
+      </div>
+      <p class="token-reveal-warn">⚠ Store this securely. It cannot be retrieved after closing this dialog.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="closeModal('tokenRevealModal')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Revoke ── -->
+<div class="modal-overlay" id="revokeModal">
+  <div class="modal-card">
+    <div class="modal-title">Revoke Token</div>
+    <div class="modal-body">
+      <p>This will immediately terminate the investor's access. They will see "Access has been revoked" if they try to re-enter.</p>
+      <div class="gen-field" style="margin-top:1rem;">
+        <label class="gen-label">Reason (optional)</label>
+        <input type="text" class="gen-input" id="revokeReason" placeholder="Due diligence period ended" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal('revokeModal')">Cancel</button>
+      <button class="modal-btn modal-btn-danger" onclick="confirmRevoke()">Revoke Access</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Extend ── -->
+<div class="modal-overlay" id="extendModal">
+  <div class="modal-card">
+    <div class="modal-title">Extend Token</div>
+    <div class="modal-body">
+      <p>Add additional time to this token's validity period.</p>
+      <div class="gen-field" style="margin-top:1rem;">
+        <label class="gen-label">Extend By</label>
+        <select class="gen-select" id="extendDuration">
+          <option value="HOUR">+1 Hour</option>
+          <option value="WEEK">+1 Week</option>
+          <option value="MONTH" selected>+1 Month</option>
+          <option value="3MONTH">+3 Months</option>
+          <option value="PERMANENT">Make Permanent</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal('extendModal')">Cancel</button>
+      <button class="modal-btn modal-btn-primary" onclick="confirmExtend()">Extend →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   MOMENTCRAFT STUDIOS — Admin Dashboard Logic
+   ══════════════════════════════════════════════════════════ */
+
+// ── CONFIG ───────────────────────────────────────────────
+const SUPABASE_URL   = 'https://YOUR_PROJECT.supabase.co';
+const ADMIN_FN_URL   = `${SUPABASE_URL}/functions/v1/admin-manage-token`;
+const ANALYTICS_URL  = `${SUPABASE_URL}/functions/v1/admin-get-analytics`;
+const POLL_INTERVAL  = 60000; // 60s
+const IS_LIVE        = !SUPABASE_URL.includes('YOUR_PROJECT'); // false until configured
+
+// ── DEMO DATA (replace with Supabase calls) ──────────────
+const DEMO_INVESTORS = [
+  { id: 'tok-001', label: 'Ahmed Al-Rashidi — STV', email: 'ahmed@stv.vc', token: 'MCR-A3F9B2C4', tokenType: 'MONTH', created: '2026-06-01', expiresAt: '2026-07-01', sessions: 3, status: 'active', lastSeen: '2 hours ago', totalDwell: '18m 32s' },
+  { id: 'tok-002', label: 'Sara Al-Otaibi — Raed Ventures', email: 'sara@raed.vc', token: 'MCR-K7D2P1N8', tokenType: 'WEEK', created: '2026-06-05', expiresAt: '2026-06-12', sessions: 1, status: 'active', lastSeen: '1 day ago', totalDwell: '7m 14s' },
+  { id: 'tok-003', label: 'Khalid Mansor — Family Office', email: 'khalid@mansor.sa', token: 'MCR-R9F4E6T2', tokenType: 'PERMANENT', created: '2026-05-20', expiresAt: null, sessions: 7, status: 'active', lastSeen: '3 hours ago', totalDwell: '1h 12m' },
+  { id: 'tok-004', label: 'Nora Al-Fahad — BECO Capital', email: 'nora@beco.ae', token: 'MCR-W5X1Y3Z7', tokenType: 'MONTH', created: '2026-06-08', expiresAt: '2026-07-08', sessions: 0, status: 'never', lastSeen: 'Never opened', totalDwell: '—' },
+];
+
+const DEMO_SIGNALS = [
+  { icon: '🏁', text: 'Ahmed Al-Rashidi opened the room for the first time', time: '2h ago', type: 'session' },
+  { icon: '🔥', text: 'Khalid Mansor spent 8 min on Financials', time: '3h ago', type: 'hot' },
+  { icon: '📄', text: 'Ahmed Al-Rashidi downloaded Pitch Deck', time: '2h ago', type: 'doc' },
+  { icon: '🎯', text: 'Khalid Mansor clicked WhatsApp CTA', time: '4h ago', type: 'cta' },
+  { icon: '⚡', text: 'Sara Al-Otaibi triggered Ctrl+P (print attempt blocked)', time: '1d ago', type: 'capture' },
+  { icon: '🔔', text: 'Token MCR-W5X1 not opened after 48h (Nora Al-Fahad)', time: '12h ago', type: 'warning' },
+];
+
+const DEMO_EVENTS = [
+  { time: '13:22', icon: '🚪', desc: 'Entered room', dur: '' },
+  { time: '13:22', icon: '✅', desc: 'NDA accepted', dur: '' },
+  { time: '13:23', icon: '👁', desc: 'Viewed 01 · Vision', dur: '1m 42s' },
+  { time: '13:25', icon: '👁', desc: 'Viewed 02 · Portfolio', dur: '4m 18s', hot: true },
+  { time: '13:25', icon: '📂', desc: 'Expanded ROGER·AI card', dur: '' },
+  { time: '13:26', icon: '📂', desc: 'Expanded CLINIQ.ONE card', dur: '' },
+  { time: '13:29', icon: '👁', desc: 'Viewed 03 · Traction', dur: '2m 05s' },
+  { time: '13:31', icon: '👁', desc: 'Viewed 04 · Financials', dur: '5m 12s', hot: true },
+  { time: '13:36', icon: '👁', desc: 'Viewed 05 · Founder', dur: '1m 30s' },
+  { time: '13:38', icon: '📄', desc: 'Downloaded Pitch Deck', dur: '' },
+  { time: '13:38', icon: '👁', desc: 'Viewed 06 · Documents', dur: '0m 45s' },
+  { time: '13:39', icon: '🎯', desc: 'Clicked WhatsApp CTA', dur: '' },
+  { time: '13:40', icon: '↗', desc: 'Focus lost (2m 15s away)', dur: '' },
+  { time: '13:42', icon: '🚪', desc: 'Exited room', dur: '18m 32s total' },
+];
+
+// ── INIT ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadOverview();
+  loadInvestorList();
+  loadAlerts();
+  loadTokenTable();
+  // Start polling
+  setInterval(pollForUpdates, POLL_INTERVAL);
+  // Request browser notifications
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+});
+
+// ── TAB SWITCHING ────────────────────────────────────────
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+  document.getElementById(`panel-${tabId}`).classList.add('active');
+}
+
+// ── OVERVIEW ─────────────────────────────────────────────
+function loadOverview() {
+  const active = DEMO_INVESTORS.filter(i => i.status === 'active' || i.status === 'never');
+  document.getElementById('kpiActiveTokens').textContent     = active.length;
+  document.getElementById('kpiActiveTokensSub').textContent   = `${DEMO_INVESTORS.length} total generated`;
+  document.getElementById('kpiSessionsToday').textContent     = '4';
+  document.getElementById('kpiSessionsTodaySub').textContent   = 'from 2 investors';
+  document.getElementById('kpiAvgTime').textContent            = '14m';
+  document.getElementById('kpiDocsDownloaded').textContent     = '3';
+
+  // Heat table
+  const tbody = document.getElementById('heatTableBody');
+  tbody.innerHTML = '';
+  DEMO_INVESTORS.forEach(inv => {
+    const dotClass = inv.status === 'never' ? 'dot-never' :
+                     inv.status === 'revoked' ? 'dot-revoked' :
+                     inv.status === 'expired' ? 'dot-expired' :
+                     inv.sessions > 5 ? 'dot-active' : 'dot-warm';
+    const statusLabel = inv.status === 'never' ? '⚠ NEVER OPENED' :
+                        inv.status === 'revoked' ? 'REVOKED' :
+                        inv.status === 'expired' ? 'EXPIRED' : 'ACTIVE';
+    const badgeClass  = inv.status === 'never' ? 'badge-never' :
+                        inv.status === 'revoked' ? 'badge-revoked' :
+                        inv.status === 'expired' ? 'badge-expired' : 'badge-active';
+
+    tbody.innerHTML += `<tr>
+      <td><strong>${inv.label}</strong></td>
+      <td class="mono">${inv.tokenType}</td>
+      <td>${inv.sessions}</td>
+      <td class="mono">${inv.lastSeen}</td>
+      <td class="mono">${inv.totalDwell}</td>
+      <td><span class="badge ${badgeClass}"><span class="dot ${dotClass}"></span>${statusLabel}</span></td>
+    </tr>`;
+  });
+
+  // Section heatmap (demo data)
+  const sectionData = [
+    { pct: 95, dwell: '2m 12s' },
+    { pct: 88, dwell: '5m 40s' },
+    { pct: 72, dwell: '2m 18s' },
+    { pct: 68, dwell: '4m 55s' },
+    { pct: 60, dwell: '1m 30s' },
+    { pct: 45, dwell: '0m 50s' },
+    { pct: 40, dwell: '0m 35s' },
+  ];
+  const cards = document.querySelectorAll('#sectionHeatmap .section-heat-card');
+  cards.forEach((card, i) => {
+    if (sectionData[i]) {
+      card.querySelector('.shc-bar').style.width = sectionData[i].pct + '%';
+      card.querySelector('.shc-pct').textContent  = sectionData[i].pct + '% viewed';
+      card.querySelector('.shc-dwell').textContent = 'avg ' + sectionData[i].dwell;
+    }
+  });
+}
+
+// ── INVESTOR LIST ────────────────────────────────────────
+function loadInvestorList() {
+  const list = document.getElementById('investorList');
+  list.innerHTML = '';
+  DEMO_INVESTORS.forEach(inv => {
+    const dotClass = inv.status === 'never' ? 'dot-never' : 'dot-active';
+    list.innerHTML += `
+      <div class="investor-list-item" onclick="selectInvestor('${inv.id}')">
+        <div>
+          <div class="ili-name">${inv.label}</div>
+          <div class="ili-email">${inv.email}</div>
+        </div>
+        <div class="ili-dot"><span class="dot ${dotClass}"></span></div>
+      </div>`;
+  });
+}
+
+function selectInvestor(id) {
+  // Highlight
+  document.querySelectorAll('.investor-list-item').forEach(el => el.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+
+  const inv = DEMO_INVESTORS.find(i => i.id === id);
+  if (!inv) return;
+
+  const detail = document.getElementById('investorDetail');
+  detail.innerHTML = `
+    <div class="dd-header">
+      <div>
+        <div class="dd-name">${inv.label}</div>
+        <div style="font-size:0.75rem;color:var(--a-cream-40);margin-top:0.25rem;">${inv.email}</div>
+      </div>
+      <div class="dd-token">${inv.token.slice(0,7)}••••</div>
+    </div>
+    <div class="panel-heading">Session Timeline</div>
+    <div class="event-timeline" id="eventTimeline"></div>
+  `;
+
+  // Load demo events
+  const timeline = document.getElementById('eventTimeline');
+  DEMO_EVENTS.forEach(ev => {
+    timeline.innerHTML += `
+      <div class="event-item">
+        <div class="event-time">${ev.time}</div>
+        <div class="event-icon">${ev.icon}</div>
+        <div class="event-desc">${ev.desc}</div>
+        <div class="event-dur ${ev.hot ? 'hot' : ''}">${ev.dur}${ev.hot ? ' 🔥' : ''}</div>
+      </div>`;
+  });
+}
+
+// ── ALERTS ───────────────────────────────────────────────
+function loadAlerts() {
+  const feed = document.getElementById('alertsFeed');
+  const overview = document.getElementById('overviewSignals');
+  feed.innerHTML = '';
+  overview.innerHTML = '';
+
+  document.getElementById('alertBadge').textContent = DEMO_SIGNALS.length || '';
+
+  DEMO_SIGNALS.forEach((sig, i) => {
+    const html = `
+      <div class="signal-item" id="signal-${i}">
+        <div class="signal-icon">${sig.icon}</div>
+        <div class="signal-text">${sig.text}</div>
+        <div class="signal-time">${sig.time}</div>
+        <button class="signal-dismiss" onclick="dismissSignal(${i})">Dismiss</button>
+      </div>`;
+    feed.innerHTML += html;
+    if (i < 5) overview.innerHTML += html; // Show top 5 in overview
+  });
+}
+
+function dismissSignal(idx) {
+  const el = document.getElementById('signal-' + idx);
+  if (el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 200); }
+}
+
+// ── TOKEN TABLE ──────────────────────────────────────────
+function loadTokenTable() {
+  const tbody = document.getElementById('tokenTableBody');
+  tbody.innerHTML = '';
+  DEMO_INVESTORS.forEach(inv => {
+    const masked  = inv.token.slice(0,7) + '•••••';
+    const expires = inv.expiresAt || 'Never';
+    const badgeClass = inv.status === 'never' ? 'badge-never' :
+                       inv.status === 'revoked' ? 'badge-revoked' :
+                       inv.status === 'expired' ? 'badge-expired' : 'badge-active';
+    const statusLabel = inv.status === 'never' ? '⚠ NEVER' :
+                        inv.status === 'revoked' ? 'REVOKED' :
+                        inv.status === 'expired' ? 'EXPIRED' : 'ACTIVE';
+    tbody.innerHTML += `<tr>
+      <td><strong>${inv.label}</strong></td>
+      <td class="mono">${inv.tokenType}</td>
+      <td class="token-masked">${masked}</td>
+      <td class="mono">${inv.created}</td>
+      <td class="mono">${expires}</td>
+      <td>${inv.sessions}</td>
+      <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
+      <td>
+        <div class="row-actions">
+          <button class="row-action" onclick="copyTokenFromTable('${inv.token}')">⧉ Copy</button>
+          <button class="row-action" onclick="openExtendModal('${inv.id}')">⟳ Extend</button>
+          <button class="row-action danger" onclick="openRevokeModal('${inv.id}')">× Revoke</button>
+        </div>
+      </td>
+    </tr>`;
+  });
+}
+
+// ── GENERATE TOKEN ───────────────────────────────────────
+async function generateToken() {
+  const name     = document.getElementById('genName').value.trim();
+  const email    = document.getElementById('genEmail').value.trim();
+  const notes    = document.getElementById('genNotes').value.trim();
+  const duration = document.getElementById('genDuration').value;
+  if (!name) { document.getElementById('genName').focus(); return; }
+
+  if (IS_LIVE) {
+    try {
+      const res = await fetch(ADMIN_FN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create', label: name, email, notes, tokenType: duration }),
+      });
+      const data = await res.json();
+      if (!res.ok) { alert('Error: ' + (data.error || 'Unknown')); return; }
+      document.getElementById('revealedToken').textContent = data.token;
+    } catch (err) {
+      alert('Network error — check Supabase connection');
+      return;
+    }
+  } else {
+    // Demo fallback
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let suffix = '';
+    for (let i = 0; i < 8; i++) suffix += chars[Math.floor(Math.random() * chars.length)];
+    document.getElementById('revealedToken').textContent = 'MCR-' + suffix;
+  }
+
+  openModal('tokenRevealModal');
+  document.getElementById('genName').value = '';
+  document.getElementById('genEmail').value = '';
+  document.getElementById('genNotes').value = '';
+
+  // Refresh token table after create
+  if (IS_LIVE) setTimeout(() => pollForUpdates(), 1000);
+}
+
+function copyToken() {
+  const code = document.getElementById('revealedToken').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('.token-reveal-copy');
+    btn.textContent = '✓ Copied';
+    setTimeout(() => btn.textContent = '⧉ Copy', 2000);
+  });
+}
+
+function copyTokenFromTable(token) {
+  navigator.clipboard.writeText(token).then(() => {
+    event.target.textContent = '✓';
+    setTimeout(() => event.target.textContent = '⧉ Copy', 1500);
+  });
+}
+
+// ── REVOKE / EXTEND ──────────────────────────────────────
+let pendingAction = { tokenId: null };
+
+function openRevokeModal(tokenId) {
+  pendingAction.tokenId = tokenId;
+  openModal('revokeModal');
+}
+async function confirmRevoke() {
+  if (IS_LIVE) {
+    const reason = document.getElementById('revokeReason').value.trim();
+    try {
+      await fetch(ADMIN_FN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'revoke', tokenId: pendingAction.tokenId, reason }),
+      });
+    } catch (err) { console.error('Revoke error:', err); }
+  }
+  closeModal('revokeModal');
+  document.getElementById('revokeReason').value = '';
+  if (IS_LIVE) setTimeout(() => pollForUpdates(), 500);
+}
+
+function openExtendModal(tokenId) {
+  pendingAction.tokenId = tokenId;
+  openModal('extendModal');
+}
+async function confirmExtend() {
+  if (IS_LIVE) {
+    const extendBy = document.getElementById('extendDuration').value;
+    try {
+      await fetch(ADMIN_FN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'extend', tokenId: pendingAction.tokenId, extendBy }),
+      });
+    } catch (err) { console.error('Extend error:', err); }
+  }
+  closeModal('extendModal');
+  if (IS_LIVE) setTimeout(() => pollForUpdates(), 500);
+}
+
+// ── MODALS ───────────────────────────────────────────────
+function openModal(id) {
+  document.getElementById(id).classList.add('visible');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('visible');
+}
+
+// ── POLLING (LIVE SUPABASE) ──────────────────────────────
+async function pollForUpdates() {
+  if (!IS_LIVE) return;
+
+  try {
+    const res = await fetch(ANALYTICS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    const data = await res.json();
+    if (!res.ok) { console.error('Analytics error:', data); return; }
+
+    document.getElementById('liveIndicator').classList.add('visible');
+    renderLiveData(data);
+  } catch (err) {
+    console.error('[Admin] Poll error:', err);
+  }
+}
+
+function renderLiveData(data) {
+  const investors = data.investors || [];
+  const sessions  = data.sessionsToday || [];
+
+  // KPIs
+  const active = investors.filter(i => i.status === 'active' || i.status === 'never');
+  document.getElementById('kpiActiveTokens').textContent   = active.length;
+  document.getElementById('kpiActiveTokensSub').textContent = `${investors.length} total`;
+  document.getElementById('kpiSessionsToday').textContent   = sessions.length;
+  const uniqueToday = new Set(sessions.map(s => s.label)).size;
+  document.getElementById('kpiSessionsTodaySub').textContent = `from ${uniqueToday} investor${uniqueToday !== 1 ? 's' : ''}`;
+  document.getElementById('kpiDocsDownloaded').textContent   = data.docDownloads || 0;
+
+  // Heat table
+  const tbody = document.getElementById('heatTableBody');
+  tbody.innerHTML = '';
+  investors.forEach(inv => {
+    const badgeClass = inv.status === 'never' ? 'badge-never' :
+                       inv.status === 'revoked' ? 'badge-revoked' :
+                       inv.status === 'expired' ? 'badge-expired' : 'badge-active';
+    const statusLabel = inv.status === 'never' ? '⚠ NEVER' :
+                        inv.status.toUpperCase();
+    const lastSeen = inv.last_session_at
+      ? timeAgo(new Date(inv.last_session_at))
+      : 'Never';
+
+    tbody.innerHTML += `<tr>
+      <td><strong>${inv.label}</strong></td>
+      <td class="mono">${inv.token_type}</td>
+      <td>${inv.session_count}</td>
+      <td class="mono">${lastSeen}</td>
+      <td class="mono">—</td>
+      <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
+    </tr>`;
+  });
+
+  // Token table
+  const ttbody = document.getElementById('tokenTableBody');
+  ttbody.innerHTML = '';
+  investors.forEach(inv => {
+    const masked = inv.token.slice(0,7) + '•••••';
+    const expires = inv.expires_at
+      ? new Date(inv.expires_at).toLocaleDateString('en-GB')
+      : 'Never';
+    const created = new Date(inv.token_created).toLocaleDateString('en-GB');
+    const badgeClass = inv.status === 'never' ? 'badge-never' :
+                       inv.status === 'revoked' ? 'badge-revoked' :
+                       inv.status === 'expired' ? 'badge-expired' : 'badge-active';
+    ttbody.innerHTML += `<tr>
+      <td><strong>${inv.label}</strong></td>
+      <td class="mono">${inv.token_type}</td>
+      <td class="token-masked">${masked}</td>
+      <td class="mono">${created}</td>
+      <td class="mono">${expires}</td>
+      <td>${inv.session_count}</td>
+      <td><span class="badge ${badgeClass}">${inv.status.toUpperCase()}</span></td>
+      <td><div class="row-actions">
+        <button class="row-action" onclick="copyTokenFromTable('${inv.token}')">⧉ Copy</button>
+        <button class="row-action" onclick="openExtendModal('${inv.token_id}')">⟳ Extend</button>
+        <button class="row-action danger" onclick="openRevokeModal('${inv.token_id}')">× Revoke</button>
+      </div></td>
+    </tr>`;
+  });
+
+  // Investor list (Tab 2)
+  const list = document.getElementById('investorList');
+  list.innerHTML = '';
+  investors.forEach(inv => {
+    const dotClass = inv.status === 'never' ? 'dot-never' : 'dot-active';
+    list.innerHTML += `
+      <div class="investor-list-item" onclick="selectLiveInvestor('${inv.token_id}', this)">
+        <div><div class="ili-name">${inv.label}</div><div class="ili-email">${inv.email || '—'}</div></div>
+        <div class="ili-dot"><span class="dot ${dotClass}"></span></div>
+      </div>`;
+  });
+
+  // Card expands (Tab 3)
+  const cebody = document.getElementById('cardExpandBody');
+  if (data.cardExpands && data.cardExpands.length) {
+    cebody.innerHTML = '';
+    data.cardExpands.forEach(ce => {
+      cebody.innerHTML += `<tr>
+        <td class="mono">${ce.product_id.toUpperCase()}</td>
+        <td>${ce.expand_count}</td>
+        <td>${ce.unique_investors}</td>
+      </tr>`;
+    });
+  }
+
+  // Signals from recentEvents
+  const signalEvents = (data.recentEvents || []).filter(e =>
+    ['room_enter','doc_download','cta_click','print_attempt','shortcut_blocked'].includes(e.event_type)
+  ).slice(0, 20);
+
+  const EVENT_ICONS = {
+    room_enter: '🏁', doc_download: '📄', cta_click: '🎯',
+    print_attempt: '⚡', shortcut_blocked: '🛡',
+  };
+
+  const feed = document.getElementById('alertsFeed');
+  const overview = document.getElementById('overviewSignals');
+  feed.innerHTML = '';
+  overview.innerHTML = '';
+  document.getElementById('alertBadge').textContent = signalEvents.length || '';
+
+  signalEvents.forEach((ev, i) => {
+    const label = ev.investor_sessions?.investor_tokens?.label || 'Unknown';
+    const icon = EVENT_ICONS[ev.event_type] || '📌';
+    const ago = timeAgo(new Date(ev.created_at));
+    const text = `${label} — ${ev.event_type.replace(/_/g,' ')}`;
+    const html = `<div class="signal-item" id="signal-${i}">
+      <div class="signal-icon">${icon}</div>
+      <div class="signal-text">${text}</div>
+      <div class="signal-time">${ago}</div>
+      <button class="signal-dismiss" onclick="dismissSignal(${i})">Dismiss</button>
+    </div>`;
+    feed.innerHTML += html;
+    if (i < 5) overview.innerHTML += html;
+  });
+}
+
+async function selectLiveInvestor(tokenId, el) {
+  document.querySelectorAll('.investor-list-item').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  // TODO: fetch investor-specific events from Supabase
+  // For now show placeholder
+  document.getElementById('investorDetail').innerHTML = `
+    <div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-text">Loading timeline...</div></div>`;
+}
+
+// ── UTILITY ──────────────────────────────────────────────
+function timeAgo(date) {
+  const ms = Date.now() - date.getTime();
+  if (ms < 60000)       return 'Just now';
+  if (ms < 3600000)     return Math.floor(ms/60000) + 'm ago';
+  if (ms < 86400000)    return Math.floor(ms/3600000) + 'h ago';
+  if (ms < 604800000)   return Math.floor(ms/86400000) + 'd ago';
+  return date.toLocaleDateString('en-GB');
+}
+
+// ── AUTH ──────────────────────────────────────────────────
+function signOut() {
+  window.location.href = '/';
+}
+
+// ── BROWSER NOTIFICATIONS ────────────────────────────────
+function notifyRoomEnter(investorName) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('MomentCraft Studios — Investor in Room', {
+      body: `${investorName} just entered the room`,
+      icon: '../favicon.svg',
+    });
+  }
+}
+</script>
+</body>
+</html>
