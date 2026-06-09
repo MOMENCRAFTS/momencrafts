@@ -448,48 +448,33 @@
       text-transform: uppercase;
     }
 
-    /* Progress + countdown */
-    .progress-wrap {
-      height: 2px;
-      background: var(--ink-08);
-      border-radius: 1px;
-      overflow: hidden;
-      margin-bottom: 0.75rem;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--teal), var(--teal-b));
-      border-radius: 1px;
-      animation: drain 20s linear forwards;
-      transform-origin: left;
-    }
-    @keyframes drain {
-      from { transform: scaleX(1); }
-      to   { transform: scaleX(0); }
-    }
-    .countdown-row {
+    /* App link row */
+    .app-link-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding-top: 0.25rem;
     }
-    .countdown-text {
+    .app-link-text {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.62rem;
       letter-spacing: 0.08em;
-      color: var(--ink-30);
+      color: var(--ink-40);
+      text-transform: uppercase;
     }
-    .countdown-text span { color: var(--teal); font-weight: 600; }
-    .cancel-link {
+    .app-link-text span { color: var(--teal); font-weight: 600; }
+    .app-link-btn {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6rem;
       letter-spacing: 0.08em;
-      color: var(--ink-30);
+      color: var(--teal);
       cursor: pointer;
-      border-bottom: 1px solid var(--ink-20);
-      transition: color 0.2s;
+      border-bottom: 1px solid var(--teal-line);
+      text-decoration: none;
       text-transform: uppercase;
+      transition: color 0.2s, border-color 0.2s;
     }
-    .cancel-link:hover { color: var(--teal); }
+    .app-link-btn:hover { color: var(--teal-b); border-color: var(--teal-b); }
 
     /* ── FOOTER ─────────────────────────────────────────────── */
     footer {
@@ -655,13 +640,13 @@
 
       <!-- CTA -->
       <div class="cta-row">
-        <a href="https://momencrafts.com" class="cta-btn" onclick="cancelRedirect()">
-          <span id="cta-ar">تعرّف على مؤمن كرافتس</span>
-          <span id="cta-en" style="display:none">Discover MomenCrafts</span>
+        <a href="https://app.cliniq.one" class="cta-btn">
+          <span id="cta-ar">افتح التطبيق</span>
+          <span id="cta-en" style="display:none">Open App</span>
           <span style="opacity:.7">←</span>
         </a>
-        <span class="cta-hint" id="cta-hint-ar">الشركة الأم لـ CLINIQ.ONE</span>
-        <span class="cta-hint" id="cta-hint-en" style="display:none">The parent studio</span>
+        <span class="cta-hint" id="cta-hint-ar">app.cliniq.one · iOS · Android</span>
+        <span class="cta-hint" id="cta-hint-en" style="display:none">app.cliniq.one · iOS · Android</span>
       </div>
 
       <div class="location">Riyadh · KSA · Est. 2025</div>
@@ -745,18 +730,11 @@
           <span class="compliance-text">MOH Compliant · Vision 2030 Aligned · PDPL Ready</span>
         </div>
 
-        <!-- Progress -->
-        <div class="progress-wrap">
-          <div class="progress-fill" id="progressBar"></div>
-        </div>
-        <div class="countdown-row">
-          <span class="countdown-text" id="countdown-ar">
-            التحويل إلى momencrafts.com خلال <span id="counter">20</span>ث
-          </span>
-          <span class="countdown-text" id="countdown-en" style="display:none">
-            Redirecting in <span id="counter2">20</span>s
-          </span>
-          <span class="cancel-link" onclick="cancelRedirect()">إلغاء</span>
+        <!-- App link -->
+        <div class="app-link-row">
+          <span class="app-link-text" id="app-link-ar">التطبيق متاح الآن على <span>iOS</span></span>
+          <span class="app-link-text" id="app-link-en" style="display:none">Now live on <span>iOS</span> · TestFlight</span>
+          <a href="https://app.cliniq.one" class="app-link-btn">فتح التطبيق →</a>
         </div>
 
       </div>
@@ -795,46 +773,12 @@
 
     slideTimer = setInterval(nextSlide, 4000);
 
-    /* ── REDIRECT COUNTDOWN (20s) ──────────────────────────── */
-    let timeLeft = 20;
-    let redirectTimer;
-    let cancelled = false;
-
-    function updateCounters() {
-      const c1 = document.getElementById('counter');
-      const c2 = document.getElementById('counter2');
-      if (c1) c1.textContent = timeLeft;
-      if (c2) c2.textContent = timeLeft;
-    }
-
-    redirectTimer = setInterval(() => {
-      if (cancelled) return;
-      timeLeft--;
-      updateCounters();
-      if (timeLeft <= 0) {
-        clearInterval(redirectTimer);
-        window.location.href = 'https://momencrafts.com';
-      }
-    }, 1000);
-
-    function cancelRedirect() {
-      cancelled = true;
-      clearInterval(redirectTimer);
-      const prog = document.getElementById('progressBar');
-      if (prog) prog.style.animationPlayState = 'paused';
-      const rows = document.querySelectorAll('.countdown-row');
-      rows.forEach(r => r.style.opacity = '0.3');
-      document.querySelectorAll('.cancel-link').forEach(l => {
-        l.textContent = '✓ cancelled';
-        l.style.cursor = 'default';
-        l.style.pointerEvents = 'none';
-      });
-    }
+    /* ── NO REDIRECT — cliniq.one is now a standalone teaser ── */
 
     /* ── LANG TOGGLE ───────────────────────────────────────── */
     let lang = 'ar';
-    const arIds = ['hl-ar','hl-sub-en','cta-ar','cta-hint-ar','countdown-ar','f1-ar','f2-ar','f3-ar','f4-ar','f5-ar'];
-    const enIds = ['hl-en','hl-sub-ar','cta-en','cta-hint-en','countdown-en','f1-en','f2-en','f3-en','f4-en','f5-en'];
+    const arIds = ['hl-ar','hl-sub-en','cta-ar','cta-hint-ar','app-link-ar','f1-ar','f2-ar','f3-ar','f4-ar','f5-ar'];
+    const enIds = ['hl-en','hl-sub-ar','cta-en','cta-hint-en','app-link-en','f1-en','f2-en','f3-en','f4-en','f5-en'];
 
     function toggleLang() {
       lang = lang === 'ar' ? 'en' : 'ar';
@@ -846,18 +790,17 @@
       document.getElementById('hl-en').style.display  = lang === 'en' ? '' : 'none';
       document.getElementById('hl-sub-en').style.display = lang === 'ar' ? '' : 'none';
       document.getElementById('hl-sub-ar').style.display = lang === 'en' ? '' : 'none';
-      ['cta-ar','cta-hint-ar','countdown-ar','f1-ar','f2-ar','f3-ar','f4-ar','f5-ar'].forEach(id => {
+      ['cta-ar','cta-hint-ar','app-link-ar','f1-ar','f2-ar','f3-ar','f4-ar','f5-ar'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = lang === 'ar' ? '' : 'none';
       });
-      ['cta-en','cta-hint-en','countdown-en','f1-en','f2-en','f3-en','f4-en','f5-en'].forEach(id => {
+      ['cta-en','cta-hint-en','app-link-en','f1-en','f2-en','f3-en','f4-en','f5-en'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = lang === 'en' ? '' : 'none';
       });
     }
 
-    /* Cancel redirect if user clicks the CTA */
-    document.querySelector('.cta-btn').addEventListener('click', cancelRedirect);
+
   </script>
 
 </body>
