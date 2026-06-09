@@ -814,7 +814,14 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   .gate-headline-ar { font-size: 1.25rem; }
 }
 @media (max-width: 480px) {
-  .gate-left { padding: 3.5rem 1.5rem 1.5rem; }
-  .gate-right { padding: 1.5rem 1.5rem 3.5rem; }
-  .gate-card  { padding: 1.75rem; }
+  .gate-left  { padding: 3rem 1.25rem 1.5rem; }
+  .gate-right { padding: 1.5rem 1.25rem 3.5rem; }
+  .gate-card  { padding: 1.75rem 1.25rem; }
+  /* Bigger touch targets on phone */
+  .gate-token-input  { min-height: 52px; font-size: 1rem; padding: 0 1.25rem; }
+  .gate-enter-btn    { min-height: 52px; font-size: 0.95rem; }
+  .gate-headline-en  { font-size: 1.75rem; }
+  .gate-sub          { font-size: 0.85rem; }
+  .gate-sectors      { gap: 0.4rem; }
+  .gate-sector       { padding: 0.35rem 0.75rem; font-size: 0.6rem; }
 }

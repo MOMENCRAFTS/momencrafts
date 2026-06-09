@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -90,7 +90,22 @@
       <button class="lang-toggle" onclick="toggleLang()" id="langToggle" aria-label="Toggle language">
         <span id="langLabel">🇬🇧 EN</span>
       </button>
+      <!-- Mobile hamburger -->
+      <button class="nav-hamburger" id="navHamburger" aria-label="Open navigation" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </div>
+
+  <!-- Mobile nav drawer -->
+  <div class="room-nav-mobile" id="roomNavMobile" aria-hidden="true">
+    <a href="#vision"       class="room-nav-mobile-item" data-en="Vision"         data-ar="الرؤية"    onclick="closeMobileNav()">الرؤية</a>
+    <a href="#portfolio"    class="room-nav-mobile-item" data-en="Portfolio"      data-ar="المحفظة"   onclick="closeMobileNav()">المحفظة</a>
+    <a href="#traction"     class="room-nav-mobile-item" data-en="Traction"       data-ar="الانتشار"  onclick="closeMobileNav()">الانتشار</a>
+    <a href="#partnership"  class="room-nav-mobile-item" data-en="Partnership"    data-ar="الشراكة"   onclick="closeMobileNav()">الشراكة</a>
+    <a href="#founder"      class="room-nav-mobile-item" data-en="Founder"        data-ar="المؤسس"    onclick="closeMobileNav()">المؤسس</a>
+    <a href="#youbring"     class="room-nav-mobile-item" data-en="What You Bring" data-ar="ما تقدمه" onclick="closeMobileNav()">ما تقدمه</a>
+    <a href="#letsbuild"    class="room-nav-mobile-item room-nav-cta" data-en="Let's Build" data-ar="لنبنِ معاً" onclick="closeMobileNav()">لنبنِ معاً</a>
   </div>
 
   <!-- Progress bar (scroll indicator) -->
@@ -788,6 +803,22 @@ function toggleLang() {
   const next = currentLang === 'ar' ? 'en' : 'ar';
   applyLang(next);
   localStorage.setItem('mc_lang', next);
+}
+
+// ── MOBILE NAV ───────────────────────────────────────────
+function toggleMobileNav() {
+  const drawer = document.getElementById('roomNavMobile');
+  const btn    = document.getElementById('navHamburger');
+  const open   = drawer.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  drawer.setAttribute('aria-hidden', !open);
+}
+function closeMobileNav() {
+  const drawer = document.getElementById('roomNavMobile');
+  const btn    = document.getElementById('navHamburger');
+  drawer.classList.remove('open');
+  btn.classList.remove('open');
+  drawer.setAttribute('aria-hidden', 'true');
 }
 
 function applyLang(lang) {

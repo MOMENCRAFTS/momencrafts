@@ -960,6 +960,73 @@ body.room-page {
   box-shadow: 0 6px 24px rgba(155,27,48,0.4);
 }
 
+/* ─── HAMBURGER BUTTON ─────────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: 1px solid var(--i-border);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+.nav-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--i-cream);
+  border-radius: 2px;
+  transition: transform 0.25s, opacity 0.25s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ─── MOBILE NAV DRAWER ────────────────────────────────── */
+.room-nav-mobile {
+  display: none;
+  flex-direction: column;
+  background: var(--i-dark, #1A1614);
+  border-top: 1px solid var(--i-border);
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.room-nav-mobile.open {
+  max-height: 500px;
+}
+.room-nav-mobile-item {
+  display: block;
+  padding: 1rem 1.5rem;
+  font-family: var(--i-ff-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--i-cream-60, rgba(245,240,232,0.6));
+  text-decoration: none;
+  border-bottom: 1px solid var(--i-border-subtle, rgba(245,240,232,0.06));
+  transition: color 0.2s, background 0.2s;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+}
+.room-nav-mobile-item:hover,
+.room-nav-mobile-item:active {
+  color: var(--i-cream);
+  background: rgba(245,240,232,0.04);
+}
+.room-nav-mobile-item.room-nav-cta {
+  color: var(--i-crimson);
+  font-weight: 600;
+}
+
 /* ─── RESPONSIVE ──────────────────────────────────────────── */
 @media (max-width: 1100px) {
   .vision-stats       { grid-template-columns: repeat(3, 1fr); }
@@ -967,9 +1034,11 @@ body.room-page {
   .rm-grid            { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 900px) {
-  .room-header-inner  { padding: 0 1.5rem; }
+  .room-header-inner  { padding: 0 1.25rem; }
   .room-nav           { display: none; }
-  .room-container     { padding: 0 1.5rem; }
+  .nav-hamburger      { display: flex; }
+  .room-nav-mobile    { display: flex; }
+  .room-container     { padding: 0 1.25rem; }
   .vision-stats       { grid-template-columns: 1fr; }
   .traction-grid      { grid-template-columns: 1fr; }
   .traction-grid::before { display: none; }
@@ -978,15 +1047,26 @@ body.room-page {
   .close-actions      { flex-direction: column; align-items: center; }
   .product-detail-grid { grid-template-columns: 1fr; }
   .product-market     { display: none; }
+  .track-body         { grid-template-columns: 1fr; }
+  .room-section-title { font-size: clamp(1.75rem, 5vw, 2.5rem); }
+  .section-label      { margin-bottom: 1.5rem; }
+  /* Better tap targets */
+  .lang-toggle        { min-width: 52px; min-height: 44px; }
+  .room-nav-cta       { padding: 0.6rem 1rem; }
 }
 @media (max-width: 600px) {
-  .room-section       { padding: 5rem 0 3rem; }
+  .room-section       { padding: 4rem 0 3rem; }
   .room-footer-inner  { flex-direction: column; text-align: center; }
   .footer-disclaimer  { text-align: center; }
-  .close-meta         { gap: 1.5rem; }
+  .close-meta         { gap: 1.5rem; flex-direction: column; }
   .rm-grid            { grid-template-columns: 1fr; }
-  .vision-thesis      { padding: 1.75rem; }
-  .stat-num           { font-size: 2.5rem; }
+  .vision-thesis      { padding: 1.5rem; font-size: 0.95rem; }
+  .stat-num           { font-size: 2.25rem; }
+  .product-list       { grid-template-columns: 1fr; }
+  .close-actions      { gap: 0.75rem; }
+  .close-actions .btn { width: 100%; text-align: center; justify-content: center; }
+  .room-container     { padding: 0 1rem; }
+  .section-heading    { font-size: clamp(1.5rem, 6vw, 2rem); }
 }
 
 /* ─── SECTION 04 · PARTNERSHIP TRACKS ────────────────────── */
