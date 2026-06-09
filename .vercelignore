@@ -1,0 +1,5 @@
+supabase/
+node_modules/
+.git/
+setup-supabase.ps1
+*.md
