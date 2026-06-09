@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    MOMENCRAFTS — Investor Room Styles
-   Dark Premium · 7 Sections · Bilingual AR/EN
+   White Premium · 7 Sections · Bilingual AR/EN
    ═══════════════════════════════════════════════════════════ */
 
 /* ─── ROOM BASE ───────────────────────────────────────────── */
@@ -14,10 +14,11 @@ body.room-page {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 200;
-  background: rgba(13, 13, 15, 0.88);
+  background: rgba(250, 250, 248, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--i-border-subtle);
+  box-shadow: 0 1px 0 rgba(26,22,20,0.05), 0 4px 16px rgba(26,22,20,0.04);
   transition: transform 0.35s var(--i-ease);
 }
 .room-header.hidden { transform: translateY(-100%); }
@@ -70,10 +71,10 @@ body.room-page {
   border-radius: 999px;
   transition: color 0.2s, background 0.2s;
 }
-.room-nav-item:hover { color: var(--i-cream); }
+.room-nav-item:hover { color: var(--i-crimson); }
 .room-nav-item.active {
-  color: var(--i-cream);
-  background: rgba(255,255,255,0.06);
+  color: var(--i-crimson);
+  background: var(--i-crimson-faint);
 }
 .room-nav-cta {
   background: var(--i-crimson);
@@ -126,7 +127,7 @@ body.room-page {
 /* Progress bar */
 .room-progress-bar {
   height: 2px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(26,22,20,0.06);
 }
 .room-progress-fill {
   height: 100%;
@@ -214,13 +215,14 @@ body.room-page {
   margin-bottom: 4rem;
 }
 .stat-card {
-  background: var(--i-bg-card);
+  background: #FFFFFF;
   border: 1px solid var(--i-border);
   border-radius: var(--i-radius-lg);
   padding: 2rem;
-  transition: border-color 0.3s, transform 0.3s;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(26,22,20,0.04);
 }
 .stat-card::before {
   content: '';
@@ -230,8 +232,9 @@ body.room-page {
   background: linear-gradient(90deg, var(--i-crimson), transparent);
 }
 .stat-card:hover {
-  border-color: rgba(155,27,48,0.4);
+  border-color: rgba(155,27,48,0.3);
   transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(26,22,20,0.08);
 }
 .stat-num {
   font-family: var(--i-ff-serif);
@@ -261,7 +264,8 @@ body.room-page {
   padding: 2.5rem 3rem;
   border: 1px solid var(--i-border-gold);
   border-radius: var(--i-radius-lg);
-  background: var(--i-gold-faint);
+  background: linear-gradient(135deg, rgba(255,249,240,0.9), rgba(255,255,255,0.7));
+  box-shadow: 0 2px 12px rgba(160,120,48,0.06);
 }
 .thesis-quote-mark {
   font-family: var(--i-ff-serif);
@@ -291,14 +295,15 @@ body.room-page {
 }
 
 .product-card {
-  background: var(--i-bg-card);
+  background: #FFFFFF;
   border: 1px solid var(--i-border);
   border-radius: var(--i-radius-lg);
   overflow: hidden;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  box-shadow: 0 1px 4px rgba(26,22,20,0.04);
 }
-.product-card:hover { border-color: rgba(155,27,48,0.35); }
-.product-card.expanded { border-color: rgba(155,27,48,0.4); }
+.product-card:hover { border-color: rgba(155,27,48,0.30); box-shadow: 0 4px 16px rgba(26,22,20,0.07); }
+.product-card.expanded { border-color: rgba(155,27,48,0.35); box-shadow: 0 4px 20px rgba(26,22,20,0.08); }
 
 .product-card-header {
   display: flex;
@@ -309,7 +314,7 @@ body.room-page {
   transition: background 0.2s;
   user-select: none;
 }
-.product-card-header:hover { background: rgba(255,255,255,0.02); }
+.product-card-header:hover { background: rgba(26,22,20,0.02); }
 
 .product-badge {
   font-family: var(--i-ff-mono);
@@ -378,7 +383,7 @@ body.room-page {
   gap: 0.75rem 2rem;
   margin-bottom: 1.25rem;
   padding: 1.25rem;
-  background: rgba(255,255,255,0.025);
+  background: #F9F8F6;
   border-radius: var(--i-radius);
   border: 1px solid var(--i-border-subtle);
 }
@@ -458,7 +463,7 @@ body.room-page {
 }
 .traction-now {
   border-color: var(--i-border-gold);
-  background: var(--i-gold-faint);
+  background: linear-gradient(135deg, rgba(255,249,240,0.9), rgba(255,255,255,0.7));
 }
 .traction-icon {
   font-size: 1.5rem;
@@ -484,7 +489,7 @@ body.room-page {
   padding: 1.5rem 2rem;
   border: 1px solid var(--i-border-subtle);
   border-radius: var(--i-radius);
-  background: rgba(255,255,255,0.02);
+  background: rgba(26,22,20,0.02);
   font-size: 0.875rem;
   color: var(--i-cream-60);
   line-height: 1.7;
@@ -507,12 +512,13 @@ body.room-page {
 }
 
 .financial-hero-card {
-  background: var(--i-bg-card);
+  background: #FFFFFF;
   border: 1px solid var(--i-border-gold);
   border-radius: var(--i-radius-xl);
   padding: 2.5rem;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 2px 12px rgba(26,22,20,0.05);
 }
 .financial-hero-card::before {
   content: '';
@@ -554,10 +560,11 @@ body.room-page {
 
 /* Use of funds */
 .use-of-funds {
-  background: var(--i-bg-card);
+  background: #FFFFFF;
   border: 1px solid var(--i-border);
   border-radius: var(--i-radius-xl);
   padding: 2rem;
+  box-shadow: 0 2px 8px rgba(26,22,20,0.04);
 }
 .uof-title {
   font-family: var(--i-ff-mono);
@@ -581,7 +588,7 @@ body.room-page {
 .uof-bar-wrap {
   width: 160px;
   height: 4px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(26,22,20,0.06);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -615,16 +622,16 @@ body.room-page {
   gap: 0.75rem;
 }
 .rm-card {
-  background: rgba(255,255,255,0.025);
+  background: #F9F8F6;
   border: 1px solid var(--i-border-subtle);
   border-radius: var(--i-radius);
   padding: 1rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-.rm-card:hover { border-color: var(--i-border); }
+.rm-card:hover { border-color: var(--i-border); box-shadow: 0 2px 8px rgba(26,22,20,0.05); }
 .rm-product {
   font-family: var(--i-ff-mono);
   font-size: 0.65rem;
@@ -689,7 +696,7 @@ body.room-page {
 .founder-quote {
   border-left: 3px solid var(--i-crimson);
   padding: 1.5rem 2rem;
-  background: rgba(155,27,48,0.05);
+  background: rgba(155,27,48,0.04);
   border-radius: 0 var(--i-radius) var(--i-radius) 0;
 }
 .founder-quote-ar {
@@ -723,16 +730,18 @@ body.room-page {
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  background: var(--i-bg-card);
+  background: #FFFFFF;
   border: 1px solid var(--i-border);
   border-radius: var(--i-radius-lg);
   padding: 1.5rem;
-  transition: border-color 0.25s, transform 0.25s;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
   cursor: pointer;
+  box-shadow: 0 1px 4px rgba(26,22,20,0.04);
 }
 .doc-card:hover {
-  border-color: rgba(155,27,48,0.4);
+  border-color: rgba(155,27,48,0.35);
   transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(26,22,20,0.08);
 }
 .doc-icon {
   font-size: 1.75rem;
@@ -772,7 +781,7 @@ body.room-page {
   padding: 0.85rem 1.25rem;
   border: 1px solid var(--i-border-subtle);
   border-radius: var(--i-radius);
-  background: rgba(255,255,255,0.02);
+  background: #F9F8F6;
 }
 .docs-note::before {
   content: '⚠ ';
@@ -978,4 +987,203 @@ body.room-page {
   .rm-grid            { grid-template-columns: 1fr; }
   .vision-thesis      { padding: 1.75rem; }
   .stat-num           { font-size: 2.5rem; }
+}
+
+/* ─── SECTION 04 · PARTNERSHIP TRACKS ────────────────────── */
+.partnership-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.partnership-track {
+  background: #FFFFFF;
+  border: 1px solid var(--i-border);
+  border-radius: var(--i-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(26,22,20,0.04);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.partnership-track:hover {
+  border-color: rgba(155,27,48,0.25);
+  box-shadow: 0 4px 16px rgba(26,22,20,0.07);
+}
+.partnership-track[data-track="affiliation"] { border-top: 2px solid var(--i-crimson); }
+.partnership-track[data-track="adoption"]    { border-top: 2px solid var(--i-gold); }
+.partnership-track[data-track="teamup"]      { border-top: 2px solid rgba(26,22,20,0.3); }
+
+.track-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem 1.75rem 1.25rem;
+  cursor: default;
+}
+.track-icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+  width: 2.5rem;
+  text-align: center;
+}
+.track-info { flex: 1; }
+.track-name {
+  font-family: var(--i-ff-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--i-crimson);
+  margin-bottom: 0.3rem;
+}
+.track-tagline {
+  font-family: var(--i-ff-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--i-cream);
+  line-height: 1.3;
+}
+
+.track-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 2rem;
+  padding: 0 1.75rem 1.75rem;
+  border-top: 1px solid var(--i-border-subtle);
+  margin-top: 0;
+}
+.track-col { padding-top: 1.25rem; }
+.track-col-label {
+  font-family: var(--i-ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--i-cream-40);
+  margin-bottom: 0.75rem;
+}
+.track-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.track-list li {
+  font-size: 0.875rem;
+  color: var(--i-cream-80);
+  line-height: 1.5;
+  padding-left: 1rem;
+  position: relative;
+}
+.track-list li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--i-crimson);
+  font-weight: 700;
+}
+
+/* ─── SECTION 06 · WHAT YOU BRING ─────────────────────────── */
+.bring-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.bring-card {
+  background: #FFFFFF;
+  border: 1px solid var(--i-border);
+  border-radius: var(--i-radius-lg);
+  padding: 1.75rem 1.5rem;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  box-shadow: 0 1px 4px rgba(26,22,20,0.04);
+}
+.bring-card:hover {
+  border-color: rgba(155,27,48,0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(26,22,20,0.08);
+}
+.bring-icon {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+.bring-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--i-cream);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+.bring-desc {
+  font-size: 0.82rem;
+  color: var(--i-cream-60);
+  line-height: 1.65;
+}
+.bring-note {
+  font-family: var(--i-ff-serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--i-gold);
+  text-align: center;
+  padding: 1.25rem 2rem;
+  border: 1px solid var(--i-border-gold);
+  border-radius: var(--i-radius);
+  background: linear-gradient(135deg, rgba(255,249,240,0.6), rgba(255,255,255,0.8));
+}
+
+/* ─── SECTION 07 · LET'S BUILD ────────────────────────────── */
+.letsbuild-tracks-mini {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+.lbtrack-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: #FFFFFF;
+  border: 1.5px solid var(--i-border);
+  border-radius: var(--i-radius-lg);
+  cursor: pointer;
+  font-family: var(--i-ff-sans);
+  font-size: 0.9rem;
+  color: var(--i-cream-80);
+  transition: all 0.2s var(--i-ease);
+  box-shadow: 0 1px 4px rgba(26,22,20,0.05);
+  min-width: 200px;
+  justify-content: center;
+}
+.lbtrack-btn:hover {
+  border-color: var(--i-crimson);
+  color: var(--i-crimson);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(155,27,48,0.10);
+}
+.lbtrack-btn.selected {
+  border-color: var(--i-crimson);
+  background: var(--i-crimson-faint);
+  color: var(--i-crimson);
+  box-shadow: 0 0 0 3px rgba(155,27,48,0.08);
+}
+.lbtrack-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+.lbtrack-label {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* ─── RESPONSIVE ADDITIONS ────────────────────────────────── */
+@media (max-width: 900px) {
+  .track-body         { grid-template-columns: 1fr; }
+  .bring-grid         { grid-template-columns: repeat(2, 1fr); }
+  .letsbuild-tracks-mini { flex-direction: column; align-items: center; }
+  .lbtrack-btn        { width: 100%; max-width: 340px; }
+}
+@media (max-width: 600px) {
+  .bring-grid         { grid-template-columns: 1fr; }
+  .track-header       { padding: 1.25rem; }
+  .track-body         { padding: 0 1.25rem 1.25rem; }
 }

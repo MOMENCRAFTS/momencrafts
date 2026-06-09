@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    MOMENCRAFTS — Investor Portal Design System
-   Dark Premium · Editorial · Bilingual AR/EN
+   White Premium · Editorial · Bilingual AR/EN
    ═══════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;600&family=Inter:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap');
@@ -8,38 +8,38 @@
 /* ─── TOKENS ──────────────────────────────────────────────── */
 :root {
   /* Backgrounds */
-  --i-bg:            #0D0D0F;
-  --i-bg-card:       rgba(20, 20, 24, 0.85);
-  --i-bg-card-solid: #141418;
-  --i-bg-section:    #111114;
-  --i-bg-hover:      rgba(30, 30, 36, 0.9);
+  --i-bg:            #FAFAF8;
+  --i-bg-card:       rgba(255, 255, 255, 0.92);
+  --i-bg-card-solid: #FFFFFF;
+  --i-bg-section:    #F4F2EE;
+  --i-bg-hover:      rgba(255, 255, 255, 0.98);
 
   /* Brand */
   --i-crimson:       #9B1B30;
   --i-crimson-bright:#C41E3A;
-  --i-crimson-glow:  rgba(155, 27, 48, 0.18);
-  --i-crimson-faint: rgba(155, 27, 48, 0.08);
-  --i-gold:          #C8A96E;
-  --i-gold-dim:      rgba(200, 169, 110, 0.35);
-  --i-gold-faint:    rgba(200, 169, 110, 0.12);
+  --i-crimson-glow:  rgba(155, 27, 48, 0.10);
+  --i-crimson-faint: rgba(155, 27, 48, 0.05);
+  --i-gold:          #A07830;
+  --i-gold-dim:      rgba(160, 120, 48, 0.30);
+  --i-gold-faint:    rgba(160, 120, 48, 0.07);
 
   /* Text */
-  --i-cream:         #EDE8DC;
-  --i-cream-80:      rgba(237, 232, 220, 0.80);
-  --i-cream-60:      rgba(237, 232, 220, 0.60);
-  --i-cream-40:      rgba(237, 232, 220, 0.40);
-  --i-cream-20:      rgba(237, 232, 220, 0.20);
-  --i-cream-10:      rgba(237, 232, 220, 0.10);
+  --i-cream:         #1A1614;
+  --i-cream-80:      rgba(26, 22, 20, 0.80);
+  --i-cream-60:      rgba(26, 22, 20, 0.60);
+  --i-cream-40:      rgba(26, 22, 20, 0.40);
+  --i-cream-20:      rgba(26, 22, 20, 0.20);
+  --i-cream-10:      rgba(26, 22, 20, 0.10);
 
   /* Borders */
-  --i-border:        rgba(155, 27, 48, 0.20);
-  --i-border-gold:   rgba(200, 169, 110, 0.25);
-  --i-border-subtle: rgba(237, 232, 220, 0.08);
+  --i-border:        rgba(155, 27, 48, 0.15);
+  --i-border-gold:   rgba(160, 120, 48, 0.20);
+  --i-border-subtle: rgba(26, 22, 20, 0.08);
 
   /* States */
-  --i-error:         #FF4444;
-  --i-success:       #2ECC71;
-  --i-warn:          #F0A500;
+  --i-error:         #D93025;
+  --i-success:       #1E8C4A;
+  --i-warn:          #C07800;
 
   /* Typography */
   --i-ff-serif:  'Playfair Display', Georgia, serif;
@@ -57,11 +57,12 @@
   --i-radius-lg: 20px;
   --i-radius-xl: 28px;
 
-  /* Shadows */
-  --i-shadow-card: 0 0 40px rgba(155,27,48,0.08),
-                   0 24px 48px rgba(0,0,0,0.45),
-                   inset 0 1px 0 rgba(255,255,255,0.04);
-  --i-shadow-glow: 0 0 60px rgba(155,27,48,0.20);
+  /* Shadows — soft, warm, premium */
+  --i-shadow-card: 0 2px 6px rgba(26,22,20,0.04),
+                   0 12px 40px rgba(26,22,20,0.08),
+                   0 0 0 1px rgba(155,27,48,0.07),
+                   inset 0 1px 0 rgba(255,255,255,0.9);
+  --i-shadow-glow: 0 8px 32px rgba(155,27,48,0.12);
 }
 
 /* ─── BASE RESET ──────────────────────────────────────────── */
@@ -89,7 +90,7 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
 ::-webkit-scrollbar-track { background: var(--i-bg); }
 ::-webkit-scrollbar-thumb { background: var(--i-border); border-radius: 2px; }
 
-/* ─── BACKGROUND ──────────────────────────────────────────── */
+/* ─── BACKGROUND TEXTURE ──────────────────────────────────── */
 .i-bg-sweep {
   position: fixed;
   inset: 0;
@@ -100,35 +101,35 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
 .i-bg-sweep::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -20%;
-  width: 60%;
-  height: 200%;
+  top: -40%;
+  left: -15%;
+  width: 55%;
+  height: 180%;
   background: linear-gradient(
-    105deg,
+    108deg,
     transparent 0%,
-    rgba(155, 27, 48, 0.035) 50%,
+    rgba(155, 27, 48, 0.018) 50%,
     transparent 100%
   );
-  animation: bgSweep 14s ease-in-out infinite alternate;
+  animation: bgSweep 16s ease-in-out infinite alternate;
 }
 .i-bg-sweep::after {
   content: '';
   position: absolute;
-  bottom: -30%;
-  right: -10%;
-  width: 50%;
-  height: 60%;
-  background: radial-gradient(ellipse, rgba(200,169,110,0.04) 0%, transparent 70%);
-  animation: bgPulse 8s ease-in-out infinite alternate;
+  bottom: -20%;
+  right: -8%;
+  width: 45%;
+  height: 55%;
+  background: radial-gradient(ellipse, rgba(160,120,48,0.05) 0%, transparent 70%);
+  animation: bgPulse 9s ease-in-out infinite alternate;
 }
 @keyframes bgSweep {
-  0%   { transform: translateX(0) rotate(0deg); opacity: 0.6; }
-  100% { transform: translateX(18%) rotate(2deg); opacity: 1; }
+  0%   { transform: translateX(0) rotate(0deg); opacity: 0.5; }
+  100% { transform: translateX(14%) rotate(1.5deg); opacity: 1; }
 }
 @keyframes bgPulse {
-  0%   { opacity: 0.5; transform: scale(1); }
-  100% { opacity: 1;   transform: scale(1.1); }
+  0%   { opacity: 0.4; transform: scale(1); }
+  100% { opacity: 1;   transform: scale(1.08); }
 }
 
 /* ─── GATE PAGE LAYOUT ────────────────────────────────────── */
@@ -173,6 +174,25 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
 .gate-logo-mark {
   color: var(--i-crimson);
   font-size: 1rem;
+}
+
+/* Tagline & sub */
+.gate-tagline {
+  font-family: var(--i-ff-serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--i-cream-60);
+  letter-spacing: 0.01em;
+  margin-top: 0.25rem;
+  margin-bottom: 0.2rem;
+}
+.gate-sub {
+  font-family: var(--i-ff-sans);
+  font-size: 0.8rem;
+  color: var(--i-cream-40);
+  letter-spacing: 0.01em;
+  margin-bottom: 0;
+  line-height: 1.6;
 }
 
 /* Headline */
@@ -224,7 +244,7 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   width: 48px;
   height: 1px;
   background: var(--i-crimson);
-  opacity: 0.4;
+  opacity: 0.35;
   margin: 2rem 0;
 }
 
@@ -246,11 +266,13 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   padding: 0.3rem 0.85rem;
   opacity: 0;
   animation: sectorPop 0.4s var(--i-ease-bounce) forwards;
-  transition: border-color 0.2s, color 0.2s;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  background: rgba(255,255,255,0.6);
 }
 .gate-sector:hover {
   border-color: var(--i-crimson);
-  color: var(--i-cream);
+  color: var(--i-crimson);
+  background: var(--i-crimson-faint);
 }
 .gate-sector:nth-child(1) { animation-delay: 0.65s; }
 .gate-sector:nth-child(2) { animation-delay: 0.76s; }
@@ -273,7 +295,8 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
-  background: var(--i-gold-faint);
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,249,240,0.8));
+  box-shadow: 0 2px 12px rgba(160,120,48,0.07);
   overflow: hidden;
   opacity: 0;
   animation: fadeIn 0.6s ease 1.2s forwards;
@@ -376,15 +399,16 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   align-items: center;
   justify-content: center;
   padding: 5rem 5rem 5rem 4rem;
+  background: linear-gradient(160deg, rgba(250,250,248,0) 0%, rgba(244,242,238,0.5) 100%);
 }
 
 .gate-card {
   width: 100%;
   max-width: 420px;
-  background: var(--i-bg-card);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--i-border);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(155, 27, 48, 0.12);
   border-radius: var(--i-radius-xl);
   padding: 2.5rem;
   box-shadow: var(--i-shadow-card);
@@ -410,20 +434,6 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   margin-bottom: 1.75rem;
 }
 
-.gate-logo-mark {
-  font-size: 1rem;
-  color: var(--i-crimson);
-}
-
-.gate-tagline {
-  font-family: var(--i-ff-sans);
-  font-size: 0.78rem;
-  font-style: italic;
-  color: var(--i-cream-40);
-  letter-spacing: 0.04em;
-  margin-top: 0.35rem;
-}
-
 .gate-card-copy {
   font-size: 0.875rem;
   color: var(--i-cream-60);
@@ -447,8 +457,8 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
 }
 .token-input {
   width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--i-border-subtle);
+  background: #F9F8F6;
+  border: 1.5px solid var(--i-border-subtle);
   border-radius: var(--i-radius);
   padding: 1rem 1.25rem;
   font-family: var(--i-ff-mono);
@@ -456,7 +466,7 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   letter-spacing: 0.08em;
   color: var(--i-cream);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
   text-transform: uppercase;
 }
 .token-input::placeholder {
@@ -464,8 +474,9 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   letter-spacing: 0.06em;
 }
 .token-input:focus {
+  background: #FFFFFF;
   border-color: var(--i-crimson);
-  box-shadow: 0 0 0 3px rgba(155, 27, 48, 0.15);
+  box-shadow: 0 0 0 3px rgba(155, 27, 48, 0.10);
 }
 .token-input.error {
   border-color: var(--i-error);
@@ -486,7 +497,7 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
 .enter-btn {
   width: 100%;
   background: var(--i-crimson);
-  color: var(--i-cream);
+  color: #fff;
   border: none;
   border-radius: var(--i-radius);
   padding: 1rem;
@@ -502,12 +513,12 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
   pointer-events: none;
 }
 .enter-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(155,27,48,0.45);
+  box-shadow: 0 8px 28px rgba(155,27,48,0.35);
 }
 .enter-btn:active:not(:disabled) {
   transform: translateY(0);
@@ -535,7 +546,7 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--i-cream);
+  background: rgba(255,255,255,0.9);
   margin: 0 2px;
   animation: dotBounce 1s ease infinite;
 }
@@ -574,15 +585,15 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   transition: color 0.2s, border-color 0.2s;
 }
 .gate-card-contact a:hover {
-  color: var(--i-cream);
-  border-color: var(--i-cream-40);
+  color: var(--i-crimson);
+  border-color: var(--i-crimson);
 }
 
 /* ─── VAULT OPEN ANIMATION ────────────────────────────────── */
 .vault-overlay {
   position: fixed;
   inset: 0;
-  background: var(--i-bg);
+  background: #FFFFFF;
   z-index: 1000;
   opacity: 0;
   pointer-events: none;
@@ -602,8 +613,8 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
 .nda-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(13, 13, 15, 0.97);
-  backdrop-filter: blur(8px);
+  background: rgba(250, 250, 248, 0.96);
+  backdrop-filter: blur(12px);
   z-index: 900;
   display: flex;
   align-items: center;
@@ -620,8 +631,8 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
 .nda-card {
   max-width: 560px;
   width: 100%;
-  background: var(--i-bg-card);
-  border: 1px solid var(--i-border);
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(155, 27, 48, 0.12);
   border-radius: var(--i-radius-xl);
   padding: 2.75rem;
   box-shadow: var(--i-shadow-card);
@@ -700,7 +711,7 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   grid-template-columns: auto 1fr;
   gap: 0.3rem 1rem;
   padding: 1rem 1.25rem;
-  background: rgba(255,255,255,0.03);
+  background: #F9F8F6;
   border-radius: var(--i-radius);
   border: 1px solid var(--i-border-subtle);
   margin-bottom: 0.5rem;
@@ -729,7 +740,7 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
 .nda-agree-btn {
   width: 100%;
   background: var(--i-crimson);
-  color: var(--i-cream);
+  color: #fff;
   border: none;
   border-radius: var(--i-radius);
   padding: 1rem 1.5rem;
@@ -741,13 +752,13 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
 }
 .nda-agree-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(155,27,48,0.45);
+  box-shadow: 0 8px 28px rgba(155,27,48,0.30);
 }
 .nda-agree-btn-ar {
   font-family: var(--i-ff-arabic);
   font-size: 0.85rem;
   display: block;
-  color: var(--i-cream-60);
+  color: rgba(255,255,255,0.7);
   text-align: center;
   margin-top: 0.4rem;
   letter-spacing: 0;
@@ -759,7 +770,7 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   top: 1.5rem;
   right: 1.5rem;
   z-index: 100;
-  background: rgba(20,20,24,0.8);
+  background: rgba(255,255,255,0.90);
   border: 1px solid var(--i-border-subtle);
   border-radius: 999px;
   padding: 0.4rem 1rem;
@@ -770,10 +781,11 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   cursor: pointer;
   transition: all 0.2s;
   backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(26,22,20,0.06);
 }
 .lang-toggle:hover {
-  border-color: var(--i-border);
-  color: var(--i-cream);
+  border-color: var(--i-crimson);
+  color: var(--i-crimson);
 }
 
 /* ─── UTILITIES ───────────────────────────────────────────── */
@@ -795,21 +807,14 @@ body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
   .gate-right {
     padding: 2rem 2rem 4rem;
     order: 2;
+    background: none;
   }
   .gate-card { max-width: 100%; }
   .gate-headline-en { font-size: 2rem; }
   .gate-headline-ar { font-size: 1.25rem; }
-  .gate-location { margin-top: 1.5rem; }
 }
-
 @media (max-width: 480px) {
-  .gate-left { padding: 3rem 1.5rem 1.5rem; }
-  .gate-right { padding: 1.5rem 1.5rem 3rem; }
-  .gate-headline-en { font-size: 1.7rem; }
-  .nda-card { padding: 2rem 1.5rem; }
-}
-
-/* ─── PRINT BLOCK ─────────────────────────────────────────── */
-@media print {
-  body { display: none !important; }
+  .gate-left { padding: 3.5rem 1.5rem 1.5rem; }
+  .gate-right { padding: 1.5rem 1.5rem 3.5rem; }
+  .gate-card  { padding: 1.75rem; }
 }

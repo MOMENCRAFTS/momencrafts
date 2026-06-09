@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>MomentCraft Studios</title>
+  <title>MomenCrafts — Partner Landscape</title>
   <!-- No OG tags, no description — intentionally minimal -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="investor.css" />
@@ -31,12 +31,12 @@
 
       <p class="nda-body-en">
         The information you are about to access is proprietary and confidential
-        to MomentCraft Studios and its founder. By proceeding, you agree not to disclose,
+        to MomenCrafts and its founder. By proceeding, you agree not to disclose,
         reproduce, distribute, or share any part of this content without prior
         written consent from the founder.
       </p>
       <p class="nda-body-ar">
-        المعلومات التي ستطّلع عليها ملكية خاصة وسرية لمومنت كرافت ستوديوز ومؤسسها.
+        المعلومات التي ستطّلع عليها ملكية خاصة وسرية لمؤمن كرافتس ومؤسسها.
         بالمتابعة، توافق على عدم الإفصاح أو النسخ أو التوزيع دون إذن كتابي
         مسبق من المؤسس.
       </p>
@@ -62,13 +62,14 @@
   <main class="gate-page" id="gatePage">
 
     <!-- LEFT: Inspirational panel -->
-    <section class="gate-left" aria-label="MomentCraft Studios — Investor Landscape">
+    <section class="gate-left" aria-label="MOMENCRAFTS — Partner Landscape">
 
-      <div class="gate-logo" aria-label="MomentCraft Studios">
+      <div class="gate-logo" aria-label="MOMENCRAFTS">
         <span class="gate-logo-mark">✦</span>
-        MOMENTCRAFT STUDIOS
+        MOMENCRAFTS
       </div>
-      <p class="gate-tagline" data-en="Where idea execution becomes an art." data-ar="حيث يصبح تنفيذ الأفكار فنًّا.">Where idea execution becomes an art.</p>
+      <p class="gate-tagline" data-en="Smart ideas, crafted into execution." data-ar="أفكار ذكية، مصنوعة للتنفيذ.">Smart ideas, crafted into execution.</p>
+      <p class="gate-sub" data-en="Where intelligent ideas are designed, engineered, and shipped with art." data-ar="حيث تُصمَّم الأفكار الذكية وتُهندَس وتُطلَق بفن.">Where intelligent ideas are designed, engineered, and shipped with art.</p>
 
       <div class="gate-headline" role="heading" aria-level="1">
         <!-- English headline -->
@@ -197,7 +198,7 @@
 
         <p class="gate-card-contact">
           Need access? &nbsp;
-          <a href="mailto:momen@momentcraftstudios.com?subject=Investor%20Access%20Request">Contact the founder</a>
+          <a href="mailto:momen@momencrafts.com?subject=Investor%20Access%20Request">Contact the founder</a>
           &nbsp;·&nbsp;
           <a href="https://wa.me/966535271122?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%AD%D8%B5%D9%88%D9%84%20%D8%B9%D9%84%D9%89%20%D9%88%D8%B5%D9%88%D9%84%20%D9%84%D9%85%D9%86%D8%B5%D8%A9%20%D9%85%D8%A4%D9%85%D9%86%20%D9%83%D8%B1%D8%A7%D9%81%D8%AA%D8%B3" target="_blank" rel="noopener">WhatsApp</a>
         </p>
@@ -209,7 +210,7 @@
 
   <script>
   /* ══════════════════════════════════════════════════════
-     MOMENTCRAFT STUDIOS — Gate Page Logic
+     MOMENCRAFTS — Gate Page Logic
      ══════════════════════════════════════════════════════ */
 
   // ── CONFIG ──────────────────────────────────────────────
@@ -375,9 +376,9 @@
 
   function handleInvalidToken(reason, data, input) {
     const messages = {
-      revoked:      { en: 'Access has been revoked', ar: 'تم إلغاء الوصول', link: 'mailto:momen@momentcraftstudios.com?subject=Access%20Query', linkText: 'Contact founder →' },
-      expired:      { en: `Expired on ${formatDate(data.expiredAt)}`, ar: 'انتهت صلاحية هذا المفتاح', link: 'mailto:momen@momentcraftstudios.com?subject=Access%20Renewal', linkText: 'Request renewal →' },
-      not_found:    { en: 'Token not recognized', ar: 'المفتاح غير موجود', link: 'mailto:momen@momentcraftstudios.com?subject=Investor%20Access%20Request', linkText: 'Request access →' },
+      revoked:      { en: 'Access has been revoked', ar: 'تم إلغاء الوصول', link: 'mailto:momen@momencrafts.com?subject=Access%20Query', linkText: 'Contact founder →' },
+      expired:      { en: `Expired on ${formatDate(data.expiredAt)}`, ar: 'انتهت صلاحية هذا المفتاح', link: 'mailto:momen@momencrafts.com?subject=Access%20Renewal', linkText: 'Request renewal →' },
+      not_found:    { en: 'Token not recognized', ar: 'المفتاح غير موجود', link: 'mailto:momen@momencrafts.com?subject=Investor%20Access%20Request', linkText: 'Request access →' },
       wrong_format: { en: 'Format not recognized', ar: 'الصيغة غير صحيحة', link: null },
     };
     const msg = messages[reason] || messages.not_found;
