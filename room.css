@@ -4,9 +4,14 @@
    ═══════════════════════════════════════════════════════════ */
 
 /* ─── ROOM BASE ───────────────────────────────────────────── */
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
 body.room-page {
   background: var(--i-bg);
   overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* ─── ROOM HEADER ─────────────────────────────────────────── */
@@ -151,7 +156,8 @@ body.room-page {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 3rem;
+  padding: 0 clamp(1rem, 4vw, 3rem);
+  box-sizing: border-box;
 }
 
 /* Section label */
@@ -1231,7 +1237,7 @@ body.room-page {
   color: var(--i-cream-80);
   transition: all 0.2s var(--i-ease);
   box-shadow: 0 1px 4px rgba(26,22,20,0.05);
-  min-width: 200px;
+  min-width: min(200px, 100%);
   justify-content: center;
 }
 .lbtrack-btn:hover {

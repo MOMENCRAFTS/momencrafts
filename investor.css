@@ -68,7 +68,11 @@
 /* ─── BASE RESET ──────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
+}
 
 body.investor-page {
   font-family: var(--i-ff-sans);
@@ -76,6 +80,7 @@ body.investor-page {
   color: var(--i-cream);
   line-height: 1.7;
   overflow-x: hidden;
+  max-width: 100%;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
