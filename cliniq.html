@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLINIQ.ONE — الرعاية الصحية الذكية</title>
+  <meta name="description" content="منصة التطبيب عن بُعد للعالم العربي. خمسة تطبيقات، نظام واحد." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🩺</text></svg>" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500&family=Cairo:wght@400;500;600;700&display=swap" />
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --c-bg:        #F8FAFB;
+      --c-white:     #FFFFFF;
+      --c-teal:      #0E7490;
+      --c-teal-mid:  #0891B2;
+      --c-teal-lite: rgba(14, 116, 144, 0.08);
+      --c-teal-glow: rgba(14, 116, 144, 0.15);
+      --c-teal-dim:  rgba(14, 116, 144, 0.25);
+      --c-gold:      #92611A;
+      --c-gold-lite: rgba(146, 97, 26, 0.07);
+      --c-ink:       #0F1923;
+      --c-ink-70:    rgba(15, 25, 35, 0.70);
+      --c-ink-50:    rgba(15, 25, 35, 0.50);
+      --c-ink-30:    rgba(15, 25, 35, 0.30);
+      --c-ink-10:    rgba(15, 25, 35, 0.08);
+      --c-border:    rgba(14, 116, 144, 0.14);
+      --ff-serif:    'Playfair Display', Georgia, serif;
+      --ff-mono:     'JetBrains Mono', monospace;
+      --ff-sans:     'Inter', system-ui, sans-serif;
+      --ff-ar:       'Cairo', 'Segoe UI', sans-serif;
+      --ease:        cubic-bezier(0.16, 1, 0.3, 1);
+      --r:           14px;
+      --r-lg:        22px;
+    }
+
+    /* ── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--ff-ar);
+      background: var(--c-bg);
+      color: var(--c-ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── BACKGROUND ─────────────────────────────────────────── */
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-orb-1 {
+      width: 500px; height: 500px;
+      top: -180px; left: -120px;
+      background: radial-gradient(circle, rgba(14,116,144,0.06) 0%, transparent 70%);
+      animation: orbFloat 12s ease-in-out infinite alternate;
+    }
+    .bg-orb-2 {
+      width: 400px; height: 400px;
+      bottom: -140px; right: -100px;
+      background: radial-gradient(circle, rgba(146,97,26,0.05) 0%, transparent 70%);
+      animation: orbFloat 9s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes orbFloat {
+      0%   { transform: scale(1) translate(0,0); }
+      100% { transform: scale(1.08) translate(20px,15px); }
+    }
+
+    /* ── MAIN CARD ──────────────────────────────────────────── */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: 3rem 2.75rem 2.5rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow:
+        0 2px 6px rgba(15,25,35,0.04),
+        0 16px 48px rgba(15,25,35,0.08),
+        0 0 0 1px rgba(14,116,144,0.06);
+      text-align: center;
+      animation: cardRise 0.8s var(--ease) forwards;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    @keyframes cardRise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── BRAND MARK ─────────────────────────────────────────── */
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 2rem;
+    }
+    .brand-cross {
+      width: 32px; height: 32px;
+      background: var(--c-teal);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(14,116,144,0.30);
+    }
+    .brand-name {
+      font-family: var(--ff-mono);
+      font-size: 0.9rem;
+      letter-spacing: 0.16em;
+      color: var(--c-teal);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .brand-dot { color: var(--c-ink-30); }
+
+    /* ── HEADLINE ───────────────────────────────────────────── */
+    .headline-ar {
+      font-family: var(--ff-ar);
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 700;
+      color: var(--c-ink);
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+    .headline-en {
+      font-family: var(--ff-serif);
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      font-style: italic;
+      color: var(--c-ink-50);
+      margin-bottom: 1.5rem;
+      direction: ltr;
+    }
+
+    /* ── DIVIDER ────────────────────────────────────────────── */
+    .divider {
+      width: 40px; height: 2px;
+      background: var(--c-teal);
+      opacity: 0.4;
+      margin: 0 auto 1.5rem;
+      border-radius: 1px;
+    }
+
+    /* ── SUB TEXT ───────────────────────────────────────────── */
+    .sub {
+      font-size: 0.875rem;
+      color: var(--c-ink-50);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    /* ── CTA BUTTONS ────────────────────────────────────────── */
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+    .cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      padding: 1rem 1.5rem;
+      border-radius: var(--r);
+      font-family: var(--ff-ar);
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+    }
+    .cta-primary {
+      background: var(--c-teal);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(14,116,144,0.30);
+    }
+    .cta-primary:hover {
+      box-shadow: 0 8px 28px rgba(14,116,144,0.40);
+    }
+    .cta-secondary {
+      background: #fff;
+      color: var(--c-teal);
+      border: 1.5px solid var(--c-border);
+      box-shadow: 0 2px 8px rgba(15,25,35,0.05);
+    }
+    .cta-secondary:hover {
+      border-color: var(--c-teal);
+      box-shadow: 0 4px 16px rgba(14,116,144,0.12);
+    }
+    .cta-icon { font-size: 1.1rem; }
+    .cta-text-ar { direction: rtl; }
+    .cta-text-en {
+      font-family: var(--ff-sans);
+      font-size: 0.72rem;
+      font-weight: 400;
+      opacity: 0.75;
+      direction: ltr;
+    }
+
+    /* ── REDIRECT COUNTER ───────────────────────────────────── */
+    .redirect-note {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--c-ink-30);
+      margin-bottom: 2rem;
+    }
+    .redirect-note span {
+      color: var(--c-teal);
+      font-weight: 600;
+    }
+
+    /* ── PROGRESS BAR ───────────────────────────────────────── */
+    .progress-wrap {
+      height: 2px;
+      background: var(--c-ink-10);
+      border-radius: 1px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--c-teal), var(--c-teal-mid));
+      border-radius: 1px;
+      width: 100%;
+      transform-origin: left;
+      animation: progressShrink 6s linear forwards;
+    }
+    @keyframes progressShrink {
+      from { transform: scaleX(1); }
+      to   { transform: scaleX(0); }
+    }
+
+    /* ── FOOTER META ────────────────────────────────────────── */
+    .footer-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      font-family: var(--ff-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: var(--c-ink-30);
+      text-transform: uppercase;
+    }
+    .footer-sep { opacity: 0.4; }
+    .footer-brand {
+      color: var(--c-ink-30);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-brand:hover { color: var(--c-teal); }
+
+    /* ── LANG TOGGLE ────────────────────────────────────────── */
+    .lang-btn {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 100;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--c-ink-10);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--c-ink-50);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.2s, color 0.2s;
+      box-shadow: 0 2px 8px rgba(15,25,35,0.06);
+    }
+    .lang-btn:hover { border-color: var(--c-teal); color: var(--c-teal); }
+
+    @media (max-width: 480px) {
+      .card { padding: 2.25rem 1.75rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg-orb bg-orb-1" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb-2" aria-hidden="true"></div>
+
+  <!-- Lang toggle -->
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">🇬🇧 EN</button>
+
+  <!-- Main card -->
+  <div class="card" role="main">
+
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-cross" aria-hidden="true">🩺</div>
+      <div class="brand-name">CLINIQ<span class="brand-dot">.</span>ONE</div>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="headline-ar" id="hl-ar">الرعاية الصحية الذكية<br>للعالم العربي.</h1>
+    <p  class="headline-en" id="hl-en">AI-powered telemedicine for the Arab world.</p>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <!-- Sub -->
+    <p class="sub" id="sub-ar">أطباء معتمدون، وصفات طبية رقمية، استشارة في ساعتين.</p>
+    <p class="sub" id="sub-en" style="display:none; direction:ltr;">Licensed doctors · Digital prescriptions · 2-hour consultation.</p>
+
+    <!-- Progress -->
+    <div class="progress-wrap" aria-hidden="true">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Redirect note -->
+    <p class="redirect-note" id="redirect-note">
+      سيتم التحويل خلال <span id="counter">6</span> ثوانٍ
+    </p>
+
+    <!-- CTAs -->
+    <div class="cta-group">
+      <a href="https://app.cliniq.one" class="cta-btn cta-primary" id="cta-patient">
+        <span class="cta-icon">🧑‍⚕️</span>
+        <span>
+          <span class="cta-text-ar" id="cta-patient-ar">أنا مريض — فتح التطبيق</span>
+          <span class="cta-text-en" id="cta-patient-en" style="display:none">I'm a Patient — Open App</span>
+        </span>
+      </a>
+      <a href="https://app.cliniq.one/doctor" class="cta-btn cta-secondary" id="cta-doctor">
+        <span class="cta-icon">👨‍⚕️</span>
+        <span>
+          <span class="cta-text-ar" id="cta-doctor-ar">أنا طبيب — بوابة الأطباء</span>
+          <span class="cta-text-en" id="cta-doctor-en" style="display:none">I'm a Doctor — Clinician Portal</span>
+        </span>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-meta">
+      <span>RIYADH · KSA</span>
+      <span class="footer-sep">·</span>
+      <span>MOH COMPLIANT</span>
+      <span class="footer-sep">·</span>
+      <a href="https://momencrafts.com" class="footer-brand">A MOMENCRAFTS PRODUCT</a>
+    </div>
+
+  </div>
+
+  <script>
+    // ── LANG ─────────────────────────────────────────────────
+    let lang = 'ar';
+    const arEls = ['hl-ar','sub-ar','cta-patient-ar','cta-doctor-ar'];
+    const enEls = ['hl-en','sub-en','cta-patient-en','cta-doctor-en'];
+
+    function toggleLang() {
+      lang = lang === 'ar' ? 'en' : 'ar';
+      document.documentElement.lang = lang;
+      document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
+      document.getElementById('langBtn').textContent = lang === 'ar' ? '🇬🇧 EN' : '🇸🇦 AR';
+      arEls.forEach(id => document.getElementById(id).style.display = lang === 'ar' ? '' : 'none');
+      enEls.forEach(id => document.getElementById(id).style.display = lang === 'en' ? '' : 'none');
+      const note = document.getElementById('redirect-note');
+      note.innerHTML = lang === 'ar'
+        ? `سيتم التحويل خلال <span id="counter">${timeLeft}</span> ثوانٍ`
+        : `Redirecting in <span id="counter">${timeLeft}</span> seconds`;
+    }
+
+    // ── AUTO-REDIRECT COUNTDOWN ───────────────────────────────
+    let timeLeft = 6;
+    const tick = setInterval(() => {
+      timeLeft--;
+      const el = document.getElementById('counter');
+      if (el) el.textContent = timeLeft;
+      if (timeLeft <= 0) {
+        clearInterval(tick);
+        window.location.href = 'https://app.cliniq.one';
+      }
+    }, 1000);
+
+    // Cancel redirect if user taps a CTA
+    document.querySelectorAll('.cta-btn').forEach(btn => {
+      btn.addEventListener('click', () => clearInterval(tick));
+    });
+  </script>
+
+</body>
+</html>

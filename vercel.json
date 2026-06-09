@@ -5,7 +5,18 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/room", "destination": "/room.html" }
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "cliniq.one" }],
+      "destination": "/cliniq.html"
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.cliniq.one" }],
+      "destination": "/cliniq.html"
+    },
+    { "source": "/room",   "destination": "/room.html" },
+    { "source": "/cliniq", "destination": "/cliniq.html" }
   ],
   "headers": [
     {
