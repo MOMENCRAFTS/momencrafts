@@ -15,8 +15,9 @@
       "has": [{ "type": "host", "value": "www.cliniq.one" }],
       "destination": "/cliniq.html"
     },
-    { "source": "/room",   "destination": "/room.html" },
-    { "source": "/cliniq", "destination": "/cliniq.html" }
+    { "source": "/room",      "destination": "/room.html" },
+    { "source": "/cliniq",    "destination": "/cliniq.html" },
+    { "source": "/ummi-demo", "destination": "/ummi-demo.html" }
   ],
   "headers": [
     {
