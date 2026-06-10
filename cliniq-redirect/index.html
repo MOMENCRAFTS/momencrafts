@@ -3,179 +3,805 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="refresh" content="4;url=https://momencrafts.com" />
-  <title>cliniq.one — تم الانتقال</title>
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="canonical" href="https://momencrafts.com" />
+  <title>CLINIQ.ONE — الرعاية الصحية الذكية للعالم العربي</title>
+  <meta name="description" content="منصة طب عن بُعد من 5 تطبيقات، مدعومة بالذكاء الاصطناعي، مبنية للسوق العربي أولاً. جزء من مؤمن كرافتس." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🩺</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;600&family=Inter:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --teal:       #0E7490;
+      --teal-b:     #0891B2;
+      --teal-glow:  rgba(14,116,144,0.12);
+      --teal-faint: rgba(14,116,144,0.06);
+      --teal-line:  rgba(14,116,144,0.18);
+      --gold:       #92611A;
+      --gold-line:  rgba(146,97,26,0.18);
+      --gold-faint: rgba(146,97,26,0.06);
+      --ink:        #0F1923;
+      --ink-80:     rgba(15,25,35,0.80);
+      --ink-60:     rgba(15,25,35,0.60);
+      --ink-40:     rgba(15,25,35,0.40);
+      --ink-20:     rgba(15,25,35,0.20);
+      --ink-08:     rgba(15,25,35,0.08);
+      --bg:         #F7F9FA;
+      --white:      #FFFFFF;
+      --ease:       cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-soft:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --r:          12px;
+      --r-lg:       20px;
+    }
 
+    /* ── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Cairo', 'Inter', sans-serif;
-      background: #FFFFFF;
-      color: #1A1A2E;
+      font-family: 'Cairo', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
       min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--teal); color: #fff; }
+
+    /* ── BACKGROUND ─────────────────────────────────────────── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .bg::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      height: 60%;
+      background: radial-gradient(ellipse, rgba(14,116,144,0.07) 0%, transparent 65%);
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+    .bg::after {
+      content: '';
+      position: absolute;
+      bottom: -10%;
+      right: -5%;
+      width: 40%;
+      height: 40%;
+      background: radial-gradient(ellipse, rgba(146,97,26,0.05) 0%, transparent 70%);
+      animation: bgPulse 11s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes bgPulse {
+      0%   { opacity: 0.5; transform: translateX(-50%) scale(1); }
+      100% { opacity: 1;   transform: translateX(-50%) scale(1.06); }
+    }
+
+    /* ── LAYOUT ─────────────────────────────────────────────── */
+    main {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      gap: 0;
+    }
+
+    /* ── LEFT PANEL ─────────────────────────────────────────── */
+    .left {
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      padding: 2rem;
+      padding: 5rem 3.5rem 5rem 4rem;
+      position: relative;
+    }
+    .left::after {
+      content: '';
+      position: absolute;
+      top: 10%; right: 0;
+      width: 1px; height: 80%;
+      background: linear-gradient(to bottom, transparent, var(--teal-line), transparent);
     }
 
-    .logo-mark {
-      width: 56px;
-      height: 56px;
-      background: #00A896;
-      border-radius: 16px;
+    /* Brand header */
+    .brand-row {
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 1rem;
-      box-shadow: 0 4px 20px rgba(0,168,150,0.25);
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.1s forwards;
     }
-    .logo-mark svg { width: 32px; height: 32px; fill: white; }
+    .brand-icon {
+      width: 36px; height: 36px;
+      background: var(--teal);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 14px rgba(14,116,144,0.30);
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      color: var(--teal);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .brand-sep { color: var(--ink-20); margin: 0 0.25rem; }
+    .brand-parent {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      color: var(--ink-40);
+      text-transform: uppercase;
+    }
 
-    .brand {
-      font-size: 1.8rem;
+    /* Headline */
+    .headline {
+      margin-bottom: 1.5rem;
+    }
+    .hl-main {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
       font-weight: 700;
-      color: #00A896;
-      margin-bottom: 2rem;
-      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--ink);
+      display: block;
+      opacity: 0;
+      animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+    }
+    .hl-sub {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 1.8vw, 1.3rem);
+      font-style: italic;
+      color: var(--ink-60);
+      display: block;
+      direction: ltr;
+      margin-top: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s var(--ease) 0.32s forwards;
     }
 
+    /* Divider */
     .divider {
-      width: 48px;
-      height: 2px;
-      background: #00A896;
-      margin: 0 auto 2rem;
-      opacity: 0.3;
+      width: 40px; height: 2px;
+      background: var(--teal);
+      opacity: 0.35;
+      border-radius: 1px;
+      margin: 1.5rem 0;
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease) 0.4s forwards;
     }
 
-    .message-en {
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      color: #555;
-      margin-bottom: 0.4rem;
-      direction: ltr;
-      text-align: center;
-    }
-    .message-ar {
-      font-size: 1.05rem;
-      color: #333;
-      font-weight: 600;
-      margin-bottom: 2.5rem;
-      text-align: center;
-    }
-
-    .progress-wrap {
-      width: 220px;
-      height: 3px;
-      background: #E8F8F6;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 0.75rem;
-    }
-    .progress-bar {
-      height: 100%;
-      background: #00A896;
-      width: 0%;
-      animation: fill 4s linear forwards;
-      border-radius: 999px;
-    }
-    @keyframes fill { to { width: 100%; } }
-
-    .countdown {
-      font-family: 'Inter', monospace;
-      font-size: 0.8rem;
-      color: #999;
-      margin-bottom: 2.5rem;
-      text-align: center;
-      direction: ltr;
-    }
-
-    .actions {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
+    /* Insights rotator */
+    .insights {
+      position: relative;
+      min-height: 90px;
       margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.48s forwards;
     }
-
-    .btn-primary {
-      background: #00A896;
-      color: white;
-      padding: 0.7rem 1.4rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 0.875rem;
+    .insight-slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      pointer-events: none;
+    }
+    .insight-slide.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      position: relative;
+    }
+    .insight-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.2rem;
+    }
+    .insight-ar {
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.95rem;
       font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      transition: opacity 0.2s, transform 0.15s;
+      color: var(--ink-80);
+      line-height: 1.5;
     }
-    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+    .insight-en {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--ink-40);
+      direction: ltr;
+      font-style: italic;
+    }
 
-    .btn-secondary {
-      border: 1px solid #00A896;
-      color: #00A896;
-      padding: 0.7rem 1.4rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 0.875rem;
+    /* Insight dots */
+    .insight-dots {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease) 0.55s forwards;
+    }
+    .dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--teal-line);
+      transition: width 0.3s, background 0.3s, border-radius 0.3s;
+      cursor: pointer;
+    }
+    .dot.active {
+      width: 16px;
+      border-radius: 2px;
+      background: var(--teal);
+    }
+
+    /* 5-app pills */
+    .apps-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.62s forwards;
+    }
+    .app-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      border: 1px solid var(--teal-line);
+      background: var(--teal-faint);
+      border-radius: 999px;
+      padding: 0.28rem 0.8rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .app-pill:hover {
+      background: var(--teal-glow);
+      border-color: var(--teal);
+    }
+
+    /* CTA */
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.7s forwards;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.75rem;
+      background: var(--teal);
+      color: #fff;
+      border-radius: var(--r);
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.95rem;
       font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.2s;
+      text-decoration: none;
+      transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
+      box-shadow: 0 4px 18px rgba(14,116,144,0.28);
+      position: relative;
+      overflow: hidden;
     }
-    .btn-secondary:hover { background: #E8F8F6; }
+    .cta-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(14,116,144,0.36); }
+    .cta-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-40);
+      text-transform: uppercase;
+      direction: ltr;
+    }
 
-    .domain-hint {
-      font-family: 'Inter', monospace;
+    /* Location */
+    .location {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-20);
+      margin-top: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease) 0.8s forwards;
+    }
+
+    /* ── RIGHT PANEL ─────────────────────────────────────────── */
+    .right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 4rem 5rem 3.5rem;
+    }
+
+    .info-card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--teal-line);
+      border-radius: var(--r-lg);
+      padding: 2.25rem;
+      box-shadow:
+        0 2px 6px rgba(15,25,35,0.04),
+        0 14px 40px rgba(15,25,35,0.07),
+        0 0 0 1px rgba(14,116,144,0.06);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s var(--ease) 0.35s forwards;
+    }
+
+    .card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
+    }
+    .card-divider {
+      height: 1px;
+      background: var(--ink-08);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Stats grid */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat {
+      text-align: center;
+      padding: 1rem 0.75rem;
+      background: var(--teal-faint);
+      border: 1px solid var(--teal-line);
+      border-radius: var(--r);
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--teal);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-40);
+      text-transform: uppercase;
+    }
+
+    /* Feature list */
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 1.5rem;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.875rem;
+      color: var(--ink-80);
+      line-height: 1.5;
+    }
+    .feature-icon {
+      flex-shrink: 0;
+      font-size: 1rem;
+      margin-top: 0.05rem;
+    }
+    .feature-en {
+      font-family: 'Inter', sans-serif;
       font-size: 0.72rem;
-      color: #CCC;
-      letter-spacing: 0.04em;
+      color: var(--ink-40);
+      display: block;
+      direction: ltr;
+      margin-top: 0.1rem;
+    }
+
+    /* MOH badge */
+    .compliance-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1rem;
+      background: var(--gold-faint);
+      border: 1px solid var(--gold-line);
+      border-radius: var(--r);
+      margin-bottom: 1.5rem;
+    }
+    .compliance-icon { font-size: 1rem; }
+    .compliance-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    /* App link row */
+    .app-link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.25rem;
+    }
+    .app-link-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      color: var(--ink-40);
+      text-transform: uppercase;
+    }
+    .app-link-text span { color: var(--teal); font-weight: 600; }
+    .app-link-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: var(--teal);
+      cursor: pointer;
+      border-bottom: 1px solid var(--teal-line);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .app-link-btn:hover { color: var(--teal-b); border-color: var(--teal-b); }
+
+    /* ── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--ink-08);
+      background: rgba(247,249,250,0.9);
+      backdrop-filter: blur(8px);
+      gap: 1.5rem;
+    }
+    .footer-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-30);
+    }
+    .footer-sep { color: var(--ink-20); }
+    footer a {
+      color: var(--teal);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    footer a:hover { border-color: var(--teal); }
+
+    /* ── LANG TOGGLE ────────────────────────────────────────── */
+    .lang-btn {
+      position: fixed;
+      top: 1.25rem; right: 1.25rem;
+      z-index: 100;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--ink-08);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-40);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.2s, color 0.2s;
+      box-shadow: 0 2px 8px rgba(15,25,35,0.06);
+    }
+    .lang-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ── ANIMATIONS ─────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      main { grid-template-columns: 1fr; }
+      .left {
+        padding: 5rem 2rem 2rem;
+        order: 1;
+      }
+      .left::after { display: none; }
+      .right {
+        padding: 2rem 2rem 4rem;
+        order: 2;
+      }
+      .info-card { max-width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .left { padding: 4.5rem 1.5rem 2rem; }
+      .right { padding: 1.5rem 1.5rem 3rem; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .cta-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="logo-mark">
-    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-  </div>
+  <!-- Background -->
+  <div class="bg" aria-hidden="true"></div>
 
-  <div class="brand">cliniq.one</div>
-  <div class="divider"></div>
+  <!-- Lang toggle -->
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">🇬🇧 EN</button>
 
-  <p class="message-en">We've moved to MomentCraft Studios.</p>
-  <p class="message-ar">انتقلنا إلى مومنت كرافت ستوديوز</p>
+  <main>
+    <!-- ── LEFT ── -->
+    <section class="left">
 
-  <div class="progress-wrap">
-    <div class="progress-bar" id="progress"></div>
-  </div>
-  <div class="countdown">Redirecting in <span id="countdown">4</span>...</div>
+      <!-- Brand -->
+      <div class="brand-row">
+        <div class="brand-icon">🩺</div>
+        <div>
+          <span class="brand-name">CLINIQ<span style="opacity:.4">.</span>ONE</span>
+          <span class="brand-sep"> · </span>
+          <span class="brand-parent">A <a href="https://momencrafts.com" style="color:inherit;text-decoration:none;">MomenCrafts</a> Product</span>
+        </div>
+      </div>
 
-  <div class="actions">
-    <a href="https://momencrafts.com" class="btn-primary">
-      View on MomentCraft Studios →
-    </a>
-    <a href="https://app.cliniq.one" class="btn-secondary">
-      Open App →
-    </a>
-  </div>
+      <!-- Headline -->
+      <div class="headline">
+        <span class="hl-main" id="hl-ar">الرعاية الصحية الذكية<br>للعالم العربي.</span>
+        <span class="hl-main" id="hl-en" style="display:none;font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.4rem)">AI-powered telemedicine<br>for the Arab world.</span>
+        <span class="hl-sub" id="hl-sub-en">AI telemedicine ecosystem · MENA Digital Health</span>
+        <span class="hl-sub" id="hl-sub-ar" style="display:none;direction:rtl;font-family:'Cairo',sans-serif;font-style:normal">منظومة طب عن بُعد بالذكاء الاصطناعي · الصحة الرقمية في الشرق الأوسط</span>
+      </div>
 
-  <div class="domain-hint">momencrafts.com</div>
+      <div class="divider"></div>
+
+      <!-- Rotating insights -->
+      <div class="insights" id="insights">
+
+        <div class="insight-slide active" id="slide-0">
+          <div class="insight-label">المنظومة · The Ecosystem</div>
+          <div class="insight-ar">٥ تطبيقات مترابطة — مريض، طبيب، صيدلية، تأمين، إدارة — نظام واحد متكامل.</div>
+          <div class="insight-en">5 connected apps — Patient, Doctor, Pharmacy, Insurance, Admin — one unified ecosystem.</div>
+        </div>
+
+        <div class="insight-slide" id="slide-1">
+          <div class="insight-label">الذكاء الاصطناعي · AI Intake</div>
+          <div class="insight-ar">المريض يُكمل مقابلة طبية بالذكاء الاصطناعي (١٠ دقائق) — الطبيب يرد خلال ٢–٤ ساعات بخطة علاج كاملة.</div>
+          <div class="insight-en">Patient completes an AI medical intake (~10 min) — doctor responds in 2–4 hours with full treatment plan.</div>
+        </div>
+
+        <div class="insight-slide" id="slide-2">
+          <div class="insight-label">الامتثال · Compliance</div>
+          <div class="insight-ar">وصفات إلكترونية متوافقة مع وزارة الصحة السعودية. مبني على معايير الصحة الرقمية في المنطقة.</div>
+          <div class="insight-en">MOH-compliant e-prescriptions built on Saudi digital health standards from day one.</div>
+        </div>
+
+        <div class="insight-slide" id="slide-3">
+          <div class="insight-label">السوق · Market</div>
+          <div class="insight-ar">السعودية والإمارات أولاً — ثم المنطقة. سوق الصحة الرقمية في الشرق الأوسط يتجاوز ٤٠ مليار دولار بحلول ٢٠٣٠.</div>
+          <div class="insight-en">Saudi Arabia and UAE first. MENA digital health market projected at $40B+ by 2030.</div>
+        </div>
+
+        <div class="insight-slide" id="slide-4">
+          <div class="insight-label">المرحلة · Stage</div>
+          <div class="insight-ar">تطبيق المريض متاح على TestFlight. تطبيق الطبيب قيد المراجعة. المنظومة الكاملة في مرحلة الإطلاق التجريبي.</div>
+          <div class="insight-en">Patient app live on iOS TestFlight. Doctor app in review. Full ecosystem in beta launch stage.</div>
+        </div>
+
+      </div>
+
+      <!-- Dots -->
+      <div class="insight-dots" id="dots">
+        <div class="dot active" onclick="goSlide(0)"></div>
+        <div class="dot" onclick="goSlide(1)"></div>
+        <div class="dot" onclick="goSlide(2)"></div>
+        <div class="dot" onclick="goSlide(3)"></div>
+        <div class="dot" onclick="goSlide(4)"></div>
+      </div>
+
+      <!-- App pills -->
+      <div class="apps-row">
+        <span class="app-pill">Patient App</span>
+        <span class="app-pill">Doctor App</span>
+        <span class="app-pill">Pharmacy</span>
+        <span class="app-pill">Insurance</span>
+        <span class="app-pill">Admin Panel</span>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-row">
+        <a href="https://app.cliniq.one" class="cta-btn">
+          <span id="cta-ar">افتح التطبيق</span>
+          <span id="cta-en" style="display:none">Open App</span>
+          <span style="opacity:.7">←</span>
+        </a>
+        <span class="cta-hint" id="cta-hint-ar">app.cliniq.one · iOS · Android</span>
+        <span class="cta-hint" id="cta-hint-en" style="display:none">app.cliniq.one · iOS · Android</span>
+      </div>
+
+      <div class="location">Riyadh · KSA · Est. 2025</div>
+
+    </section>
+
+    <!-- ── RIGHT ── -->
+    <aside class="right">
+      <div class="info-card">
+
+        <div class="card-label">Project Overview</div>
+        <div class="card-divider"></div>
+
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-num">5</span>
+            <span class="stat-label">Apps</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">2h</span>
+            <span class="stat-label">Response Time</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">AI</span>
+            <span class="stat-label">Intake Engine</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">MOH</span>
+            <span class="stat-label">Compliant</span>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <ul class="feature-list">
+          <li>
+            <span class="feature-icon">🤖</span>
+            <span>
+              <span id="f1-ar">مقابلة طبية بالذكاء الاصطناعي (~١٠ دقائق)</span>
+              <span id="f1-en" style="display:none">AI-powered medical intake (~10 min)</span>
+              <span class="feature-en">Gemini-powered · Arabic-first</span>
+            </span>
+          </li>
+          <li>
+            <span class="feature-icon">👨‍⚕️</span>
+            <span>
+              <span id="f2-ar">أطباء معتمدون يردون خلال ٢–٤ ساعات</span>
+              <span id="f2-en" style="display:none">Licensed doctors respond in 2–4 hours</span>
+              <span class="feature-en">Asynchronous consultation model</span>
+            </span>
+          </li>
+          <li>
+            <span class="feature-icon">📋</span>
+            <span>
+              <span id="f3-ar">وصفات إلكترونية متوافقة مع وزارة الصحة</span>
+              <span id="f3-en" style="display:none">MOH-compliant digital prescriptions</span>
+              <span class="feature-en">Saudi Digital Health Standards</span>
+            </span>
+          </li>
+          <li>
+            <span class="feature-icon">🏥</span>
+            <span>
+              <span id="f4-ar">تكامل مع الصيدليات وشركات التأمين</span>
+              <span id="f4-en" style="display:none">Pharmacy and insurance integration</span>
+              <span class="feature-en">Full network effect built-in</span>
+            </span>
+          </li>
+          <li>
+            <span class="feature-icon">🌐</span>
+            <span>
+              <span id="f5-ar">مبني للسوق العربي أولاً</span>
+              <span id="f5-en" style="display:none">Built Arabic-first, for MENA</span>
+              <span class="feature-en">iOS · Android · Doctor Web</span>
+            </span>
+          </li>
+        </ul>
+
+        <!-- MOH badge -->
+        <div class="compliance-badge">
+          <span class="compliance-icon">🛡️</span>
+          <span class="compliance-text">MOH Compliant · Vision 2030 Aligned · PDPL Ready</span>
+        </div>
+
+        <!-- App link -->
+        <div class="app-link-row">
+          <span class="app-link-text" id="app-link-ar">التطبيق متاح الآن على <span>iOS</span></span>
+          <span class="app-link-text" id="app-link-en" style="display:none">Now live on <span>iOS</span> · TestFlight</span>
+          <a href="https://app.cliniq.one" class="app-link-btn">فتح التطبيق →</a>
+        </div>
+
+      </div>
+    </aside>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <span class="footer-item">CLINIQ.ONE</span>
+    <span class="footer-sep">·</span>
+    <span class="footer-item">A <a href="https://momencrafts.com">MomenCrafts</a> Product</span>
+    <span class="footer-sep">·</span>
+    <span class="footer-item">Riyadh, Saudi Arabia</span>
+    <span class="footer-sep">·</span>
+    <span class="footer-item">Digital Health · MENA</span>
+  </footer>
 
   <script>
-    let count = 4;
-    const el = document.getElementById('countdown');
-    const timer = setInterval(() => {
-      count--;
-      el.textContent = count;
-      if (count <= 0) {
-        clearInterval(timer);
-        window.location.replace('https://momencrafts.com');
-      }
-    }, 1000);
+    /* ── INSIGHTS ROTATOR ──────────────────────────────────── */
+    const slides = document.querySelectorAll('.insight-slide');
+    const dots   = document.querySelectorAll('.dot');
+    let current  = 0;
+    let slideTimer;
+
+    function goSlide(n) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = n;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function nextSlide() {
+      goSlide((current + 1) % slides.length);
+    }
+
+    slideTimer = setInterval(nextSlide, 4000);
+
+    /* ── NO REDIRECT — cliniq.one is now a standalone teaser ── */
+
+    /* ── LANG TOGGLE ───────────────────────────────────────── */
+    let lang = 'ar';
+    const arIds = ['hl-ar','hl-sub-en','cta-ar','cta-hint-ar','app-link-ar','f1-ar','f2-ar','f3-ar','f4-ar','f5-ar'];
+    const enIds = ['hl-en','hl-sub-ar','cta-en','cta-hint-en','app-link-en','f1-en','f2-en','f3-en','f4-en','f5-en'];
+
+    function toggleLang() {
+      lang = lang === 'ar' ? 'en' : 'ar';
+      document.documentElement.lang = lang;
+      document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
+      document.getElementById('langBtn').textContent = lang === 'ar' ? '🇬🇧 EN' : '🇸🇦 AR';
+      // show/hide text blocks
+      document.getElementById('hl-ar').style.display  = lang === 'ar' ? '' : 'none';
+      document.getElementById('hl-en').style.display  = lang === 'en' ? '' : 'none';
+      document.getElementById('hl-sub-en').style.display = lang === 'ar' ? '' : 'none';
+      document.getElementById('hl-sub-ar').style.display = lang === 'en' ? '' : 'none';
+      ['cta-ar','cta-hint-ar','app-link-ar','f1-ar','f2-ar','f3-ar','f4-ar','f5-ar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = lang === 'ar' ? '' : 'none';
+      });
+      ['cta-en','cta-hint-en','app-link-en','f1-en','f2-en','f3-en','f4-en','f5-en'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = lang === 'en' ? '' : 'none';
+      });
+    }
+
+
   </script>
+
 </body>
 </html>
