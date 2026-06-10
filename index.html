@@ -71,6 +71,8 @@
   .inv-track-grid{grid-template-columns:1fr;}
   #inv-section-nav{display:none;}
 }
+/* ── Pulse animation (D2 expiry badge) ── */
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
 </style>
 </head>
 <body>
@@ -802,6 +804,20 @@
     </div>
   </section>
 
+  <!-- D1: Invisible watermark canvas -->
+  <canvas id="inv-watermark" style="position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0;width:100%;height:100%;" aria-hidden="true"></canvas>
+
+  <!-- D3: Session expired overlay -->
+  <div id="inv-expired-overlay" style="display:none;position:fixed;inset:0;background:rgba(12,10,9,.97);z-index:99999;align-items:center;justify-content:center;">
+    <div style="text-align:center;max-width:420px;padding:3rem;">
+      <div style="font-size:3.5rem;margin-bottom:1rem;animation:pulse 2s infinite;">&#9200;</div>
+      <h2 style="font-family:'Playfair Display',Georgia,serif;color:#f0ebe3;margin-bottom:.75rem;font-size:1.8rem;">انتهت الجلسة &middot; Session Ended</h2>
+      <p style="color:#a09070;margin-bottom:.5rem;line-height:1.7;">Your timed access has expired. Thank you for reviewing MomenCrafts.</p>
+      <p style="color:#a09070;font-size:.8rem;margin-bottom:2.5rem;font-family:monospace;">If you'd like extended access, reach out directly.</p>
+      <a href="mailto:momen@momencrafts.com?subject=Access Renewal Request" style="display:inline-block;background:#C8A96E;color:#0C0A09;padding:.9rem 2.2rem;border-radius:10px;text-decoration:none;font-family:monospace;font-weight:700;font-size:.9rem;">Request Extended Access &#8594;</a>
+    </div>
+  </div>
+
 </div><!-- /investor-layer -->
 
 <script>
@@ -894,12 +910,91 @@ function trackInv(event, data) {
     });
   }, { threshold: 0.2 });
   document.querySelectorAll('[data-section]').forEach(function(el){ obs.observe(el); });
+
+  // Phase D — security
+  initWatermark();
+  initExpiry();
 })();
 
 function exitInvestorMode(){
   ['mcr_investor','mcr_token','mcr_session','mcr_name','mcr_type','mcr_expires','mcr_email','mcr_ts'].forEach(function(k){ sessionStorage.removeItem(k); });
   trackInv('exit_clicked', {});
   window.location.reload();
+}
+
+// ── D1: Invisible watermark ──
+function initWatermark() {
+  var canvas = document.getElementById('inv-watermark');
+  if (!canvas) return;
+  var ctx   = canvas.getContext('2d');
+  var name  = sessionStorage.getItem('mcr_name')  || 'INVESTOR';
+  var token = sessionStorage.getItem('mcr_token') || '';
+  function draw() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.save();
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate(-Math.PI / 6);
+    ctx.font = '13px JetBrains Mono, monospace';
+    ctx.fillStyle = 'rgba(200,169,110,0.38)';
+    var text = name + '  ·  ' + token + '  ·  ' + new Date().toLocaleDateString('en-GB');
+    for (var y = -canvas.height; y < canvas.height * 2; y += 80) {
+      for (var x = -canvas.width * 1.5; x < canvas.width * 2; x += 320) {
+        ctx.fillText(text, x, y);
+      }
+    }
+    ctx.restore();
+  }
+  draw();
+  window.addEventListener('resize', draw);
+  // Briefly flash watermark on PrintScreen
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'PrintScreen' || e.keyCode === 44) {
+      canvas.style.opacity = '0.05';
+      setTimeout(function() { canvas.style.opacity = '0'; }, 300);
+    }
+  });
+  // Briefly flash on tab hide (potential screenshot)
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      canvas.style.opacity = '0.04';
+      setTimeout(function() { canvas.style.opacity = '0'; }, 400);
+    }
+  });
+}
+
+// ── D2 + D4: Session expiry countdown ──
+function initExpiry() {
+  var type    = sessionStorage.getItem('mcr_type')    || 'MONTH';
+  var expires = sessionStorage.getItem('mcr_expires') || '';
+  if (!expires) return;
+  var expiryDate = new Date(expires);
+  if (isNaN(expiryDate.getTime())) return;
+
+  function tick() {
+    var msLeft = expiryDate - Date.now();
+    if (msLeft <= 0) {
+      trackInv('session_expired', {});
+      // Clear session but keep expired overlay visible
+      ['mcr_investor','mcr_token','mcr_session','mcr_name','mcr_type','mcr_expires','mcr_email','mcr_ts']
+        .forEach(function(k){ sessionStorage.removeItem(k); });
+      var overlay = document.getElementById('inv-expired-overlay');
+      if (overlay) overlay.style.display = 'flex';
+      return;
+    }
+    if (type === 'HOUR') {
+      var m = Math.floor(msLeft / 60000);
+      var s = Math.floor((msLeft % 60000) / 1000);
+      var badge     = document.getElementById('inv-expiry-badge');
+      var countdown = document.getElementById('inv-countdown');
+      if (badge)     badge.style.display = 'inline';
+      if (countdown) countdown.textContent = m + ':' + String(s).padStart(2, '0');
+      // Pulse red when under 10 min
+      if (badge && m < 10) badge.style.animation = 'pulse 1.2s infinite';
+      setTimeout(tick, 1000);
+    }
+  }
+  tick();
 }
 </script>
 
