@@ -8,7 +8,43 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/admin/admin.css" />
 </head>
-<body>
+<body style="visibility:hidden">
+
+<!-- ══ ADMIN AUTH GATE ══ -->
+<div id="adminGate" style="
+  position:fixed;inset:0;z-index:9999;
+  background:#0d0d0d;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Inter',system-ui,sans-serif;
+">
+  <div style="
+    background:#141414;border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px;padding:2.5rem 2rem;width:min(380px,90vw);
+    box-shadow:0 24px 64px rgba(0,0,0,0.6);
+    text-align:center;
+  ">
+    <div style="font-size:1.5rem;margin-bottom:0.4rem;">✦</div>
+    <div style="color:#fff;font-size:1.05rem;font-weight:600;margin-bottom:0.25rem;">MomenCrafts Admin</div>
+    <div style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-bottom:1.75rem;letter-spacing:0.05em;">RESTRICTED ACCESS</div>
+    <input id="adminPassInput" type="password" placeholder="Admin key"
+      autocomplete="current-password"
+      style="
+        width:100%;padding:0.8rem 1rem;border-radius:8px;
+        border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);
+        color:#fff;font-size:0.95rem;outline:none;margin-bottom:0.75rem;
+        box-sizing:border-box;
+      "
+      onkeydown="if(event.key==='Enter')verifyAdminPass()"
+    />
+    <div id="adminGateError" style="color:#e05c5c;font-size:0.8rem;min-height:1.2rem;margin-bottom:0.75rem;"></div>
+    <button onclick="verifyAdminPass()" style="
+      width:100%;padding:0.8rem;border-radius:8px;
+      background:#9b1b30;border:none;color:#fff;
+      font-size:0.9rem;font-weight:600;cursor:pointer;
+      letter-spacing:0.04em;
+    ">Enter</button>
+  </div>
+</div>
 
 <!-- ── HEADER ── -->
 <header class="admin-header">
@@ -292,7 +328,49 @@ const SUPABASE_URL   = 'https://isciigqmdfcozrtojqcm.supabase.co';
 const ADMIN_FN_URL   = `${SUPABASE_URL}/functions/v1/admin-manage-token`;
 const ANALYTICS_URL  = `${SUPABASE_URL}/functions/v1/admin-get-analytics`;
 const POLL_INTERVAL  = 60000; // 60s
-const IS_LIVE        = !SUPABASE_URL.includes('isciigqmdfcozrtojqcm'); // false until configured
+const IS_LIVE        = true;
+
+// ── ADMIN AUTH GATE ───────────────────────────────────
+// Password hash (SHA-256 of "MCR-ADMIN-2026") — never store plain text
+const ADMIN_HASH = 'b991c1c84045dcc8e342e734435f3a6230aed84e2627ba581239b1d21339d904';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function verifyAdminPass() {
+  const val  = document.getElementById('adminPassInput').value.trim();
+  const hash = await sha256(val);
+  if (hash === ADMIN_HASH) {
+    sessionStorage.setItem('mc_admin_auth', '1');
+    document.getElementById('adminGate').remove();
+    document.body.style.visibility = 'visible';
+  } else {
+    const err = document.getElementById('adminGateError');
+    err.textContent = 'Incorrect key. Try again.';
+    document.getElementById('adminPassInput').value = '';
+    document.getElementById('adminPassInput').focus();
+  }
+}
+
+// Check session on load
+(function checkAdminAuth() {
+  if (sessionStorage.getItem('mc_admin_auth') === '1') {
+    // Already authed this session — skip gate
+    document.addEventListener('DOMContentLoaded', () => {
+      const gate = document.getElementById('adminGate');
+      if (gate) gate.remove();
+      document.body.style.visibility = 'visible';
+    });
+  } else {
+    // Show gate, keep body hidden until auth
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('adminPassInput').focus();
+    });
+  }
+})();
+
 
 // ── DEMO DATA (replace with Supabase calls) ──────────────
 const DEMO_INVESTORS = [
