@@ -401,24 +401,30 @@ const DEMO_EVENTS = [
   { time: '13:36', icon: '👁', desc: 'Viewed 05 · Founder', dur: '1m 30s' },
   { time: '13:38', icon: '📄', desc: 'Downloaded Pitch Deck', dur: '' },
   { time: '13:38', icon: '👁', desc: 'Viewed 06 · Documents', dur: '0m 45s' },
-  { time: '13:39', icon: '🎯', desc: 'Clicked WhatsApp CTA', dur: '' },
-  { time: '13:40', icon: '↗', desc: 'Focus lost (2m 15s away)', dur: '' },
-  { time: '13:42', icon: '🚪', desc: 'Exited room', dur: '18m 32s total' },
-];
-
-// ── INIT ─────────────────────────────────────────────────
+// ── INIT ─────────────────────────────────────────
+// Show skeleton states immediately, then fetch live data
 document.addEventListener('DOMContentLoaded', () => {
-  loadOverview();
-  loadInvestorList();
-  loadAlerts();
-  loadTokenTable();
-  // Start polling
+  showSkeletons();
+  pollForUpdates(); // immediately fetch live
   setInterval(pollForUpdates, POLL_INTERVAL);
-  // Request browser notifications
   if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission();
   }
 });
+
+function showSkeletons() {
+  const skRow = '<tr><td colspan="6" class="empty-state"><div class="empty-text" style="opacity:.4">Loading…</div></td></tr>';
+  const skRow8 = '<tr><td colspan="8" class="empty-state"><div class="empty-text" style="opacity:.4">Loading…</div></td></tr>';
+  const el = id => document.getElementById(id);
+  ['kpiActiveTokens','kpiSessionsToday','kpiAvgTime','kpiDocsDownloaded']
+    .forEach(k => { if(el(k)) el(k).textContent = '—'; });
+  if(el('heatTableBody'))  el('heatTableBody').innerHTML  = skRow;
+  if(el('tokenTableBody')) el('tokenTableBody').innerHTML = skRow8;
+  if(el('investorList'))   el('investorList').innerHTML   = '<div class="empty-state"><div class="empty-text" style="opacity:.4">Loading…</div></div>';
+  if(el('overviewSignals'))el('overviewSignals').innerHTML = '';
+  if(el('alertsFeed'))     el('alertsFeed').innerHTML     = '<div class="empty-state"><div class="empty-text" style="opacity:.4">Loading…</div></div>';
+}
+
 
 // ── TAB SWITCHING ────────────────────────────────────────
 function switchTab(tabId) {
@@ -430,130 +436,60 @@ function switchTab(tabId) {
 
 // ── OVERVIEW ─────────────────────────────────────────────
 function loadOverview() {
-  const active = DEMO_INVESTORS.filter(i => i.status === 'active' || i.status === 'never');
-  document.getElementById('kpiActiveTokens').textContent     = active.length;
-  document.getElementById('kpiActiveTokensSub').textContent   = `${DEMO_INVESTORS.length} total generated`;
-  document.getElementById('kpiSessionsToday').textContent     = '4';
-  document.getElementById('kpiSessionsTodaySub').textContent   = 'from 2 investors';
-  document.getElementById('kpiAvgTime').textContent            = '14m';
-  document.getElementById('kpiDocsDownloaded').textContent     = '3';
-
-  // Heat table
-  const tbody = document.getElementById('heatTableBody');
-  tbody.innerHTML = '';
-  DEMO_INVESTORS.forEach(inv => {
-    const dotClass = inv.status === 'never' ? 'dot-never' :
-                     inv.status === 'revoked' ? 'dot-revoked' :
-                     inv.status === 'expired' ? 'dot-expired' :
-                     inv.sessions > 5 ? 'dot-active' : 'dot-warm';
-    const statusLabel = inv.status === 'never' ? '⚠ NEVER OPENED' :
-                        inv.status === 'revoked' ? 'REVOKED' :
-                        inv.status === 'expired' ? 'EXPIRED' : 'ACTIVE';
-    const badgeClass  = inv.status === 'never' ? 'badge-never' :
-                        inv.status === 'revoked' ? 'badge-revoked' :
-                        inv.status === 'expired' ? 'badge-expired' : 'badge-active';
-
-    tbody.innerHTML += `<tr>
-      <td><strong>${inv.label}</strong></td>
-      <td class="mono">${inv.tokenType}</td>
-      <td>${inv.sessions}</td>
-      <td class="mono">${inv.lastSeen}</td>
-      <td class="mono">${inv.totalDwell}</td>
-      <td><span class="badge ${badgeClass}"><span class="dot ${dotClass}"></span>${statusLabel}</span></td>
-    </tr>`;
-  });
-
-  // Section heatmap (demo data)
-  const sectionData = [
-    { pct: 95, dwell: '2m 12s' },
-    { pct: 88, dwell: '5m 40s' },
-    { pct: 72, dwell: '2m 18s' },
-    { pct: 68, dwell: '4m 55s' },
-    { pct: 60, dwell: '1m 30s' },
-    { pct: 45, dwell: '0m 50s' },
-    { pct: 40, dwell: '0m 35s' },
-  ];
-  const cards = document.querySelectorAll('#sectionHeatmap .section-heat-card');
-  cards.forEach((card, i) => {
-    if (sectionData[i]) {
-      card.querySelector('.shc-bar').style.width = sectionData[i].pct + '%';
-      card.querySelector('.shc-pct').textContent  = sectionData[i].pct + '% viewed';
-      card.querySelector('.shc-dwell').textContent = 'avg ' + sectionData[i].dwell;
-    }
-  });
+  // Placeholder for logic now entirely within renderLiveData
 }
 
-// ── INVESTOR LIST ────────────────────────────────────────
-function loadInvestorList() {
-  const list = document.getElementById('investorList');
-  list.innerHTML = '';
-  DEMO_INVESTORS.forEach(inv => {
-    const dotClass = inv.status === 'never' ? 'dot-never' : 'dot-active';
-    list.innerHTML += `
-      <div class="investor-list-item" onclick="selectInvestor('${inv.id}')">
+// ── INVESTOR DRILLDOWN ──────────────────────────────
+async function selectLiveInvestor(tokenId, el) {
+  document.querySelectorAll('.investor-list-item').forEach(e => e.classList.remove('selected'));
+  if (el) el.classList.add('selected');
+
+  detail.innerHTML = '<div class="empty-state"><div class="empty-text" style="opacity:.4">Loading timeline…</div></div>';
+
+  try {
+    const res = await fetch(ANALYTICS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'investor_events', tokenId }),
+    });
+    const data = await res.json();
+    const inv    = data.investor || {};
+    const events = data.events  || [];
+
+    detail.innerHTML = `
+      <div class="dd-header">
         <div>
-          <div class="ili-name">${inv.label}</div>
-          <div class="ili-email">${inv.email}</div>
+          <div class="dd-name">${inv.label || tokenId}</div>
+          <div style="font-size:0.75rem;color:var(--a-cream-40);margin-top:0.25rem;">${inv.email || '—'}</div>
         </div>
-        <div class="ili-dot"><span class="dot ${dotClass}"></span></div>
-      </div>`;
-  });
-}
-
-function selectInvestor(id) {
-  // Highlight
-  document.querySelectorAll('.investor-list-item').forEach(el => el.classList.remove('selected'));
-  event.currentTarget.classList.add('selected');
-
-  const inv = DEMO_INVESTORS.find(i => i.id === id);
-  if (!inv) return;
-
-  const detail = document.getElementById('investorDetail');
-  detail.innerHTML = `
-    <div class="dd-header">
-      <div>
-        <div class="dd-name">${inv.label}</div>
-        <div style="font-size:0.75rem;color:var(--a-cream-40);margin-top:0.25rem;">${inv.email}</div>
+        <div class="dd-token">${(inv.token||'').slice(0,7)}••••</div>
       </div>
-      <div class="dd-token">${inv.token.slice(0,7)}••••</div>
-    </div>
-    <div class="panel-heading">Session Timeline</div>
-    <div class="event-timeline" id="eventTimeline"></div>
-  `;
+      <div class="panel-heading">Session Timeline</div>
+      <div class="event-timeline" id="eventTimeline"></div>
+    `;
 
-  // Load demo events
-  const timeline = document.getElementById('eventTimeline');
-  DEMO_EVENTS.forEach(ev => {
-    timeline.innerHTML += `
-      <div class="event-item">
-        <div class="event-time">${ev.time}</div>
-        <div class="event-icon">${ev.icon}</div>
-        <div class="event-desc">${ev.desc}</div>
-        <div class="event-dur ${ev.hot ? 'hot' : ''}">${ev.dur}${ev.hot ? ' 🔥' : ''}</div>
-      </div>`;
-  });
-}
-
-// ── ALERTS ───────────────────────────────────────────────
-function loadAlerts() {
-  const feed = document.getElementById('alertsFeed');
-  const overview = document.getElementById('overviewSignals');
-  feed.innerHTML = '';
-  overview.innerHTML = '';
-
-  document.getElementById('alertBadge').textContent = DEMO_SIGNALS.length || '';
-
-  DEMO_SIGNALS.forEach((sig, i) => {
-    const html = `
-      <div class="signal-item" id="signal-${i}">
-        <div class="signal-icon">${sig.icon}</div>
-        <div class="signal-text">${sig.text}</div>
-        <div class="signal-time">${sig.time}</div>
-        <button class="signal-dismiss" onclick="dismissSignal(${i})">Dismiss</button>
-      </div>`;
-    feed.innerHTML += html;
-    if (i < 5) overview.innerHTML += html; // Show top 5 in overview
-  });
+    const timeline = document.getElementById('eventTimeline');
+    if (!events.length) {
+      timeline.innerHTML = '<div class="empty-state"><div class="empty-text">No events recorded yet</div></div>';
+    } else {
+      events.forEach(ev => {
+        const t    = new Date(ev.created_at);
+        const time = t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
+        const iconMap = { session_start:'🚪', nda_accepted:'✅', section_view:'👁', card_expand:'📂', cta_click:'🎯', doc_download:'📄', session_expired:'⏰', exit_clicked:'↗' };
+        const icon = iconMap[ev.event_type] || '•';
+        const hot  = ev.event_type === 'section_view' && ev.duration_ms > 240000;
+        timeline.innerHTML += `
+          <div class="event-item">
+            <div class="event-time">${time}</div>
+            <div class="event-icon">${icon}</div>
+            <div class="event-desc">${ev.description || ev.event_type}</div>
+            <div class="event-dur ${hot?'hot':''}">${ev.duration_ms?Math.round(ev.duration_ms/1000)+'s':''}${hot?' 🔥':''}</div>
+          </div>`;
+      });
+    }
+  } catch(err) {
+    detail.innerHTML = '<div class="empty-state"><div class="empty-text">Could not load investor timeline</div></div>';
+  }
 }
 
 function dismissSignal(idx) {
@@ -561,36 +497,9 @@ function dismissSignal(idx) {
   if (el) { el.style.opacity = '0'; setTimeout(() => el.remove(), 200); }
 }
 
-// ── TOKEN TABLE ──────────────────────────────────────────
+// ── TOKEN TABLE (skeleton only — populated by renderLiveData) ──
 function loadTokenTable() {
-  const tbody = document.getElementById('tokenTableBody');
-  tbody.innerHTML = '';
-  DEMO_INVESTORS.forEach(inv => {
-    const masked  = inv.token.slice(0,7) + '•••••';
-    const expires = inv.expiresAt || 'Never';
-    const badgeClass = inv.status === 'never' ? 'badge-never' :
-                       inv.status === 'revoked' ? 'badge-revoked' :
-                       inv.status === 'expired' ? 'badge-expired' : 'badge-active';
-    const statusLabel = inv.status === 'never' ? '⚠ NEVER' :
-                        inv.status === 'revoked' ? 'REVOKED' :
-                        inv.status === 'expired' ? 'EXPIRED' : 'ACTIVE';
-    tbody.innerHTML += `<tr>
-      <td><strong>${inv.label}</strong></td>
-      <td class="mono">${inv.tokenType}</td>
-      <td class="token-masked">${masked}</td>
-      <td class="mono">${inv.created}</td>
-      <td class="mono">${expires}</td>
-      <td>${inv.sessions}</td>
-      <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
-      <td>
-        <div class="row-actions">
-          <button class="row-action" onclick="copyTokenFromTable('${inv.token}')">⧉ Copy</button>
-          <button class="row-action" onclick="openExtendModal('${inv.id}')">⟳ Extend</button>
-          <button class="row-action danger" onclick="openRevokeModal('${inv.id}')">× Revoke</button>
-        </div>
-      </td>
-    </tr>`;
-  });
+  // Skeletons shown in showSkeletons(); real data rendered by renderLiveData()
 }
 
 // ── GENERATE TOKEN ───────────────────────────────────────
@@ -730,6 +639,13 @@ function renderLiveData(data) {
   const uniqueToday = new Set(sessions.map(s => s.label)).size;
   document.getElementById('kpiSessionsTodaySub').textContent = `from ${uniqueToday} investor${uniqueToday !== 1 ? 's' : ''}`;
   document.getElementById('kpiDocsDownloaded').textContent   = data.docDownloads || 0;
+
+  // Avg dwell
+  if (data.avgDwellMs) {
+    const m = Math.floor(data.avgDwellMs / 60000);
+    const s = Math.floor((data.avgDwellMs % 60000) / 1000);
+    document.getElementById('kpiAvgTime').textContent = m + 'm ' + s + 's';
+  }
 
   // Heat table
   const tbody = document.getElementById('heatTableBody');
