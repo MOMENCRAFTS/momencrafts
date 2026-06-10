@@ -837,6 +837,7 @@ function applyLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
   document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
+  document.body.lang             = lang;  // needed for body[lang=ar] font selectors
   document.getElementById('langLabel').textContent = lang === 'ar' ? '🇬🇧 EN' : '🇸🇦 AR';
 
   document.querySelectorAll('[data-en][data-ar]').forEach(el => {

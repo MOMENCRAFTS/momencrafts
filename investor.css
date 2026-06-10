@@ -85,10 +85,17 @@ body.investor-page {
   min-height: 100vh;
 }
 
+/* Arabic font — covers html[lang=ar] (set by applyLang) AND .ar class elements */
+html[lang="ar"],
+html[lang="ar"] body,
 body.investor-page[lang="ar"],
-body.investor-page .ar { font-family: var(--i-ff-arabic); direction: rtl; }
+body.investor-page .ar { font-family: var(--i-ff-arabic); }
+
+/* English font */
+html[lang="en"],
+html[lang="en"] body,
 body.investor-page[lang="en"],
-body.investor-page .en { font-family: var(--i-ff-sans); direction: ltr; }
+body.investor-page .en { font-family: var(--i-ff-sans); }
 
 ::selection { background: var(--i-crimson); color: #fff; }
 ::-webkit-scrollbar { width: 4px; }
