@@ -73,6 +73,24 @@
 }
 /* ── Pulse animation (D2 expiry badge) ── */
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+/* ── E1: Scroll progress bar ── */
+#inv-scroll-bar{display:none;position:fixed;top:52px;left:0;right:0;height:2px;background:#1A1614;z-index:9997;}
+#inv-scroll-fill{height:100%;background:linear-gradient(to right,#9B1B30,#C8A96E);width:0%;transition:width .12s linear;}
+/* ── E2: Active nav highlight ── */
+#inv-section-nav a.nav-active{color:#C8A96E!important;font-weight:700;}
+/* ── E3: Language toggle ── */
+#inv-lang-toggle{background:transparent;border:1px solid #C8A96E44;color:#C8A96E;padding:.25rem .6rem;border-radius:4px;cursor:pointer;font-family:monospace;font-size:.62rem;letter-spacing:.1em;}
+#inv-lang-toggle:hover{border-color:#C8A96E88;}
+/* ── E4: Mobile investor bar ── */
+@media(max-width:900px){
+  #inv-section-nav{display:none!important;}
+}
+@media(max-width:600px){
+  #investor-bar{flex-direction:column;align-items:flex-start;padding:.5rem 1rem;gap:.4rem;}
+  #investor-bar > div:first-child{flex-wrap:wrap;}
+  #investor-bar > div:last-child{align-self:flex-end;}
+  #inv-scroll-bar{top:80px;}
+}
 </style>
 </head>
 <body>
@@ -372,11 +390,16 @@
     <a href="#inv-youbring"    style="color:#a09070;text-decoration:none;">What You Bring</a>
     <a href="#inv-letsbuild"   style="color:#C8A96E;text-decoration:none;font-weight:700;">Let's Build →</a>
   </nav>
-  <div style="display:flex;gap:.6rem;flex-shrink:0;">
+  <!-- E3: Language toggle button -->
+  <div style="display:flex;gap:.6rem;flex-shrink:0;align-items:center;">
+    <button id="inv-lang-toggle" onclick="toggleInvLang()" title="Toggle language">AR</button>
     <button onclick="exitInvestorMode()" style="background:transparent;border:1px solid #C8A96E44;color:#a09070;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.68rem;">Exit</button>
     <a href="#inv-letsbuild" style="background:#9B1B30;color:#fff;padding:.3rem .8rem;border-radius:6px;font-family:monospace;font-size:.68rem;text-decoration:none;">Let's Build →</a>
   </div>
 </div>
+
+<!-- E1: Scroll progress bar -->
+<div id="inv-scroll-bar"><div id="inv-scroll-fill"></div></div>
 
 <div id="investor-layer" style="display:none;">
 
@@ -914,7 +937,42 @@ function trackInv(event, data) {
   // Phase D — security
   initWatermark();
   initExpiry();
+
+  // E1: Scroll progress bar
+  var scrollBar  = document.getElementById('inv-scroll-bar');
+  var scrollFill = document.getElementById('inv-scroll-fill');
+  if (scrollBar) scrollBar.style.display = 'block';
+  window.addEventListener('scroll', function() {
+    if (!scrollFill) return;
+    var scrolled = document.documentElement.scrollTop;
+    var total    = document.documentElement.scrollHeight - window.innerHeight;
+    scrollFill.style.width = (total > 0 ? (scrolled / total * 100) : 0) + '%';
+  }, { passive: true });
+
+  // E2: Active section nav highlight
+  var navLinks = document.querySelectorAll('#inv-section-nav a');
+  var activeObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        navLinks.forEach(function(a) { a.classList.remove('nav-active'); });
+        var link = document.querySelector('#inv-section-nav a[href="#' + e.target.id + '"]');
+        if (link) link.classList.add('nav-active');
+      }
+    });
+  }, { threshold: 0.35 });
+  document.querySelectorAll('[data-section]').forEach(function(el) { activeObs.observe(el); });
 })();
+
+// E3: Language toggle
+var _invLang = 'ar';
+function toggleInvLang() {
+  _invLang = _invLang === 'ar' ? 'en' : 'ar';
+  var btn = document.getElementById('inv-lang-toggle');
+  if (btn) btn.textContent = _invLang === 'ar' ? 'AR' : 'EN';
+  var layer = document.getElementById('investor-layer');
+  if (layer) layer.dir = _invLang === 'ar' ? 'rtl' : 'ltr';
+  trackInv('language_toggle', { lang: _invLang });
+}
 
 function exitInvestorMode(){
   ['mcr_investor','mcr_token','mcr_session','mcr_name','mcr_type','mcr_expires','mcr_email','mcr_ts'].forEach(function(k){ sessionStorage.removeItem(k); });
