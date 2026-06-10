@@ -16,6 +16,61 @@
 *{font-family:'Cairo',sans-serif!important;letter-spacing:0!important}
 .hero-heading,.section-title{font-family:'Cairo',sans-serif!important;font-weight:900!important}
 .card-live-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.62rem;font-weight:700;letter-spacing:.12em;color:#1a7a3a;background:rgba(76,175,80,.1);border:1px solid rgba(76,175,80,.3);border-radius:4px;padding:.2rem .55rem;margin-bottom:.4rem;font-family:monospace}
+/* ── Investor Portfolio Cards ── */
+.inv-product-card{background:#1A1614;border:1px solid #C8A96E22;border-left:3px solid #C8A96E;border-radius:10px;overflow:hidden;transition:border-color .2s;}
+.inv-product-card:hover{border-left-color:#9B1B30;}
+.inv-product-card-header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;cursor:pointer;gap:1rem;}
+.inv-product-card-header:hover{background:rgba(200,169,110,.04);}
+.inv-ph-left{display:flex;align-items:center;gap:1rem;flex:1;}
+.inv-ph-badges{display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
+.inv-badge{font-family:monospace;font-size:.6rem;font-weight:700;letter-spacing:.12em;padding:.2rem .55rem;border-radius:4px;}
+.inv-badge-live{color:#4CAF50;background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.3);}
+.inv-badge-beta{color:#C8A96E;background:rgba(200,169,110,.12);border:1px solid rgba(200,169,110,.3);}
+.inv-badge-dev{color:#0e7490;background:rgba(14,116,144,.1);border:1px solid rgba(14,116,144,.3);}
+.inv-badge-prototype{color:#a78bfa;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);}
+.inv-badge-patent{color:#9B1B30;background:rgba(155,27,48,.1);border:1px solid rgba(155,27,48,.3);}
+.inv-product-name{font-family:monospace;font-weight:700;font-size:1rem;color:#f0ebe3;}
+.inv-product-tagline{color:#a09070;font-size:.78rem;margin-top:.15rem;}
+.inv-card-cat{font-family:monospace;font-size:.6rem;color:#C8A96E55;letter-spacing:.1em;text-transform:uppercase;}
+.inv-toggle-icon{color:#C8A96E;font-size:1.4rem;font-weight:300;font-family:monospace;flex-shrink:0;width:24px;text-align:center;transition:transform .3s;}
+.inv-product-card-body{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+.inv-product-card-body-inner{padding:0 1.5rem 1.5rem;border-top:1px solid #C8A96E11;}
+.inv-body-desc{color:#a09070;font-size:.85rem;line-height:1.8;margin:.75rem 0 1rem;}
+.inv-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem;}
+.inv-detail-item{background:#0C0A09;border:1px solid #ffffff08;border-radius:6px;padding:.6rem .9rem;}
+.inv-detail-label{font-family:monospace;font-size:.58rem;letter-spacing:.15em;color:#C8A96E66;margin-bottom:.2rem;}
+.inv-detail-value{color:#f0ebe3;font-size:.78rem;}
+.inv-demo-link{display:inline-flex;align-items:center;gap:.4rem;background:#9B1B30;color:#fff;padding:.45rem 1.1rem;border-radius:6px;font-family:monospace;font-size:.72rem;text-decoration:none;font-weight:700;transition:background .2s;}
+.inv-demo-link:hover{background:#b52035;}
+/* ── What You Bring ── */
+.inv-bring-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin:2rem 0;}
+.inv-bring-card{background:#1A1614;border:1px solid #C8A96E22;border-top:2px solid #C8A96E33;border-radius:12px;padding:1.75rem;transition:border-top-color .2s;}
+.inv-bring-card:hover{border-top-color:#C8A96E;}
+.inv-bring-icon{font-size:1.8rem;margin-bottom:.75rem;}
+.inv-bring-title{font-family:monospace;font-size:.85rem;font-weight:700;color:#C8A96E;margin-bottom:.6rem;}
+.inv-bring-desc{color:#a09070;font-size:.8rem;line-height:1.7;}
+/* ── Track Cards (Partnership) ── */
+.inv-track-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;}
+.inv-track-card{background:#0C0A09;border-radius:12px;padding:2rem;transition:transform .2s;cursor:default;}
+.inv-track-card:hover{transform:translateY(-2px);}
+.inv-track-icon{font-size:1.5rem;margin-bottom:.75rem;}
+.inv-track-title{font-size:1.05rem;color:#f0ebe3;margin:0 0 .5rem;font-weight:600;}
+.inv-track-desc{color:#a09070;font-size:.82rem;line-height:1.7;margin-bottom:1.5rem;}
+.inv-track-btn{display:block;text-align:center;padding:.7rem;border-radius:8px;font-size:.78rem;text-decoration:none;font-family:monospace;font-weight:700;cursor:pointer;border:none;width:100%;transition:opacity .2s;}
+.inv-track-btn:hover{opacity:.85;}
+/* ── Let's Build ── */
+.inv-letsbuild-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem;}
+.inv-letsbuild-footer{margin-top:2rem;padding-top:1.5rem;border-top:1px solid #C8A96E22;display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;font-family:monospace;font-size:.65rem;color:#a09070;letter-spacing:.05em;text-align:center;}
+/* ── Investor Bar extras ── */
+#inv-name-display{color:#f0ebe3;font-weight:700;}
+#inv-type-display{color:#C8A96E;font-size:.68rem;}
+/* ── Mobile ── */
+@media(max-width:768px){
+  .inv-detail-grid{grid-template-columns:1fr;}
+  .inv-bring-grid{grid-template-columns:1fr;}
+  .inv-track-grid{grid-template-columns:1fr;}
+  #inv-section-nav{display:none;}
+}
 </style>
 </head>
 <body>
@@ -293,18 +348,31 @@
      INVESTOR LAYER — hidden for public, revealed after gate
      ═══════════════════════════════════════════════════════ -->
 
-<!-- Sticky Investor Bar -->
-<div id="investor-bar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#1A1614;border-bottom:1px solid #C8A96E44;padding:.65rem 1.5rem;align-items:center;justify-content:space-between;font-family:monospace;font-size:.78rem;">
-  <div style="display:flex;align-items:center;gap:1rem;color:#C8A96E;">
-    <span>🔒 Partner View Active</span>
-    <span style="color:#444;">|</span>
-    <span id="inv-token-display" style="letter-spacing:.1em;color:#f0ebe3;">MCR-••••••••</span>
-    <span style="color:#444;">|</span>
-    <span style="color:#4CAF50;">✓ NDA Signed</span>
+<!-- Sticky Investor Bar (C5) -->
+<div id="investor-bar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#1A1614;border-bottom:1px solid #C8A96E44;padding:.55rem 1.5rem;align-items:center;justify-content:space-between;font-family:monospace;font-size:.78rem;gap:.75rem;">
+  <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;min-width:0;">
+    <span style="color:#C8A96E;">🔒</span>
+    <span id="inv-name-display" style="color:#f0ebe3;font-weight:700;">Partner</span>
+    <span style="color:#333;">|</span>
+    <span id="inv-token-display" style="letter-spacing:.1em;color:#a09070;font-size:.72rem;">MCR-••••••••</span>
+    <span style="color:#333;">|</span>
+    <span id="inv-type-display" style="color:#C8A96E;font-size:.68rem;"></span>
+    <span style="color:#333;">|</span>
+    <span style="color:#4CAF50;font-size:.72rem;">✓ NDA Signed</span>
+    <span id="inv-expiry-badge" style="display:none;background:rgba(155,27,48,.2);border:1px solid #9B1B30;color:#f87171;padding:.15rem .5rem;border-radius:4px;font-size:.62rem;">⏱ <span id="inv-countdown">--:--</span></span>
   </div>
-  <div style="display:flex;gap:.75rem;">
-    <button onclick="exitInvestorMode()" style="background:transparent;border:1px solid #C8A96E55;color:#C8A96E;padding:.35rem .9rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.72rem;">Exit</button>
-    <a href="#inv-schedule" style="background:#9B1B30;color:#fff;padding:.35rem .9rem;border-radius:6px;font-family:monospace;font-size:.72rem;text-decoration:none;">جدول اجتماعاً</a>
+  <!-- Section Nav -->
+  <nav id="inv-section-nav" style="display:flex;gap:1.2rem;font-size:.66rem;">
+    <a href="#inv-traction"    style="color:#a09070;text-decoration:none;">Traction</a>
+    <a href="#inv-portfolio"   style="color:#a09070;text-decoration:none;">Portfolio</a>
+    <a href="#inv-vision"      style="color:#a09070;text-decoration:none;">Vision</a>
+    <a href="#inv-founder"     style="color:#a09070;text-decoration:none;">Founder</a>
+    <a href="#inv-youbring"    style="color:#a09070;text-decoration:none;">What You Bring</a>
+    <a href="#inv-letsbuild"   style="color:#C8A96E;text-decoration:none;font-weight:700;">Let's Build →</a>
+  </nav>
+  <div style="display:flex;gap:.6rem;flex-shrink:0;">
+    <button onclick="exitInvestorMode()" style="background:transparent;border:1px solid #C8A96E44;color:#a09070;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.68rem;">Exit</button>
+    <a href="#inv-letsbuild" style="background:#9B1B30;color:#fff;padding:.3rem .8rem;border-radius:6px;font-family:monospace;font-size:.68rem;text-decoration:none;">Let's Build →</a>
   </div>
 </div>
 
@@ -332,8 +400,273 @@
     </div>
   </section>
 
-  <!-- 02 VISION -->
-  <section id="inv-vision" data-section="vision" style="background:#1A1614;padding:5rem 1.5rem;">
+  <!-- 02 PORTFOLIO DEEP-DIVE (C1) -->
+  <section id="inv-portfolio" data-section="portfolio" style="background:#1A1614;padding:5rem 1.5rem;">
+    <div style="max-width:1100px;margin:0 auto;">
+      <div style="font-family:monospace;font-size:.7rem;letter-spacing:.2em;color:#C8A96E;margin-bottom:.5rem;">02 · PORTFOLIO</div>
+      <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.8rem,4vw,3rem);color:#f0ebe3;margin:0 0 .75rem;font-weight:700;">المحفظة الكاملة <span style="font-size:.55em;color:#C8A96E;font-style:italic;">· Full Portfolio</span></h2>
+      <p style="color:#a09070;font-size:.85rem;margin:0 0 2.5rem;line-height:1.7;">10 products across 5 industries — each hand-built, solo, from concept to launch. Click any card to expand.</p>
+      <div style="display:flex;flex-direction:column;gap:.75rem;" id="invPortfolioGrid">
+
+        <!-- ROGER·AI -->
+        <div class="inv-product-card" id="inv-card-roger">
+          <div class="inv-product-card-header" onclick="toggleProduct('roger')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">ROGER·AI</div><div class="inv-product-tagline">مساعدك التنفيذي الذكي · Executive Voice Intelligence</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">Voice AI</span>
+              <span class="inv-badge inv-badge-beta">BETA</span>
+              <span class="inv-toggle-icon" id="inv-icon-roger">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-roger">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">Voice-first executive assistant with persistent memory, proactive reports, and full Arabic/English bilingual support. Built for C-level users who need intelligent, always-on operational support across iOS and Android.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">Enterprise SaaS · Productivity</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Monthly subscription · Enterprise licensing</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">PLATFORM</div><div class="inv-detail-value">iOS · Android · Web</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">STATUS</div><div class="inv-detail-value">Private beta — invite-only</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLINIQ.ONE -->
+        <div class="inv-product-card" id="inv-card-cliniq">
+          <div class="inv-product-card-header" onclick="toggleProduct('cliniq')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">CLINIQ.ONE</div><div class="inv-product-tagline">منصة طب عن بُعد · Full-Stack Telemedicine</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">HealthTech</span>
+              <span class="inv-badge inv-badge-live">LIVE</span>
+              <span class="inv-toggle-icon" id="inv-icon-cliniq">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-cliniq">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">5-app telemedicine ecosystem — patient, doctor, admin, intake bot, and pharmacy module — purpose-built for MOH compliance in Saudi Arabia and the wider MENA region. Live with real users.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">Digital Health · MENA</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Clinic SaaS · Per-consultation</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">COMPLIANCE</div><div class="inv-detail-value">MOH Saudi Arabia</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">MARKET SIZE</div><div class="inv-detail-value">$21.8B Digital Health (MENA) by 2028</div></div>
+              </div>
+              <a href="https://www.cliniq.one" target="_blank" rel="noopener" class="inv-demo-link" onclick="trackInv('demo_click',{product:'cliniq'})">🌐 Visit cliniq.one →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- UMMI -->
+        <div class="inv-product-card" id="inv-card-ummi">
+          <div class="inv-product-card-header" onclick="toggleProduct('ummi')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">UMMI · أمي</div><div class="inv-product-tagline">محفظة العائلة ورعاية الأم · Family Finance & Mother Care</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">FinTech</span>
+              <span class="inv-badge inv-badge-beta">BETA</span>
+              <span class="inv-toggle-icon" id="inv-icon-ummi">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-ummi">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">Private family financial system built with dignity for Saudi families. Dedicated budgeting, smart pockets, automatic mother's salary, emergency fund system — 28 features, 3 family roles, fully bilingual Arabic/English. IoT-connected piggy bank for children.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">Islamic FinTech · Family</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Family subscription · Hardware sales</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">UNIQUE FEATURE</div><div class="inv-detail-value">IoT piggy bank + Mother's salary module</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">MARKET SIZE</div><div class="inv-detail-value">$128B Islamic Fintech (Global)</div></div>
+              </div>
+              <a href="https://ummi-wallet-demo.vercel.app" target="_blank" rel="noopener" class="inv-demo-link" onclick="trackInv('demo_click',{product:'ummi'})">🎯 Live Demo →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- QADAA -->
+        <div class="inv-product-card" id="inv-card-qadaa">
+          <div class="inv-product-card-header" onclick="toggleProduct('qadaa')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">QADAA · قضاء</div><div class="inv-product-tagline">منصة قانونية ذكية · Legal Intelligence Platform</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">LegalTech</span>
+              <span class="inv-badge inv-badge-dev">IN DEV</span>
+              <span class="inv-toggle-icon" id="inv-icon-qadaa">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-qadaa">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">Connects clients to lawyers with AI-powered case analysis and full Arabic language support. Addresses the severe underserving of legal tech in Saudi Arabia and the UAE — most citizens lack affordable, accessible legal guidance.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">LegalTech · Saudi Arabia · UAE</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Per-session · Lawyer SaaS subscription</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">STATUS</div><div class="inv-detail-value">Architecture phase — market validated</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">LANGUAGE</div><div class="inv-detail-value">Arabic-first · RTL native</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MUSCLE HUSTLE -->
+        <div class="inv-product-card" id="inv-card-muscle">
+          <div class="inv-product-card-header" onclick="toggleProduct('muscle')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">MUSCLE HUSTLE</div><div class="inv-product-tagline">سوق المدربين الشخصيين · Fitness Trainer Marketplace</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">FitTech</span>
+              <span class="inv-badge inv-badge-dev">IN DEV</span>
+              <span class="inv-toggle-icon" id="inv-icon-muscle">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-muscle">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">Two-sided marketplace connecting certified personal trainers with clients. Smart workout coaching, progress tracking, and premium interactive experience. Targets the high-growth KSA fitness market energized by Vision 2030 lifestyle initiatives.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">Fitness · Consumer</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Marketplace commission · Trainer subscriptions</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">STATUS</div><div class="inv-detail-value">Product design phase</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">TARGET</div><div class="inv-detail-value">KSA · Vision 2030 lifestyle</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AQAR -->
+        <div class="inv-product-card" id="inv-card-aqar">
+          <div class="inv-product-card-header" onclick="toggleProduct('aqar')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">AQAR · عقار</div><div class="inv-product-tagline">منصة عقارية ذكية · Intelligent Real Estate</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">PropTech</span>
+              <span class="inv-badge inv-badge-dev">IN DEV</span>
+              <span class="inv-toggle-icon" id="inv-icon-aqar">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-aqar">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">AI-powered real estate platform built to support Vision 2030 — advanced market analysis, intelligent buyer-property matching, and full compliance with RERA regulations. Targets the booming Saudi real estate market.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">PropTech · Vision 2030</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Listing SaaS · Transaction commission</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">COMPLIANCE</div><div class="inv-detail-value">RERA · Saudi NLRP</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">MARKET</div><div class="inv-detail-value">SAR 1.2T Vision 2030 Digital Economy</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RELAYBOT -->
+        <div class="inv-product-card" id="inv-card-relay">
+          <div class="inv-product-card-header" onclick="toggleProduct('relay')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">RELAYBOT</div><div class="inv-product-tagline">نقل النص الذكي · Intelligent Text Bridge for Locked Systems</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">Hardware · IoT</span>
+              <span class="inv-badge inv-badge-dev">IN DEV</span>
+              <span class="inv-toggle-icon" id="inv-icon-relay">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-relay">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">Physical bridge device (ESP32-S3) that sits between a keyboard and any computer. AI enhances text on-device and injects it into any locked system — hospitals, government terminals, air-gapped machines — with zero software installation required.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">Hardware · Enterprise · Gov</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Device sales · Enterprise SaaS</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">TECH</div><div class="inv-detail-value">ESP32-S3 · BLE · OTA</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">IP</div><div class="inv-detail-value">Proprietary protocol — open-source core</div></div>
+              </div>
+              <a href="https://github.com/momencrafts/relaybot" target="_blank" rel="noopener" class="inv-demo-link" onclick="trackInv('demo_click',{product:'relaybot'})">📁 GitHub →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SABHA -->
+        <div class="inv-product-card" id="inv-card-sabha">
+          <div class="inv-product-card-header" onclick="toggleProduct('sabha')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">SABHA · سبحة</div><div class="inv-product-tagline">سبحة ذكية فاخرة · Luxury Smart Prayer Beads</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">Wearable · Islamic</span>
+              <span class="inv-badge inv-badge-prototype">PROTOTYPE</span>
+              <span class="inv-toggle-icon" id="inv-icon-sabha">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-sabha">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">Premium smart prayer beads combining traditional Islamic dhikr practice with embedded electronics — haptic feedback, count tracking, companion app, and luxurious handcrafted materials. Targets affluent Muslim users globally.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">Islamic Wearables · Luxury</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Premium hardware · App subscription</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">STATUS</div><div class="inv-detail-value">Hardware prototype — seeking manufacturing partner</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">MARKET</div><div class="inv-detail-value">2B+ Muslims globally · Luxury segment</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TURBO DRONE CIRCUIT -->
+        <div class="inv-product-card" id="inv-card-tdc">
+          <div class="inv-product-card-header" onclick="toggleProduct('tdc')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">TURBO DRONE CIRCUIT</div><div class="inv-product-tagline">نظام إدارة طاقة طائرات FPV · FPV Drone Power Management</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">Hardware · Patent</span>
+              <span class="inv-badge inv-badge-patent">PATENT</span>
+              <span class="inv-toggle-icon" id="inv-icon-tdc">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-tdc">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">Patented intelligent circuit that detects and actively compensates for voltage sag in FPV drone batteries — maintaining consistent motor power and extending flight performance. USPTO patent filed covering the core compensation algorithm.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">UAV · FPV · Hardware IP</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Licensing · OEM integration</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">IP STATUS</div><div class="inv-detail-value">USPTO Patent Filed</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">OPPORTUNITY</div><div class="inv-detail-value">License to drone manufacturers globally</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDGE TACK -->
+        <div class="inv-product-card" id="inv-card-edgetack">
+          <div class="inv-product-card-header" onclick="toggleProduct('edgetack')">
+            <div class="inv-ph-left">
+              <div><div class="inv-product-name">EDGE TACK</div><div class="inv-product-tagline">واقي شاشة مع أزرار ألعاب · Gaming Screen Protector</div></div>
+            </div>
+            <div class="inv-ph-badges">
+              <span class="inv-card-cat">Mobile Gaming · Patent</span>
+              <span class="inv-badge inv-badge-patent">PATENT</span>
+              <span class="inv-toggle-icon" id="inv-icon-edgetack">+</span>
+            </div>
+          </div>
+          <div class="inv-product-card-body" id="inv-body-edgetack">
+            <div class="inv-product-card-body-inner">
+              <p class="inv-body-desc">Patented mobile gaming accessory combining screen protection with collapsible pneumatic trigger buttons — providing console-grade gaming control with zero bulk when folded flat. Designed for the massive mobile gaming market in Saudi Arabia and MENA.</p>
+              <div class="inv-detail-grid">
+                <div class="inv-detail-item"><div class="inv-detail-label">SECTOR</div><div class="inv-detail-value">Mobile Gaming · Consumer Hardware</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">REVENUE MODEL</div><div class="inv-detail-value">Retail · Licensing to case manufacturers</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">IP STATUS</div><div class="inv-detail-value">USPTO Patent Filed</div></div>
+                <div class="inv-detail-item"><div class="inv-detail-label">MARKET</div><div class="inv-detail-value">KSA #1 mobile gaming market per capita</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /invPortfolioGrid -->
+    </div>
+  </section>
+
+  <!-- 03 VISION -->
+  <section id="inv-vision" data-section="vision" style="background:#0C0A09;padding:5rem 1.5rem;">
     <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
       <div>
         <div style="font-family:monospace;font-size:.7rem;letter-spacing:.2em;color:#C8A96E;margin-bottom:.5rem;">02 · VISION</div>
@@ -352,12 +685,12 @@
     </div>
   </section>
 
-  <!-- 03 FOUNDER -->
-  <section id="inv-founder" data-section="founder" style="background:#0C0A09;padding:5rem 1.5rem;">
+  <!-- 04 FOUNDER -->
+  <section id="inv-founder" data-section="founder" style="background:#1A1614;padding:5rem 1.5rem;">
     <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:start;">
       <div style="text-align:center;"><div style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#9B1B30,#1A1614);border:2px solid #C8A96E;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#C8A96E;">م</div><div style="font-family:monospace;font-size:.65rem;color:#C8A96E;letter-spacing:.15em;">FOUNDER</div></div>
       <div>
-        <div style="font-family:monospace;font-size:.7rem;letter-spacing:.2em;color:#C8A96E;margin-bottom:.5rem;">03 · FOUNDER</div>
+        <div style="font-family:monospace;font-size:.7rem;letter-spacing:.2em;color:#C8A96E;margin-bottom:.5rem;">04 · FOUNDER</div>
         <h3 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:#f0ebe3;margin:0 0 .25rem;">Momen Pharaon</h3>
         <div style="color:#C8A96E;font-family:monospace;font-size:.8rem;margin-bottom:1.5rem;">مؤمن فرعون · Founder &amp; Solo Engineer · Riyadh, KSA</div>
         <p style="color:#a09070;line-height:1.8;font-size:.88rem;margin-bottom:1.5rem;">Built all 10 products solo — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Former medical student turned full-stack engineer.</p>
@@ -371,28 +704,100 @@
     </div>
   </section>
 
-  <!-- 04 PARTNERSHIP -->
-  <section id="inv-partnership" data-section="partnership" style="background:#1A1614;padding:5rem 1.5rem;">
+  <!-- 05 PARTNERSHIP (C3 — pre-filled WhatsApp tracks) -->
+  <section id="inv-partnership" data-section="partnership" style="background:#0C0A09;padding:5rem 1.5rem;">
     <div style="max-width:1100px;margin:0 auto;">
-      <div style="font-family:monospace;font-size:.7rem;letter-spacing:.2em;color:#C8A96E;margin-bottom:.5rem;">04 · PARTNERSHIP</div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.5rem);color:#f0ebe3;margin:0 0 2.5rem;">مسارات الشراكة · Partnership Tracks</h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">
-        <div style="background:#0C0A09;border:1px solid #9B1B3055;border-top:3px solid #9B1B30;border-radius:12px;padding:2rem;"><div style="font-size:1.5rem;margin-bottom:.75rem;">🤝</div><h4 style="color:#f0ebe3;font-size:1.05rem;margin:0 0 .75rem;">Strategic Partner</h4><p style="color:#a09070;font-size:.83rem;line-height:1.7;margin-bottom:1.5rem;">Co-develop products for MENA markets. Full codebase access, roadmap, and joint go-to-market.</p><a href="https://wa.me/966535271122?text=Strategic Partnership — MomenCrafts" target="_blank" rel="noopener" style="display:block;text-align:center;background:#9B1B30;color:#fff;padding:.7rem;border-radius:8px;font-size:.8rem;text-decoration:none;font-family:monospace;">تواصل عبر واتساب →</a></div>
-        <div style="background:#0C0A09;border:1px solid #C8A96E55;border-top:3px solid #C8A96E;border-radius:12px;padding:2rem;"><div style="font-size:1.5rem;margin-bottom:.75rem;">💰</div><h4 style="color:#f0ebe3;font-size:1.05rem;margin:0 0 .75rem;">Financial Investor</h4><p style="color:#a09070;font-size:.83rem;line-height:1.7;margin-bottom:1.5rem;">Seed or Series A. 10 products ready to scale. SaaS subscriptions + enterprise licensing revenue models.</p><a href="https://wa.me/966535271122?text=Investment Inquiry — MomenCrafts" target="_blank" rel="noopener" style="display:block;text-align:center;background:#C8A96E;color:#0C0A09;padding:.7rem;border-radius:8px;font-size:.8rem;text-decoration:none;font-family:monospace;font-weight:700;">تواصل عبر واتساب →</a></div>
-        <div style="background:#0C0A09;border:1px solid #0e749055;border-top:3px solid #0e7490;border-radius:12px;padding:2rem;"><div style="font-size:1.5rem;margin-bottom:.75rem;">⚙️</div><h4 style="color:#f0ebe3;font-size:1.05rem;margin:0 0 .75rem;">Technical Collaborator</h4><p style="color:#a09070;font-size:.83rem;line-height:1.7;margin-bottom:1.5rem;">Engineers, designers, or domain experts. Build on an existing 10-product foundation with full stack.</p><a href="https://wa.me/966535271122?text=Technical Collaboration — MomenCrafts" target="_blank" rel="noopener" style="display:block;text-align:center;background:#0e7490;color:#fff;padding:.7rem;border-radius:8px;font-size:.8rem;text-decoration:none;font-family:monospace;">تواصل عبر واتساب →</a></div>
+      <div style="font-family:monospace;font-size:.7rem;letter-spacing:.2em;color:#C8A96E;margin-bottom:.5rem;">05 · PARTNERSHIP</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.5rem);color:#f0ebe3;margin:0 0 .75rem;">مسارات الشراكة · Partnership Tracks</h2>
+      <p style="color:#a09070;font-size:.85rem;margin:0 0 2.5rem;line-height:1.7;">Choose the track that fits your position. Each button opens a pre-filled WhatsApp message — direct line to the founder.</p>
+      <div class="inv-track-grid">
+        <!-- Affiliation -->
+        <div class="inv-track-card" style="border:1px solid #C8A96E33;border-top:3px solid #C8A96E;">
+          <div class="inv-track-icon">🌐</div>
+          <h4 class="inv-track-title">Affiliation · التابعية</h4>
+          <p class="inv-track-desc">You have a network — hospitals, clinics, law firms, real estate devs, or enterprise procurement channels. Bring MomenCrafts into your ecosystem as a reseller or referral partner.</p>
+          <button class="inv-track-btn" style="background:#C8A96E;color:#0C0A09;" onclick="prefillWhatsApp('affiliation')">💬 مهتم بالتابعية →</button>
+        </div>
+        <!-- Adoption -->
+        <div class="inv-track-card" style="border:1px solid #9B1B3033;border-top:3px solid #9B1B30;">
+          <div class="inv-track-icon">📦</div>
+          <h4 class="inv-track-title">Adoption · تبني المنتج</h4>
+          <p class="inv-track-desc">You want to deploy one of our 10 products inside your organization — a hospital system using Cliniq, a family office using Ummi Wallet, or an enterprise using RogerAI.</p>
+          <button class="inv-track-btn" style="background:#9B1B30;color:#fff;" onclick="prefillWhatsApp('adoption')">💬 أريد تبني منتج →</button>
+        </div>
+        <!-- Team-Up -->
+        <div class="inv-track-card" style="border:1px solid #0e749033;border-top:3px solid #0e7490;">
+          <div class="inv-track-icon">⚡</div>
+          <h4 class="inv-track-title">Team-Up · شراكة بناء</h4>
+          <p class="inv-track-desc">You're an engineer, designer, domain expert, or strategic co-founder. You want to co-build, invest capital, or bring domain expertise to accelerate one or more products.</p>
+          <button class="inv-track-btn" style="background:#0e7490;color:#fff;" onclick="prefillWhatsApp('teamup')">💬 أريد التعاون →</button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 05 SCHEDULE -->
-  <section id="inv-schedule" data-section="close" style="background:#0C0A09;padding:5rem 1.5rem;border-bottom:2px solid #C8A96E33;">
+  <!-- 06 WHAT YOU BRING (C2) -->
+  <section id="inv-youbring" data-section="youbring" style="background:#1A1614;padding:5rem 1.5rem;">
+    <div style="max-width:1100px;margin:0 auto;">
+      <div style="font-family:monospace;font-size:.7rem;letter-spacing:.2em;color:#C8A96E;margin-bottom:.5rem;">06 · WHAT YOU BRING</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.5rem);color:#f0ebe3;margin:0 0 .75rem;">الشريك المناسب يحمل أكثر من موارد</h2>
+      <p style="color:#a09070;font-size:.85rem;margin:0 0 2rem;line-height:1.7;">The right partner brings more than resources. One strong signal is enough to start a conversation.</p>
+      <div class="inv-bring-grid">
+        <div class="inv-bring-card">
+          <div class="inv-bring-icon">🌐</div>
+          <div class="inv-bring-title">Network &amp; Access · شبكة وصول</div>
+          <div class="inv-bring-desc">Relationships with hospitals, clinics, law firms, real estate developers, government bodies, or enterprise procurement channels that can open doors our products need.</div>
+        </div>
+        <div class="inv-bring-card">
+          <div class="inv-bring-icon">🧠</div>
+          <div class="inv-bring-title">Domain Expertise · خبرة قطاعية</div>
+          <div class="inv-bring-desc">Deep knowledge of healthcare, legal, fintech, real estate, or government regulations in Saudi Arabia or MENA — helping us build compliant, market-ready products faster.</div>
+        </div>
+        <div class="inv-bring-card">
+          <div class="inv-bring-icon">⚙️</div>
+          <div class="inv-bring-title">Execution Capacity · قدرة تنفيذية</div>
+          <div class="inv-bring-desc">Engineers, product managers, or designers who can accelerate the roadmap. We have the architecture — we need the hands that can execute at scale alongside us.</div>
+        </div>
+        <div class="inv-bring-card">
+          <div class="inv-bring-icon">📋</div>
+          <div class="inv-bring-title">Regulatory Pull · مسار تنظيمي</div>
+          <div class="inv-bring-desc">Connections to MOH, SAMA, REGA, or other licensing bodies in KSA. Fast-tracked approvals are often the difference between 6 months and 3 years to market.</div>
+        </div>
+        <div class="inv-bring-card">
+          <div class="inv-bring-icon">🏛️</div>
+          <div class="inv-bring-title">Market Presence · حضور سوقي</div>
+          <div class="inv-bring-desc">An established brand, user base, or distribution channel in Saudi Arabia or the GCC that our products can integrate with or be offered through.</div>
+        </div>
+        <div class="inv-bring-card">
+          <div class="inv-bring-icon">🤝</div>
+          <div class="inv-bring-title">Belief · إيمان بالرؤية</div>
+          <div class="inv-bring-desc">You understand what it means to build for the Arab world with care, precision, and ambition. You see the gap — and you want to be part of filling it.</div>
+        </div>
+      </div>
+      <p style="color:#a09070;font-size:.78rem;text-align:center;margin-top:.5rem;font-style:italic;">You don't need all six. One strong signal is enough to start a conversation. · لا تحتاج لكل القدرات الستة. إشارة واحدة قوية تكفي لبدء محادثة.</p>
+    </div>
+  </section>
+
+  <!-- 07 LET'S BUILD (C4) -->
+  <section id="inv-letsbuild" data-section="letsbuild" style="background:#0C0A09;padding:5rem 1.5rem;border-bottom:2px solid #C8A96E33;">
     <div style="max-width:700px;margin:0 auto;text-align:center;">
-      <div style="font-family:monospace;font-size:.7rem;letter-spacing:.2em;color:#C8A96E;margin-bottom:.5rem;">05 · CLOSE</div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.5rem);color:#f0ebe3;margin:0 0 1rem;">جدول اجتماعاً<br><span style="font-size:.6em;font-style:italic;color:#C8A96E;">Schedule a Call</span></h2>
-      <p style="color:#a09070;line-height:1.7;margin-bottom:2.5rem;">Ready to discuss? All conversations are confidential under the NDA you signed.</p>
-      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-        <a href="https://wa.me/966535271122?text=أريد جدولة اجتماع حول MomenCrafts" target="_blank" rel="noopener" style="background:#25D366;color:#fff;padding:.9rem 2rem;border-radius:10px;font-family:monospace;font-size:.88rem;text-decoration:none;font-weight:700;">💬 WhatsApp</a>
-        <a href="mailto:momen@momencrafts.com?subject=Partnership Inquiry — MomenCrafts" style="background:#1A1614;border:1px solid #C8A96E55;color:#C8A96E;padding:.9rem 2rem;border-radius:10px;font-family:monospace;font-size:.88rem;text-decoration:none;">✉️ Email</a>
+      <div style="font-family:monospace;font-size:.7rem;letter-spacing:.2em;color:#C8A96E;margin-bottom:.5rem;">07 · LET'S BUILD</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.5rem);color:#f0ebe3;margin:0 0 .75rem;">إن رأيت الفرصة — فلنبنِها معاً</h2>
+      <p style="color:#a09070;line-height:1.7;margin-bottom:2rem;">No pitches. No decks. A direct conversation with the founder. All discussions are confidential under the NDA you have signed.</p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">
+        <button onclick="prefillWhatsApp('affiliation')" style="background:#1A1614;border:1px solid #C8A96E55;color:#C8A96E;padding:.7rem 1.4rem;border-radius:8px;font-family:monospace;font-size:.78rem;cursor:pointer;">🌐 مهتم بالتابعية</button>
+        <button onclick="prefillWhatsApp('adoption')" style="background:#1A1614;border:1px solid #9B1B3055;color:#f87171;padding:.7rem 1.4rem;border-radius:8px;font-family:monospace;font-size:.78rem;cursor:pointer;">📦 أريد تبني منتج</button>
+        <button onclick="prefillWhatsApp('teamup')" style="background:#1A1614;border:1px solid #0e749055;color:#22d3ee;padding:.7rem 1.4rem;border-radius:8px;font-family:monospace;font-size:.78rem;cursor:pointer;">⚡ أريد التعاون</button>
+      </div>
+      <div class="inv-letsbuild-actions">
+        <a id="inv-whatsapp-btn" href="https://wa.me/966535271122" target="_blank" rel="noopener" style="background:#25D366;color:#fff;padding:.9rem 2.2rem;border-radius:10px;font-family:monospace;font-size:.9rem;text-decoration:none;font-weight:700;">💬 WhatsApp Direct</a>
+        <a href="mailto:momen@momencrafts.com?subject=Partnership Inquiry — MomenCrafts" style="background:#1A1614;border:1px solid #C8A96E44;color:#C8A96E;padding:.9rem 2.2rem;border-radius:10px;font-family:monospace;font-size:.9rem;text-decoration:none;">✉️ Email</a>
+      </div>
+      <div class="inv-letsbuild-footer">
+        <span>MomenCrafts · Riyadh, Saudi Arabia</span>
+        <span id="inv-footer-expiry"></span>
+        <span>Affiliation · Adoption · Team-Up</span>
+        <span>By accessing this landscape you acknowledge its confidential nature.</span>
       </div>
     </div>
   </section>
@@ -400,35 +805,100 @@
 </div><!-- /investor-layer -->
 
 <script>
+// ── WhatsApp track messages (C3) ──
+var TRACKS = {
+  affiliation: 'مرحباً، أنا مهتم بالتابعية مع MomenCrafts — لدي شبكة وصول وأريد معرفة المزيد.',
+  adoption:    'مرحباً، أريد تبني أحد منتجات MomenCrafts في مؤسستي — يسعدني نقاش التفاصيل.',
+  teamup:      'مرحباً، أريد التعاون مع MomenCrafts كشريك استراتيجي / تقني — لدي ما أقدمه.'
+};
+function prefillWhatsApp(track) {
+  var msg = encodeURIComponent(TRACKS[track] || '');
+  window.open('https://wa.me/966535271122?text=' + msg, '_blank');
+  trackInv('partnership_track_select', { track: track });
+}
+
+// ── Product card toggle (C1) ──
+function toggleProduct(id) {
+  var body = document.getElementById('inv-body-' + id);
+  var icon = document.getElementById('inv-icon-' + id);
+  if (!body) return;
+  var isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+  body.style.maxHeight = isOpen ? '0px' : body.scrollHeight + 'px';
+  icon.textContent = isOpen ? '+' : '−';
+  trackInv('card_expand', { product_id: id, section: 'portfolio', action: isOpen ? 'collapse' : 'expand' });
+}
+
+// ── Analytics helper ──
+function trackInv(event, data) {
+  var token = sessionStorage.getItem('mcr_token');
+  var sid   = sessionStorage.getItem('mcr_session');
+  fetch('https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/track-event', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(Object.assign({ token: token, event: event, sessionId: sid }, data || {}))
+  }).catch(function() {});
+}
+
+// ── Investor detection + bar population (C5) ──
 (function(){
   if (sessionStorage.getItem('mcr_investor') !== '1') return;
   var bar   = document.getElementById('investor-bar');
   var layer = document.getElementById('investor-layer');
   if (bar)   { bar.style.display   = 'flex'; }
   if (layer) { layer.style.display = 'block'; }
-  document.body.style.paddingTop = '48px';
+  document.body.style.paddingTop = '52px';
+
+  // Token display
   var raw    = sessionStorage.getItem('mcr_token') || '';
   var masked = raw.length > 4 ? 'MCR-\u2022\u2022\u2022\u2022' + raw.slice(-4) : raw;
   var disp   = document.getElementById('inv-token-display');
   if (disp) disp.textContent = masked;
-  var TRACK  = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/track-event';
-  var token  = sessionStorage.getItem('mcr_token');
-  var sid    = sessionStorage.getItem('mcr_session');
-  var seen   = {};
-  var obs    = new IntersectionObserver(function(entries){
+
+  // Name + type display (C5)
+  var name    = sessionStorage.getItem('mcr_name') || '';
+  var type    = sessionStorage.getItem('mcr_type') || 'MONTH';
+  var expires = sessionStorage.getItem('mcr_expires') || '';
+  var TYPE_LABELS = { HOUR: '1-Hour Access', WEEK: '7-Day Access', MONTH: '30-Day Access', STRATEGIC: 'Strategic Partner' };
+  var nameEl = document.getElementById('inv-name-display');
+  var typeEl = document.getElementById('inv-type-display');
+  if (nameEl && name) nameEl.textContent = name;
+  if (typeEl) {
+    var label = TYPE_LABELS[type] || type;
+    if (expires) {
+      var expDate = new Date(expires);
+      label += ' · Exp ' + expDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    }
+    typeEl.textContent = label;
+  }
+
+  // Footer expiry
+  if (expires) {
+    var footerExpiry = document.getElementById('inv-footer-expiry');
+    if (footerExpiry) {
+      var d = new Date(expires);
+      footerExpiry.textContent = 'Access expires: ' + d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+  }
+
+  // Section view tracking
+  var token = sessionStorage.getItem('mcr_token');
+  var sid   = sessionStorage.getItem('mcr_session');
+  var seen  = {};
+  var obs   = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       var sec = e.target.dataset.section;
       if (e.isIntersecting && sec && !seen[sec]){
         seen[sec] = 1;
-        fetch(TRACK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token,event:'section_view',section:sec,sessionId:sid})}).catch(function(){});
+        trackInv('section_view', { section: sec });
       }
     });
-  },{threshold:0.2});
+  }, { threshold: 0.2 });
   document.querySelectorAll('[data-section]').forEach(function(el){ obs.observe(el); });
 })();
 
 function exitInvestorMode(){
-  ['mcr_investor','mcr_token','mcr_session','mcr_label','mcr_ts'].forEach(function(k){ sessionStorage.removeItem(k); });
+  ['mcr_investor','mcr_token','mcr_session','mcr_name','mcr_type','mcr_expires','mcr_email','mcr_ts'].forEach(function(k){ sessionStorage.removeItem(k); });
+  trackInv('exit_clicked', {});
   window.location.reload();
 }
 </script>
