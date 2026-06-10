@@ -567,6 +567,50 @@ body {
   font-size: 0.72rem;
   color: var(--gold);
 }
+/* PREPARED FOR block */
+.nda-prepared-for {
+  background: rgba(200,169,110,0.07);
+  border: 1px solid rgba(200,169,110,0.2);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+.nda-pf-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-dim);
+  margin-bottom: 0.3rem;
+}
+.nda-pf-name {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 0.2rem;
+}
+.nda-pf-type {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--gold);
+}
+/* HOUR warning */
+.nda-hour-warning {
+  background: rgba(155,27,48,0.1);
+  border: 1px solid rgba(155,27,48,0.3);
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: #f87171;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+/* NDA buttons */
 .nda-accept {
   width: 100%;
   padding: 0.9rem;
@@ -577,8 +621,22 @@ body {
   font-size: 0.9rem; font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.15s;
+  margin-bottom: 0.75rem;
 }
 .nda-accept:hover { background: var(--crimson-b); transform: translateY(-1px); }
+.nda-decline {
+  width: 100%;
+  padding: 0.6rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--cream-mute);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.nda-decline:hover { border-color: var(--border-2); color: var(--cream-dim); }
 
 /* ── Vault overlay (opening animation) ── */
 .vault-overlay {
@@ -744,15 +802,7 @@ body {
         <span class="btn-text" id="btn-text-en" style="display:none">Enter →</span>
       </button>
 
-      <div class="token-divider">
-        <span id="divider-ar">أو</span>
-        <span id="divider-en" style="display:none">OR</span>
-      </div>
-
-      <div class="token-public-link">
-        <a href="/" id="public-link-ar">تصفح المحفظة العامة ←</a>
-        <a href="/" id="public-link-en" style="display:none">Browse public portfolio →</a>
-      </div>
+      <!-- No public browse — token required -->
     </div>
 
   </div>
@@ -763,6 +813,18 @@ body {
   <div class="nda-card">
     <div class="nda-mark">✦</div>
     <div class="nda-title">CONFIDENTIALITY NOTICE · إشعار السرية</div>
+
+    <!-- PREPARED FOR (shown when investor label is available) -->
+    <div class="nda-prepared-for" id="ndaPreparedFor" style="display:none">
+      <span class="nda-pf-label">PREPARED FOR · مُعدّ لـ</span>
+      <span class="nda-pf-name" id="ndaInvestorName">—</span>
+      <span class="nda-pf-type" id="ndaAccessType">—</span>
+    </div>
+
+    <!-- HOUR token warning -->
+    <div class="nda-hour-warning" id="ndaHourWarning" style="display:none">
+      ⚠️ This is a 1-hour timed session. Your access will expire automatically.
+    </div>
 
     <p class="nda-body">
       The information you are about to access is proprietary and confidential to MomenCrafts
@@ -777,15 +839,26 @@ body {
     <div class="nda-meta">
       <span class="nda-meta-key">Access key</span>
       <span class="nda-meta-val" id="ndaTokenDisplay">MCR-••••••••</span>
+      <span class="nda-meta-key">Access type</span>
+      <span class="nda-meta-val" id="ndaAccessTypeDisplay">—</span>
+      <span class="nda-meta-key">Expires</span>
+      <span class="nda-meta-val" id="ndaExpiresDisplay">—</span>
       <span class="nda-meta-key">Date &amp; time</span>
       <span class="nda-meta-val" id="ndaTimestamp">—</span>
       <span class="nda-meta-key">Session</span>
       <span class="nda-meta-val" id="ndaSession">—</span>
     </div>
+    <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--cream-mute);text-align:center;margin-bottom:1.25rem;letter-spacing:.05em;">
+      This acceptance is logged. · هذا القبول مسجّل.
+    </p>
 
     <button class="nda-accept" id="ndaAcceptBtn" onclick="acceptNda()">
       <span id="nda-btn-ar">أوافق على الشروط — تابع ←</span>
       <span id="nda-btn-en" style="display:none">I agree — Continue →</span>
+    </button>
+    <button class="nda-decline" onclick="declineNda()">
+      <span id="nda-decline-ar">رفض · العودة للبوابة</span>
+      <span id="nda-decline-en" style="display:none">Decline · Return to gate</span>
     </button>
   </div>
 </div>
@@ -801,7 +874,7 @@ body {
 const SUPABASE_URL  = 'https://isciigqmdfcozrtojqcm.supabase.co';
 const VERIFY_URL    = `${SUPABASE_URL}/functions/v1/verify-token`;
 const TRACK_URL     = `${SUPABASE_URL}/functions/v1/track-event`;
-const ROOM_URL      = '/';   // → Unified landing (investor layer revealed by sessionStorage)
+const ROOM_URL      = '/home';  // → Investor landing (guarded — requires mcr_investor=1)
 
 let currentLang     = 'ar';
 let pendingToken    = null;
@@ -957,19 +1030,45 @@ async function submitToken() {
       throw new Error(data.error || 'invalid');
     }
 
-    // Valid — store session in sessionStorage so room.html can read it
+    // Valid — store clean mcr_* session
     pendingToken = raw;
-    const sessionId = Math.random().toString(36).slice(2, 10).toUpperCase();
-    sessionStorage.setItem('mc_session',        sessionId);
-    sessionStorage.setItem('mc_token_id',       data.id         || raw);
-    sessionStorage.setItem('mc_token_type',     data.type       || data.token_type || 'MONTH');
-    sessionStorage.setItem('mc_expires_at',     data.expires_at || '');
-    sessionStorage.setItem('mc_investor_label', data.label      || data.investor_label || '');
+    const sessionId    = Math.random().toString(36).slice(2, 10).toUpperCase();
+    const investorName = data.investorLabel || data.label || '';
+    const tokenType    = data.tokenType    || data.token_type || 'MONTH';
+    const expiresAt    = data.expiresAt    || data.expires_at || '';
+    const investorEmail= data.investorEmail|| data.email     || '';
 
+    // mcr_* namespace only — clean, no legacy mc_* keys
+    sessionStorage.setItem('mcr_session', sessionId);
+    sessionStorage.setItem('mcr_token',   raw);
+    sessionStorage.setItem('mcr_name',    investorName);
+    sessionStorage.setItem('mcr_type',    tokenType);
+    sessionStorage.setItem('mcr_expires', expiresAt);
+    sessionStorage.setItem('mcr_email',   investorEmail);
+
+    // Populate NDA
     document.getElementById('ndaTokenDisplay').textContent = raw.slice(0, 7) + '••••';
     document.getElementById('ndaTimestamp').textContent =
       new Date().toLocaleString('en-SA', { dateStyle: 'medium', timeStyle: 'short' });
     document.getElementById('ndaSession').textContent = sessionId;
+
+    // PREPARED FOR block
+    const typeLabels = { HOUR: '1-Hour Access', WEEK: '7-Day Access', MONTH: '30-Day Access', STRATEGIC: 'Strategic Partner', PERMANENT: 'Permanent Access' };
+    const typeLabel  = typeLabels[tokenType] || tokenType;
+    const expiryStr  = expiresAt ? new Date(expiresAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) : 'Open';
+
+    document.getElementById('ndaAccessTypeDisplay').textContent = typeLabel;
+    document.getElementById('ndaExpiresDisplay').textContent    = expiryStr;
+
+    if (investorName) {
+      document.getElementById('ndaInvestorName').textContent = investorName;
+      document.getElementById('ndaAccessType').textContent   = typeLabel + ' · Expires ' + expiryStr;
+      document.getElementById('ndaPreparedFor').style.display = '';
+    }
+    if (tokenType === 'HOUR') {
+      document.getElementById('ndaHourWarning').style.display = '';
+    }
+
     document.getElementById('tokenInput').classList.add('success');
     document.getElementById('ndaOverlay').classList.add('visible');
 
@@ -1000,12 +1099,9 @@ async function acceptNda() {
     });
   } catch (_) {}
 
-  // ── Set investor session so landing reveals the investor layer ──
-  sessionStorage.setItem('mcr_investor',  '1');
-  sessionStorage.setItem('mcr_token',     pendingToken);
-  sessionStorage.setItem('mcr_session',   document.getElementById('ndaSession').textContent);
-  sessionStorage.setItem('mcr_label',     sessionStorage.getItem('mc_investor_label') || '');
-  sessionStorage.setItem('mcr_ts',        new Date().toISOString());
+  // ── Confirm investor session (mcr_* already set in submitToken) ──
+  sessionStorage.setItem('mcr_investor', '1');
+  sessionStorage.setItem('mcr_ts',       new Date().toISOString());
 
   // Vault open animation
   const vault = document.getElementById('vaultOverlay');
@@ -1014,6 +1110,20 @@ async function acceptNda() {
     vault.classList.add('open-2');
     window.location.href = ROOM_URL;
   }, 500);
+}
+
+/* ── Decline NDA ── */
+function declineNda() {
+  document.getElementById('ndaOverlay').classList.remove('visible');
+  document.getElementById('tokenInput').value = '';
+  document.getElementById('tokenInput').classList.remove('success', 'error');
+  document.getElementById('submitBtn').classList.remove('loading');
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('ndaPreparedFor').style.display = 'none';
+  document.getElementById('ndaHourWarning').style.display = 'none';
+  // Clear pending session keys
+  ['mcr_session','mcr_token','mcr_name','mcr_type','mcr_expires','mcr_email'].forEach(k => sessionStorage.removeItem(k));
+  pendingToken = null;
 }
 
 /* ── Focus on load ── */

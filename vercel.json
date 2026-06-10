@@ -15,9 +15,13 @@
       "has": [{ "type": "host", "value": "www.cliniq.one" }],
       "destination": "/cliniq.html"
     },
-    { "source": "/gate",   "destination": "/gate.html" },
-    { "source": "/room",   "destination": "/room.html" },
+    { "source": "/",      "destination": "/gate.html"   },
+    { "source": "/home",  "destination": "/index.html"  },
+    { "source": "/gate",  "destination": "/gate.html"   },
     { "source": "/cliniq", "destination": "/cliniq.html" }
+  ],
+  "redirects": [
+    { "source": "/room", "destination": "/", "permanent": false }
   ],
   "headers": [
     {
@@ -29,13 +33,7 @@
       ]
     },
     {
-      "source": "/room(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/admin/(.*)",
+      "source": "/(gate|home|admin)(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
