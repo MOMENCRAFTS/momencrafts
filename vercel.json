@@ -25,6 +25,8 @@
     { "source": "/rogerai",  "destination": "/index.html" },
     { "source": "/tdc",      "destination": "/index.html" },
     { "source": "/edgetack", "destination": "/index.html" },
+    { "source": "/ummiwallet",       "destination": "/ummiwallet/index.html" },
+    { "source": "/ummiwallet/(.*)",   "destination": "/ummiwallet/$1" },
     { "source": "/(.*)",     "destination": "/index.html" }
   ],
   "headers": [
