@@ -3,7 +3,6 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "cleanUrls": false,
-  "trailingSlash": false,
   "redirects": [
     {
       "source": "/(.*)",
@@ -25,8 +24,9 @@
     { "source": "/rogerai",  "destination": "/index.html" },
     { "source": "/tdc",      "destination": "/index.html" },
     { "source": "/edgetack", "destination": "/index.html" },
-    { "source": "/ummiwallet",       "destination": "/ummiwallet/index.html" },
-    { "source": "/ummiwallet/(.*)",   "destination": "/ummiwallet/$1" },
+    { "source": "/ummiwallet",          "destination": "/ummiwallet/index.html" },
+    { "source": "/ummiwallet/",         "destination": "/ummiwallet/index.html" },
+    { "source": "/ummiwallet/:path*",   "destination": "/ummiwallet/:path*" },
     { "source": "/(.*)",     "destination": "/index.html" }
   ],
   "headers": [
