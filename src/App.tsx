@@ -6,6 +6,7 @@ const Gate     = lazy(() => import('@/screens/GateScreen'))
 const Home     = lazy(() => import('@/screens/HomeScreen'))
 const RogerAI  = lazy(() => import('@/screens/RogerAIScreen'))
 const EdgeTack = lazy(() => import('@/screens/EdgeTackScreen'))
+const TDC      = lazy(() => import('@/screens/TDCScreen'))
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const token = useAppStore((s) => s.token)
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/home" element={<AuthGuard><Home /></AuthGuard>} />
           <Route path="/rogerai" element={<RogerAI />} />
           <Route path="/edgetack" element={<EdgeTack />} />
+          <Route path="/tdc" element={<TDC />} />
           {/* Legacy redirects */}
           <Route path="/gate" element={<Navigate to="/" replace />} />
           <Route path="/room" element={<Navigate to="/" replace />} />
