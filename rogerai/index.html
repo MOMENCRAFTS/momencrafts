@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <meta name="robots" content="index, follow"/>
 <title>ROGER·AI — The Voice of Intelligence | MomenCrafts</title>
 <meta name="description" content="ROGER·AI is a purpose-built AI voice assistant device — handheld, bilingual Arabic/English, with persistent memory, radio integration, and executive-grade intelligence."/>
@@ -44,13 +44,15 @@
   --font-sans:  'Inter', system-ui, sans-serif;
 }
 
-html { scroll-behavior: smooth; }
+html { height: 100%; }
 body {
   background: var(--ink);
   color: var(--cream);
   font-family: var(--font-sans);
   overflow-x: hidden;
   line-height: 1.6;
+  min-height: 100%;
+  min-height: -webkit-fill-available;
 }
 
 /* ── Canvas BG ── */
@@ -76,9 +78,11 @@ body {
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 999;
   background: rgba(12,10,9,0.92);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   padding: .85rem 1.5rem;
+  padding-top: calc(.85rem + env(safe-area-inset-top));
   display: flex; align-items: center; justify-content: space-between;
 }
 .nav-brand {
@@ -111,8 +115,10 @@ nav {
 ══════════════════ */
 .hero {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex; align-items: center;
   padding: 6rem 1.5rem 4rem;
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
   position: relative; z-index: 1;
   overflow: hidden;
 }
@@ -354,6 +360,7 @@ nav {
   gap: 0; margin: 3rem auto 0;
   max-width: 900px; flex-wrap: nowrap;
   overflow-x: auto; padding-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
 }
 .flow-node {
   display: flex; flex-direction: column; align-items: center;
@@ -678,6 +685,7 @@ footer {
   background: var(--ink);
   border-top: 1px solid var(--border);
   padding: 2rem 1.5rem;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 1rem;
   position: relative; z-index: 1;
@@ -711,6 +719,7 @@ footer {
   .flow-diagram { justify-content: flex-start; gap: 0; }
 }
 </style>
+<link rel="stylesheet" href="../mobile.css"/>
 </head>
 <body>
 
@@ -1293,5 +1302,40 @@ const revealObs = new IntersectionObserver((entries)=>{
 },{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 </script>
-</body>
+<script>
+/* ── Mobile hamburger nav ── */
+(function(){
+  var btn = document.getElementById('nav-hamburger');
+  var nav = document.getElementById('nav');
+  if(!btn || !nav) return;
+  btn.addEventListener('click', function(){
+    nav.classList.toggle('nav-open');
+    btn.setAttribute('aria-expanded', nav.classList.contains('nav-open'));
+  });
+  /* Close on outside tap */
+  document.addEventListener('click', function(e){
+    if(nav.classList.contains('nav-open') && !nav.contains(e.target)){
+      nav.classList.remove('nav-open');
+      btn.setAttribute('aria-expanded','false');
+    }
+  });
+  /* Close on link click */
+  document.querySelectorAll('#nav-links a').forEach(function(a){
+    a.addEventListener('click', function(){
+      nav.classList.remove('nav-open');
+    });
+  });
+})();
+
+/* ── Mobile particle reduction ── */
+(function(){
+  if(typeof window.__particleCount === 'undefined'){
+    window.__particleCount = window.innerWidth < 640 ? 15 : 50;
+  }
+  /* Pause canvas on visibility change */
+  document.addEventListener('visibilitychange', function(){
+    window.__particlePaused = document.hidden;
+  });
+})();
+</script></body>
 </html>

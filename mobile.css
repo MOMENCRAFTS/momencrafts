@@ -1,0 +1,375 @@
+/* ════════════════════════════════════════════════════════════
+   mobile.css — MomenCrafts Universal Mobile + Foldable Layer
+   Covers: iOS Safari, Android Chrome, Foldables (Galaxy Fold,
+   Pixel Fold, Surface Duo), and tablet breakpoints.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── 1. BASE TOUCH RESETS ───────────────────────────────── */
+
+/* Prevent 300ms tap delay on all interactive elements */
+a, button, input, select, textarea, [onclick], [role="button"] {
+  touch-action: manipulation;
+}
+
+/* Remove tap highlight on iOS/Android */
+a, button, [onclick] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent user-select on UI chrome elements */
+button, .badge, .nav-links, .section-label,
+.inv-badge, .card-status, .mono {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Smooth momentum scrolling on all scroll containers */
+html, body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── 2. MINIMUM TOUCH TARGETS (44 × 44px) ───────────────── */
+
+/* Global enforcement — any link/button that is too small */
+nav a, nav button,
+.btn, .card-link, .inv-demo-link, .inv-track-btn,
+.lang-toggle, #inv-lang-toggle,
+.nav-hamburger, .nav-cta,
+.hw-block-head,          /* RogerAI hardware blocks */
+.inv-product-card-header /* Investor portfolio cards */
+{
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-hamburger {
+  min-width: 44px;
+  justify-content: center;
+}
+
+/* Language toggle — was ~28px, now 44px */
+.lang-toggle {
+  padding: 0.75rem 1.1rem !important;
+  min-height: 44px !important;
+}
+
+/* ── 3. INPUTS — PREVENT iOS AUTO-ZOOM ─────────────────── */
+
+/* iOS zooms if input font-size < 16px */
+input, textarea, select {
+  font-size: max(1rem, 16px) !important;
+}
+
+/* Gate token input — override to keep monospace feel at 16px */
+.token-input {
+  font-size: 1rem !important;
+}
+
+/* Contact form inputs */
+.contact-form input,
+.contact-form textarea {
+  font-size: 1rem !important;
+}
+
+/* ── 4. ACTIVE / TAP STATES ─────────────────────────────── */
+
+/* Immediate visual feedback on tap */
+.btn:active, .card-link:active, .inv-demo-link:active {
+  transform: scale(0.97) !important;
+  opacity: 0.82 !important;
+}
+
+.mode-card:active, .uc-card:active {
+  transform: translateY(-1px) !important;
+  border-top-color: var(--amber, #F59E0B) !important;
+}
+
+.hw-block-head:active {
+  background: rgba(245,158,11,0.06) !important;
+}
+
+.inv-product-card-header:active {
+  background: rgba(200,169,110,0.06) !important;
+}
+
+.nav-links a:active { color: var(--gold, #C8A96E) !important; }
+
+/* ── 5. HAMBURGER NAV — OPEN STATE ─────────────────────── */
+
+/* When nav has .nav-open class, show the links as a dropdown */
+@media (max-width: 900px) {
+  /* Nav link list becomes a slide-down panel */
+  #nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    background: rgba(12, 10, 9, 0.98);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(200,169,110,0.15);
+    flex-direction: column;
+    padding: 1rem 1.5rem 1.5rem;
+    gap: .5rem;
+    z-index: 998;
+    animation: nav-slide-down 0.25s ease;
+  }
+  nav.nav-open #nav-links {
+    display: flex !important;
+  }
+  @keyframes nav-slide-down {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  #nav-links li { width: 100%; }
+  #nav-links a {
+    display: block;
+    padding: .75rem 0;
+    font-size: .85rem !important;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    min-height: 44px;
+    display: flex; align-items: center;
+  }
+  #nav-links a.nav-cta {
+    margin-top: .5rem;
+    background: var(--gold, #C8A96E);
+    color: #0C0A09 !important;
+    border-radius: 8px;
+    justify-content: center;
+    font-weight: 700;
+    border-bottom: none;
+  }
+  /* Hamburger → X animation */
+  .nav-hamburger span { transition: transform 0.25s, opacity 0.25s; }
+  nav.nav-open .nav-hamburger span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  nav.nav-open .nav-hamburger span:nth-child(2) { opacity: 0; }
+  nav.nav-open .nav-hamburger span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+/* ── 6. STANDARD MOBILE (≤ 640px) ──────────────────────── */
+
+@media (max-width: 640px) {
+
+  /* AI flow diagram — vertical stack instead of horizontal scroll */
+  .flow-diagram {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    overflow-x: visible !important;
+    gap: 0 !important;
+    padding-left: 1.5rem !important;
+    position: relative;
+  }
+  .flow-diagram::before {
+    content: '';
+    position: absolute;
+    left: 1.85rem; top: 36px; bottom: 36px;
+    width: 2px;
+    background: linear-gradient(to bottom, rgba(245,158,11,0.5), rgba(245,158,11,0.1));
+  }
+  .flow-node {
+    flex-direction: row !important;
+    min-width: unset !important;
+    width: 100%;
+    gap: 1rem;
+    padding: .5rem 0;
+  }
+  .flow-icon {
+    width: 52px !important; height: 52px !important;
+    font-size: 1.3rem !important; flex-shrink: 0;
+  }
+  .flow-label { text-align: left !important; }
+  .flow-arrow {
+    transform: rotate(90deg);
+    height: 24px; min-width: unset !important;
+    max-width: unset !important;
+    flex: unset; width: 52px;
+    margin-left: 0;
+  }
+
+  /* Spec table → card list on mobile */
+  .spec-table { font-size: .72rem; }
+  .spec-table thead { display: none; }
+  .spec-table tbody { display: flex; flex-direction: column; gap: .5rem; }
+  .spec-table tr {
+    display: flex; flex-direction: column;
+    border: 1px solid rgba(245,158,11,0.1);
+    border-radius: 8px;
+    padding: .65rem .85rem;
+    background: rgba(255,255,255,0.02);
+  }
+  .spec-table td {
+    border: none !important;
+    padding: .1rem 0 !important;
+  }
+  .spec-table td:first-child {
+    font-size: .58rem !important;
+    letter-spacing: .12em;
+    margin-bottom: .1rem;
+    color: var(--amber, #F59E0B) !important;
+  }
+
+  /* LED strip demo — tighter on narrow screens */
+  .led-demo { gap: 1.25rem !important; }
+  .led-strip { width: 100px !important; }
+  .led-mode  { min-width: 100px !important; }
+
+  /* RogerAI hardware blocks — expand up to 350px content */
+  .hw-block-body.open { max-height: 450px !important; }
+
+  /* Investor bar collapse */
+  #investor-bar > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: .2rem !important;
+  }
+  #inv-countdown { font-size: .55rem; }
+
+  /* Card tags wrap */
+  .card-tags { flex-wrap: wrap !important; gap: .35rem !important; }
+  .tag { white-space: nowrap; }
+
+  /* Section padding reduction */
+  .modes, .hw-specs, .ai-flow,
+  .led-section, .specs-table, .roadmap,
+  .use-cases, .radio-section, .cta-section {
+    padding-top: 3.5rem !important;
+    padding-bottom: 3.5rem !important;
+  }
+}
+
+/* ── 7. VERY SMALL PHONES (≤ 380px) — Galaxy Fold cover ── */
+
+@media (max-width: 380px) {
+
+  /* Gate card */
+  .token-card { padding: 1.5rem 1.25rem !important; }
+  .token-card-title { font-size: 1.5rem !important; }
+  .gate-heading  { font-size: 1.8rem !important; }
+  .gate-sub      { font-size: .82rem !important; }
+
+  /* Hero title shrink */
+  .hero-title  { font-size: 1.9rem !important; }
+
+  /* Mode cards — tighter padding */
+  .mode-card { padding: 1.5rem 1.1rem !important; }
+
+  /* Hide hero device image on tiny screens to save space */
+  .hero-device::before { display: none; }
+
+  /* Nav brand — shorter */
+  .nav-brand { font-size: .72rem !important; letter-spacing: .08em !important; }
+
+  /* Stats grid — 2 cols instead of 3 */
+  .hero-stats { flex-wrap: wrap; gap: .75rem !important; }
+}
+
+/* ── 8. FOLDABLE — DUAL PANE (unfolded landscape) ─────── */
+/* Samsung Galaxy Fold unfolded, Pixel Fold, Surface Duo    */
+
+@media (horizontal-viewport-segments: 2) {
+  /* Split layout across fold */
+  .hero-inner {
+    grid-template-columns:
+      env(viewport-segment-width 0 0, 1fr)
+      env(viewport-segment-width 1 0, 1fr) !important;
+    gap: calc(env(viewport-segment-left 1 0, 0px) - env(viewport-segment-right 0 0, 0px) + 2rem) !important;
+  }
+
+  /* Two-pane flow diagram */
+  .flow-diagram {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    flex-direction: row !important;
+  }
+
+  /* Products grid — 2 per pane = 4 total visible */
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Hardware blocks — 2 per pane */
+  .hw-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ── 9. FOLDABLE LAPTOP POSTURE (fold 90°, half-open) ──── */
+
+@media (screen-fold-posture: laptop) {
+  /* Content in top half, sticky CTA in bottom half */
+  .hero {
+    min-height: env(fold-top, 50vh) !important;
+    align-items: flex-start;
+    padding-top: 5rem;
+  }
+  .cta-section {
+    position: sticky;
+    bottom: 0;
+    min-height: calc(100vh - env(fold-top, 50vh));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* ── 10. FOLDABLE — COVER SCREEN (Galaxy Fold closed) ──── */
+/* Cover screen: ~260–280px wide */
+
+@media (max-width: 280px) {
+  /* Gate — bare minimum */
+  .token-card-title { font-size: 1.3rem !important; }
+  .gate-stats { display: none !important; }
+  .hero-badges { display: none !important; }
+  .particle-canvas, #r-canvas { display: none !important; }
+
+  /* Nav — brand only */
+  .nav-links { display: none !important; }
+  .nav-brand { font-size: .65rem !important; }
+
+  /* Remove decorative animations */
+  .hero-device::before, .hero::before { display: none !important; }
+  .device-img { max-width: 180px !important; }
+
+  /* Flow diagram ultra-compact */
+  .flow-icon { width: 40px !important; height: 40px !important; font-size: 1rem !important; }
+
+  /* Input and button full-bleed */
+  .token-input, .token-submit, .btn { border-radius: 6px !important; }
+}
+
+/* ── 11. PARTICLE PERFORMANCE ON MOBILE ─────────────────── */
+/* Handled via JS injection below — CSS hides canvas on      */
+/* low-memory devices via media query fallback               */
+
+@media (max-width: 640px) and (max-resolution: 2dppx) {
+  /* Reduce canvas opacity further on 1x screens (older phones) */
+  #hero-canvas, #r-canvas { opacity: 0.12 !important; }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  #hero-canvas, #r-canvas { display: none !important; }
+  .device-img { animation: none !important; }
+}
+
+/* ── 12. SAFE AREA INSETS (notch, home bar) ─────────────── */
+/* Already applied inline — reinforce here for any overrides */
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  footer, .cta-section:last-child {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)) !important;
+  }
+  nav {
+    padding-top: calc(.85rem + env(safe-area-inset-top)) !important;
+  }
+}

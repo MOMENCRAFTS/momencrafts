@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <!-- ── GATE GUARD: no token = back to gate ── -->
 <script>(function(){if(sessionStorage.getItem('mcr_investor')!=='1'){window.location.replace('/');}})();</script>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>مؤمن كرافتس — استوديو الذكاء الاصطناعي · الرياض</title>
 <meta name="description" content="مؤمن كرافتس استوديو برمجيات يعتمد على الذكاء الاصطناعي في الرياض للسوق السعودي."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -92,6 +92,7 @@
   #inv-scroll-bar{top:80px;}
 }
 </style>
+<link rel="stylesheet" href="mobile.css"/>
 </head>
 <body>
 <div id="progress-bar"></div>
@@ -283,7 +284,7 @@
         <p class="card-tagline">واقي شاشة مع أزرار ألعاب</p>
         <p class="card-desc">ملحق ألعاب جوال — واقي شاشة مع أزرار هوائية قابلة للطي لتجربة ألعاب احترافية.</p>
         <div class="card-tags"><span class="tag">ألعاب الجوال</span><span class="tag">براءة اختراع</span></div>
-        <a href="#contact" class="card-link">اعرف أكثر ←</a>
+        <a href="/edgetacktic" class="card-link">اعرف أكثر ←</a>
       </article>
 
     </div>
@@ -1058,5 +1059,40 @@ function initExpiry() {
 </script>
 
 <script src="script.js"></script>
-</body>
+<script>
+/* ── Mobile hamburger nav ── */
+(function(){
+  var btn = document.getElementById('nav-hamburger');
+  var nav = document.getElementById('nav');
+  if(!btn || !nav) return;
+  btn.addEventListener('click', function(){
+    nav.classList.toggle('nav-open');
+    btn.setAttribute('aria-expanded', nav.classList.contains('nav-open'));
+  });
+  /* Close on outside tap */
+  document.addEventListener('click', function(e){
+    if(nav.classList.contains('nav-open') && !nav.contains(e.target)){
+      nav.classList.remove('nav-open');
+      btn.setAttribute('aria-expanded','false');
+    }
+  });
+  /* Close on link click */
+  document.querySelectorAll('#nav-links a').forEach(function(a){
+    a.addEventListener('click', function(){
+      nav.classList.remove('nav-open');
+    });
+  });
+})();
+
+/* ── Mobile particle reduction ── */
+(function(){
+  if(typeof window.__particleCount === 'undefined'){
+    window.__particleCount = window.innerWidth < 640 ? 15 : 50;
+  }
+  /* Pause canvas on visibility change */
+  document.addEventListener('visibilitychange', function(){
+    window.__particlePaused = document.hidden;
+  });
+})();
+</script></body>
 </html>
