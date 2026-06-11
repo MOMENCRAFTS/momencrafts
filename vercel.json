@@ -1,7 +1,8 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "cleanUrls": true,
+  "framework": "vite",
+  "cleanUrls": false,
   "trailingSlash": false,
   "redirects": [
     {
@@ -20,7 +21,10 @@
     { "source": "/room", "destination": "/", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/home",     "destination": "/index.html" },
+    { "source": "/rogerai",  "destination": "/index.html" },
+    { "source": "/edgetack", "destination": "/index.html" },
+    { "source": "/(.*)",     "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -28,7 +32,7 @@
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options",        "value": "DENY" },
-        { "key": "Referrer-Policy",         "value": "no-referrer" }
+        { "key": "Referrer-Policy",        "value": "no-referrer" }
       ]
     },
     {
