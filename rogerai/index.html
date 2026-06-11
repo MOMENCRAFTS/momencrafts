@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="index, follow"/>
+<title>ROGER·AI — The Voice of Intelligence | MomenCrafts</title>
+<meta name="description" content="ROGER·AI is a purpose-built AI voice assistant device — handheld, bilingual Arabic/English, with persistent memory, radio integration, and executive-grade intelligence."/>
+<meta property="og:title" content="ROGER·AI — The Voice of Intelligence"/>
+<meta property="og:description" content="A purpose-built hardware AI assistant. PTT. TFT. ESP32-S3. Voice-first. Always on."/>
+<meta property="og:type" content="website"/>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=JetBrains+Mono:wght@400;500;700&family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════════
+   ROGER·AI PRODUCT PAGE — MomenCrafts
+   ══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --ink:        #0C0A09;
+  --deep:       #080706;
+  --surface:    #1A1614;
+  --surface-2:  #221E1B;
+  --border:     rgba(245,158,11,0.12);
+  --border-2:   rgba(245,158,11,0.25);
+  --amber:      #F59E0B;
+  --amber-dim:  rgba(245,158,11,0.55);
+  --amber-glow: rgba(245,158,11,0.10);
+  --amber-hot:  #FBBF24;
+  --gold:       #C8A96E;
+  --crimson:    #9B1B30;
+  --cream:      #F0EBE3;
+  --cream-dim:  rgba(240,235,227,0.55);
+  --cream-mute: rgba(240,235,227,0.28);
+  --cyan:       #06B6D4;
+  --violet:     #8B5CF6;
+  --terminal:   #4ADE80;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono:  'JetBrains Mono', monospace;
+  --font-ar:    'Cairo', sans-serif;
+  --font-sans:  'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── Canvas BG ── */
+#r-canvas {
+  position: fixed; inset: 0;
+  pointer-events: none; opacity: 0.25; z-index: 0;
+}
+
+/* ── Utility ── */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+.section-label {
+  font-family: var(--font-mono);
+  font-size: .68rem; letter-spacing: .22em;
+  color: var(--amber); margin-bottom: .5rem; text-transform: uppercase;
+}
+.mono { font-family: var(--font-mono); }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ══════════════════
+   NAV
+══════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: rgba(12,10,9,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: .85rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  font-family: var(--font-mono);
+  font-size: .85rem; letter-spacing: .18em;
+  color: var(--amber); text-decoration: none; font-weight: 700;
+}
+.nav-links { display: flex; gap: 1.5rem; list-style: none; }
+.nav-links a {
+  font-family: var(--font-mono); font-size: .7rem;
+  color: var(--cream-mute); text-decoration: none;
+  letter-spacing: .1em; transition: color .2s;
+}
+.nav-links a:hover { color: var(--amber); }
+.nav-cta {
+  background: var(--amber); color: var(--ink) !important;
+  padding: .35rem .9rem; border-radius: 5px;
+  font-weight: 700 !important; transition: background .2s !important;
+}
+.nav-cta:hover { background: var(--amber-hot) !important; }
+.nav-back {
+  font-family: var(--font-mono); font-size: .68rem;
+  color: var(--cream-mute); text-decoration: none;
+  letter-spacing: .1em; transition: color .2s;
+}
+.nav-back:hover { color: var(--cream); }
+
+/* ══════════════════
+   HERO
+══════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 6rem 1.5rem 4rem;
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 65% 50%, rgba(245,158,11,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  display: grid; grid-template-columns: 1fr 420px;
+  gap: 4rem; align-items: center; width: 100%;
+}
+.hero-eyebrow {
+  display: flex; align-items: center; gap: .6rem;
+  font-family: var(--font-mono); font-size: .68rem;
+  letter-spacing: .18em; color: var(--cream-mute);
+  margin-bottom: 1.5rem;
+}
+.hero-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 10px var(--amber);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}
+}
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-weight: 900; line-height: 1.05;
+  margin-bottom: 1.25rem; color: var(--cream);
+}
+.hero-title em { font-style: italic; color: var(--amber); }
+.hero-title .ar {
+  display: block; font-family: var(--font-ar);
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  font-weight: 700; color: var(--cream-dim);
+  margin-top: .4rem; direction: rtl;
+}
+.hero-sub {
+  font-size: 1rem; color: var(--cream-dim);
+  line-height: 1.75; max-width: 520px;
+  margin-bottom: 2rem;
+}
+.hero-badges {
+  display: flex; gap: .75rem; flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+.badge {
+  font-family: var(--font-mono); font-size: .62rem;
+  letter-spacing: .12em; padding: .25rem .65rem;
+  border-radius: 4px; font-weight: 700;
+}
+.badge-amber { color: var(--amber); background: var(--amber-glow); border: 1px solid var(--border-2); }
+.badge-cyan  { color: var(--cyan);  background: rgba(6,182,212,.08); border: 1px solid rgba(6,182,212,.25); }
+.badge-violet{ color: var(--violet);background: rgba(139,92,246,.08); border: 1px solid rgba(139,92,246,.25); }
+.badge-green { color: var(--terminal); background: rgba(74,222,128,.06); border: 1px solid rgba(74,222,128,.2); }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .75rem 1.5rem; border-radius: 8px;
+  font-family: var(--font-mono); font-size: .78rem;
+  letter-spacing: .08em; font-weight: 700;
+  text-decoration: none; transition: all .2s; cursor: pointer; border: none;
+}
+.btn-amber { background: var(--amber); color: var(--ink); }
+.btn-amber:hover { background: var(--amber-hot); transform: translateY(-1px); }
+.btn-ghost {
+  background: transparent; color: var(--cream-mute);
+  border: 1px solid var(--border-2);
+}
+.btn-ghost:hover { color: var(--cream); border-color: var(--amber-dim); }
+
+/* ── Device Visual ── */
+.hero-device {
+  display: flex; justify-content: center; align-items: center;
+  position: relative;
+}
+.hero-device::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 280px; height: 420px;
+  background: radial-gradient(ellipse, rgba(245,158,11,0.15) 0%, transparent 70%);
+  border-radius: 50%; animation: glow-pulse 3s ease-in-out infinite;
+}
+@keyframes glow-pulse {
+  0%,100%{opacity:.8;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}
+}
+.device-img {
+  width: 100%; max-width: 380px;
+  filter: drop-shadow(0 0 40px rgba(245,158,11,0.3)) drop-shadow(0 20px 60px rgba(0,0,0,0.8));
+  animation: float 4s ease-in-out infinite;
+  position: relative; z-index: 1;
+}
+@keyframes float {
+  0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}
+}
+.device-specs-strip {
+  display: flex; gap: .5rem; justify-content: center;
+  flex-wrap: wrap; margin-top: 1.5rem;
+}
+.device-spec-tag {
+  font-family: var(--font-mono); font-size: .6rem;
+  letter-spacing: .1em; color: var(--cream-mute);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: .2rem .55rem; border-radius: 4px;
+}
+
+/* ══════════════════
+   MODES SECTION
+══════════════════ */
+.modes {
+  padding: 5rem 1.5rem;
+  background: var(--surface);
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+}
+.modes-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem; margin-top: 3rem;
+}
+.mode-card {
+  background: var(--ink);
+  border: 1px solid var(--border);
+  border-top: 2px solid transparent;
+  border-radius: 12px; padding: 2rem 1.5rem;
+  transition: border-top-color .25s, transform .25s;
+  cursor: default;
+}
+.mode-card:hover { border-top-color: var(--amber); transform: translateY(-3px); }
+.mode-icon {
+  font-size: 2rem; margin-bottom: 1rem;
+  display: block;
+}
+.mode-name {
+  font-family: var(--font-mono); font-size: .75rem;
+  letter-spacing: .15em; color: var(--amber);
+  margin-bottom: .5rem; text-transform: uppercase;
+}
+.mode-title {
+  font-size: 1.1rem; font-weight: 600;
+  color: var(--cream); margin-bottom: .6rem;
+}
+.mode-desc {
+  font-size: .85rem; color: var(--cream-mute);
+  line-height: 1.7;
+}
+
+/* ══════════════════
+   HARDWARE SPECS
+══════════════════ */
+.hw-specs {
+  padding: 5rem 1.5rem;
+  position: relative; z-index: 1;
+}
+.hw-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem; margin-top: 3rem;
+}
+.hw-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber-dim);
+  border-radius: 10px; overflow: hidden;
+  transition: border-left-color .2s;
+}
+.hw-block:hover { border-left-color: var(--amber); }
+.hw-block-head {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  cursor: pointer; user-select: none;
+}
+.hw-block-num {
+  font-family: var(--font-mono); font-size: .6rem;
+  letter-spacing: .15em; color: var(--amber-dim);
+  flex-shrink: 0;
+}
+.hw-block-icon { font-size: 1.3rem; flex-shrink: 0; }
+.hw-block-info { flex: 1; }
+.hw-block-name {
+  font-family: var(--font-mono); font-size: .78rem;
+  font-weight: 700; color: var(--cream); letter-spacing: .05em;
+}
+.hw-block-chip {
+  font-family: var(--font-mono); font-size: .65rem;
+  color: var(--amber-dim); margin-top: .1rem; letter-spacing: .06em;
+}
+.hw-block-toggle {
+  color: var(--amber); font-family: var(--font-mono);
+  font-size: 1.2rem; flex-shrink: 0; transition: transform .25s;
+}
+.hw-block.open .hw-block-toggle { transform: rotate(45deg); }
+.hw-block-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .35s ease;
+}
+.hw-block.open .hw-block-body { max-height: 300px; }
+.hw-block-inner {
+  padding: .75rem 1.25rem 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.hw-detail-row {
+  display: flex; align-items: baseline; gap: .75rem;
+  margin-bottom: .4rem;
+}
+.hw-detail-key {
+  font-family: var(--font-mono); font-size: .6rem;
+  letter-spacing: .12em; color: var(--amber-dim);
+  min-width: 80px; flex-shrink: 0; text-transform: uppercase;
+}
+.hw-detail-val {
+  font-size: .78rem; color: var(--cream-dim);
+}
+.hw-nets {
+  margin-top: .75rem; padding-top: .75rem;
+  border-top: 1px solid rgba(255,255,255,.05);
+  font-family: var(--font-mono); font-size: .6rem;
+  color: var(--terminal); letter-spacing: .05em;
+  line-height: 1.8;
+}
+.hw-nets span { opacity: .7; }
+
+/* ══════════════════
+   AI FLOW
+══════════════════ */
+.ai-flow {
+  padding: 5rem 1.5rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  position: relative; z-index: 1;
+}
+.flow-diagram {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin: 3rem auto 0;
+  max-width: 900px; flex-wrap: nowrap;
+  overflow-x: auto; padding-bottom: 1rem;
+}
+.flow-node {
+  display: flex; flex-direction: column; align-items: center;
+  gap: .6rem; min-width: 120px; flex-shrink: 0;
+}
+.flow-icon {
+  width: 72px; height: 72px; border-radius: 14px;
+  background: var(--ink);
+  border: 1.5px solid var(--border-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; position: relative;
+  transition: border-color .3s;
+}
+.flow-icon.active { border-color: var(--amber); box-shadow: 0 0 20px var(--amber-glow); }
+.flow-label {
+  font-family: var(--font-mono); font-size: .62rem;
+  letter-spacing: .1em; color: var(--cream-mute);
+  text-align: center; line-height: 1.4;
+}
+.flow-arrow {
+  flex: 1; min-width: 40px; max-width: 70px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; flex-shrink: 0;
+}
+.flow-line {
+  width: 100%; height: 2px;
+  background: linear-gradient(to right, var(--amber-dim), rgba(245,158,11,0.1));
+  position: relative; overflow: hidden;
+}
+.flow-line::after {
+  content: '';
+  position: absolute; top: -1px; left: -30px;
+  width: 30px; height: 4px;
+  background: var(--amber);
+  border-radius: 2px;
+  animation: flow-move 2s linear infinite;
+}
+@keyframes flow-move { 0%{left:-30px}100%{left:110%} }
+.flow-tip {
+  width: 0; height: 0;
+  border-left: 8px solid var(--amber-dim);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  flex-shrink: 0;
+}
+
+/* ══════════════════
+   LED RING DEMO
+══════════════════ */
+.led-section {
+  padding: 5rem 1.5rem;
+  position: relative; z-index: 1;
+}
+.led-demo {
+  display: flex; justify-content: center; gap: 3rem;
+  flex-wrap: wrap; margin-top: 3rem;
+}
+.led-mode {
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  min-width: 140px;
+}
+.led-strip {
+  width: 120px; height: 16px; border-radius: 8px;
+  display: flex; gap: 4px; padding: 3px;
+  background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.1);
+}
+.led-dot {
+  flex: 1; border-radius: 4px;
+  transition: opacity .3s;
+}
+/* Listening — Amber pulse */
+.led-listen .led-dot { background: var(--amber); animation: led-pulse-amber 1.2s ease-in-out infinite; }
+.led-listen .led-dot:nth-child(2){animation-delay:.1s}
+.led-listen .led-dot:nth-child(3){animation-delay:.2s}
+.led-listen .led-dot:nth-child(4){animation-delay:.3s}
+.led-listen .led-dot:nth-child(5){animation-delay:.4s}
+.led-listen .led-dot:nth-child(6){animation-delay:.5s}
+.led-listen .led-dot:nth-child(7){animation-delay:.6s}
+.led-listen .led-dot:nth-child(8){animation-delay:.7s}
+@keyframes led-pulse-amber {
+  0%,100%{opacity:1;box-shadow:0 0 6px var(--amber)}
+  50%{opacity:.3;box-shadow:none}
+}
+/* Thinking — Blue wave */
+.led-think .led-dot { background: var(--cyan); animation: led-wave 1s ease-in-out infinite; }
+.led-think .led-dot:nth-child(1){animation-delay:0s}
+.led-think .led-dot:nth-child(2){animation-delay:.12s}
+.led-think .led-dot:nth-child(3){animation-delay:.24s}
+.led-think .led-dot:nth-child(4){animation-delay:.36s}
+.led-think .led-dot:nth-child(5){animation-delay:.48s}
+.led-think .led-dot:nth-child(6){animation-delay:.60s}
+.led-think .led-dot:nth-child(7){animation-delay:.72s}
+.led-think .led-dot:nth-child(8){animation-delay:.84s}
+@keyframes led-wave {
+  0%,100%{opacity:.2;transform:scaleY(1)}
+  50%{opacity:1;transform:scaleY(1.3);box-shadow:0 0 8px var(--cyan)}
+}
+/* Ready — Green solid */
+.led-ready .led-dot { background: var(--terminal); box-shadow: 0 0 6px var(--terminal); opacity:1; }
+/* Muted — Red flash */
+.led-mute .led-dot { background: #ef4444; animation: led-flash .6s ease-in-out infinite; }
+@keyframes led-flash { 0%,100%{opacity:1}50%{opacity:.1} }
+/* Idle — White breathe */
+.led-idle .led-dot { background: #ffffff; animation: led-breathe 2.5s ease-in-out infinite; }
+@keyframes led-breathe { 0%,100%{opacity:.8}50%{opacity:.15} }
+.led-label {
+  font-family: var(--font-mono); font-size: .62rem;
+  letter-spacing: .1em; color: var(--cream-mute);
+  text-align: center;
+}
+.led-state {
+  font-family: var(--font-mono); font-size: .7rem;
+  font-weight: 700; color: var(--cream);
+}
+
+/* ══════════════════
+   SPECS TABLE
+══════════════════ */
+.specs-table {
+  padding: 5rem 1.5rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  position: relative; z-index: 1;
+}
+.spec-table {
+  width: 100%; border-collapse: collapse;
+  margin-top: 2.5rem; font-family: var(--font-mono); font-size: .78rem;
+}
+.spec-table th {
+  text-align: left; padding: .6rem 1rem;
+  border-bottom: 1px solid var(--border-2);
+  color: var(--amber); letter-spacing: .12em; font-size: .65rem;
+  text-transform: uppercase;
+}
+.spec-table td {
+  padding: .65rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  color: var(--cream-dim); vertical-align: top;
+}
+.spec-table tr:hover td { background: rgba(245,158,11,.03); }
+.spec-table td:first-child { color: var(--cream-mute); font-size: .68rem; letter-spacing: .08em; }
+.spec-badge {
+  display: inline-block; font-size: .58rem;
+  padding: .12rem .45rem; border-radius: 3px;
+  margin-left: .4rem; letter-spacing: .1em;
+}
+.sb-optional { background: rgba(139,92,246,.12); color: var(--violet); border: 1px solid rgba(139,92,246,.2); }
+.sb-proto { background: rgba(245,158,11,.08); color: var(--amber); border: 1px solid rgba(245,158,11,.15); }
+
+/* ══════════════════
+   ROADMAP
+══════════════════ */
+.roadmap {
+  padding: 5rem 1.5rem;
+  position: relative; z-index: 1;
+}
+.roadmap-track {
+  position: relative; margin-top: 3rem; padding-left: 2rem;
+}
+.roadmap-track::before {
+  content: '';
+  position: absolute; left: .35rem; top: 0; bottom: 0;
+  width: 2px; background: linear-gradient(to bottom, var(--amber), transparent);
+}
+.roadmap-item {
+  position: relative; padding-bottom: 2.5rem; padding-left: 2rem;
+}
+.roadmap-dot {
+  position: absolute; left: -1.65rem; top: .15rem;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--amber-dim); background: var(--ink);
+  transition: background .3s;
+}
+.roadmap-item.done .roadmap-dot { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 12px var(--amber-glow); }
+.roadmap-item.active .roadmap-dot { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 12px rgba(6,182,212,.25); animation: pulse-dot 1.8s infinite; }
+.roadmap-date {
+  font-family: var(--font-mono); font-size: .62rem;
+  letter-spacing: .12em; color: var(--amber-dim);
+  margin-bottom: .25rem;
+}
+.roadmap-title {
+  font-size: .95rem; font-weight: 600; color: var(--cream);
+  margin-bottom: .3rem;
+}
+.roadmap-desc { font-size: .82rem; color: var(--cream-mute); line-height: 1.6; }
+
+/* ══════════════════
+   USE CASES
+══════════════════ */
+.use-cases { padding: 5rem 1.5rem; position: relative; z-index: 1; }
+.uc-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem; margin-top: 3rem;
+}
+.uc-card {
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 2rem; transition: transform .25s;
+}
+.uc-card:hover { transform: translateY(-4px); }
+.uc-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+.uc-title { font-size: 1.05rem; font-weight: 600; color: var(--cream); margin-bottom: .5rem; }
+.uc-sub {
+  font-family: var(--font-mono); font-size: .62rem;
+  letter-spacing: .1em; color: var(--amber-dim);
+  margin-bottom: .75rem; text-transform: uppercase;
+}
+.uc-desc { font-size: .85rem; color: var(--cream-mute); line-height: 1.7; }
+
+/* ══════════════════
+   RADIO SECTION
+══════════════════ */
+.radio-section {
+  padding: 5rem 1.5rem;
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(6,182,212,0.04) 100%);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative; z-index: 1; overflow: hidden;
+}
+.radio-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+}
+.radio-headline {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 700; color: var(--cream);
+  margin-bottom: 1.25rem; line-height: 1.2;
+}
+.radio-headline span { color: var(--cyan); }
+.radio-body { font-size: .9rem; color: var(--cream-mute); line-height: 1.8; margin-bottom: 1.5rem; }
+.radio-specs { display: flex; flex-direction: column; gap: .5rem; }
+.radio-spec {
+  display: flex; gap: .75rem; align-items: flex-start;
+  font-family: var(--font-mono); font-size: .72rem;
+}
+.radio-spec-key { color: var(--cyan); min-width: 110px; flex-shrink: 0; }
+.radio-spec-val { color: var(--cream-dim); }
+/* Waveform SVG animation */
+.radio-visual {
+  display: flex; justify-content: center; align-items: center;
+  position: relative;
+}
+.waveform-wrap {
+  background: var(--ink);
+  border: 1px solid rgba(6,182,212,.2);
+  border-radius: 14px; padding: 2rem;
+  text-align: center; position: relative;
+}
+.waveform-label {
+  font-family: var(--font-mono); font-size: .58rem;
+  letter-spacing: .15em; color: var(--cyan);
+  margin-bottom: 1rem;
+}
+.waveform svg { display: block; }
+.wave-path {
+  stroke: var(--cyan); stroke-width: 2;
+  fill: none; stroke-dasharray: 400;
+  animation: wave-anim 3s linear infinite;
+}
+.wave-path-ai {
+  stroke: var(--amber); stroke-width: 1.5;
+  fill: none; stroke-dasharray: 400;
+  animation: wave-anim 2.3s linear infinite reverse;
+  opacity: .7;
+}
+@keyframes wave-anim {
+  0%{stroke-dashoffset:400}100%{stroke-dashoffset:0}
+}
+.waveform-status {
+  display: flex; gap: 1.5rem; justify-content: center;
+  margin-top: 1rem;
+}
+.ws-dot {
+  display: flex; align-items: center; gap: .4rem;
+  font-family: var(--font-mono); font-size: .58rem;
+  color: var(--cream-mute); letter-spacing: .08em;
+}
+.ws-dot::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+}
+.ws-radio::before { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.ws-ai::before { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+
+/* ══════════════════
+   CTA
+══════════════════ */
+.cta-section {
+  padding: 6rem 1.5rem;
+  text-align: center;
+  position: relative; z-index: 1;
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+}
+.cta-overline {
+  font-family: var(--font-mono); font-size: .62rem;
+  letter-spacing: .2em; color: var(--amber-dim);
+  margin-bottom: 1rem; text-transform: uppercase;
+}
+.cta-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900; color: var(--cream);
+  margin-bottom: 1rem; line-height: 1.15;
+}
+.cta-title em { color: var(--amber); font-style: italic; }
+.cta-sub {
+  font-size: .95rem; color: var(--cream-mute);
+  max-width: 480px; margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+.cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.cta-note {
+  margin-top: 2rem; font-family: var(--font-mono); font-size: .65rem;
+  color: var(--cream-mute); letter-spacing: .08em;
+}
+
+/* ══════════════════
+   FOOTER
+══════════════════ */
+footer {
+  background: var(--ink);
+  border-top: 1px solid var(--border);
+  padding: 2rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+  position: relative; z-index: 1;
+}
+.footer-brand {
+  font-family: var(--font-mono); font-size: .72rem;
+  color: var(--amber); letter-spacing: .12em;
+}
+.footer-copy { font-family: var(--font-mono); font-size: .65rem; color: var(--cream-mute); }
+.footer-back {
+  font-family: var(--font-mono); font-size: .68rem;
+  color: var(--cream-mute); text-decoration: none;
+  transition: color .2s;
+}
+.footer-back:hover { color: var(--amber); }
+
+/* ══════════════════
+   RESPONSIVE
+══════════════════ */
+@media(max-width:900px){
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-device { order: -1; }
+  .device-img { max-width: 260px; }
+  .radio-inner { grid-template-columns: 1fr; }
+  .radio-visual { display: none; }
+  nav .nav-links { display: none; }
+}
+@media(max-width:640px){
+  .hero { padding: 5rem 1rem 3rem; }
+  .hero-title { font-size: 2.2rem; }
+  .flow-diagram { justify-content: flex-start; gap: 0; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="r-canvas"></canvas>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="../" class="nav-brand">✦ MOMENCRAFTS</a>
+  <ul class="nav-links">
+    <li><a href="#modes">Modes</a></li>
+    <li><a href="#hardware">Hardware</a></li>
+    <li><a href="#flow">How It Works</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#cta" class="nav-cta">Request Access →</a></li>
+  </ul>
+  <a href="../home" class="nav-back">← Investor Room</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-inner container">
+    <div class="hero-text reveal">
+      <div class="hero-eyebrow">
+        <span class="hero-dot"></span>
+        MOMENCRAFTS · HARDWARE DIVISION · RIYADH, KSA
+      </div>
+      <h1 class="hero-title">
+        ROGER·AI
+        <em>Voice of Intelligence</em>
+        <span class="ar">صوت الذكاء</span>
+      </h1>
+      <p class="hero-sub">
+        A purpose-built handheld AI assistant — combining hardware engineering, voice AI, and radio integration into a single device designed for executives, field operators, and bilingual Arabic/English power users.
+      </p>
+      <div class="hero-badges">
+        <span class="badge badge-amber">🧪 PROTOTYPE · SPIN 1</span>
+        <span class="badge badge-cyan">ESP32-S3 · 240MHz</span>
+        <span class="badge badge-violet">WiFi + BLE 5.0</span>
+        <span class="badge badge-green">✓ PCB DESIGNED</span>
+      </div>
+      <div class="hero-actions">
+        <a href="#cta" class="btn btn-amber">Request Access →</a>
+        <a href="#hardware" class="btn btn-ghost">View Hardware ↓</a>
+      </div>
+    </div>
+
+    <div class="hero-device reveal">
+      <div>
+        <img src="device.png" alt="RogerAI Device" class="device-img"/>
+        <div class="device-specs-strip">
+          <span class="device-spec-tag">TFT Display</span>
+          <span class="device-spec-tag">PTT Button</span>
+          <span class="device-spec-tag">EC11 Encoder</span>
+          <span class="device-spec-tag">WS2812B × 8</span>
+          <span class="device-spec-tag">USB-C</span>
+          <span class="device-spec-tag">3W Speaker</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4 MODES ══ -->
+<section id="modes" class="modes">
+  <div class="container">
+    <div class="section-label reveal">02 · OPERATING MODES</div>
+    <h2 style="font-family:var(--font-serif);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:var(--cream);margin:.5rem 0 .75rem" class="reveal">Four Modes. One Device.</h2>
+    <p style="color:var(--cream-mute);font-size:.9rem;max-width:560px" class="reveal">Switch between operational modes via the TFT touchscreen — each mode optimized for a specific interaction pattern.</p>
+    <div class="modes-grid">
+      <div class="mode-card reveal">
+        <span class="mode-icon">🎙️</span>
+        <div class="mode-name">MODE 01</div>
+        <div class="mode-title">Voice</div>
+        <div class="mode-desc">Press PTT, speak, release. Roger processes your command in real time over WiFi — executive briefings, reminders, decisions. Ambient audio via ES8388 codec.</div>
+      </div>
+      <div class="mode-card reveal">
+        <span class="mode-icon">💬</span>
+        <div class="mode-name">MODE 02</div>
+        <div class="mode-title">Chat</div>
+        <div class="mode-desc">Persistent conversation thread on the TFT display. Navigate with the rotary encoder. Full Arabic/English bilingual. Session memory synced to cloud.</div>
+      </div>
+      <div class="mode-card reveal">
+        <span class="mode-icon">🧠</span>
+        <div class="mode-name">MODE 03</div>
+        <div class="mode-title">AI Mode</div>
+        <div class="mode-desc">Autonomous intelligence layer — proactive reports, calendar awareness, decision support. Roger surfaces what you need before you ask.</div>
+      </div>
+      <div class="mode-card reveal">
+        <span class="mode-icon">⚙️</span>
+        <div class="mode-name">MODE 04</div>
+        <div class="mode-title">Settings</div>
+        <div class="mode-desc">Device config, WiFi setup, BLE pairing, language preference, audio levels, OTA firmware updates — all on-device via rotary encoder navigation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HARDWARE SPECS ══ -->
+<section id="hardware" class="hw-specs">
+  <div class="container">
+    <div class="section-label reveal">03 · HARDWARE ARCHITECTURE</div>
+    <h2 style="font-family:var(--font-serif);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:var(--cream);margin:.5rem 0 .75rem" class="reveal">7 Blocks. One Board.</h2>
+    <p style="color:var(--cream-mute);font-size:.9rem;max-width:560px;margin-bottom:0" class="reveal">Spin 1 PCB designed in KiCad 10 — every subsystem engineered from the ground up.</p>
+    <div class="hw-grid">
+
+      <!-- Block 1: Power -->
+      <div class="hw-block">
+        <div class="hw-block-head" onclick="toggleBlock(this)">
+          <div class="hw-block-num">01</div>
+          <div class="hw-block-icon">⚡</div>
+          <div class="hw-block-info">
+            <div class="hw-block-name">POWER SYSTEM</div>
+            <div class="hw-block-chip">BQ25895 · BQ29700 · AP2112K × 2 · MT3608</div>
+          </div>
+          <div class="hw-block-toggle">+</div>
+        </div>
+        <div class="hw-block-body">
+          <div class="hw-block-inner">
+            <div class="hw-detail-row"><span class="hw-detail-key">INPUT</span><span class="hw-detail-val">USB-C with USBLC6-2SC6 ESD protection</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">CHARGER</span><span class="hw-detail-val">BQ25895 Li-ion (up to 5A input, I²C control)</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">PROTECTION</span><span class="hw-detail-val">BQ29700 cell protection IC</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">LDO × 2</span><span class="hw-detail-val">AP2112K-3.3 · 3V3_DIG + 3V3_ANA (isolated)</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">BOOST</span><span class="hw-detail-val">MT3608 → 5V for LEDs + level shifter</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">MONITOR</span><span class="hw-detail-val">BATT_ADC resistor divider → ESP32 IO1</span></div>
+            <div class="hw-nets"><span>Nets: </span>VBUS · VSYS · VBAT · 3V3_DIG · 3V3_ANA · 5V · AGND · CHG_STAT</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 2: MCU -->
+      <div class="hw-block">
+        <div class="hw-block-head" onclick="toggleBlock(this)">
+          <div class="hw-block-num">02</div>
+          <div class="hw-block-icon">💻</div>
+          <div class="hw-block-info">
+            <div class="hw-block-name">MCU CORE</div>
+            <div class="hw-block-chip">ESP32-S3-WROOM-1-N16R8</div>
+          </div>
+          <div class="hw-block-toggle">+</div>
+        </div>
+        <div class="hw-block-body">
+          <div class="hw-block-inner">
+            <div class="hw-detail-row"><span class="hw-detail-key">CPU</span><span class="hw-detail-val">Xtensa LX7 dual-core · 240 MHz</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">FLASH</span><span class="hw-detail-val">16 MB SPI (NOR)</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">RAM</span><span class="hw-detail-val">8 MB PSRAM (OPI)</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">WIRELESS</span><span class="hw-detail-val">WiFi 802.11 b/g/n · BLE 5.0</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">USB</span><span class="hw-detail-val">Native USB-CDC (DFU + serial)</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">GPIO MAP</span><span class="hw-detail-val">IO1–IO48 · 26 mapped peripherals</span></div>
+            <div class="hw-nets"><span>Nets: </span>I²S_MCLK · SPI_MOSI/SCK/MISO · I²C1/2 · PTT · WS2812_DATA · ENC_A/B/SW</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 3: Audio -->
+      <div class="hw-block">
+        <div class="hw-block-head" onclick="toggleBlock(this)">
+          <div class="hw-block-num">03</div>
+          <div class="hw-block-icon">🔊</div>
+          <div class="hw-block-info">
+            <div class="hw-block-name">AUDIO SYSTEM</div>
+            <div class="hw-block-chip">ES8388 · MAX98357A · TRRS</div>
+          </div>
+          <div class="hw-block-toggle">+</div>
+        </div>
+        <div class="hw-block-body">
+          <div class="hw-block-inner">
+            <div class="hw-detail-row"><span class="hw-detail-key">CODEC</span><span class="hw-detail-val">ES8388 — hi-fi ADC/DAC, I²S + I²C config</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">AMP</span><span class="hw-detail-val">MAX98357A — I²S Class-D · 3W mono speaker</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">MIC</span><span class="hw-detail-val">Internal electret via LIN2 · SPDT mute switch + red LED</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">HEADPHONE</span><span class="hw-detail-val">Stereo L/R via LOUT1/ROUT1 + coupling caps</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">TRRS</span><span class="hw-detail-val">3.5mm jack — HP L/R + external mic + AUX detect</span></div>
+            <div class="hw-nets"><span>Nets: </span>I²S_MCLK · I²S_BCLK · I²S_WS · I²S_DIN · I²S_DOUT · AUX_DETECT · MIC_MUTE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 4: Display -->
+      <div class="hw-block">
+        <div class="hw-block-head" onclick="toggleBlock(this)">
+          <div class="hw-block-num">04</div>
+          <div class="hw-block-icon">📺</div>
+          <div class="hw-block-info">
+            <div class="hw-block-name">DISPLAY + TOUCH + SD</div>
+            <div class="hw-block-chip">TFT FPC-12P · Capacitive Touch · MicroSD</div>
+          </div>
+          <div class="hw-block-toggle">+</div>
+        </div>
+        <div class="hw-block-body">
+          <div class="hw-block-inner">
+            <div class="hw-detail-row"><span class="hw-detail-key">DISPLAY</span><span class="hw-detail-val">TFT via 12-pin FPC connector · SPI bus</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">BACKLIGHT</span><span class="hw-detail-val">FDC6330L PMOS · PWM via IO2 (TFT_BL_PWM)</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">TOUCH</span><span class="hw-detail-val">Capacitive via I²C2 · INT + RST pins</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">STORAGE</span><span class="hw-detail-val">MicroSD SPI (shared SPI bus · IO42 CS)</span></div>
+            <div class="hw-nets"><span>Nets: </span>TFT_CS · TFT_DC · TFT_BL · SPI_MOSI · SPI_SCK · TOUCH_INT · TOUCH_RST · SD_CS</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 5: Controls -->
+      <div class="hw-block">
+        <div class="hw-block-head" onclick="toggleBlock(this)">
+          <div class="hw-block-num">05</div>
+          <div class="hw-block-icon">🎛️</div>
+          <div class="hw-block-info">
+            <div class="hw-block-name">CONTROLS + LEDs</div>
+            <div class="hw-block-chip">PTT · EC11 · WS2812B × 8 · 74AHCT125</div>
+          </div>
+          <div class="hw-block-toggle">+</div>
+        </div>
+        <div class="hw-block-body">
+          <div class="hw-block-inner">
+            <div class="hw-detail-row"><span class="hw-detail-key">PTT</span><span class="hw-detail-val">Push-to-talk button · RC debounce · IO36</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">ENCODER</span><span class="hw-detail-val">EC11 rotary — A/B/SW · 10kΩ pull-ups · 100n debounce</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">LEDs</span><span class="hw-detail-val">8× WS2812B addressable RGB · daisy-chained</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">LEVEL SHIFT</span><span class="hw-detail-val">SN74AHCT125 · 3.3V → 5V for WS2812B data</span></div>
+            <div class="hw-nets"><span>Nets: </span>PTT · ENC_A · ENC_B · ENC_SW · WS2812_DATA · WS_DATA_5V · 5V</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 6: Sensors DNP -->
+      <div class="hw-block">
+        <div class="hw-block-head" onclick="toggleBlock(this)">
+          <div class="hw-block-num">06</div>
+          <div class="hw-block-icon">🛰️</div>
+          <div class="hw-block-info">
+            <div class="hw-block-name">SENSORS (OPTIONAL)</div>
+            <div class="hw-block-chip">NEO-M8N · DS3231M · DRV2605L · ATECC608B</div>
+          </div>
+          <div class="hw-block-toggle">+</div>
+        </div>
+        <div class="hw-block-body">
+          <div class="hw-block-inner">
+            <div class="hw-detail-row"><span class="hw-detail-key">GPS</span><span class="hw-detail-val">NEO-M8N · UART · uFL antenna · CR1220 backup <span class="spec-badge sb-optional">DNP</span></span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">RTC</span><span class="hw-detail-val">DS3231M · I²C2 · CR2032 backup <span class="spec-badge sb-optional">DNP</span></span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">HAPTIC</span><span class="hw-detail-val">DRV2605L + LRA motor · I²C2 <span class="spec-badge sb-optional">DNP</span></span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">CRYPTO</span><span class="hw-detail-val">ATECC608B secure element · I²C1 <span class="spec-badge sb-optional">DNP</span></span></div>
+            <div class="hw-nets"><span>Nets: </span>UART2_TX/RX · RTC_INT · HAPTIC_EN · I²C1/2_SDA/SCL</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 7: Expansion -->
+      <div class="hw-block">
+        <div class="hw-block-head" onclick="toggleBlock(this)">
+          <div class="hw-block-num">07</div>
+          <div class="hw-block-icon">📡</div>
+          <div class="hw-block-info">
+            <div class="hw-block-name">RADIO + EXPANSION</div>
+            <div class="hw-block-chip">UART1 · RADIO_PTT · RADIO_COR · I²C2</div>
+          </div>
+          <div class="hw-block-toggle">+</div>
+        </div>
+        <div class="hw-block-body">
+          <div class="hw-block-inner">
+            <div class="hw-detail-row"><span class="hw-detail-key">RADIO PTT</span><span class="hw-detail-val">Output to trigger radio transmitter</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">RADIO COR</span><span class="hw-detail-val">Input — Carrier Operated Relay (squelch detect)</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">UART1</span><span class="hw-detail-val">Serial control of external radio transceiver</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">EXPANSION</span><span class="hw-detail-val">8-pin header · 3V3 · GND · UART · I²C2 · PTT · COR</span></div>
+            <div class="hw-detail-row"><span class="hw-detail-key">TEST PTS</span><span class="hw-detail-val">15× test points for all major nets</span></div>
+            <div class="hw-nets"><span>Nets: </span>RADIO_PTT · RADIO_COR · UART1_TX · UART1_RX · I²C2_SDA · I²C2_SCL</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ AI FLOW ══ -->
+<section id="flow" class="ai-flow">
+  <div class="container">
+    <div class="section-label reveal">04 · AI PIPELINE</div>
+    <h2 style="font-family:var(--font-serif);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:var(--cream);margin:.5rem 0 .75rem" class="reveal">From PTT to Intelligence</h2>
+    <p style="color:var(--cream-mute);font-size:.9rem;max-width:560px" class="reveal">Press and hold the PTT button — ROGER·AI captures, processes, and responds in under 2 seconds.</p>
+
+    <div class="flow-diagram">
+      <div class="flow-node reveal">
+        <div class="flow-icon active">🎙️</div>
+        <div class="flow-label">PTT Press<br/>Mic Active</div>
+      </div>
+      <div class="flow-arrow reveal"><div class="flow-line"></div><div class="flow-tip"></div></div>
+      <div class="flow-node reveal">
+        <div class="flow-icon">🔊</div>
+        <div class="flow-label">ES8388<br/>Audio Capture</div>
+      </div>
+      <div class="flow-arrow reveal"><div class="flow-line"></div><div class="flow-tip"></div></div>
+      <div class="flow-node reveal">
+        <div class="flow-icon">💻</div>
+        <div class="flow-label">ESP32-S3<br/>Pre-process</div>
+      </div>
+      <div class="flow-arrow reveal"><div class="flow-line"></div><div class="flow-tip"></div></div>
+      <div class="flow-node reveal">
+        <div class="flow-icon">☁️</div>
+        <div class="flow-label">WiFi → Cloud<br/>Gemini AI</div>
+      </div>
+      <div class="flow-arrow reveal"><div class="flow-line"></div><div class="flow-tip"></div></div>
+      <div class="flow-node reveal">
+        <div class="flow-icon">🧠</div>
+        <div class="flow-label">Persistent<br/>Memory + Context</div>
+      </div>
+      <div class="flow-arrow reveal"><div class="flow-line"></div><div class="flow-tip"></div></div>
+      <div class="flow-node reveal">
+        <div class="flow-icon active">📺</div>
+        <div class="flow-label">TFT + Speaker<br/>Response</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ USE CASES ══ -->
+<section class="use-cases">
+  <div class="container">
+    <div class="section-label reveal">05 · USE CASES</div>
+    <h2 style="font-family:var(--font-serif);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:var(--cream);margin:.5rem 0 .75rem" class="reveal">Built for the Field. Designed for the Boardroom.</h2>
+    <div class="uc-grid">
+      <div class="uc-card reveal">
+        <div class="uc-icon">👔</div>
+        <div class="uc-sub">Executive</div>
+        <div class="uc-title">C-Level Intelligence</div>
+        <div class="uc-desc">Morning briefings, meeting summaries, decision support — Roger surfaces what matters before you ask. Arabic-first, English-capable, always-on context.</div>
+      </div>
+      <div class="uc-card reveal">
+        <div class="uc-icon">📡</div>
+        <div class="uc-sub">Field Operations</div>
+        <div class="uc-title">Radio-Integrated AI</div>
+        <div class="uc-desc">Connect to any radio transceiver via the expansion port. AI monitors, transcribes, and responds over voice comms — PTT to speak, COR to listen.</div>
+      </div>
+      <div class="uc-card reveal">
+        <div class="uc-icon">🌐</div>
+        <div class="uc-sub">Bilingual</div>
+        <div class="uc-title">Arabic + English Native</div>
+        <div class="uc-desc">Switch languages mid-sentence. Roger understands Gulf Arabic dialect, translates in real time, and responds in the language you prefer.</div>
+      </div>
+      <div class="uc-card reveal">
+        <div class="uc-icon">🔐</div>
+        <div class="uc-sub">Security</div>
+        <div class="uc-title">Hardware-Level Crypto</div>
+        <div class="uc-desc">Optional ATECC608B crypto chip for secure key storage — enterprise deployments with hardware authentication, encrypted memory sync, and secure OTA.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RADIO SECTION ══ -->
+<section class="radio-section">
+  <div class="container">
+    <div class="radio-inner">
+      <div class="reveal">
+        <div class="section-label">06 · RADIO INTEGRATION</div>
+        <h2 class="radio-headline">The only AI assistant that <span>talks to your radio.</span></h2>
+        <p class="radio-body">Roger·AI's expansion header exposes RADIO_PTT and RADIO_COR signals — giving it the ability to interface with any amateur or professional radio transceiver. AI understands the transmission, responds on air, and logs everything.</p>
+        <div class="radio-specs">
+          <div class="radio-spec"><span class="radio-spec-key">RADIO_PTT</span><span class="radio-spec-val">Output → triggers radio transmit relay</span></div>
+          <div class="radio-spec"><span class="radio-spec-key">RADIO_COR</span><span class="radio-spec-val">Input ← Carrier Operated Relay (channel open detect)</span></div>
+          <div class="radio-spec"><span class="radio-spec-key">UART1</span><span class="radio-spec-val">Serial control of CAT-compatible transceivers</span></div>
+          <div class="radio-spec"><span class="radio-spec-key">AUDIO</span><span class="radio-spec-val">TRRS jack for radio mic/speaker loop</span></div>
+        </div>
+      </div>
+      <div class="radio-visual reveal">
+        <div class="waveform-wrap">
+          <div class="waveform-label">LIVE · RADIO + AI OVERLAY</div>
+          <div class="waveform">
+            <svg width="260" height="80" viewBox="0 0 260 80">
+              <path class="wave-path" d="M0,40 C20,20 30,60 50,40 C70,20 80,60 100,40 C120,20 130,60 150,40 C170,20 180,60 200,40 C220,20 230,60 260,40"/>
+              <path class="wave-path-ai" d="M0,40 C15,30 25,50 45,40 C65,30 75,50 95,40 C115,30 125,50 145,40 C165,30 175,50 195,40 C215,30 225,50 260,40"/>
+            </svg>
+          </div>
+          <div class="waveform-status">
+            <div class="ws-dot ws-radio">Radio Signal</div>
+            <div class="ws-dot ws-ai">AI Response</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LED RING ══ -->
+<section class="led-section">
+  <div class="container">
+    <div class="section-label reveal">07 · STATUS LED SYSTEM</div>
+    <h2 style="font-family:var(--font-serif);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:var(--cream);margin:.5rem 0 .75rem" class="reveal">8 LEDs. Every State.</h2>
+    <p style="color:var(--cream-mute);font-size:.9rem;max-width:560px" class="reveal">WS2812B addressable RGB LEDs provide instant, glanceable status — no screen required.</p>
+    <div class="led-demo">
+      <div class="led-mode reveal">
+        <div class="led-strip led-listen">
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+        </div>
+        <div class="led-state">🎙️ LISTENING</div>
+        <div class="led-label">Amber pulse<br/>PTT active</div>
+      </div>
+      <div class="led-mode reveal">
+        <div class="led-strip led-think">
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+        </div>
+        <div class="led-state">🔵 THINKING</div>
+        <div class="led-label">Cyan wave<br/>AI processing</div>
+      </div>
+      <div class="led-mode reveal">
+        <div class="led-strip led-ready">
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+        </div>
+        <div class="led-state">🟢 READY</div>
+        <div class="led-label">Green solid<br/>Response ready</div>
+      </div>
+      <div class="led-mode reveal">
+        <div class="led-strip led-mute">
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+        </div>
+        <div class="led-state">🔴 MUTED</div>
+        <div class="led-label">Red flash<br/>Mic hardware muted</div>
+      </div>
+      <div class="led-mode reveal">
+        <div class="led-strip led-idle">
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+          <div class="led-dot"></div><div class="led-dot"></div>
+        </div>
+        <div class="led-state">⚪ IDLE</div>
+        <div class="led-label">White breathe<br/>Standby / charging</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DEVICE SPECS TABLE ══ -->
+<section class="specs-table">
+  <div class="container">
+    <div class="section-label reveal">08 · FULL SPECIFICATIONS</div>
+    <h2 style="font-family:var(--font-serif);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:var(--cream);margin:.5rem 0 .75rem" class="reveal">Spin 1 · Technical Sheet</h2>
+    <table class="spec-table reveal">
+      <thead><tr><th>COMPONENT</th><th>SPECIFICATION</th></tr></thead>
+      <tbody>
+        <tr><td>CPU</td><td>ESP32-S3 Xtensa LX7 dual-core · 240 MHz</td></tr>
+        <tr><td>Flash Memory</td><td>16 MB SPI NOR</td></tr>
+        <tr><td>RAM</td><td>8 MB OPI PSRAM (in-package)</td></tr>
+        <tr><td>Connectivity</td><td>WiFi 802.11 b/g/n · BLE 5.0 (LE)</td></tr>
+        <tr><td>USB</td><td>USB-C · Native USB-CDC · DFU capable</td></tr>
+        <tr><td>Display</td><td>TFT via 12-pin FPC · SPI · PWM backlight</td></tr>
+        <tr><td>Touch</td><td>Capacitive · I²C2 · interrupt-driven</td></tr>
+        <tr><td>Audio Codec</td><td>ES8388 · Hi-fi ADC/DAC · I²S digital · I²C config</td></tr>
+        <tr><td>Speaker Amp</td><td>MAX98357A · I²S Class-D · 3W mono</td></tr>
+        <tr><td>Audio Jack</td><td>TRRS 3.5mm · HP stereo + external mic</td></tr>
+        <tr><td>Status LEDs</td><td>8× WS2812B addressable RGB (5V, via 74AHCT125)</td></tr>
+        <tr><td>Controls</td><td>PTT push button · EC11 rotary encoder + click · Power switch</td></tr>
+        <tr><td>Storage</td><td>MicroSD card slot (SPI)</td></tr>
+        <tr><td>Charging</td><td>BQ25895 Li-ion · up to 5A input · I²C telemetry</td></tr>
+        <tr><td>Battery Prot.</td><td>BQ29700 cell protection</td></tr>
+        <tr><td>Regulators</td><td>Dual AP2112K-3.3 (digital / analog isolated) · MT3608 boost 5V</td></tr>
+        <tr><td>Radio I/F</td><td>RADIO_PTT out · RADIO_COR in · UART1 serial <span class="spec-badge sb-proto">PROTOTYPE</span></td></tr>
+        <tr><td>GPS</td><td>NEO-M8N · UART · uFL · CR1220 backup <span class="spec-badge sb-optional">OPTIONAL</span></td></tr>
+        <tr><td>RTC</td><td>DS3231M · I²C2 · CR2032 <span class="spec-badge sb-optional">OPTIONAL</span></td></tr>
+        <tr><td>Haptic</td><td>DRV2605L + LRA motor <span class="spec-badge sb-optional">OPTIONAL</span></td></tr>
+        <tr><td>Crypto</td><td>ATECC608B secure element · I²C1 <span class="spec-badge sb-optional">OPTIONAL</span></td></tr>
+        <tr><td>PCB Design</td><td>KiCad 10 · 7-sheet hierarchical schematic</td></tr>
+        <tr><td>Status</td><td>Spin 1 schematic complete — PCB fabrication pending</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ ROADMAP ══ -->
+<section id="roadmap" class="roadmap">
+  <div class="container">
+    <div class="section-label reveal">09 · ROADMAP</div>
+    <h2 style="font-family:var(--font-serif);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:var(--cream);margin:.5rem 0 .75rem" class="reveal">The Journey to Production</h2>
+    <div class="roadmap-track">
+      <div class="roadmap-item done reveal">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-date">Q1 2026</div>
+        <div class="roadmap-title">Spin 1 Schematic Complete</div>
+        <div class="roadmap-desc">Full 7-block hierarchical KiCad schematic designed. All net assignments, power architecture, and component selection finalized.</div>
+      </div>
+      <div class="roadmap-item active reveal">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-date">Q2 2026 · NOW</div>
+        <div class="roadmap-title">PCB Layout + Fabrication</div>
+        <div class="roadmap-desc">Routing the PCB, placing components, manufacturing Spin 1 prototype boards. First physical units in hand.</div>
+      </div>
+      <div class="roadmap-item reveal">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-date">Q3 2026</div>
+        <div class="roadmap-title">Firmware Development</div>
+        <div class="roadmap-desc">ESP32-S3 firmware — audio pipeline, AI integration, BLE companion, WiFi config, OTA updates. App companion launch.</div>
+      </div>
+      <div class="roadmap-item reveal">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-date">Q3 2026</div>
+        <div class="roadmap-title">Private Beta · Invite Only</div>
+        <div class="roadmap-desc">Hand-selected beta partners receive Spin 1 devices. Feedback loop begins. Enterprise pilot agreements.</div>
+      </div>
+      <div class="roadmap-item reveal">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-date">Q4 2026</div>
+        <div class="roadmap-title">Production Run</div>
+        <div class="roadmap-desc">Spin 2 refinements based on beta feedback. Production order. Channel partnerships.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section id="cta" class="cta-section">
+  <div class="container">
+    <div class="cta-overline reveal">ROGER·AI · PRIVATE ACCESS</div>
+    <h2 class="cta-title reveal">This device is not<br/>for sale — <em>yet.</em></h2>
+    <p class="cta-sub reveal">Roger·AI is in active development. If you're an enterprise partner, investor, or system integrator who wants early access — reach out directly.</p>
+    <div class="cta-actions reveal">
+      <a href="mailto:momen@momencrafts.com?subject=ROGER·AI — Partnership Inquiry" class="btn btn-amber">✉️ momen@momencrafts.com</a>
+      <a href="https://wa.me/966535271122?text=I'm interested in ROGER·AI — early access" target="_blank" rel="noopener" class="btn btn-ghost">💬 WhatsApp Direct</a>
+    </div>
+    <div class="cta-note reveal">Partners with MCR- investor access tokens can view full hardware specs and firmware architecture in the investor room.</div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-brand">✦ ROGER·AI BY MOMENCRAFTS</div>
+  <div class="footer-copy">© 2026 MomenCrafts · Riyadh, KSA · Built by Momen Faraon</div>
+  <a href="../" class="footer-back">← momencrafts.com</a>
+</footer>
+
+<script>
+/* ── Particle canvas ── */
+(function(){
+  const canvas = document.getElementById('r-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for(let i=0;i<50;i++){
+    particles.push({
+      x: Math.random()*2000, y: Math.random()*1200,
+      r: Math.random()*1.5+0.3,
+      vx:(Math.random()-.5)*.15, vy:(Math.random()-.5)*.1,
+      o: Math.random()*.5+.1
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x%W, p.y%H, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(245,158,11,${p.o})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── Hardware block toggle ── */
+function toggleBlock(head){
+  const block = head.closest('.hw-block');
+  block.classList.toggle('open');
+}
+
+/* ── Scroll reveal ── */
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+</script>
+</body>
+</html>
