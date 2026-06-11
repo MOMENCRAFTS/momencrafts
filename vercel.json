@@ -1,12 +1,8 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "vite",
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
   "redirects": [
     {
       "source": "/(.*)",
@@ -22,6 +18,9 @@
     },
     { "source": "/gate", "destination": "/", "permanent": false },
     { "source": "/room", "destination": "/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {
