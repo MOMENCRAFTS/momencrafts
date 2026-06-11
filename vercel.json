@@ -16,7 +16,7 @@
       "destination": "/cliniq.html"
     },
     { "source": "/",      "destination": "/gate.html"   },
-    { "source": "/home",  "destination": "/index.html"  },
+    { "source": "/home",  "destination": "/home.html"   },
     { "source": "/gate",  "destination": "/gate.html"   },
     { "source": "/cliniq", "destination": "/cliniq.html" }
   ],
