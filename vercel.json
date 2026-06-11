@@ -8,12 +8,12 @@
     {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "cliniq.one" }],
-      "destination": "/cliniq.html"
+      "destination": "/cliniq"
     },
     {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "www.cliniq.one" }],
-      "destination": "/cliniq.html"
+      "destination": "/cliniq"
     },
     { "source": "/", "destination": "/gate" }
   ],
