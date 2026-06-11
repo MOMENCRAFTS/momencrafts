@@ -1,11 +1,11 @@
 {
-  "buildCommand": null,
-  "outputDirectory": ".",
-  "framework": null,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/gate" }
+    { "source": "/((?!assets|audio|videos|favicon\\.svg|og-image\\.png|robots\\.txt|sitemap\\.xml).*)", "destination": "/index.html" }
   ],
   "redirects": [
     {
@@ -20,23 +20,23 @@
       "destination": "https://momencrafts.com/cliniq",
       "permanent": true
     },
-    { "source": "/room", "destination": "/gate", "permanent": false }
+    { "source": "/gate", "destination": "/", "permanent": false },
+    { "source": "/room", "destination": "/", "permanent": false }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "no-referrer" }
+        { "key": "X-Frame-Options",        "value": "DENY" },
+        { "key": "Referrer-Policy",         "value": "no-referrer" }
       ]
     },
     {
-      "source": "/(gate|home|admin)(.*)",
+      "source": "/(|home)(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
     }
   ]
 }
-

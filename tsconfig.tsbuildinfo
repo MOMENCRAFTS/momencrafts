@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/screens/edgetackscreen.tsx","./src/screens/gatescreen.tsx","./src/screens/homescreen.tsx","./src/screens/rogeraiscreen.tsx","./src/services/supabase.ts","./src/stores/useappstore.ts"],"version":"5.8.3"}
