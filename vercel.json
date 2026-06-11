@@ -15,13 +15,10 @@
       "has": [{ "type": "host", "value": "www.cliniq.one" }],
       "destination": "/cliniq.html"
     },
-    { "source": "/",      "destination": "/gate.html"   },
-    { "source": "/home",  "destination": "/home.html"   },
-    { "source": "/gate",  "destination": "/gate.html"   },
-    { "source": "/cliniq", "destination": "/cliniq.html" }
+    { "source": "/", "destination": "/gate" }
   ],
   "redirects": [
-    { "source": "/room", "destination": "/", "permanent": false }
+    { "source": "/room", "destination": "/gate", "permanent": false }
   ],
   "headers": [
     {
