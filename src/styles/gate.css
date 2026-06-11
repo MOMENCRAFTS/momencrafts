@@ -403,10 +403,17 @@ body:has(.gate-layout) {
   background: rgba(8,7,6,0.92);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: flex-start;     /* Safari: don't clip tall cards */
+  justify-content: center;
   z-index: 9000;
   opacity: 0; pointer-events: none;
   transition: opacity 0.35s;
+  /* iOS scrollable overlay */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: max(2rem, env(safe-area-inset-top)) 1rem max(2rem, env(safe-area-inset-bottom));
 }
 .nda-overlay.visible {
   opacity: 1; pointer-events: all;
@@ -420,6 +427,9 @@ body:has(.gate-layout) {
   width: 90%;
   box-shadow: 0 32px 80px rgba(0,0,0,0.7);
   text-align: center;
+  /* Safari: ensure card is never taller than viewport, allow inner scroll if needed */
+  flex-shrink: 0;
+  margin: auto;  /* vertically centre when content shorter than viewport */
 }
 .nda-mark { font-size: 1.5rem; color: var(--g-gold); margin-bottom: 1rem; }
 .nda-title {

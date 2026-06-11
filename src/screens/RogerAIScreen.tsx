@@ -67,10 +67,30 @@ function useReveal() {
   }, [])
 }
 
+function useHamburger() {
+  useEffect(() => {
+    const btn   = document.getElementById('nav-hamburger')
+    const links = document.getElementById('nav-links')
+    if (!btn || !links) return
+    const toggle = () => {
+      const open = links.classList.toggle('open')
+      btn.setAttribute('aria-expanded', String(open))
+    }
+    btn.addEventListener('click', toggle)
+    // Close on link click
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      links.classList.remove('open')
+      btn.setAttribute('aria-expanded', 'false')
+    }))
+    return () => btn.removeEventListener('click', toggle)
+  }, [])
+}
+
 export default function RogerAIScreen() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useParticle(canvasRef)
   useReveal()
+  useHamburger()
 
   return (
     <>

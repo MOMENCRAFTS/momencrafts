@@ -116,3 +116,207 @@ body{background:#fff;color:var(--txt);background-image:none}
 
 /* PROGRESS BAR */
 #progress-bar{background:linear-gradient(90deg,var(--cr),var(--cr-deep))}
+
+/* ════════════════════════════════════════════════
+   PRODUCT SCREENS MOBILE — RogerAI + EdgeTack
+   Shared breakpoints for classes used in both screens
+   ════════════════════════════════════════════════ */
+
+/* ── Shared product screen nav vars ── */
+.nav-brand{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  letter-spacing:.2em;color:var(--cr);text-decoration:none;font-weight:700;
+}
+.nav-back{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  letter-spacing:.1em;color:var(--txt-2);text-decoration:none;
+  padding:.4rem .9rem;border:1px solid rgba(181,0,15,.2);border-radius:4px;
+  transition:color .2s,border-color .2s;
+}
+.nav-back:hover{color:var(--cr);border-color:var(--cr);}
+
+/* ── Product screen hero ── */
+.hero-inner.container{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:center;
+}
+.hero-title{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:clamp(2.5rem,5vw,4rem);font-weight:700;
+  line-height:1.1;color:#fff;margin-bottom:1rem;
+}
+.hero-title em{color:var(--cr);font-style:italic;}
+.hero-title .ar{
+  display:block;font-family:'Cairo',sans-serif;
+  font-size:.45em;color:var(--txt-2);font-weight:400;
+  margin-top:.5rem;letter-spacing:0;
+}
+.hero-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--cr);display:inline-block;
+  animation:blink 1.8s ease-in-out infinite;
+}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem;}
+.badge{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  letter-spacing:.12em;padding:.3rem .7rem;border-radius:3px;
+}
+.badge-amber{background:rgba(200,169,110,.1);color:#C8A96E;border:1px solid rgba(200,169,110,.25);}
+.badge-cyan {background:rgba(0,229,255,.08);color:#00E5FF;border:1px solid rgba(0,229,255,.18);}
+.badge-violet{background:rgba(147,51,234,.1);color:#a78bfa;border:1px solid rgba(147,51,234,.2);}
+.badge-green{background:rgba(0,166,81,.1);color:#00A651;border:1px solid rgba(0,166,81,.2);}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.25rem;}
+.btn-amber{background:var(--cr);color:#fff;border-color:var(--cr) !important;}
+.btn-amber:hover{background:var(--cr-deep) !important;transform:translateY(-2px) !important;}
+.hero-device{display:flex;align-items:center;justify-content:center;}
+.device-img{max-width:100%;height:auto;border-radius:8px;}
+.device-specs-strip{
+  display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem;justify-content:center;
+}
+.device-spec-tag{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  letter-spacing:.1em;background:rgba(181,0,15,.08);
+  border:1px solid rgba(181,0,15,.18);color:var(--cr);
+  padding:.2rem .6rem;border-radius:3px;
+}
+
+/* ── Modes grid ── */
+.modes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.mode-card{
+  background:rgba(181,0,15,.04);border:1px solid rgba(181,0,15,.12);
+  border-radius:8px;padding:1.5rem 1.25rem;
+}
+.mode-icon{font-size:1.8rem;display:block;margin-bottom:.75rem;}
+.mode-name{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.2em;color:var(--cr);margin-bottom:.3rem;}
+.mode-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;margin-bottom:.5rem;}
+.mode-desc{font-size:.8rem;color:var(--txt-2);line-height:1.6;}
+
+/* ── Hardware grid ── */
+.hw-grid{display:flex;flex-direction:column;gap:.75rem;}
+.hw-block{border:1px solid rgba(181,0,15,.12);border-radius:6px;overflow:hidden;}
+.hw-block-head{
+  display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;
+  cursor:pointer;background:rgba(181,0,15,.03);
+  transition:background .2s;
+}
+.hw-block-head:hover{background:rgba(181,0,15,.07);}
+.hw-block-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:var(--cr);}
+.hw-block-icon{font-size:1.3rem;}
+.hw-block-info{flex:1;}
+.hw-block-name{font-size:.88rem;font-weight:600;color:#fff;margin-bottom:.15rem;}
+.hw-block-chip{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--txt-2);letter-spacing:.05em;}
+.hw-block-toggle{color:var(--cr);font-size:1.2rem;font-weight:300;}
+.hw-block-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+.hw-block.open .hw-block-body{max-height:200px;}
+.hw-block-inner{padding:.75rem 1.25rem 1.25rem;}
+.hw-nets{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--txt-2);letter-spacing:.05em;line-height:1.6;}
+.hw-nets span{color:var(--cr);font-weight:600;}
+
+/* ── AI flow diagram ── */
+.ai-flow{padding:5rem 0;background:rgba(181,0,15,.02);}
+.flow-diagram{display:flex;align-items:center;gap:1rem;overflow-x:auto;padding:.5rem 0;}
+.flow-node{display:flex;flex-direction:column;align-items:center;gap:.75rem;min-width:90px;}
+.flow-icon{
+  width:60px;height:60px;border-radius:50%;
+  background:rgba(181,0,15,.08);border:2px solid rgba(181,0,15,.2);
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+}
+.flow-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.08em;color:var(--txt-2);text-align:center;}
+.flow-arrow{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.flow-line{width:32px;height:2px;background:rgba(181,0,15,.3);}
+.flow-tip{width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid rgba(181,0,15,.4);}
+
+/* ── LED demo ── */
+.led-section{padding:5rem 0;}
+.led-demo{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;}
+.led-mode{text-align:center;}
+.led-strip{display:flex;gap:4px;justify-content:center;margin-bottom:.5rem;}
+.led-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.1);}
+.led-listen .led-dot{background:#00ff88;box-shadow:0 0 6px #00ff88;}
+.led-think  .led-dot{background:#f59e0b;box-shadow:0 0 6px #f59e0b;animation:ledPulse 1s ease-in-out infinite;}
+.led-ready  .led-dot{background:var(--cr);box-shadow:0 0 6px var(--cr);}
+.led-mute   .led-dot{background:#555;}
+.led-idle   .led-dot{background:#1a3a2a;box-shadow:0 0 3px #006C35;}
+@keyframes ledPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.led-state{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;color:#fff;margin-bottom:.2rem;}
+.led-label{font-size:.72rem;color:var(--txt-2);}
+
+/* ── Product CTA section ── */
+.cta-section{padding:6rem 0;text-align:center;background:rgba(181,0,15,.03);}
+.cta-overline{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--cr);margin-bottom:1rem;}
+.cta-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);color:#fff;margin-bottom:.75rem;}
+.cta-title em{color:var(--cr);font-style:italic;}
+.cta-sub{color:var(--txt-2);max-width:48ch;margin:0 auto 2rem;line-height:1.7;}
+.cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.cta-note{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--txt-3);margin-top:2rem;}
+
+/* ── Shared footer ── */
+.footer-brand{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;color:#fff;font-weight:700;}
+.footer-copy{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:rgba(255,255,255,.45);}
+.footer-back{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:var(--txt-2);text-decoration:none;}
+.footer-back:hover{color:var(--cr);}
+
+/* ══════════════════════════════════════════════
+   MOBILE BREAKPOINTS — Product Screens
+   ══════════════════════════════════════════════ */
+@media(max-width:768px){
+  /* Nav */
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  .nav-back{font-size:.62rem;padding:.35rem .7rem;}
+
+  /* Hero — stack vertically */
+  .hero-inner.container{
+    grid-template-columns:1fr;
+    gap:2rem;
+    padding:6rem 0 3rem;
+  }
+  .hero-title{font-size:clamp(2.2rem,9vw,3rem);}
+  .hero-device{order:-1;}
+  .device-img{max-width:260px;margin:0 auto;}
+  .hero-actions{flex-direction:column;gap:.75rem;}
+  .hero-actions .btn{width:100%;justify-content:center;}
+
+  /* Modes — 2 column */
+  .modes-grid{grid-template-columns:1fr 1fr;}
+
+  /* Flow — vertical */
+  .flow-diagram{
+    flex-direction:column;
+    align-items:center;
+    overflow-x:visible;
+  }
+  .flow-arrow{transform:rotate(90deg);}
+
+  /* LED demo — 3 columns */
+  .led-demo{grid-template-columns:repeat(3,1fr);}
+
+  /* CTA */
+  .cta-actions{flex-direction:column;align-items:center;}
+  .cta-actions .btn{width:100%;max-width:340px;justify-content:center;}
+}
+
+@media(max-width:480px){
+  /* Hero */
+  .hero-title{font-size:clamp(2rem,11vw,2.6rem);}
+  .hero-sub{font-size:.92rem;}
+  .hero-badges{gap:.35rem;}
+  .device-img{max-width:220px;}
+  .device-specs-strip{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;justify-content:flex-start;}
+
+  /* Modes — single column */
+  .modes-grid{grid-template-columns:1fr;}
+
+  /* LED demo — 2 column */
+  .led-demo{grid-template-columns:1fr 1fr;}
+
+  /* Nav open menu */
+  .nav-links.open{
+    display:flex;position:fixed;inset:0;
+    background:rgba(7,5,4,.97);
+    flex-direction:column;justify-content:center;align-items:center;
+    gap:2rem;z-index:99;
+  }
+  .nav-links.open li a{font-size:1.1rem !important;color:#fff !important;padding:.5rem 0;}
+}

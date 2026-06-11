@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:ummi": "cd ../ummi-wallet-demo && npm run build && if not exist ..\\momencrafts\\public\\ummiwallet mkdir ..\\momencrafts\\public\\ummiwallet && xcopy /E /I /Y dist ..\\momencrafts\\public\\ummiwallet",
+    "build:all": "npm run build:ummi && npm run build",
     "preview": "vite preview"
   },
   "dependencies": {

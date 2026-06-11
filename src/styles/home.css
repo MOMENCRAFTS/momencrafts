@@ -504,7 +504,8 @@
 }
 
 /* ── Scroll progress bar ── */
-#inv-scroll-bar { display: none; position: fixed; top: 52px; left: 0; right: 0; height: 2px; background: var(--br-gray-2); z-index: 9997; }
+#inv-scroll-bar { display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; height: 2px; background: var(--br-gray-2); z-index: 9997; }
+#inv-scroll-bar { top: auto; bottom: 0; height: 2px; position: fixed; left: 0; right: 0; } /* anchor to bottom of bar, not hardcoded px */
 #inv-scroll-fill { height: 100%; background: linear-gradient(to right, var(--br-red), var(--br-red-b)); width: 0%; transition: width .12s linear; }
 
 /* ── Section nav active ── */
@@ -523,6 +524,11 @@
 }
 #wa-btn:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(37,211,102,.45); }
 #wa-btn svg { width: 28px; height: 28px; fill: #fff; }
+/* Home context — override global WA position with safe area */
+.home-root #wa-btn {
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  left: calc(1.5rem + env(safe-area-inset-left));
+}
 #wa-tooltip {
   position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
   background: var(--br-text); color: #fff; font-size: .72rem; white-space: nowrap;
@@ -642,4 +648,16 @@
     font-size: .68rem;
   }
   #inv-scroll-bar { top: auto; }
+}
+
+/* ── Very narrow: hide non-essential bar items ── */
+@media (max-width: 480px) {
+  .inv-bar-token,
+  .inv-bar-nda,
+  .inv-sep { display: none; }
+  .inv-expiry-badge { display: none; }
+  #investor-bar { padding: .35rem .6rem; gap: .3rem .5rem; font-size: .65rem; }
+  .inv-bar-cta  { padding: .28rem .55rem; font-size: .6rem; }
+  .inv-bar-exit { padding: .22rem .5rem;  font-size: .6rem; }
+  #inv-lang-toggle { padding: .2rem .5rem; font-size: .58rem; }
 }

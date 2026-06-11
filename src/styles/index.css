@@ -56,7 +56,7 @@ body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);line-heig
 .nav-hamburger span{display:block;width:22px;height:2px;background:var(--green);transition:all .3s}
 
 /* HERO */
-.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:var(--bg)}
+.hero{position:relative;min-height:100dvh;display:flex;align-items:center;overflow:hidden;background:var(--bg)}
 .hero::after{content:'';position:absolute;right:-80px;top:10%;width:320px;height:320px;border:3px solid var(--green);opacity:.12;transform:rotate(15deg);pointer-events:none}
 .hero-ember{display:none}
 .hero-inner{position:relative;z-index:1;padding:8rem 0 5rem}
@@ -182,7 +182,7 @@ body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);line-heig
 #progress-bar{position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,var(--saudi-green),var(--gold));z-index:9999;transition:width .1s linear}
 
 /* WHATSAPP FLOATING BUTTON */
-#wa-btn{position:fixed;bottom:2rem;right:2rem;z-index:500;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);text-decoration:none;transition:transform .3s var(--ease),box-shadow .3s;animation:waPulse 2.5s ease-in-out infinite}
+#wa-btn{position:fixed;bottom:calc(2rem + env(safe-area-inset-bottom));right:calc(2rem + env(safe-area-inset-right));z-index:500;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);text-decoration:none;transition:transform .3s var(--ease),box-shadow .3s;animation:waPulse 2.5s ease-in-out infinite}
 #wa-btn:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,.6);animation:none}
 @keyframes waPulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 32px rgba(37,211,102,.7)}}
 #wa-btn svg{width:28px;height:28px;fill:white}
@@ -274,4 +274,13 @@ body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);line-heig
   .btn:active{transform:scale(.97)}
   .contact-link:active{border-color:var(--gold-border-h);color:var(--gold)}
   .nav-links a{min-height:44px;display:flex;align-items:center}
+}
+
+/* ── Reduced motion — battery & accessibility ── */
+@media(prefers-reduced-motion:reduce){
+  #wa-btn{animation:none}
+  .reveal{transition:none;opacity:1;transform:none}
+  .stack-items{animation-play-state:paused}
+  @keyframes blink{0%,100%{opacity:1}}
+  @keyframes scrollAnim{0%,100%{transform:none}}
 }

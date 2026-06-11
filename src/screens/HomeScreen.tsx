@@ -466,7 +466,7 @@ export default function HomeScreen() {
               <p className="card-desc">نظام مالي عائلي خاص لرعاية الأم — ميزانية ذكية، جيوب مخصصة، راتب تلقائي للأم، ونظام طوارئ — مصمم بدفء وكرامة للعائلات السعودية. ٢٨ وحدة، ٣ أدوار، ثنائي اللغة عربي/إنجليزي.</p>
               <div className="card-tags"><span className="tag">تقنية مالية</span><span className="tag">عائلي</span><span className="tag">عربي أولاً</span><span className="tag">٢٨ وحدة</span><span className="tag">IoT</span></div>
               <span className="card-live-badge">🟢 DEMO</span>
-              <a href="https://ummi-wallet-demo.vercel.app" target="_blank" rel="noopener" className="card-link">شاهد العرض التفاعلي ←</a>
+              <a href="/ummiwallet/" className="card-link">شاهد العرض التفاعلي ←</a>
             </article>
 
             {/* RELAYBOT */}
@@ -667,7 +667,7 @@ export default function HomeScreen() {
               <InvCard id="ummi" name="UMMI · أمي" tagline="محفظة العائلة ورعاية الأم · Family Finance & Mother Care" cat="FinTech" badge="inv-badge-beta"
                 desc="Private family financial system built with dignity for Saudi families. Dedicated budgeting, smart pockets, automatic mother's salary, emergency fund system — 28 features, 3 family roles, fully bilingual Arabic/English. IoT-connected piggy bank for children."
                 details={[{label:'SECTOR',value:'Islamic FinTech · Family'},{label:'REVENUE MODEL',value:'Family subscription · Hardware sales'},{label:'UNIQUE FEATURE',value:"IoT piggy bank + Mother's salary module"},{label:'MARKET SIZE',value:'$128B Islamic Fintech (Global)'}]}
-                demoLink="https://ummi-wallet-demo.vercel.app" demoLabel="🎯 Live Demo →" />
+                demoLink="/ummiwallet/" demoLabel="🎯 Live Demo →" />
               <InvCard id="qadaa" name="QADAA · قضاء" tagline="منصة قانونية ذكية · Legal Intelligence Platform" cat="LegalTech" badge="inv-badge-dev"
                 desc="Connects clients to lawyers with AI-powered case analysis and full Arabic language support. Addresses the severe underserving of legal tech in Saudi Arabia and the UAE — most citizens lack affordable, accessible legal guidance."
                 details={[{label:'SECTOR',value:'LegalTech · Saudi Arabia · UAE'},{label:'REVENUE MODEL',value:'Per-session · Lawyer SaaS subscription'},{label:'STATUS',value:'Architecture phase — market validated'},{label:'LANGUAGE',value:'Arabic-first · RTL native'}]}
