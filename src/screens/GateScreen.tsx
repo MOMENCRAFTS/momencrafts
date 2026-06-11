@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
 import { verifyToken } from '@/services/supabase'
+import '@/styles/gate.css'
 
 /* ── Bilingual strings ─────────────────────────────────── */
 const INSIGHTS_EN = [

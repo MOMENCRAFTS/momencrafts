@@ -1,4 +1,4 @@
-﻿@import './dark.css';
+@import './dark.css';
 @import './investor.css';
 @import './room.css';
 
@@ -69,8 +69,8 @@ body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);line-heig
 .hero-sub{font-size:1.1rem;color:var(--text-2);max-width:50ch;line-height:1.75;margin-bottom:2.5rem}
 .hero-actions{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:3.5rem}
 .hero-stats{display:flex;align-items:center;gap:2.5rem}
-.stat{display:flex;flex-direction:column;gap:.2rem;padding:1rem 1.5rem;border:2px solid var(--green);box-shadow:var(--retro-shadow-sm);transition:transform .25s var(--ease-bounce),box-shadow .25s}
-.stat:hover{transform:translate(-2px,-2px);box-shadow:var(--retro-shadow)}
+.stat{display:flex;flex-direction:column;gap:.2rem;padding:.75rem 1.25rem;border:none;box-shadow:none;transition:transform .25s var(--ease-bounce)}
+.stat:hover{transform:translateY(-2px)}
 .stat-num{font-family:var(--ff-serif);font-size:2.2rem;font-weight:900;color:var(--green);line-height:1}
 .stat-label{font-family:var(--ff-mono);font-size:.62rem;letter-spacing:.18em;color:var(--text-3);text-transform:uppercase}
 .stat-divider{color:var(--green);font-size:1.5rem;opacity:.3}

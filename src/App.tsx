@@ -34,10 +34,10 @@ export default function App() {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<GateGuard><Gate /></GateGuard>} />
-          <Route path="/home" element={<AuthGuard><Home /></AuthGuard>} />
-          <Route path="/rogerai" element={<RogerAI />} />
-          <Route path="/edgetack" element={<EdgeTack />} />
-          <Route path="/tdc" element={<TDC />} />
+          <Route path="/home"     element={<AuthGuard><Home /></AuthGuard>} />
+          <Route path="/rogerai"  element={<AuthGuard><RogerAI /></AuthGuard>} />
+          <Route path="/edgetack" element={<AuthGuard><EdgeTack /></AuthGuard>} />
+          <Route path="/tdc"      element={<AuthGuard><TDC /></AuthGuard>} />
           {/* Legacy redirects */}
           <Route path="/gate" element={<Navigate to="/" replace />} />
           <Route path="/room" element={<Navigate to="/" replace />} />

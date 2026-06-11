@@ -164,7 +164,8 @@ export default function HomeScreen() {
   const raw     = token; const masked = raw.length > 4 ? 'MCR-••••' + raw.slice(-4) : raw
 
   const TYPE_LABELS: Record<string, string> = {
-    HOUR: '1-Hour Access', WEEK: '7-Day Access', MONTH: '30-Day Access', STRATEGIC: 'Strategic Partner'
+    HOUR: '1-Hour Access', WEEK: '7-Day Access', MONTH: '30-Day Access',
+    STRATEGIC: 'Strategic Partner', PERMANENT: 'Permanent Access', FOUNDER: 'Founder Access',
   }
   let typeLabel = TYPE_LABELS[type] || type
   if (expires) {
@@ -176,6 +177,8 @@ export default function HomeScreen() {
   const [expired, setExpired]       = useState(false)
   const [navOpen, setNavOpen]       = useState(false)
   const [scrollPct, setScrollPct]   = useState(0)
+  const [barVisible, setBarVisible] = useState(true)
+  const barHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useParticleCanvas(canvasRef)
   useReveal()
@@ -204,6 +207,35 @@ export default function HomeScreen() {
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Auto-hide investor bar after 4 s; reappear on hover/touch near top
+  useEffect(() => {
+    const scheduleHide = () => {
+      if (barHideTimer.current) clearTimeout(barHideTimer.current)
+      barHideTimer.current = setTimeout(() => setBarVisible(false), 4000)
+    }
+    scheduleHide()
+    const peekZone = 60 // px from top that triggers re-show
+    const onMouseMove = (e: MouseEvent) => {
+      if (e.clientY < peekZone) {
+        setBarVisible(true)
+        scheduleHide()
+      }
+    }
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches[0].clientY < peekZone) {
+        setBarVisible(true)
+        scheduleHide()
+      }
+    }
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    return () => {
+      if (barHideTimer.current) clearTimeout(barHideTimer.current)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('touchstart', onTouchStart)
+    }
   }, [])
 
   // Section view tracking + active nav
@@ -238,31 +270,35 @@ export default function HomeScreen() {
         style={{ position:'fixed', inset:0, width:'100%', height:'100%', pointerEvents:'none', opacity:.35, zIndex:0 }} />
 
       {/* ── Investor Bar ── */}
-      <div id="investor-bar" className="visible" style={{ display:'flex' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'.75rem', flexWrap:'wrap', minWidth:0 }}>
-          <span style={{ color:'#C8A96E' }}>🔒</span>
+      <div
+        id="investor-bar"
+        className={`visible${barVisible ? '' : ' inv-bar-hidden'}`}
+        onMouseEnter={() => { setBarVisible(true); if (barHideTimer.current) clearTimeout(barHideTimer.current) }}
+        onMouseLeave={() => { barHideTimer.current = setTimeout(() => setBarVisible(false), 2000) }}
+      >
+        <div className="inv-bar-left">
+          <span className="inv-bar-lock">🔒</span>
           <span id="inv-name-display">{name}</span>
-          <span style={{ color:'#333' }}>|</span>
-          <span id="inv-token-display" style={{ letterSpacing:'.1em', color:'#a09070', fontSize:'.72rem' }}>{masked}</span>
-          <span style={{ color:'#333' }}>|</span>
+          <span className="inv-sep">|</span>
+          <span id="inv-token-display" className="inv-bar-token">{masked}</span>
+          <span className="inv-sep">|</span>
           <span id="inv-type-display">{typeLabel}</span>
-          <span style={{ color:'#333' }}>|</span>
-          <span style={{ color:'#4CAF50', fontSize:'.72rem' }}>✓ NDA Signed</span>
+          <span className="inv-sep">|</span>
+          <span className="inv-bar-nda">✓ NDA Signed</span>
           {countdown && type === 'HOUR' && (
-            <span id="inv-expiry-badge" style={{ display:'inline', background:'rgba(155,27,48,.2)', border:'1px solid #9B1B30', color:'#f87171', padding:'.15rem .5rem', borderRadius:'4px', fontSize:'.62rem', animation: countdown < '10:00' ? 'pulse 1.2s infinite' : 'none' }}>
+            <span id="inv-expiry-badge" className="inv-expiry-badge" style={{ animation: countdown < '10:00' ? 'pulse 1.2s infinite' : 'none' }}>
               ⏱ <span id="inv-countdown">{countdown}</span>
             </span>
           )}
         </div>
         <nav id="inv-section-nav" style={{ display:'flex', gap:'1.2rem', fontSize:'.66rem' }}>
-          {[['#inv-traction','Traction'],['#inv-portfolio','Portfolio'],['#inv-vision','Vision'],['#inv-founder','Founder'],['#inv-youbring','What You Bring'],['#inv-letsbuild','Let\'s Build →']].map(([href, label]) => (
+          {[['#inv-traction','Traction'],['#inv-portfolio','Portfolio'],['#inv-vision','Vision'],['#inv-founder','Founder'],['#inv-youbring','What You Bring'],['#inv-letsbuild',"Let's Build →"]].map(([href, label]) => (
             <a key={href} href={href} style={{ color: label.includes('→') ? '#C8A96E' : '#a09070', textDecoration:'none', fontWeight: label.includes('→') ? 700 : 400 }}>{label}</a>
           ))}
         </nav>
-        <div style={{ display:'flex', gap:'.6rem', flexShrink:0, alignItems:'center' }}>
-          <button id="inv-lang-toggle" title="Toggle language">AR</button>
-          <button onClick={handleExit} style={{ background:'transparent', border:'1px solid #C8A96E44', color:'#a09070', padding:'.3rem .8rem', borderRadius:'6px', cursor:'pointer', fontFamily:'monospace', fontSize:'.68rem' }}>Exit</button>
-          <a href="#inv-letsbuild" style={{ background:'#9B1B30', color:'#fff', padding:'.3rem .8rem', borderRadius:'6px', fontFamily:'monospace', fontSize:'.68rem', textDecoration:'none' }}>Let's Build →</a>
+        <div className="inv-bar-actions">
+          <button onClick={handleExit} className="inv-bar-exit">Exit</button>
+          <a href="#inv-letsbuild" className="inv-bar-cta">Let's Build →</a>
         </div>
       </div>
 
@@ -380,7 +416,7 @@ export default function HomeScreen() {
               <p className="card-tagline">منصة قانونية بالذكاء الاصطناعي</p>
               <p className="card-desc">تربط العملاء بالمحامين مع أدوات ذكاء اصطناعي لتحليل القضايا ودعم كامل للعربية.</p>
               <div className="card-tags"><span className="tag">تقنية قانونية</span><span className="tag">السعودية · الإمارات</span></div>
-              <a href="#contact" className="card-link">اعرف أكثر ←</a>
+              <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20QADAA%20%C2%B7%20%D9%82%D8%B6%D8%A7%D8%A1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
 
             {/* MUSCLE HUSTLE */}
@@ -396,7 +432,7 @@ export default function HomeScreen() {
               <p className="card-tagline">سوق المدربين الشخصيين</p>
               <p className="card-desc">منصة لياقة بدنية تربط المدربين بالعملاء مع تدريب ذكي وتجربة تفاعلية متميزة.</p>
               <div className="card-tags"><span className="tag">لياقة بدنية</span><span className="tag">سوق إلكتروني</span></div>
-              <a href="#contact" className="card-link">اعرف أكثر ←</a>
+              <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20Muscle%20Hustle%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
 
             {/* AQAR */}
@@ -412,7 +448,7 @@ export default function HomeScreen() {
               <p className="card-tagline">منصة عقارات بالذكاء الاصطناعي</p>
               <p className="card-desc">منصة عقارية ذكية مصممة لدعم رؤية 2030 — تحليل سوق وأنظمة مطابقة متقدمة.</p>
               <div className="card-tags"><span className="tag">تقنية عقارية</span><span className="tag">رؤية 2030</span></div>
-              <a href="#contact" className="card-link">اعرف أكثر ←</a>
+              <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20AQAR%20%C2%B7%20%D8%B9%D9%82%D8%A7%D8%B1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
 
             {/* UMMI */}
@@ -462,7 +498,7 @@ export default function HomeScreen() {
               <p className="card-tagline">سبحة ذكية فاخرة</p>
               <p className="card-desc">سبحة ذكية تجمع بين الذكر التقليدي وتقنيات حديثة — مصنوعة من مواد فاخرة.</p>
               <div className="card-tags"><span className="tag">قابل للارتداء</span><span className="tag">فاخر</span></div>
-              <a href="#contact" className="card-link">اعرف أكثر ←</a>
+              <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%AA%D8%AC%20SABHA%20%C2%B7%20%D8%B3%D8%A8%D8%AD%D8%A9%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
 
             {/* TURBO DRONE CIRCUIT */}
@@ -478,7 +514,7 @@ export default function HomeScreen() {
               <p className="card-tagline">إدارة طاقة طائرات FPV</p>
               <p className="card-desc">نظام ذكي يعالج انخفاض الجهد في بطاريات الطائرات بدون طيار ويعوضها تلقائياً.</p>
               <div className="card-tags"><span className="tag">براءة اختراع</span><span className="tag">FPV · UAV</span></div>
-              <a href="https://wa.me/966535271122?text=أريد معرفة المزيد عن Turbo Drone Circuit" target="_blank" rel="noopener" className="card-link">تواصل للشراكة ←</a>
+              <a href="/tdc" className="card-link">عرض المشروع ←</a>
             </article>
 
             {/* EDGE TACK */}
@@ -634,26 +670,32 @@ export default function HomeScreen() {
                 demoLink="https://ummi-wallet-demo.vercel.app" demoLabel="🎯 Live Demo →" />
               <InvCard id="qadaa" name="QADAA · قضاء" tagline="منصة قانونية ذكية · Legal Intelligence Platform" cat="LegalTech" badge="inv-badge-dev"
                 desc="Connects clients to lawyers with AI-powered case analysis and full Arabic language support. Addresses the severe underserving of legal tech in Saudi Arabia and the UAE — most citizens lack affordable, accessible legal guidance."
-                details={[{label:'SECTOR',value:'LegalTech · Saudi Arabia · UAE'},{label:'REVENUE MODEL',value:'Per-session · Lawyer SaaS subscription'},{label:'STATUS',value:'Architecture phase — market validated'},{label:'LANGUAGE',value:'Arabic-first · RTL native'}]} />
+                details={[{label:'SECTOR',value:'LegalTech · Saudi Arabia · UAE'},{label:'REVENUE MODEL',value:'Per-session · Lawyer SaaS subscription'},{label:'STATUS',value:'Architecture phase — market validated'},{label:'LANGUAGE',value:'Arabic-first · RTL native'}]}
+                demoLink="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20QADAA%20%C2%B7%20%D9%82%D8%B6%D8%A7%D8%A1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" demoLabel="💬 تحدث مع المؤسس" />
               <InvCard id="muscle" name="MUSCLE HUSTLE" tagline="سوق المدربين الشخصيين · Fitness Trainer Marketplace" cat="FitTech" badge="inv-badge-dev"
                 desc="Two-sided marketplace connecting certified personal trainers with clients. Smart workout coaching, progress tracking, and premium interactive experience. Targets the high-growth KSA fitness market energized by Vision 2030 lifestyle initiatives."
-                details={[{label:'SECTOR',value:'Fitness · Consumer'},{label:'REVENUE MODEL',value:'Marketplace commission · Trainer subscriptions'},{label:'STATUS',value:'Product design phase'},{label:'TARGET',value:'KSA · Vision 2030 lifestyle'}]} />
+                details={[{label:'SECTOR',value:'Fitness · Consumer'},{label:'REVENUE MODEL',value:'Marketplace commission · Trainer subscriptions'},{label:'STATUS',value:'Product design phase'},{label:'TARGET',value:'KSA · Vision 2030 lifestyle'}]}
+                demoLink="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20Muscle%20Hustle%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" demoLabel="💬 تحدث مع المؤسس" />
               <InvCard id="aqar" name="AQAR · عقار" tagline="منصة عقارية ذكية · Intelligent Real Estate" cat="PropTech" badge="inv-badge-dev"
                 desc="AI-powered real estate platform built to support Vision 2030 — advanced market analysis, intelligent buyer-property matching, and full compliance with RERA regulations. Targets the booming Saudi real estate market."
-                details={[{label:'SECTOR',value:'PropTech · Vision 2030'},{label:'REVENUE MODEL',value:'Listing SaaS · Transaction commission'},{label:'COMPLIANCE',value:'RERA · Saudi NLRP'},{label:'MARKET',value:'SAR 1.2T Vision 2030 Digital Economy'}]} />
+                details={[{label:'SECTOR',value:'PropTech · Vision 2030'},{label:'REVENUE MODEL',value:'Listing SaaS · Transaction commission'},{label:'COMPLIANCE',value:'RERA · Saudi NLRP'},{label:'MARKET',value:'SAR 1.2T Vision 2030 Digital Economy'}]}
+                demoLink="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20AQAR%20%C2%B7%20%D8%B9%D9%82%D8%A7%D8%B1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" demoLabel="💬 تحدث مع المؤسس" />
               <InvCard id="relay" name="RELAYBOT" tagline="نقل النص الذكي · Intelligent Text Bridge for Locked Systems" cat="Hardware · IoT" badge="inv-badge-dev"
                 desc="Physical bridge device (ESP32-S3) that sits between a keyboard and any computer. AI enhances text on-device and injects it into any locked system — hospitals, government terminals, air-gapped machines — with zero software installation required."
                 details={[{label:'SECTOR',value:'Hardware · Enterprise · Gov'},{label:'REVENUE MODEL',value:'Device sales · Enterprise SaaS'},{label:'TECH',value:'ESP32-S3 · BLE · OTA'},{label:'IP',value:'Proprietary protocol — open-source core'}]}
                 demoLink="https://github.com/momencrafts/relaybot" demoLabel="📁 GitHub →" />
               <InvCard id="sabha" name="SABHA · سبحة" tagline="سبحة ذكية فاخرة · Luxury Smart Prayer Beads" cat="Wearable · Islamic" badge="inv-badge-prototype"
                 desc="Premium smart prayer beads combining traditional Islamic dhikr practice with embedded electronics — haptic feedback, count tracking, companion app, and luxurious handcrafted materials. Targets affluent Muslim users globally."
-                details={[{label:'SECTOR',value:'Islamic Wearables · Luxury'},{label:'REVENUE MODEL',value:'Premium hardware · App subscription'},{label:'STATUS',value:'Hardware prototype — seeking manufacturing partner'},{label:'MARKET',value:'2B+ Muslims globally · Luxury segment'}]} />
+                details={[{label:'SECTOR',value:'Islamic Wearables · Luxury'},{label:'REVENUE MODEL',value:'Premium hardware · App subscription'},{label:'STATUS',value:'Hardware prototype — seeking manufacturing partner'},{label:'MARKET',value:'2B+ Muslims globally · Luxury segment'}]}
+                demoLink="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%AA%D8%AC%20SABHA%20%C2%B7%20%D8%B3%D8%A8%D8%AD%D8%A9%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" demoLabel="💬 تحدث مع المؤسس" />
               <InvCard id="tdc" name="TURBO DRONE CIRCUIT" tagline="نظام إدارة طاقة طائرات FPV · FPV Drone Power Management" cat="Hardware · Patent" badge="inv-badge-patent"
                 desc="Patented intelligent circuit that detects and actively compensates for voltage sag in FPV drone batteries — maintaining consistent motor power and extending flight performance. USPTO patent filed covering the core compensation algorithm."
-                details={[{label:'SECTOR',value:'UAV · FPV · Hardware IP'},{label:'REVENUE MODEL',value:'Licensing · OEM integration'},{label:'IP STATUS',value:'USPTO Patent Filed'},{label:'OPPORTUNITY',value:'License to drone manufacturers globally'}]} />
+                details={[{label:'SECTOR',value:'UAV · FPV · Hardware IP'},{label:'REVENUE MODEL',value:'Licensing · OEM integration'},{label:'IP STATUS',value:'USPTO Patent Filed'},{label:'OPPORTUNITY',value:'License to drone manufacturers globally'}]}
+                demoLink="/tdc" demoLabel="→ View TDC Circuit" />
               <InvCard id="edgetack" name="EDGE TACK" tagline="واقي شاشة مع أزرار ألعاب · Gaming Screen Protector" cat="Mobile Gaming · Patent" badge="inv-badge-patent"
                 desc="Patented mobile gaming accessory combining screen protection with collapsible pneumatic trigger buttons — providing console-grade gaming control with zero bulk when folded flat. Designed for the massive mobile gaming market in Saudi Arabia and MENA."
-                details={[{label:'SECTOR',value:'Mobile Gaming · Consumer Hardware'},{label:'REVENUE MODEL',value:'Retail · Licensing to case manufacturers'},{label:'IP STATUS',value:'USPTO Patent Filed'},{label:'MARKET',value:'KSA #1 mobile gaming market per capita'}]} />
+                details={[{label:'SECTOR',value:'Mobile Gaming · Consumer Hardware'},{label:'REVENUE MODEL',value:'Retail · Licensing to case manufacturers'},{label:'IP STATUS',value:'USPTO Patent Filed'},{label:'MARKET',value:'KSA #1 mobile gaming market per capita'}]}
+                demoLink="/edgetack" demoLabel="→ View EdgeTack" />
             </div>
           </div>
         </section>
@@ -761,26 +803,69 @@ export default function HomeScreen() {
         </section>
 
         {/* 07 LET'S BUILD */}
-        <section id="inv-letsbuild" data-section="letsbuild" style={{ background:'#0C0A09', padding:'5rem 1.5rem', borderBottom:'2px solid #C8A96E33' }}>
-          <div style={{ maxWidth:'700px', margin:'0 auto', textAlign:'center' }}>
-            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>07 · LET'S BUILD</div>
-            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>إن رأيت الفرصة — فلنبنِها معاً</h2>
-            <p style={{ color:'#a09070', lineHeight:1.7, marginBottom:'2rem' }}>No pitches. No decks. A direct conversation with the founder. All discussions are confidential under the NDA you have signed.</p>
-            <div style={{ display:'flex', gap:'.75rem', justifyContent:'center', flexWrap:'wrap', marginBottom:'1.5rem' }}>
-              <button onClick={() => prefillWhatsApp('affiliation')} style={{ background:'#1A1614', border:'1px solid #C8A96E55', color:'#C8A96E', padding:'.7rem 1.4rem', borderRadius:'8px', fontFamily:'monospace', fontSize:'.78rem', cursor:'pointer' }}>🌐 مهتم بالتابعية</button>
-              <button onClick={() => prefillWhatsApp('adoption')}    style={{ background:'#1A1614', border:'1px solid #9B1B3055', color:'#f87171', padding:'.7rem 1.4rem', borderRadius:'8px', fontFamily:'monospace', fontSize:'.78rem', cursor:'pointer' }}>📦 أريد تبني منتج</button>
-              <button onClick={() => prefillWhatsApp('teamup')}      style={{ background:'#1A1614', border:'1px solid #0e749055', color:'#22d3ee', padding:'.7rem 1.4rem', borderRadius:'8px', fontFamily:'monospace', fontSize:'.78rem', cursor:'pointer' }}>⚡ أريد التعاون</button>
+        <section id="inv-letsbuild" data-section="letsbuild" className="letsb-section">
+          {/* Background decoration */}
+          <div className="letsb-bg-deco" aria-hidden="true" />
+
+          <div className="letsb-inner">
+
+            {/* Eyebrow */}
+            <div className="letsb-eyebrow">
+              <span className="letsb-eyebrow-dot" />
+              <span>07 · LET'S BUILD TOGETHER</span>
             </div>
-            <div className="inv-letsbuild-actions">
-              <a href="https://wa.me/966535271122" target="_blank" rel="noopener" style={{ background:'#25D366', color:'#fff', padding:'.9rem 2.2rem', borderRadius:'10px', fontFamily:'monospace', fontSize:'.9rem', textDecoration:'none', fontWeight:700 }}>💬 WhatsApp Direct</a>
-              <a href="mailto:momen@momencrafts.com?subject=Partnership Inquiry — MomenCrafts" style={{ background:'#1A1614', border:'1px solid #C8A96E44', color:'#C8A96E', padding:'.9rem 2.2rem', borderRadius:'10px', fontFamily:'monospace', fontSize:'.9rem', textDecoration:'none' }}>✉️ Email</a>
+
+            {/* Main headline */}
+            <h2 className="letsb-heading">
+              إن رأيت الفرصة —<br/>
+              <em>فلنبنِها معاً</em>
+            </h2>
+            <p className="letsb-sub">
+              No pitches. No decks.<br/>
+              A direct conversation with the founder.<br/>
+              All discussions are confidential under the NDA you have signed.
+            </p>
+
+            {/* Three partnership tracks */}
+            <div className="letsb-tracks">
+              <button onClick={() => prefillWhatsApp('affiliation')} className="letsb-track-btn letsb-track-affiliate">
+                <span className="letsb-track-icon">🌐</span>
+                <span className="letsb-track-label">مهتم بالتابعية</span>
+                <span className="letsb-track-sub">Affiliate · Distribute · Grow</span>
+              </button>
+              <button onClick={() => prefillWhatsApp('adoption')} className="letsb-track-btn letsb-track-adopt">
+                <span className="letsb-track-icon">📦</span>
+                <span className="letsb-track-label">أريد تبني منتج</span>
+                <span className="letsb-track-sub">License · Deploy · Scale</span>
+              </button>
+              <button onClick={() => prefillWhatsApp('teamup')} className="letsb-track-btn letsb-track-team">
+                <span className="letsb-track-icon">⚡</span>
+                <span className="letsb-track-label">أريد التعاون</span>
+                <span className="letsb-track-sub">Partner · Invest · Build</span>
+              </button>
             </div>
-            <div className="inv-letsbuild-footer">
-              <span>MomenCrafts · Riyadh, Saudi Arabia</span>
+
+            {/* Primary CTAs */}
+            <div className="letsb-ctas">
+              <a href="https://wa.me/966535271122" target="_blank" rel="noopener" className="letsb-cta-wa">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                WhatsApp Direct
+              </a>
+              <a href="mailto:momen@momencrafts.com?subject=Partnership Inquiry — MomenCrafts" className="letsb-cta-email">
+                ✉️ momen@momencrafts.com
+              </a>
+            </div>
+
+            {/* Trust footer */}
+            <div className="letsb-trust">
+              <span>🔒 NDA Signed · Confidential</span>
+              <span>📍 Riyadh, Saudi Arabia</span>
+              <span>⚡ Respond within 24h</span>
               {footerExpiry && <span id="inv-footer-expiry">{footerExpiry}</span>}
-              <span>Affiliation · Adoption · Team-Up</span>
-              <span>By accessing this landscape you acknowledge its confidential nature.</span>
             </div>
+
           </div>
         </section>
 
