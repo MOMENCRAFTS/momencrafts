@@ -125,13 +125,12 @@
   <!-- Section Mini-Heatmap -->
   <div class="panel-heading">Section Engagement</div>
   <div class="section-heatmap" id="sectionHeatmap">
-    <div class="section-heat-card"><div class="shc-num">01</div><div class="shc-name">Vision</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">01</div><div class="shc-name">Traction</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
     <div class="section-heat-card"><div class="shc-num">02</div><div class="shc-name">Portfolio</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
-    <div class="section-heat-card"><div class="shc-num">03</div><div class="shc-name">Traction</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
-    <div class="section-heat-card"><div class="shc-num">04</div><div class="shc-name">Financials</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
-    <div class="section-heat-card"><div class="shc-num">05</div><div class="shc-name">Founder</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
-    <div class="section-heat-card"><div class="shc-num">06</div><div class="shc-name">Documents</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
-    <div class="section-heat-card"><div class="shc-num">07</div><div class="shc-name">Close</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">03</div><div class="shc-name">Vision</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">04</div><div class="shc-name">Founder</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">05</div><div class="shc-name">What You Bring</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
+    <div class="section-heat-card"><div class="shc-num">06</div><div class="shc-name">Let's Build</div><div class="shc-bar-wrap"><div class="shc-bar" style="width:0%"></div></div><div class="shc-pct">—</div><div class="shc-dwell">—</div></div>
   </div>
 
   <!-- Key Signals -->
@@ -372,35 +371,6 @@ async function verifyAdminPass() {
 })();
 
 
-// ── DEMO DATA (replace with Supabase calls) ──────────────
-const DEMO_INVESTORS = [
-  { id: 'tok-001', label: 'Ahmed Al-Rashidi — STV', email: 'ahmed@stv.vc', token: 'MCR-A3F9B2C4', tokenType: 'MONTH', created: '2026-06-01', expiresAt: '2026-07-01', sessions: 3, status: 'active', lastSeen: '2 hours ago', totalDwell: '18m 32s' },
-  { id: 'tok-002', label: 'Sara Al-Otaibi — Raed Ventures', email: 'sara@raed.vc', token: 'MCR-K7D2P1N8', tokenType: 'WEEK', created: '2026-06-05', expiresAt: '2026-06-12', sessions: 1, status: 'active', lastSeen: '1 day ago', totalDwell: '7m 14s' },
-  { id: 'tok-003', label: 'Khalid Mansor — Family Office', email: 'khalid@mansor.sa', token: 'MCR-R9F4E6T2', tokenType: 'PERMANENT', created: '2026-05-20', expiresAt: null, sessions: 7, status: 'active', lastSeen: '3 hours ago', totalDwell: '1h 12m' },
-  { id: 'tok-004', label: 'Nora Al-Fahad — BECO Capital', email: 'nora@beco.ae', token: 'MCR-W5X1Y3Z7', tokenType: 'MONTH', created: '2026-06-08', expiresAt: '2026-07-08', sessions: 0, status: 'never', lastSeen: 'Never opened', totalDwell: '—' },
-];
-
-const DEMO_SIGNALS = [
-  { icon: '🏁', text: 'Ahmed Al-Rashidi opened the room for the first time', time: '2h ago', type: 'session' },
-  { icon: '🔥', text: 'Khalid Mansor spent 8 min on Financials', time: '3h ago', type: 'hot' },
-  { icon: '📄', text: 'Ahmed Al-Rashidi downloaded Pitch Deck', time: '2h ago', type: 'doc' },
-  { icon: '🎯', text: 'Khalid Mansor clicked WhatsApp CTA', time: '4h ago', type: 'cta' },
-  { icon: '⚡', text: 'Sara Al-Otaibi triggered Ctrl+P (print attempt blocked)', time: '1d ago', type: 'capture' },
-  { icon: '🔔', text: 'Token MCR-W5X1 not opened after 48h (Nora Al-Fahad)', time: '12h ago', type: 'warning' },
-];
-
-const DEMO_EVENTS = [
-  { time: '13:22', icon: '🚪', desc: 'Entered room', dur: '' },
-  { time: '13:22', icon: '✅', desc: 'NDA accepted', dur: '' },
-  { time: '13:23', icon: '👁', desc: 'Viewed 01 · Vision', dur: '1m 42s' },
-  { time: '13:25', icon: '👁', desc: 'Viewed 02 · Portfolio', dur: '4m 18s', hot: true },
-  { time: '13:25', icon: '📂', desc: 'Expanded ROGER·AI card', dur: '' },
-  { time: '13:26', icon: '📂', desc: 'Expanded CLINIQ.ONE card', dur: '' },
-  { time: '13:29', icon: '👁', desc: 'Viewed 03 · Traction', dur: '2m 05s' },
-  { time: '13:31', icon: '👁', desc: 'Viewed 04 · Financials', dur: '5m 12s', hot: true },
-  { time: '13:36', icon: '👁', desc: 'Viewed 05 · Founder', dur: '1m 30s' },
-  { time: '13:38', icon: '📄', desc: 'Downloaded Pitch Deck', dur: '' },
-  { time: '13:38', icon: '👁', desc: 'Viewed 06 · Documents', dur: '0m 45s' },
 // ── INIT ─────────────────────────────────────────
 // Show skeleton states immediately, then fetch live data
 document.addEventListener('DOMContentLoaded', () => {
@@ -449,7 +419,7 @@ async function selectLiveInvestor(tokenId, el) {
   try {
     const res = await fetch(ANALYTICS_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_HASH },
       body: JSON.stringify({ action: 'investor_events', tokenId }),
     });
     const data = await res.json();
@@ -514,7 +484,7 @@ async function generateToken() {
     try {
       const res = await fetch(ADMIN_FN_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_HASH },
         body: JSON.stringify({ action: 'create', label: name, email, notes, tokenType: duration }),
       });
       const data = await res.json();
@@ -570,7 +540,7 @@ async function confirmRevoke() {
     try {
       await fetch(ADMIN_FN_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_HASH },
         body: JSON.stringify({ action: 'revoke', tokenId: pendingAction.tokenId, reason }),
       });
     } catch (err) { console.error('Revoke error:', err); }
@@ -590,7 +560,7 @@ async function confirmExtend() {
     try {
       await fetch(ADMIN_FN_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_HASH },
         body: JSON.stringify({ action: 'extend', tokenId: pendingAction.tokenId, extendBy }),
       });
     } catch (err) { console.error('Extend error:', err); }
@@ -614,7 +584,7 @@ async function pollForUpdates() {
   try {
     const res = await fetch(ANALYTICS_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_HASH },
       body: JSON.stringify({}),
     });
     const data = await res.json();
@@ -755,14 +725,6 @@ function renderLiveData(data) {
   });
 }
 
-async function selectLiveInvestor(tokenId, el) {
-  document.querySelectorAll('.investor-list-item').forEach(e => e.classList.remove('selected'));
-  el.classList.add('selected');
-  // TODO: fetch investor-specific events from Supabase
-  // For now show placeholder
-  document.getElementById('investorDetail').innerHTML = `
-    <div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-text">Loading timeline...</div></div>`;
-}
 
 // ── UTILITY ──────────────────────────────────────────────
 function timeAgo(date) {
@@ -776,6 +738,7 @@ function timeAgo(date) {
 
 // ── AUTH ──────────────────────────────────────────────────
 function signOut() {
+  sessionStorage.removeItem('mc_admin_auth');
   window.location.href = '/';
 }
 

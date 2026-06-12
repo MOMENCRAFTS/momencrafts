@@ -7,8 +7,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Origin': 'https://www.momencrafts.com',
+  'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
@@ -26,10 +26,15 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Verify admin key
+    const ADMIN_KEY = Deno.env.get('ADMIN_SECRET_KEY')
+    const clientKey = req.headers.get('X-Admin-Key')
+    if (!ADMIN_KEY || !clientKey || clientKey !== ADMIN_KEY) {
+      return json(401, { error: 'Unauthorized' })
+    }
+
     const body = await req.json()
     const { action } = body
-
-    // TODO: Verify Google OAuth admin identity here
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
