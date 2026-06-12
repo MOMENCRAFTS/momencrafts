@@ -6,13 +6,24 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://www.momencrafts.com',
-  'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+const ALLOWED_ORIGINS = [
+  'https://www.momencrafts.com',
+  'https://momencrafts.com',
+  'https://momencrafts-iota.vercel.app',
+]
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get('Origin') || ''
+  const allowed = ALLOWED_ORIGINS.includes(origin) || origin.startsWith('http://localhost:')
+  return {
+    'Access-Control-Allow-Origin': allowed ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req)
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders })
   }
@@ -22,7 +33,7 @@ Deno.serve(async (req) => {
     const ADMIN_KEY = Deno.env.get('ADMIN_SECRET_KEY')
     const clientKey = req.headers.get('X-Admin-Key')
     if (!ADMIN_KEY || !clientKey || clientKey !== ADMIN_KEY) {
-      return json(401, { error: 'Unauthorized' })
+      return json(401, { error: 'Unauthorized' }, corsHeaders)
     }
 
     const supabase = createClient(
@@ -84,14 +95,14 @@ Deno.serve(async (req) => {
       recentEvents:  recentEvents || [],
       docDownloads:  docCount || 0,
       failedAttempts24h: failedCount || 0,
-    })
+    }, corsHeaders)
   } catch (err) {
     console.error('admin-get-analytics error:', err)
-    return json(500, { error: 'Internal error' })
+    return json(500, { error: 'Internal error' }, corsHeaders)
   }
 })
 
-function json(status: number, body: object) {
+function json(status: number, body: object, corsHeaders: Record<string, string>) {
   return new Response(JSON.stringify(body), {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },

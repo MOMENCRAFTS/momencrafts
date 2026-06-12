@@ -6,10 +6,20 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://www.momencrafts.com',
-  'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+const ALLOWED_ORIGINS = [
+  'https://www.momencrafts.com',
+  'https://momencrafts.com',
+  'https://momencrafts-iota.vercel.app',
+]
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get('Origin') || ''
+  const allowed = ALLOWED_ORIGINS.includes(origin) || origin.startsWith('http://localhost:')
+  return {
+    'Access-Control-Allow-Origin': allowed ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
 }
 
 // Duration map
@@ -20,7 +30,15 @@ const DURATIONS: Record<string, number> = {
   '3MONTH': 90 * 24 * 60 * 60 * 1000,
 }
 
+function json(status: number, body: object, corsHeaders: Record<string, string>) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  })
+}
+
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req)
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders })
   }
@@ -30,7 +48,7 @@ Deno.serve(async (req) => {
     const ADMIN_KEY = Deno.env.get('ADMIN_SECRET_KEY')
     const clientKey = req.headers.get('X-Admin-Key')
     if (!ADMIN_KEY || !clientKey || clientKey !== ADMIN_KEY) {
-      return json(401, { error: 'Unauthorized' })
+      return json(401, { error: 'Unauthorized' }, corsHeaders)
     }
 
     const body = await req.json()
@@ -45,7 +63,7 @@ Deno.serve(async (req) => {
       case 'create': {
         const { label, email, notes, tokenType } = body
         if (!label || !tokenType) {
-          return json(400, { error: 'label and tokenType are required' })
+          return json(400, { error: 'label and tokenType are required' }, corsHeaders)
         }
 
         // Generate MCR-XXXXXXXX
@@ -71,19 +89,19 @@ Deno.serve(async (req) => {
 
         if (error) {
           console.error('Create token error:', error)
-          return json(500, { error: 'Failed to create token' })
+          return json(500, { error: 'Failed to create token' }, corsHeaders)
         }
 
         return json(200, {
           token: data.token,
           tokenId: data.id,
           expiresAt: data.expires_at,
-        })
+        }, corsHeaders)
       }
 
       case 'revoke': {
         const { tokenId, reason } = body
-        if (!tokenId) return json(400, { error: 'tokenId required' })
+        if (!tokenId) return json(400, { error: 'tokenId required' }, corsHeaders)
 
         const { error } = await supabase.from('investor_tokens').update({
           revoked_at: new Date().toISOString(),
@@ -92,14 +110,14 @@ Deno.serve(async (req) => {
 
         if (error) {
           console.error('Revoke error:', error)
-          return json(500, { error: 'Failed to revoke' })
+          return json(500, { error: 'Failed to revoke' }, corsHeaders)
         }
-        return json(200, { ok: true })
+        return json(200, { ok: true }, corsHeaders)
       }
 
       case 'extend': {
         const { tokenId, extendBy } = body
-        if (!tokenId || !extendBy) return json(400, { error: 'tokenId and extendBy required' })
+        if (!tokenId || !extendBy) return json(400, { error: 'tokenId and extendBy required' }, corsHeaders)
 
         if (extendBy === 'PERMANENT') {
           await supabase.from('investor_tokens')
@@ -120,21 +138,14 @@ Deno.serve(async (req) => {
             .eq('id', tokenId)
         }
 
-        return json(200, { ok: true })
+        return json(200, { ok: true }, corsHeaders)
       }
 
       default:
-        return json(400, { error: `Unknown action: ${action}` })
+        return json(400, { error: `Unknown action: ${action}` }, corsHeaders)
     }
   } catch (err) {
     console.error('admin-manage-token error:', err)
-    return json(500, { error: 'Internal error' })
+    return json(500, { error: 'Internal error' }, corsHeaders)
   }
 })
-
-function json(status: number, body: object) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
-}
