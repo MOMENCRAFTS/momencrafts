@@ -10,14 +10,12 @@ const TDC      = lazy(() => import('@/screens/TDCScreen'))
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const token = useAppStore((s) => s.token)
-  const hasSession = token && sessionStorage.getItem('mcr_investor') === '1'
-  return hasSession ? <>{children}</> : <Navigate to="/" replace />
+  return token ? <>{children}</> : <Navigate to="/" replace />
 }
 
 function GateGuard({ children }: { children: React.ReactNode }) {
   const token = useAppStore((s) => s.token)
-  const hasSession = token && sessionStorage.getItem('mcr_investor') === '1'
-  return hasSession ? <Navigate to="/home" replace /> : <>{children}</>
+  return token ? <Navigate to="/home" replace /> : <>{children}</>
 }
 
 const Loader = () => (
