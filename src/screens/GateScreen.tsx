@@ -6,24 +6,28 @@ import '@/styles/gate.css'
 
 /* ── Bilingual strings ─────────────────────────────────── */
 const INSIGHTS_EN = [
+  'MomenCrafts & Co — the "Co" is earned. Your input, if used, makes you part of the company.',
   '"The most powerful technology disappears — it becomes so natural the user forgets they\'re interacting with a machine." — Momen Pharaon',
-  '10 products. 5 industries. One vision: building the intelligent infrastructure of the MENA economy.',
+  '10 products. 5 industries. One vision: building the intelligent infrastructure of the MENA economy — with you.',
   'Every product built from idea to launch by a single pair of hands — founder writes the code, designs the UX, and hits Deploy.',
   'cliniq.one — a full-stack telemedicine suite. 5 apps. Arabic-first AI intake. MOH compliant.',
   'UMMI · أمي — a private family finance OS designed with warmth and dignity for Saudi families. 28 modules.',
   'ROGER·AI — your AI Chief of Staff. Persistent memory, proactive briefings, bilingual AR/EN.',
   'RelayBot — a zero-install hardware device that types AI-enhanced text into any locked system.',
-  '2 patents pending at USPTO. Products in beta. Founder ready for the right partnership.',
+  'Every bug report, feature request, and idea that ships = your name in the & Co registry.',
+  '2 patents pending at USPTO. Products in beta. Founder ready for the right co-builder.',
 ]
 const INSIGHTS_AR = [
+  'مؤمن كرافتس اند كو — الشركة تُبنى معكم. مساهمتك إذا اعتُمدت تعني أنك جزء منها.',
   'أقوى التقنيات هي تلك التي تختفي — تصبح طبيعية لدرجة أن المستخدم ينسى أنه يتفاعل مع آلة.',
-  '١٠ منتجات. ٥ مجالات. رؤية واحدة: بناء البنية الذكية لاقتصاد المنطقة.',
+  '١٠ منتجات. ٥ مجالات. رؤية واحدة: بناء البنية الذكية لاقتصاد المنطقة — معكم.',
   'كل منتج بُني من الفكرة إلى الإطلاق بيد واحدة — المؤسس نفسه يكتب الكود، يصمم التجربة، ويضغط Deploy.',
   'cliniq.one — منصة طب عن بُعد متكاملة، ٥ تطبيقات، ذكاء اصطناعي عربي أولاً.',
   'أمي — نظام مالي عائلي ذكي صمم بدفء وكرامة للعائلة السعودية. ٢٨ وحدة.',
   'رجر AI — مساعدك التنفيذي الصوتي. ذاكرة مستمرة. تقارير استباقية. عربي وإنجليزي.',
   'RelayBot — جهاز يربط أي لوحة مفاتيح بأي نظام. بلا تثبيت. بلا قيود.',
-  'براءتا اختراع مقدمتان لدى USPTO. المنتجات في مرحلة التجريب. المؤسس جاهز للشراكة الصحيحة.',
+  'كل فكرة تُطبّق = اسمك في سجل اند كو.',
+  'براءتا اختراع مقدمتان لدى USPTO. المنتجات في مرحلة التجريب. المؤسس جاهز للشريك الصحيح.',
 ]
 
 const TYPE_LABELS: Record<string, string> = {
@@ -104,7 +108,7 @@ function NDAOverlay({ token, investorData, lang, onAccept, onDecline }: NDAProps
     <div className="nda-overlay visible" role="dialog" aria-modal="true">
       <div className="nda-card">
         <div className="nda-mark">✦</div>
-        <div className="nda-title">CONFIDENTIALITY NOTICE · إشعار السرية</div>
+        <div className="nda-title">CO-BUILDER AGREEMENT · اتفاقية البناء المشترك</div>
 
         {investorData.name && (
           <div className="nda-prepared-for">
@@ -121,12 +125,15 @@ function NDAOverlay({ token, investorData, lang, onAccept, onDecline }: NDAProps
 
         <p className="nda-body">
           The information you are about to access is proprietary and confidential to MomenCrafts
-          and its founder. By proceeding, you agree not to disclose, reproduce, or distribute
-          any part of this content without prior written consent.
+          & Co. By proceeding, you agree not to disclose, reproduce, or distribute
+          any part of this content without prior written consent. In return, your contributions —
+          feedback, ideas, and suggestions — may shape our products. If implemented,
+          you earn your place in the & Co registry.
         </p>
         <p className="nda-body-ar">
-          المعلومات التي ستطّلع عليها ملكية خاصة وسرية لمؤمن كرافتس ومؤسسها.
+          المعلومات التي ستطّلع عليها ملكية خاصة وسرية لمؤمن كرافتس اند كو.
           بالمتابعة، توافق على عدم الإفصاح أو النسخ أو التوزيع دون إذن كتابي مسبق.
+          في المقابل، مساهماتك — أفكارك وملاحظاتك — قد تُشكّل منتجاتنا. إذا اعتُمدت، يُسجّل اسمك في سجل اند كو.
         </p>
 
         <div className="nda-meta">
@@ -280,22 +287,22 @@ export default function GateScreen() {
             <div className="gate-logo-mark">✦</div>
             <div className="gate-logo-text">
               <span className="gate-logo-primary">MOMENCRAFTS</span>
-              <span className="gate-logo-sub">{lang === 'ar' ? 'استوديو أفكار' : 'Idea Studio'}</span>
+              <span className="gate-logo-co">{lang === 'ar' ? 'اند كو' : '& Co'}</span>
             </div>
           </div>
 
           <div className="gate-headline-block">
             <h1 className="gate-heading">
               {lang === 'ar' ? (
-                <><em>أفكار</em><br/>تُصاغ لتصبح<br/>واقعًا.</>
+                <>ابنِ<br/><em>معنا.</em></>
               ) : (
-                <>Ideas,<br/><em>Intelligently</em><br/>Crafted.</>
+                <>Build<br/><em>With Us.</em></>
               )}
             </h1>
             <p className="gate-sub">
               {lang === 'ar'
-                ? 'استوديو أفكار مؤسَّس بقيادة مومن فرعون · الرياض، المملكة العربية السعودية'
-                : 'Founder-led idea studio · Riyadh, Kingdom of Saudi Arabia'}
+                ? 'منصة بناء مشترك · الرياض، المملكة العربية السعودية'
+                : 'A co-builder platform · Riyadh, Saudi Arabia'}
             </p>
           </div>
 
@@ -331,7 +338,7 @@ export default function GateScreen() {
 
           <div className="gate-brand-footer">
             <span className="gate-location">Riyadh · Kingdom of Saudi Arabia</span>
-            <span className="gate-year">© 2026 MomenCrafts</span>
+            <span className="gate-year">© 2026 MomenCrafts & Co</span>
           </div>
         </div>
 
@@ -343,7 +350,7 @@ export default function GateScreen() {
 
           <div className="token-card">
             <div className="token-card-badge">
-              <span>{lang === 'ar' ? 'وصول محدود' : 'RESTRICTED ACCESS'}</span>
+              <span>{lang === 'ar' ? 'دخول الشركاء' : 'CO-BUILDER ACCESS'}</span>
             </div>
 
             <h2 className="token-card-title">
@@ -352,8 +359,8 @@ export default function GateScreen() {
 
             <p className="token-card-sub">
               {lang === 'ar'
-                ? 'أدخل رمز الوصول الخاص بك (MCR-XXXXXXXX) للاطلاع على المحفظة الكاملة وفرص الشراكة.'
-                : 'Enter your access key (MCR-XXXXXXXX) to explore the full portfolio and partnership opportunities.'}
+                ? 'أدخل رمز الوصول للدخول إلى الاستوديو. مساهمتك تشكّل ما نبنيه.'
+                : 'Enter your access key to join the studio. Your input shapes what we build next.'}
             </p>
 
             <label className="token-field-label" htmlFor="tokenInput">

@@ -312,7 +312,7 @@ export default function HomeScreen() {
           <span className="inv-sep">|</span>
           <span id="inv-type-display">{typeLabel}</span>
           <span className="inv-sep">|</span>
-          <span className="inv-bar-nda">✓ NDA Signed</span>
+          <span className="inv-bar-nda">✓ & Co</span>
           {countdown && type === 'HOUR' && (
             <span id="inv-expiry-badge" className="inv-expiry-badge" style={{ animation: countdown < '10:00' ? 'pulse 1.2s infinite' : 'none' }}>
               ⏱ <span id="inv-countdown">{countdown}</span>
@@ -320,13 +320,13 @@ export default function HomeScreen() {
           )}
         </div>
         <nav id="inv-section-nav" style={{ display:'flex', gap:'1.2rem', fontSize:'.66rem' }}>
-          {[['#inv-traction','Traction'],['#inv-portfolio','Portfolio'],['#inv-vision','Vision'],['#inv-founder','Founder'],['#inv-youbring','What You Bring'],['#inv-letsbuild',"Let's Build →"]].map(([href, label]) => (
+          {[['#inv-traction','Our Story'],['#inv-portfolio','Portfolio'],['#inv-vision','Vision'],['#inv-founder','Founder'],['#inv-youbring','Your Superpower'],['#inv-letsbuild','Become & Co →']].map(([href, label]) => (
             <a key={href} href={href} style={{ color: label.includes('→') ? '#C8A96E' : '#a09070', textDecoration:'none', fontWeight: label.includes('→') ? 700 : 400 }}>{label}</a>
           ))}
         </nav>
         <div className="inv-bar-actions">
           <button onClick={handleExit} className="inv-bar-exit">Exit</button>
-          <a href="#inv-letsbuild" className="inv-bar-cta">Let's Build →</a>
+          <a href="#inv-letsbuild" className="inv-bar-cta">Become & Co →</a>
         </div>
       </div>
 
@@ -363,14 +363,14 @@ export default function HomeScreen() {
         <div className="container hero-inner">
           <div className="hero-eyebrow reveal">
             <span className="eyebrow-dot" />
-            استوديو برمجيات الذكاء الاصطناعي · الرياض، السعودية
+            مؤمن كرافتس اند كو · الرياض، السعودية
           </div>
           <h1 className="hero-heading reveal delay-100">
-            بذكاء<br/><em>مصممة بعناية</em>
+            بعناية<br/><em>مصممة معكم</em>
           </h1>
-          <p className="hero-byline reveal delay-200">من MomenCrafts</p>
+          <p className="hero-byline reveal delay-200">MomenCrafts & Co</p>
           <p className="hero-sub reveal delay-300">
-            10 منتجات. 5 مجالات.<br/>استوديو واحد — يبني البنية الذكية لاقتصاد المنطقة.
+            10 منتجات. 5 مجالات.<br/>استوديو واحد — يبني البنية الذكية مع شركائه.
           </p>
           <div className="hero-actions reveal delay-400">
             <a href="#products" className="btn btn-primary">تصفح أعمالنا <span className="btn-arrow">←</span></a>
@@ -650,9 +650,9 @@ export default function HomeScreen() {
         {/* 01 TRACTION */}
         <section id="inv-traction" data-section="traction" style={{ background:'#0C0A09', padding:'5rem 1.5rem', borderTop:'2px solid #C8A96E33' }}>
           <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
-            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>01 · TRACTION</div>
+            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>01 · OUR STORY</div>
             <h2 style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:'clamp(1.8rem,4vw,3rem)', color:'#f0ebe3', margin:'0 0 2.5rem', fontWeight:700 }}>
-              القصة حتى الآن <span style={{ fontSize:'.55em', color:'#C8A96E', fontStyle:'italic' }}>· The Story So Far</span>
+              ما بنيناه معاً <span style={{ fontSize:'.55em', color:'#C8A96E', fontStyle:'italic' }}>· What We’ve Built — Together</span>
             </h2>
             <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))', gap:'1.5rem', marginBottom:'3rem' }}>
               {[{n:10,label:'منتجات مبنية · Products'},{n:2,label:'براءات اختراع · Patents'},{n:5,label:'قطاعات · Industries'},{n:1,label:'مؤسس · Solo Founder'}].map((item,i) => (
@@ -739,11 +739,11 @@ export default function HomeScreen() {
         <section id="inv-vision" data-section="vision" style={{ background:'#0C0A09', padding:'5rem 1.5rem' }}>
           <div style={{ maxWidth:'1100px', margin:'0 auto', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'3rem', alignItems:'center' }}>
             <div>
-              <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>02 · VISION</div>
+              <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>03 · SHARED VISION</div>
               <blockquote style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:'clamp(1rem,2.2vw,1.5rem)', color:'#f0ebe3', lineHeight:1.7, borderLeft:'3px solid #9B1B30', paddingLeft:'1.5rem', margin:'1rem 0 2rem', fontStyle:'italic' }}>
                 "The most powerful technology disappears — it becomes so natural the user forgets they're interacting with a machine."
               </blockquote>
-              <p style={{ color:'#a09070', lineHeight:1.7, fontSize:'.88rem' }}>MomenCrafts builds the missing tech layer for the Arab world — starting with healthcare, fintech, and IoT. Every product targets a structural gap in MENA markets, not a feature request.</p>
+              <p style={{ color:'#a09070', lineHeight:1.7, fontSize:'.88rem' }}>MomenCrafts & Co builds the missing tech layer for the Arab world — starting with healthcare, fintech, and IoT. This vision isn’t ours alone. Every co-builder who shapes a product shares in this mission.</p>
             </div>
             <div style={{ background:'#0C0A09', border:'1px solid #C8A96E22', borderRadius:'16px', padding:'2rem' }}>
               <div style={{ fontFamily:'monospace', fontSize:'.68rem', color:'#C8A96E', marginBottom:'1rem', letterSpacing:'.15em' }}>MARKET OPPORTUNITY</div>
@@ -783,9 +783,9 @@ export default function HomeScreen() {
         {/* 05 PARTNERSHIP */}
         <section id="inv-partnership" data-section="partnership" style={{ background:'#0C0A09', padding:'5rem 1.5rem' }}>
           <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
-            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>05 · PARTNERSHIP</div>
-            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>مسارات الشراكة · Partnership Tracks</h2>
-            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>Choose the track that fits your position. Each button opens a pre-filled WhatsApp message — direct line to the founder.</p>
+            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>05 · JOIN THE CO</div>
+            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>كيف تصبح & Co · How You Earn Your Seat</h2>
+            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>There are many ways to become & Co. Choose the path that fits you — every contribution counts.</p>
             <div className="inv-track-grid">
               <div className="inv-track-card" style={{ border:'1px solid #C8A96E33', borderTop:'3px solid #C8A96E' }}>
                 <div className="inv-track-icon">🌐</div>
@@ -812,9 +812,9 @@ export default function HomeScreen() {
         {/* 06 WHAT YOU BRING */}
         <section id="inv-youbring" data-section="youbring" style={{ background:'#1A1614', padding:'5rem 1.5rem' }}>
           <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
-            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>06 · WHAT YOU BRING</div>
-            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>الشريك المناسب يحمل أكثر من موارد</h2>
-            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2rem', lineHeight:1.7 }}>The right partner brings more than resources. One strong signal is enough to start a conversation.</p>
+            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>06 · YOUR SUPERPOWER</div>
+            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>كل شريك يحمل قدرة فريدة · What Makes You & Co</h2>
+            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2rem', lineHeight:1.7 }}>You don’t need everything. One strong signal is enough to earn your seat.</p>
             <div className="inv-bring-grid">
               {[
                 ['🌐','Network & Access · شبكة وصول','Relationships with hospitals, clinics, law firms, real estate developers, government bodies, or enterprise procurement channels that can open doors our products need.'],
@@ -847,18 +847,18 @@ export default function HomeScreen() {
             {/* Eyebrow */}
             <div className="letsb-eyebrow">
               <span className="letsb-eyebrow-dot" />
-              <span>07 · LET'S BUILD TOGETHER</span>
+              <span>07 · BECOME & CO</span>
             </div>
 
             {/* Main headline */}
             <h2 className="letsb-heading">
               إن رأيت الفرصة —<br/>
-              <em>فلنبنِها معاً</em>
+              <em>صِر اند كو</em>
             </h2>
             <p className="letsb-sub">
               No pitches. No decks.<br/>
-              A direct conversation with the founder.<br/>
-              All discussions are confidential under the NDA you have signed.
+              Your input becomes code.<br/>
+              Your name joins the registry.
             </p>
 
             {/* Three partnership tracks */}

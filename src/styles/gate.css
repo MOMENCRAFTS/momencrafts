@@ -96,11 +96,18 @@ body:has(.gate-layout) {
   color: var(--g-gold);
   font-weight: 500;
 }
-.gate-logo-sub {
-  font-family: var(--g-font-mono);
+.gate-logo-co {
+  font-family: var(--g-font-serif);
+  font-style: italic;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--g-gold);
+  opacity: 0.85;
+}
+[dir="rtl"] .gate-logo-co {
+  font-family: var(--g-font-ar);
+  font-style: normal;
   font-size: 0.65rem;
-  letter-spacing: 0.14em;
-  color: var(--g-cream-mute);
 }
 
 /* Headline block */
