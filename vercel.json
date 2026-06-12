@@ -27,6 +27,8 @@
     { "source": "/ummiwallet",          "destination": "/ummiwallet/index.html" },
     { "source": "/ummiwallet/",         "destination": "/ummiwallet/index.html" },
     { "source": "/ummiwallet/:path*",   "destination": "/ummiwallet/:path*" },
+    { "source": "/admin",    "destination": "/admin/index.html" },
+    { "source": "/admin/",   "destination": "/admin/index.html" },
     { "source": "/(.*)",     "destination": "/index.html" }
   ],
   "headers": [
