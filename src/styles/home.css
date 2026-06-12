@@ -108,23 +108,47 @@
   box-shadow: 0 1px 12px rgba(155,27,48,.06) !important;
 }
 .home-root .nav-logo,
-.home-root .nav-links a { color: var(--br-text) !important; }
+.home-root .nav-links a { color: var(--br-text) !important; position: relative; }
+.home-root .nav-links a::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 2px; background: var(--br-red);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform 0.3s cubic-bezier(.2,0,0,1);
+}
 .home-root .nav-links a:hover { color: var(--br-red) !important; }
+.home-root .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
 .home-root .nav-cta {
   background: var(--br-red) !important; color: #fff !important;
   border: none !important; box-shadow: none !important;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.25s !important;
 }
-.home-root .nav-cta:hover { background: var(--br-red-b) !important; }
+.home-root .nav-cta:hover { background: var(--br-red-b) !important; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(155,27,48,.25) !important; }
 .home-root .nav-hamburger span { background: var(--br-text) !important; }
 
 /* ── HERO ── */
 .home-root .hero {
   background: var(--br-white) !important;
+  position: relative;
+  overflow: hidden;
+}
+.home-root .hero::before {
+  content: '';
+  position: absolute;
+  top: -30%; right: -20%;
+  width: 80%; height: 80%;
+  background: radial-gradient(ellipse, rgba(155,27,48,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  animation: heroMesh 12s ease-in-out infinite alternate;
+}
+@keyframes heroMesh {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  100% { transform: translate(-5%, 3%) scale(1.1); opacity: 1; }
 }
 .home-root .hero::after { border-color: var(--br-red) !important; opacity: .06 !important; }
 .home-root .hero-ember { display: none !important; }
 .home-root .hero-eyebrow { color: var(--br-red) !important; }
-.home-root .eyebrow-dot { background: var(--br-red) !important; }
+.home-root .eyebrow-dot { background: var(--br-red) !important; box-shadow: 0 0 8px rgba(155,27,48,0.4) !important; }
 .home-root .hero-heading { color: var(--br-text) !important; }
 .home-root .hero-heading em { color: var(--br-red) !important; font-style: italic; }
 .home-root .hero-byline { color: var(--br-text-3) !important; }
@@ -143,8 +167,8 @@
 }
 .home-root .btn-primary:hover {
   background: var(--br-red-b) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(155,27,48,.25) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 24px rgba(155,27,48,.3) !important;
 }
 .home-root .btn-ghost {
   background: var(--br-white) !important;
@@ -166,22 +190,50 @@
 .home-root .stat-divider { color: var(--br-red) !important; opacity: .2 !important; }
 
 /* ── PRODUCTS SECTION ── */
-.home-root .products { background: var(--br-gray-1) !important; }
+.home-root .products {
+  background: var(--br-gray-1) !important;
+  position: relative;
+}
+.home-root .products::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(180deg, var(--br-white) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
 .home-root .section-label { color: var(--br-red) !important; }
 .home-root .section-title { color: var(--br-text) !important; }
 .home-root .section-sub { color: var(--br-text-2) !important; }
 .home-root .product-card {
   background: var(--br-white) !important;
   border: none !important;
-  border-radius: 12px !important;
+  border-radius: 14px !important;
   box-shadow: 0 2px 16px rgba(155,27,48,.08) !important;
+  transition: transform 0.3s cubic-bezier(.2,0,0,1), box-shadow 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+.home-root .product-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(155,27,48,0.03) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
 }
 .home-root .product-card:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 8px 32px rgba(155,27,48,.15) !important;
+  transform: translateY(-6px) !important;
+  box-shadow: 0 16px 48px rgba(155,27,48,.16), 0 4px 12px rgba(155,27,48,.08) !important;
 }
 .home-root .product-card.featured {
   border-top: 3px solid var(--br-red) !important;
+  box-shadow: 0 4px 20px rgba(155,27,48,.12) !important;
+}
+.home-root .product-card.featured::before {
+  height: 180px;
+  background: linear-gradient(180deg, rgba(155,27,48,0.06) 0%, transparent 100%);
 }
 .home-root .card-accent-bar { background: var(--br-red) !important; }
 .home-root .card-featured-badge {
@@ -216,8 +268,8 @@
   border: none !important;
   border-radius: 4px !important;
 }
-.home-root .card-link { color: var(--br-red) !important; }
-.home-root .card-link:hover { text-decoration: underline !important; }
+.home-root .card-link { color: var(--br-red) !important; transition: gap 0.2s ease; }
+.home-root .card-link:hover { text-decoration: underline !important; gap: 0.6rem; }
 
 /* ── ABOUT SECTION ── */
 .home-root .about { background: var(--br-white) !important; border-top: none !important; }
@@ -437,8 +489,15 @@
   background: rgba(255,255,255,.18);
   border-color: rgba(255,255,255,.4);
   transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
 }
-.letsb-track-icon { font-size: 1.8rem; }
+.letsb-track-btn:hover .letsb-track-icon { transform: scale(1.2); }
+.letsb-track-icon { font-size: 1.8rem; transition: transform 0.3s cubic-bezier(.2,0,0,1); }
+.letsb-track-team {
+  border-color: rgba(255,255,255,.35);
+  background: rgba(255,255,255,.14);
+  box-shadow: 0 0 24px rgba(255,255,255,0.05);
+}
 .letsb-track-label {
   font-family: 'Cairo', sans-serif !important;
   font-size: .95rem !important;
@@ -524,6 +583,11 @@
 }
 #wa-btn:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(37,211,102,.45); }
 #wa-btn svg { width: 28px; height: 28px; fill: #fff; }
+@keyframes wa-breathe {
+  0%, 100% { box-shadow: 0 4px 16px rgba(37,211,102,.35); }
+  50% { box-shadow: 0 4px 24px rgba(37,211,102,.55), 0 0 40px rgba(37,211,102,.15); }
+}
+#wa-btn { animation: wa-breathe 3s ease-in-out infinite; }
 /* Home context — override global WA position with safe area */
 .home-root #wa-btn {
   bottom: calc(1.5rem + env(safe-area-inset-bottom));

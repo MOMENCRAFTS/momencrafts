@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
 import '@/styles/home.css'
@@ -55,7 +55,9 @@ function InvCard({ id, name, tagline, cat, badge, desc, details, demoLink, demoL
         <div className="inv-ph-badges">
           <span className="inv-card-cat">{cat}</span>
           <span className={`inv-badge ${badge}`}>{BADGE_LABELS[badge] ?? badge}</span>
-          <span className="inv-toggle-icon" id={`inv-icon-${id}`}>{open ? '−' : '+'}</span>
+          <span className="inv-toggle-icon" id={`inv-icon-${id}`} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s cubic-bezier(.2,0,0,1)' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
         </div>
       </div>
       <div className={`inv-product-card-body${open ? ' open' : ''}`} id={`inv-body-${id}`}>
@@ -123,6 +125,32 @@ function useReveal() {
     document.querySelectorAll('.reveal').forEach(el => io.observe(el))
     return () => io.disconnect()
   }, [])
+}
+
+// ── Animated count-up on scroll ──
+function CountUp({ end, duration = 1600, suffix = '' }: { end: number; duration?: number; suffix?: string }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLSpanElement>(null)
+  const started = useRef(false)
+  useEffect(() => {
+    const el = ref.current; if (!el) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started.current) {
+        started.current = true
+        const start = performance.now()
+        const tick = (now: number) => {
+          const t = Math.min((now - start) / duration, 1)
+          const ease = 1 - Math.pow(1 - t, 4) // easeOutQuart
+          setCount(Math.round(ease * end))
+          if (t < 1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+      }
+    }, { threshold: 0.3 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [end, duration])
+  return <span ref={ref}>{count}{suffix}</span>
 }
 
 // ── Watermark canvas ──
@@ -627,20 +655,27 @@ export default function HomeScreen() {
               القصة حتى الآن <span style={{ fontSize:'.55em', color:'#C8A96E', fontStyle:'italic' }}>· The Story So Far</span>
             </h2>
             <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))', gap:'1.5rem', marginBottom:'3rem' }}>
-              {[['10','منتجات مبنية · Products'],['2','براءات اختراع · Patents'],['5','قطاعات · Industries'],['1','مؤسس · Solo Founder']].map(([num,label],i) => (
-                <div key={num} style={{ background:'#1A1614', border:'1px solid #C8A96E33', borderRadius:'12px', padding:'1.5rem', textAlign:'center' }}>
-                  <div style={{ fontSize:'2.8rem', fontWeight:900, color: i===3 ? '#9B1B30' : '#C8A96E', fontFamily:'Georgia,serif' }}>{num}</div>
-                  <div style={{ color:'#a09070', fontSize:'.8rem', marginTop:'.3rem' }}>{label}</div>
+              {[{n:10,label:'منتجات مبنية · Products'},{n:2,label:'براءات اختراع · Patents'},{n:5,label:'قطاعات · Industries'},{n:1,label:'مؤسس · Solo Founder'}].map((item,i) => (
+                <div key={item.n} style={{ background:'rgba(26,22,20,0.6)', backdropFilter:'blur(8px)', border:'1px solid rgba(200,169,110,0.15)', borderRadius:'14px', padding:'1.75rem', textAlign:'center', position:'relative', overflow:'hidden' }}>
+                  <div style={{ position:'absolute', bottom:0, left:'10%', right:'10%', height:'2px', background:'linear-gradient(to right, transparent, rgba(200,169,110,0.3), transparent)' }} />
+                  <div style={{ fontSize:'3rem', fontWeight:900, color: i===3 ? '#9B1B30' : '#C8A96E', fontFamily:'Georgia,serif', lineHeight:1 }}><CountUp end={item.n} duration={1200} /></div>
+                  <div style={{ color:'#a09070', fontSize:'.8rem', marginTop:'.5rem', lineHeight:1.4 }}>{item.label}</div>
                 </div>
               ))}
             </div>
-            <div style={{ display:'flex', justifyContent:'space-between', gap:'1rem', flexWrap:'wrap', position:'relative', paddingTop:'1rem' }}>
-              <div style={{ position:'absolute', top:'1.6rem', left:0, right:0, height:'1px', background:'linear-gradient(to right,transparent,#C8A96E44,transparent)' }} />
+            <div style={{ display:'flex', justifyContent:'space-between', gap:'1rem', flexWrap:'wrap', position:'relative', paddingTop:'1.5rem' }}>
+              <div style={{ position:'absolute', top:'2rem', left:'5%', right:'5%', height:'2px', background:'linear-gradient(to right,transparent 0%,rgba(200,169,110,0.25) 15%,rgba(200,169,110,0.4) 50%,rgba(155,27,48,0.3) 85%,transparent 100%)' }} />
               {[['2024','First Concept'],['2025 Q1','Cliniq.one Beta'],['2025 Q2','2 Patents Filed'],['2025 Q4','Ummi Wallet Beta'],['2026 →','Seeking Partners']].map(([year,label],i) => (
                 <div key={year} style={{ textAlign:'center', flex:1, minWidth:'100px' }}>
-                  <div style={{ width: i===4 ? '14px' : '10px', height: i===4 ? '14px' : '10px', borderRadius:'50%', background: i===4 ? '#9B1B30' : '#C8A96E', margin:'0 auto .6rem', position:'relative', zIndex:1, boxShadow: i===4 ? '0 0 10px #9B1B3088' : 'none' }} />
-                  <div style={{ fontSize:'.65rem', color: i===4 ? '#9B1B30' : '#C8A96E', fontFamily:'monospace' }}>{year}</div>
-                  <div style={{ fontSize:'.72rem', color:'#a09070', marginTop:'.2rem' }}>{label}</div>
+                  <div style={{
+                    width: i===4 ? '16px' : '12px', height: i===4 ? '16px' : '12px',
+                    borderRadius:'50%', background: i===4 ? '#9B1B30' : '#C8A96E',
+                    margin:'0 auto .6rem', position:'relative', zIndex:1,
+                    boxShadow: i===4 ? '0 0 12px rgba(155,27,48,0.6), 0 0 24px rgba(155,27,48,0.3)' : '0 0 6px rgba(200,169,110,0.3)',
+                    animation: i===4 ? 'pulse 2s ease-in-out infinite' : 'none'
+                  }} />
+                  <div style={{ fontSize:'.7rem', color: i===4 ? '#9B1B30' : '#C8A96E', fontFamily:'monospace', fontWeight:700, letterSpacing:'.05em' }}>{year}</div>
+                  <div style={{ fontSize:'.72rem', color:'#a09070', marginTop:'.25rem' }}>{label}</div>
                 </div>
               ))}
             </div>

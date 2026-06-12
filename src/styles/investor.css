@@ -98,9 +98,10 @@ body.investor-page[lang="en"],
 body.investor-page .en { font-family: var(--i-ff-sans); }
 
 ::selection { background: var(--i-crimson); color: #fff; }
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--i-bg); }
-::-webkit-scrollbar-thumb { background: var(--i-border); border-radius: 2px; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(155,27,48,0.18); border-radius: 3px; transition: background 0.2s; }
+::-webkit-scrollbar-thumb:hover { background: rgba(155,27,48,0.3); }
 
 /* ─── BACKGROUND TEXTURE ──────────────────────────────────── */
 .i-bg-sweep {
@@ -488,7 +489,7 @@ body.investor-page .en { font-family: var(--i-ff-sans); }
 .token-input:focus {
   background: #FFFFFF;
   border-color: var(--i-crimson);
-  box-shadow: 0 0 0 3px rgba(155, 27, 48, 0.10);
+  box-shadow: 0 0 0 3px rgba(155, 27, 48, 0.10), 0 4px 20px rgba(155, 27, 48, 0.06);
 }
 .token-input.error {
   border-color: var(--i-error);
@@ -529,8 +530,8 @@ body.investor-page .en { font-family: var(--i-ff-sans); }
   pointer-events: none;
 }
 .enter-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(155,27,48,0.35);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 32px rgba(155,27,48,0.35), 0 0 48px rgba(155,27,48,0.1);
 }
 .enter-btn:active:not(:disabled) {
   transform: translateY(0);
