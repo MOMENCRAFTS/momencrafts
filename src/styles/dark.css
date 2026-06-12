@@ -1,10 +1,4 @@
-/* MOMENCRAFTS — White · Crimson · Saudi Green */
-:root{
-  --cr:#B5000F;--cr-deep:#8A000B;--cr-pale:#FFF5F5;
-  --gr:#006C35;--gr-bright:#00A651;
-  --txt:#1A0505;--txt-2:#5A2525;--txt-3:#9A7575;
-}
-body{background:#fff;color:var(--txt);background-image:none}
+/* MOMENCRAFTS — Dark Premium · Saudi Green (home-page overrides only) */
 
 /* NAV */
 #nav{background:#fff;border-bottom:1px solid rgba(181,0,15,.12);box-shadow:none}
