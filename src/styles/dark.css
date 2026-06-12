@@ -1,13 +1,13 @@
 /* MOMENCRAFTS — Dark Premium · Saudi Green (home-page overrides only) */
 
-/* NAV */
-#nav{background:#fff;border-bottom:1px solid rgba(181,0,15,.12);box-shadow:none}
-#nav.scrolled{background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(181,0,15,.2);box-shadow:0 2px 12px rgba(181,0,15,.08)}
-.logo-text{color:var(--txt);font-weight:700}.logo-mark{color:var(--cr)}
-.nav-links a{color:var(--txt-2);border-bottom:none}.nav-links a:hover{color:var(--cr);border-bottom:none}
+/* NAV — default dark for product screens (RogerAI, EdgeTack, TDC) */
+#nav{background:rgba(7,5,4,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(181,0,15,.15);box-shadow:0 2px 12px rgba(0,0,0,.2)}
+#nav.scrolled{background:rgba(7,5,4,0.95);border-bottom:1px solid rgba(181,0,15,.25);box-shadow:0 2px 16px rgba(0,0,0,.3)}
+.logo-text{color:#fff;font-weight:700}.logo-mark{color:var(--cr)}
+.nav-links a{color:rgba(255,255,255,.7);border-bottom:none}.nav-links a:hover{color:var(--cr);border-bottom:none}
 .nav-cta{color:#fff!important;background:var(--cr)!important;border:1px solid var(--cr)!important;box-shadow:none!important;transform:none!important}
 .nav-cta:hover{background:var(--cr-deep)!important;transform:none!important;box-shadow:none!important}
-.nav-hamburger span{background:var(--cr)}
+.nav-hamburger span{background:rgba(255,255,255,.8)}
 @media(max-width:640px){
   .nav-links{background:var(--cr)}
   .nav-links a{color:#fff!important;border-bottom:1px solid rgba(255,255,255,.15)!important}
