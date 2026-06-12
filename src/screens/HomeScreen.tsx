@@ -428,7 +428,7 @@ export default function HomeScreen() {
               <p className="card-desc">منصة طب عن بُعد متكاملة — 5 تطبيقات لربط المرضى بالأطباء مصممة لقطاع الصحة في المنطقة.</p>
               <div className="card-tags"><span className="tag">رعاية صحية</span><span className="tag">MENA</span><span className="tag">5 تطبيقات</span></div>
               <span className="card-live-badge">🟢 LIVE</span>
-              <a href="https://www.cliniq.one" target="_blank" rel="noopener" className="card-link">زيارة cliniq.one ←</a>
+              <a href="/cliniq" target="_blank" rel="noopener" className="card-link">زيارة cliniq.one ←</a>
             </article>
 
             {/* QADAA */}
@@ -698,7 +698,7 @@ export default function HomeScreen() {
               <InvCard id="cliniq" name="CLINIQ.ONE" tagline="منصة طب عن بُعد · Full-Stack Telemedicine" cat="HealthTech" badge="inv-badge-live"
                 desc="5-app telemedicine ecosystem — patient, doctor, admin, intake bot, and pharmacy module — purpose-built for MOH compliance in Saudi Arabia and the wider MENA region. Live with real users."
                 details={[{label:'SECTOR',value:'Digital Health · MENA'},{label:'REVENUE MODEL',value:'Clinic SaaS · Per-consultation'},{label:'COMPLIANCE',value:'MOH Saudi Arabia'},{label:'MARKET SIZE',value:'$21.8B Digital Health (MENA) by 2028'}]}
-                demoLink="https://www.cliniq.one" demoLabel="🌐 Visit cliniq.one →" />
+                demoLink="/cliniq" demoLabel="🌐 Visit cliniq.one →" />
               <InvCard id="ummi" name="UMMI · أمي" tagline="محفظة العائلة ورعاية الأم · Family Finance & Mother Care" cat="FinTech" badge="inv-badge-beta"
                 desc="Private family financial system built with dignity for Saudi families. Dedicated budgeting, smart pockets, automatic mother's salary, emergency fund system — 28 features, 3 family roles, fully bilingual Arabic/English. IoT-connected piggy bank for children."
                 details={[{label:'SECTOR',value:'Islamic FinTech · Family'},{label:'REVENUE MODEL',value:'Family subscription · Hardware sales'},{label:'UNIQUE FEATURE',value:"IoT piggy bank + Mother's salary module"},{label:'MARKET SIZE',value:'$128B Islamic Fintech (Global)'}]}
