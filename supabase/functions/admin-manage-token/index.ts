@@ -61,10 +61,24 @@ Deno.serve(async (req) => {
     )
 
     switch (action) {
+      case 'list': {
+        const { data: rows, error } = await supabase
+          .from('investor_tokens')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(200)
+        if (error) {
+          console.error('List tokens error:', error)
+          return json(500, { error: 'Failed to list tokens' }, corsHeaders)
+        }
+        return json(200, { data: rows }, corsHeaders)
+      }
+
       case 'create': {
-        const { label, email, notes, tokenType } = body
+        const { label, email, notes, token_type: tt } = body
+        const tokenType = tt || body.tokenType
         if (!label || !tokenType) {
-          return json(400, { error: 'label and tokenType are required' }, corsHeaders)
+          return json(400, { error: 'label and token_type are required' }, corsHeaders)
         }
 
         // Generate MCR-XXXXXXXX
@@ -93,10 +107,15 @@ Deno.serve(async (req) => {
           return json(500, { error: 'Failed to create token' }, corsHeaders)
         }
 
+        const ndaLink = `https://admin.momencrafts.com/nda?t=${data.id}`
+        const portalLink = `https://www.momencrafts.com?token=${data.token}`
+
         return json(200, {
           token: data.token,
           tokenId: data.id,
           expiresAt: data.expires_at,
+          ndaLink,
+          portalLink,
         }, corsHeaders)
       }
 
