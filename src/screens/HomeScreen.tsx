@@ -320,7 +320,7 @@ export default function HomeScreen() {
           )}
         </div>
         <nav id="inv-section-nav" style={{ display:'flex', gap:'1.2rem', fontSize:'.66rem' }}>
-          {[['#inv-traction','Our Story'],['#inv-portfolio','Portfolio'],['#inv-vision','Vision'],['#inv-founder','Founder'],['#inv-youbring','Your Superpower'],['#inv-letsbuild','Become & Co →']].map(([href, label]) => (
+          {[['#inv-traction','Our Story'],['#inv-portfolio','Portfolio'],['#inv-vision','Vision'],['#inv-downloads','Test & Shape'],['#inv-journal','Journal'],['#inv-traction-live','Progress'],['#inv-cobuilder','Board'],['#inv-letsbuild','Become & Co →']].map(([href, label]) => (
             <a key={href} href={href} style={{ color: label.includes('→') ? '#C8A96E' : '#a09070', textDecoration:'none', fontWeight: label.includes('→') ? 700 : 400 }}>{label}</a>
           ))}
         </nav>
@@ -834,6 +834,226 @@ export default function HomeScreen() {
             <p style={{ color:'#a09070', fontSize:'.78rem', textAlign:'center', marginTop:'.5rem', fontStyle:'italic' }}>
               You don't need all six. One strong signal is enough to start a conversation. · لا تحتاج لكل القدرات الستة. إشارة واحدة قوية تكفي لبدء محادثة.
             </p>
+          </div>
+        </section>
+
+        {/* 08 TEST & SHAPE */}
+        <section id="inv-downloads" data-section="downloads" className="co-section co-section-dark">
+          <div className="co-container">
+            <div className="co-eyebrow">08 · TEST & SHAPE</div>
+            <h2 className="co-title">جرّب وشكّل <span className="co-title-en">· Download. Test. Shape What Ships.</span></h2>
+            <p className="co-sub">Every install is a vote. Every bug report earns credit. Download our apps and help shape the next release.</p>
+            <div className="co-downloads-grid">
+              {[
+                { id:'cliniq-patient', name:'Cliniq Patient', nameAr:'كلينيك المريض', version:'v2.4.1', status:'live', emoji:'🏥', size:'63 MB', desc:'Patient-facing telemedicine app with AI intake' },
+                { id:'cliniq-doctor', name:'Cliniq Doctor', nameAr:'كلينيك الطبيب', version:'v2.3.0', status:'live', emoji:'⚕️', size:'58 MB', desc:'Doctor dashboard with AI-assisted consultations' },
+                { id:'rogerai', name:'Roger·AI', nameAr:'رجر AI', version:'v1.2.0', status:'beta', emoji:'🎙️', size:'45 MB', desc:'Voice-first executive assistant' },
+                { id:'ummi', name:'Ummi Wallet', nameAr:'محفظة أمي', version:'v3.1.0', status:'beta', emoji:'💚', size:'52 MB', desc:'Family finance OS with mother care' },
+                { id:'relaybot', name:'RelayBot', nameAr:'ريلي بوت', version:'v1.8.3', status:'dev', emoji:'⌨️', size:'12 MB', desc:'Companion app for RelayBot device' },
+              ].map(app => (
+                <div key={app.id} className="co-download-card">
+                  <div className="co-dl-header">
+                    <span className="co-dl-emoji">{app.emoji}</span>
+                    <span className={`co-dl-status co-dl-${app.status}`}>
+                      {app.status === 'live' ? '🟢 LIVE' : app.status === 'beta' ? '🧪 BETA' : '🔧 DEV'}
+                    </span>
+                  </div>
+                  <h4 className="co-dl-name">{app.name}</h4>
+                  <p className="co-dl-name-ar">{app.nameAr}</p>
+                  <p className="co-dl-desc">{app.desc}</p>
+                  <div className="co-dl-meta">
+                    <span>{app.version}</span>
+                    <span>{app.size}</span>
+                  </div>
+                  <div className="co-dl-actions">
+                    <button className="co-dl-btn co-dl-btn-android" onClick={() => window.open(`https://wa.me/966535271122?text=I'd like the APK for ${app.name}`, '_blank')}>
+                      📱 Android APK
+                    </button>
+                    {(app.status === 'live' || app.status === 'beta') && (
+                      <button className="co-dl-btn co-dl-btn-feedback" onClick={() => {
+                        const section = document.getElementById('inv-cobuilder')
+                        if (section) section.scrollIntoView({ behavior: 'smooth' })
+                      }}>
+                        🐛 Report / Suggest
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="co-dl-footer-note">
+              ⚡ APK links are sent via WhatsApp for security. iOS TestFlight invites available on request.
+            </p>
+          </div>
+        </section>
+
+        {/* 09 STUDIO JOURNAL */}
+        <section id="inv-journal" data-section="journal" className="co-section co-section-warm">
+          <div className="co-container">
+            <div className="co-eyebrow">09 · STUDIO JOURNAL</div>
+            <h2 className="co-title">يوميات الاستوديو <span className="co-title-en">· What's Happening Inside</span></h2>
+            <p className="co-sub">Real-time updates from the studio. Launches, patents, milestones, and co-builder credits.</p>
+            <div className="co-journal-feed">
+              {[
+                { cat: 'launch', date: 'Jun 12, 2026', title: 'Cliniq.one Landing Page — Live', body: 'The public-facing landing page for Cliniq.one is now deployed. Patients can learn about the platform and doctors can request onboarding.', product: 'Cliniq', credit: null, pinned: true },
+                { cat: 'update', date: 'Jun 10, 2026', title: 'MomenCrafts & Co — Brand Alignment Complete', body: 'The entire investor portal has been rebranded to reflect the & Co philosophy. Every section now speaks the co-builder language.', product: null, credit: null, pinned: true },
+                { cat: 'patent', date: 'May 2025', title: 'USPTO: Turbo Drone Circuit Patent Filed', body: 'Intelligent voltage sag compensation circuit for FPV drones. Patent covers the core detection and active compensation algorithm.', product: 'TDC', credit: null, pinned: false },
+                { cat: 'patent', date: 'May 2025', title: 'USPTO: Edge Tack Patent Filed', body: 'Collapsible pneumatic trigger buttons integrated into a screen protector for mobile gaming. Patent covers the mechanical design.', product: 'EdgeTack', credit: null, pinned: false },
+                { cat: 'milestone', date: 'Apr 2025', title: 'Ummi Wallet — 28 Modules Complete', body: 'All 28 financial modules are coded and functional: smart budgeting, pocket system, mother\'s salary, emergency fund, IoT piggy bank, and more.', product: 'Ummi', credit: null, pinned: false },
+                { cat: 'community', date: 'Coming soon', title: 'First & Co Registry Entry', body: 'The first investor to have their suggestion implemented will be the inaugural entry in the & Co registry. Your name. Your contribution. Permanently recorded.', product: null, credit: '— waiting for you', pinned: false },
+              ].map((entry, i) => (
+                <article key={i} className={`co-journal-entry${entry.pinned ? ' co-journal-pinned' : ''}`}>
+                  <div className="co-journal-meta">
+                    <span className={`co-journal-cat co-cat-${entry.cat}`}>
+                      {entry.cat === 'launch' ? '🚀 Launch' : entry.cat === 'patent' ? '📜 Patent' : entry.cat === 'update' ? '🔄 Update' : entry.cat === 'milestone' ? '🏆 Milestone' : '🏛 Community'}
+                    </span>
+                    {entry.product && <span className="co-journal-product">{entry.product}</span>}
+                    <span className="co-journal-date">{entry.date}</span>
+                    {entry.pinned && <span className="co-journal-pin">📌</span>}
+                  </div>
+                  <h4 className="co-journal-title">{entry.title}</h4>
+                  <p className="co-journal-body">{entry.body}</p>
+                  {entry.credit && <p className="co-journal-credit">& Co Credit: {entry.credit}</p>}
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 10 OUR PROGRESS */}
+        <section id="inv-traction-live" data-section="traction-live" className="co-section co-section-dark">
+          <div className="co-container">
+            <div className="co-eyebrow">10 · OUR PROGRESS</div>
+            <h2 className="co-title">تقدمنا الآن <span className="co-title-en">· Live Traction Dashboard</span></h2>
+            <p className="co-sub">Real numbers. No vanity metrics. Updated by the founder.</p>
+
+            {/* Global KPIs */}
+            <div className="co-kpi-grid">
+              {[
+                { label: 'Products Built', value: '10', icon: '📦' },
+                { label: 'Patents Filed', value: '2', icon: '📜' },
+                { label: 'Apps in Beta', value: '4', icon: '🧪' },
+                { label: 'Industries', value: '5', icon: '🏢' },
+                { label: 'Lines of Code', value: '280K+', icon: '💻' },
+                { label: 'Solo Founder', value: '1', icon: '👤' },
+              ].map(kpi => (
+                <div key={kpi.label} className="co-kpi-card">
+                  <span className="co-kpi-icon">{kpi.icon}</span>
+                  <span className="co-kpi-value">{kpi.value}</span>
+                  <span className="co-kpi-label">{kpi.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Product Progress Bars */}
+            <div className="co-progress-section">
+              <h4 className="co-progress-heading">Product Readiness</h4>
+              {[
+                { name: 'Cliniq.one', pct: 85, status: 'Live with users', color: '#0e7490' },
+                { name: 'Ummi Wallet', pct: 75, status: 'Beta — 28 modules', color: '#22c55e' },
+                { name: 'Roger·AI', pct: 60, status: 'Private beta', color: '#C8A96E' },
+                { name: 'RelayBot', pct: 45, status: 'Hardware prototype', color: '#a855f7' },
+                { name: 'Qadaa', pct: 20, status: 'Architecture phase', color: '#3b82f6' },
+              ].map(p => (
+                <div key={p.name} className="co-progress-row">
+                  <div className="co-progress-label">
+                    <span>{p.name}</span>
+                    <span className="co-progress-status">{p.status}</span>
+                  </div>
+                  <div className="co-progress-bar">
+                    <div className="co-progress-fill" style={{ width: `${p.pct}%`, background: p.color }} />
+                  </div>
+                  <span className="co-progress-pct">{p.pct}%</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Co Impact */}
+            <div className="co-impact-box">
+              <h4 className="co-impact-heading">& Co Impact</h4>
+              <div className="co-impact-grid">
+                <div className="co-impact-stat"><span className="co-impact-num">0</span><span className="co-impact-label">Bugs Reported</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">0</span><span className="co-impact-label">Suggestions</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">0</span><span className="co-impact-label">Ideas Shipped</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">0</span><span className="co-impact-label">Co-Builders</span></div>
+              </div>
+              <p className="co-impact-note">These numbers update as co-builders contribute. Be the first.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* 12 CO-BUILDER BOARD + REGISTRY */}
+        <section id="inv-cobuilder" data-section="cobuilder" className="co-section co-section-warm">
+          <div className="co-container">
+            <div className="co-eyebrow">12 · CO-BUILDER BOARD</div>
+            <h2 className="co-title">لوحة اند كو <span className="co-title-en">· Ideas. Feedback. Your Name in the Registry.</span></h2>
+            <p className="co-sub">Share ideas, report bugs, suggest features. If it ships — you're & Co.</p>
+
+            {/* Submit Card */}
+            <div className="co-submit-card">
+              <h4 className="co-submit-title">💡 Submit Your Idea</h4>
+              <p className="co-submit-desc">Have a feature request, bug report, or product idea? Share it here. If we build it, your name goes on the & Co registry.</p>
+              <div className="co-submit-actions">
+                <a href="https://wa.me/966535271122?text=💡 Co-Builder Idea:%0A%0AProduct:%0AIdea:" target="_blank" rel="noopener" className="co-submit-btn">
+                  💬 Submit via WhatsApp
+                </a>
+                <a href="mailto:momen@momencrafts.com?subject=Co-Builder Idea&body=Product:%0AIdea:%0AType (bug/feature/suggestion):" className="co-submit-btn co-submit-btn-email">
+                  ✉️ Submit via Email
+                </a>
+              </div>
+            </div>
+
+            {/* Sample Board Posts */}
+            <div className="co-board-posts">
+              <h4 className="co-board-heading">Recent Ideas & Status</h4>
+              {[
+                { title: 'Body location picker for AI intake', product: 'Cliniq', status: 'reviewing', author: '—', votes: 0 },
+                { title: 'Dark mode for doctor dashboard', product: 'Cliniq', status: 'new', author: '—', votes: 0 },
+                { title: 'Offline mode for RelayBot companion', product: 'RelayBot', status: 'new', author: '—', votes: 0 },
+                { title: 'SAMA integration for Ummi Wallet', product: 'Ummi', status: 'new', author: '—', votes: 0 },
+              ].map((post, i) => (
+                <div key={i} className="co-board-post">
+                  <div className="co-board-post-main">
+                    <span className={`co-board-status co-board-${post.status}`}>
+                      {post.status === 'new' ? '🆕 New' : post.status === 'reviewing' ? '🔍 Reviewing' : post.status === 'approved' ? '✅ Approved' : post.status === 'implemented' ? '🏛 Shipped' : post.status}
+                    </span>
+                    <h5 className="co-board-post-title">{post.title}</h5>
+                    <span className="co-board-product">{post.product}</span>
+                  </div>
+                  <div className="co-board-post-meta">
+                    <span className="co-board-author">By: {post.author}</span>
+                    <span className="co-board-votes">▲ {post.votes}</span>
+                  </div>
+                </div>
+              ))}
+              <p className="co-board-empty-note">🏛 No implemented ideas yet — be the first to earn your & Co credit.</p>
+            </div>
+
+            {/* & Co Registry Wall */}
+            <div className="co-registry-wall">
+              <div className="co-registry-header">
+                <span className="co-registry-icon">🏛</span>
+                <h4 className="co-registry-title">The & Co Registry</h4>
+                <p className="co-registry-sub">Names permanently recorded. Contributions that shipped.</p>
+              </div>
+              <div className="co-registry-empty">
+                <div className="co-registry-placeholder">
+                  <span className="co-registry-question">?</span>
+                  <p>Your name here</p>
+                  <p className="co-registry-prompt">Submit an idea that ships → become & Co</p>
+                </div>
+                <div className="co-registry-placeholder">
+                  <span className="co-registry-question">?</span>
+                  <p>Your name here</p>
+                  <p className="co-registry-prompt">Report a bug that gets fixed → earn credit</p>
+                </div>
+                <div className="co-registry-placeholder">
+                  <span className="co-registry-question">?</span>
+                  <p>Your name here</p>
+                  <p className="co-registry-prompt">Test an app & give feedback → join the Co</p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
