@@ -6,28 +6,28 @@ import '@/styles/gate.css'
 
 /* ── Bilingual strings ─────────────────────────────────── */
 const INSIGHTS_EN = [
-  'MomenCrafts & Co — the "Co" is earned. Your input, if used, makes you part of the company.',
-  '"The most powerful technology disappears — it becomes so natural the user forgets they\'re interacting with a machine." — Momen Pharaon',
-  '10 products. 5 industries. One vision: building the intelligent infrastructure of the MENA economy — with you.',
-  'Every product built from idea to launch by a single pair of hands — founder writes the code, designs the UX, and hits Deploy.',
-  'cliniq.one — a full-stack telemedicine suite. 5 apps. Arabic-first AI intake. MOH compliant.',
-  'UMMI · أمي — a private family finance OS designed with warmth and dignity for Saudi families. 28 modules.',
-  'ROGER·AI — your AI Chief of Staff. Persistent memory, proactive briefings, bilingual AR/EN.',
-  'RelayBot — a zero-install hardware device that types AI-enhanced text into any locked system.',
-  'Every bug report, feature request, and idea that ships = your name in the & Co registry.',
-  '2 patents pending at USPTO. Products in beta. Founder ready for the right co-builder.',
+  'MomenCrafts & Co — the "Co" is earned. When your contribution ships, your name joins the registry.',
+  '"The most powerful technology disappears — it becomes so natural the user forgets they are interacting with a machine." — Momen Pharaon',
+  '10 products. 5 industries. One founder-led studio building practical intelligence for the region — with the right co-builders.',
+  'Every product started as a founder-built system — code, UX, architecture, hardware concepts, and deployment shaped by one vision.',
+  'cliniq.one — a full-stack telemedicine suite with 5 apps, Arabic-first intake, and Saudi healthcare workflows in mind.',
+  'UMMI · أمي — a private family finance OS designed with warmth, dignity, and control for Saudi families.',
+  'ROGER·AI — an AI Chief of Staff concept for memory, proactive briefings, and bilingual executive workflows.',
+  'RelayBot — a zero-install hardware bridge that brings AI-enhanced text into locked or restricted systems.',
+  'Every useful bug report, feature request, intro, or idea can become shipped value — and credited contribution.',
+  '2 patent filings. Products in early beta and prototype stages. Founder ready for the right co-builders.',
 ]
 const INSIGHTS_AR = [
-  'مؤمن كرافتس اند كو — الشركة تُبنى معكم. مساهمتك إذا اعتُمدت تعني أنك جزء منها.',
-  'أقوى التقنيات هي تلك التي تختفي — تصبح طبيعية لدرجة أن المستخدم ينسى أنه يتفاعل مع آلة.',
-  '١٠ منتجات. ٥ مجالات. رؤية واحدة: بناء البنية الذكية لاقتصاد المنطقة — معكم.',
-  'كل منتج بُني من الفكرة إلى الإطلاق بيد واحدة — المؤسس نفسه يكتب الكود، يصمم التجربة، ويضغط Deploy.',
-  'cliniq.one — منصة طب عن بُعد متكاملة، ٥ تطبيقات، ذكاء اصطناعي عربي أولاً.',
-  'أمي — نظام مالي عائلي ذكي صمم بدفء وكرامة للعائلة السعودية. ٢٨ وحدة.',
-  'رجر AI — مساعدك التنفيذي الصوتي. ذاكرة مستمرة. تقارير استباقية. عربي وإنجليزي.',
-  'RelayBot — جهاز يربط أي لوحة مفاتيح بأي نظام. بلا تثبيت. بلا قيود.',
-  'كل فكرة تُطبّق = اسمك في سجل اند كو.',
-  'براءتا اختراع مقدمتان لدى USPTO. المنتجات في مرحلة التجريب. المؤسس جاهز للشريك الصحيح.',
+  'مومن كرافتس اند كو — كلمة "Co" تُكتسب. عندما تتحول مساهمتك إلى منتج، يُضاف اسمك إلى السجل.',
+  '«أقوى التقنيات هي التي تختفي — تصبح طبيعية لدرجة أن المستخدم ينسى أنه يتفاعل مع آلة.» — مومن فرعون',
+  '١٠ منتجات. ٥ مجالات. استوديو واحد يقوده المؤسس لبناء ذكاء عملي للمنطقة — مع الشركاء الصحيحين.',
+  'كل منتج بدأ كنظام بناه المؤسس — كود، تجربة مستخدم، بنية تقنية، أفكار عتادية، ونشر تقوده رؤية واحدة.',
+  'cliniq.one — منصة طب عن بُعد متكاملة تضم ٥ تطبيقات، إدخال طبي عربي أولاً، وتجربة مصممة لسير العمل الصحي في السعودية.',
+  'أمي — نظام مالي عائلي خاص صُمم بدفء وكرامة وتحكم للعائلة السعودية.',
+  'ROGER·AI — مفهوم مساعد تنفيذي ذكي للذاكرة المستمرة، التقارير الاستباقية، وسير العمل بالعربية والإنجليزية.',
+  'RelayBot — جسر عتادي بلا تثبيت ينقل النصوص المحسّنة بالذكاء الاصطناعي إلى الأنظمة المقيدة أو المغلقة.',
+  'كل بلاغ مفيد، طلب ميزة، تعريف بجهة، أو فكرة يمكن أن تتحول إلى قيمة منشورة — ومساهمة موثقة.',
+  'ملفّا براءة اختراع قيد التسجيل. منتجات في مراحل التجريب والنماذج الأولية. والمؤسس جاهز للشركاء الصحيحين.',
 ]
 
 const TYPE_LABELS: Record<string, string> = {
@@ -119,21 +119,22 @@ function NDAOverlay({ token, investorData, lang, onAccept, onDecline }: NDAProps
         )}
         {investorData.type === 'HOUR' && (
           <div className="nda-hour-warning">
-            ⚠️ This is a 1-hour timed session. Your access will expire automatically.
+            {lang === 'ar' ? '⚠️ هذه جلسة محددة بساعة واحدة. سينتهي الوصول تلقائياً.' : '⚠️ This is a timed 1-hour session. Access expires automatically.'}
           </div>
         )}
 
         <p className="nda-body">
-          The information you are about to access is proprietary and confidential to MomenCrafts
-          & Co. By proceeding, you agree not to disclose, reproduce, or distribute
-          any part of this content without prior written consent. In return, your contributions —
-          feedback, ideas, and suggestions — may shape our products. If implemented,
-          you earn your place in the & Co registry.
+          You are about to access proprietary and confidential MomenCrafts
+          & Co material. By continuing, you agree not to disclose, copy, reproduce, or distribute
+          any part of this content without prior written consent. In return, your feedback, ideas,
+          introductions, and suggestions may shape our products. If a contribution is approved and shipped,
+          you may earn recognition in the & Co Registry. Legal, commercial, or equity rights require a separate written agreement.
         </p>
         <p className="nda-body-ar">
-          المعلومات التي ستطّلع عليها ملكية خاصة وسرية لمؤمن كرافتس اند كو.
-          بالمتابعة، توافق على عدم الإفصاح أو النسخ أو التوزيع دون إذن كتابي مسبق.
-          في المقابل، مساهماتك — أفكارك وملاحظاتك — قد تُشكّل منتجاتنا. إذا اعتُمدت، يُسجّل اسمك في سجل اند كو.
+          ستطّلع على مواد خاصة وسرية تابعة لمومن كرافتس اند كو.
+          بالمتابعة، توافق على عدم الإفصاح أو النسخ أو إعادة النشر أو التوزيع دون موافقة خطية مسبقة.
+          في المقابل، قد تُسهم ملاحظاتك وأفكارك وتعريفاتك واقتراحاتك في تشكيل منتجاتنا. وإذا اعتُمدت مساهمة
+          وتحولت إلى منتج منشور، فقد تحصل على توثيق في سجل اند كو. أي حقوق قانونية أو تجارية أو ملكية تتطلب اتفاقية خطية منفصلة.
         </p>
 
         <div className="nda-meta">
@@ -149,11 +150,11 @@ function NDAOverlay({ token, investorData, lang, onAccept, onDecline }: NDAProps
           <span className="nda-meta-val">{investorData.session}</span>
         </div>
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: '.65rem', color: 'var(--cream-mute)', textAlign: 'center', marginBottom: '1.25rem', letterSpacing: '.05em' }}>
-          This acceptance is logged. · هذا القبول مسجّل.
+          {lang === 'ar' ? 'تم تسجيل هذا القبول.' : 'This acceptance is logged.'}
         </p>
 
         <button className="nda-accept" onClick={onAccept}>
-          {lang === 'ar' ? 'أوافق على الشروط — تابع ←' : 'I agree — Continue →'}
+          {lang === 'ar' ? 'أوافق — تابع ←' : 'I agree — Continue →'}
         </button>
         <button className="nda-decline" onClick={onDecline}>
           {lang === 'ar' ? 'رفض · العودة للبوابة' : 'Decline · Return to gate'}
@@ -301,8 +302,8 @@ export default function GateScreen() {
             </h1>
             <p className="gate-sub">
               {lang === 'ar'
-                ? 'منصة بناء مشترك · الرياض، المملكة العربية السعودية'
-                : 'A co-builder platform · Riyadh, Saudi Arabia'}
+                ? 'استوديو بناء مشترك يقوده المؤسس · الرياض، المملكة العربية السعودية'
+                : 'A founder-led co-builder studio · Riyadh, Saudi Arabia'}
             </p>
           </div>
 
@@ -326,8 +327,8 @@ export default function GateScreen() {
             {[
               { num: '10', ar: 'منتجات', en: 'PRODUCTS' },
               { num: '5',  ar: 'مجالات', en: 'INDUSTRIES' },
-              { num: '2',  ar: 'براءة اختراع', en: 'PATENTS' },
-              { num: '2026', ar: 'تأسست', en: 'FOUNDED' },
+              { num: '2',  ar: 'ملفات براءة', en: 'PATENT FILINGS' },
+              { num: '2026', ar: 'التأسيس', en: 'FOUNDED' },
             ].map(s => (
               <div className="gate-stat" key={s.en}>
                 <span className="gate-stat-num">{s.num}</span>
@@ -350,7 +351,7 @@ export default function GateScreen() {
 
           <div className="token-card">
             <div className="token-card-badge">
-              <span>{lang === 'ar' ? 'دخول الشركاء' : 'CO-BUILDER ACCESS'}</span>
+              <span>{lang === 'ar' ? 'دخول الشركاء البنّائين' : 'CO-BUILDER ACCESS'}</span>
             </div>
 
             <h2 className="token-card-title">
@@ -359,8 +360,8 @@ export default function GateScreen() {
 
             <p className="token-card-sub">
               {lang === 'ar'
-                ? 'أدخل رمز الوصول للدخول إلى الاستوديو. مساهمتك تشكّل ما نبنيه.'
-                : 'Enter your access key to join the studio. Your input shapes what we build next.'}
+                ? 'أدخل رمز الوصول للدخول إلى الاستوديو. قد تشكّل رؤيتك ما نبنيه بعد ذلك.'
+                : 'Enter your access key to enter the studio. Your perspective may shape what we build next.'}
             </p>
 
             <label className="token-field-label" htmlFor="tokenInput">

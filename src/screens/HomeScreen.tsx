@@ -340,7 +340,7 @@ export default function HomeScreen() {
         <div className="nav-inner">
           <a href="#hero" className="nav-logo" id="nav-logo-ar">
             <img src="/logo.png" alt="مؤمن كرافتس" className="nav-logo-img" />
-            <span className="logo-text">مؤمن كرافتس</span>
+            <span className="logo-text">مومن كرافتس</span>
           </a>
           <ul className="nav-links" id="nav-links" role="list">
             <li><a href="#contact" className="nav-cta">تواصل معنا</a></li>
@@ -363,25 +363,25 @@ export default function HomeScreen() {
         <div className="container hero-inner">
           <div className="hero-eyebrow reveal">
             <span className="eyebrow-dot" />
-            مؤمن كرافتس اند كو · الرياض، السعودية
+            مومن كرافتس اند كو · الرياض، السعودية
           </div>
           <h1 className="hero-heading reveal delay-100">
             بعناية<br/><em>مصممة معكم</em>
           </h1>
           <p className="hero-byline reveal delay-200">MomenCrafts & Co</p>
           <p className="hero-sub reveal delay-300">
-            10 منتجات. 5 مجالات.<br/>استوديو واحد — يبني البنية الذكية مع شركائه.
+            ١٠ منتجات. ٥ مجالات.<br/>استوديو واحد يحوّل الأفكار إلى أنظمة ومنتجات قابلة للتجربة.
           </p>
           <div className="hero-actions reveal delay-400">
             <a href="#products" className="btn btn-primary">تصفح أعمالنا <span className="btn-arrow">←</span></a>
             <a href="#about" className="btn btn-ghost">عن الاستوديو</a>
           </div>
           <div className="hero-stats reveal delay-500">
-            <div className="stat"><span className="stat-num">10</span><span className="stat-label">منتجات</span></div>
+            <div className="stat"><span className="stat-num">١٠</span><span className="stat-label">منتجات</span></div>
             <div className="stat-divider">·</div>
-            <div className="stat"><span className="stat-num">5</span><span className="stat-label">مجالات</span></div>
+            <div className="stat"><span className="stat-num">٥</span><span className="stat-label">مجالات</span></div>
             <div className="stat-divider">·</div>
-            <div className="stat"><span className="stat-num">1</span><span className="stat-label">رؤية</span></div>
+            <div className="stat"><span className="stat-num">١</span><span className="stat-label">رؤية واحدة</span></div>
           </div>
         </div>
       </section>
@@ -393,7 +393,7 @@ export default function HomeScreen() {
         <div className="container">
           <div className="section-label reveal">أعمالنا</div>
           <h2 className="section-title reveal delay-100">المحفظة</h2>
-          <p className="section-sub reveal delay-200">10 منتجات مصممة بعناية — كل واحدة بُنيت يدوياً من الفكرة للإطلاق.</p>
+          <p className="section-sub reveal delay-200">١٠ منتجات صُممت بعناية — من الفكرة إلى النموذج، ومن النموذج إلى منتج قابل للتجربة.</p>
           <div className="products-grid">
 
             {/* ROGER·AI */}
@@ -407,8 +407,8 @@ export default function HomeScreen() {
                 <span className="card-status testing">🧪 قيد الاختبار</span>
               </div>
               <h3 className="card-title">ROGER·AI</h3>
-              <p className="card-tagline">مساعدك التنفيذي الذكي</p>
-              <p className="card-desc">منصة ذكاء صوتية للمدراء التنفيذيين — ذاكرة مستمرة، تقارير استباقية، ودعم كامل للعربي والإنجليزي.</p>
+              <p className="card-tagline">مساعد تنفيذي ذكي</p>
+              <p className="card-desc">مساعد تنفيذي صوتي للمدراء — ذاكرة مستمرة، تقارير استباقية، وتجربة عمل بالعربية والإنجليزية.</p>
               <div className="card-tags"><span className="tag">صوتية أولاً</span><span className="tag">iOS · Android</span><span className="tag">ثنائي اللغة</span></div>
               <a href="/rogerai" target="_blank" rel="noopener" className="card-link">اعرف أكثر ←</a>
             </article>
@@ -424,8 +424,8 @@ export default function HomeScreen() {
                 <span className="card-status testing">● مرحلة تجريبية</span>
               </div>
               <h3 className="card-title">CLINIQ.ONE</h3>
-              <p className="card-tagline">منصة طب عن بُعد بالذكاء الاصطناعي</p>
-              <p className="card-desc">منصة طب عن بُعد متكاملة — 5 تطبيقات لربط المرضى بالأطباء مصممة لقطاع الصحة في المنطقة.</p>
+              <p className="card-tagline">طب عن بُعد مصمم للمنطقة</p>
+              <p className="card-desc">منصة طب عن بُعد متكاملة تضم ٥ تطبيقات لربط المرضى والأطباء ضمن تجربة صحية عربية وسلسة.</p>
               <div className="card-tags"><span className="tag">رعاية صحية</span><span className="tag">MENA</span><span className="tag">5 تطبيقات</span></div>
               <span className="card-live-badge">🟢 LIVE</span>
               <a href="https://www.cliniq.one" target="_blank" rel="noopener" className="card-link">زيارة cliniq.one ←</a>
@@ -441,8 +441,8 @@ export default function HomeScreen() {
                 <span className="card-status dev">◌ قيد التطوير</span>
               </div>
               <h3 className="card-title">QADAA · قضاء</h3>
-              <p className="card-tagline">منصة قانونية بالذكاء الاصطناعي</p>
-              <p className="card-desc">تربط العملاء بالمحامين مع أدوات ذكاء اصطناعي لتحليل القضايا ودعم كامل للعربية.</p>
+              <p className="card-tagline">منصة قانونية ذكية</p>
+              <p className="card-desc">منصة تربط العملاء بالمحامين وتدعم تحليل القضايا والمستندات بتجربة عربية واضحة.</p>
               <div className="card-tags"><span className="tag">تقنية قانونية</span><span className="tag">السعودية · الإمارات</span></div>
               <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20QADAA%20%C2%B7%20%D9%82%D8%B6%D8%A7%D8%A1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
@@ -458,7 +458,7 @@ export default function HomeScreen() {
               </div>
               <h3 className="card-title">MUSCLE HUSTLE</h3>
               <p className="card-tagline">سوق المدربين الشخصيين</p>
-              <p className="card-desc">منصة لياقة بدنية تربط المدربين بالعملاء مع تدريب ذكي وتجربة تفاعلية متميزة.</p>
+              <p className="card-desc">منصة لياقة تربط المدربين بالعملاء مع تدريب ذكي وتجربة تفاعلية محفزة.</p>
               <div className="card-tags"><span className="tag">لياقة بدنية</span><span className="tag">سوق إلكتروني</span></div>
               <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20Muscle%20Hustle%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
@@ -473,8 +473,8 @@ export default function HomeScreen() {
                 <span className="card-status dev">◌ قيد التطوير</span>
               </div>
               <h3 className="card-title">AQAR · عقار</h3>
-              <p className="card-tagline">منصة عقارات بالذكاء الاصطناعي</p>
-              <p className="card-desc">منصة عقارية ذكية مصممة لدعم رؤية 2030 — تحليل سوق وأنظمة مطابقة متقدمة.</p>
+              <p className="card-tagline">عقار أذكى للسوق السعودي</p>
+              <p className="card-desc">منصة عقارية تساعد على تحليل السوق، مطابقة الاحتياج، وتبسيط قرارات الشراء والاستثمار.</p>
               <div className="card-tags"><span className="tag">تقنية عقارية</span><span className="tag">رؤية 2030</span></div>
               <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20AQAR%20%C2%B7%20%D8%B9%D9%82%D8%A7%D8%B1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
@@ -507,8 +507,8 @@ export default function HomeScreen() {
                 <span className="card-status dev">◌ قيد التطوير</span>
               </div>
               <h3 className="card-title">RELAYBOT</h3>
-              <p className="card-tagline">نقل النص الذكي للأنظمة المقيدة</p>
-              <p className="card-desc">جهاز يربط بين لوحة المفاتيح والحاسوب — الذكاء الاصطناعي يحسّن النص ويرجعه لأي نظام بدون قيود.</p>
+              <p className="card-tagline">جسر نص ذكي للأنظمة المقيدة</p>
+              <p className="card-desc">جهاز يربط بين لوحة المفاتيح والحاسوب ليُدخل النصوص المحسّنة بالذكاء الاصطناعي إلى أي نظام دون تثبيت.</p>
               <div className="card-tags"><span className="tag">أجهزة</span><span className="tag">بلا تثبيت</span></div>
               <a href="https://github.com/momencrafts/relaybot" target="_blank" className="card-link">رابط المشروع على GitHub ←</a>
             </article>
@@ -524,7 +524,7 @@ export default function HomeScreen() {
               </div>
               <h3 className="card-title">SABHA · سبحة</h3>
               <p className="card-tagline">سبحة ذكية فاخرة</p>
-              <p className="card-desc">سبحة ذكية تجمع بين الذكر التقليدي وتقنيات حديثة — مصنوعة من مواد فاخرة.</p>
+              <p className="card-desc">سبحة ذكية تمزج روح الذكر التقليدي مع تقنيات حديثة ومواد فاخرة.</p>
               <div className="card-tags"><span className="tag">قابل للارتداء</span><span className="tag">فاخر</span></div>
               <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%AA%D8%AC%20SABHA%20%C2%B7%20%D8%B3%D8%A8%D8%AD%D8%A9%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
@@ -536,11 +536,11 @@ export default function HomeScreen() {
                 <div className="card-icon crimson-icon">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 </div>
-                <span className="card-status prototype">◈ براءة اختراع</span>
+                <span className="card-status prototype">◈ براءة قيد التسجيل</span>
               </div>
               <h3 className="card-title">TURBO DRONE CIRCUIT</h3>
               <p className="card-tagline">إدارة طاقة طائرات FPV</p>
-              <p className="card-desc">نظام ذكي يعالج انخفاض الجهد في بطاريات الطائرات بدون طيار ويعوضها تلقائياً.</p>
+              <p className="card-desc">دائرة ذكية لمعالجة هبوط الجهد في بطاريات طائرات FPV وتعويضه تلقائياً.</p>
               <div className="card-tags"><span className="tag">براءة اختراع</span><span className="tag">FPV · UAV</span></div>
               <a href="/tdc" className="card-link">عرض المشروع ←</a>
             </article>
@@ -552,11 +552,11 @@ export default function HomeScreen() {
                 <div className="card-icon blue-icon">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M5 8h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2"/></svg>
                 </div>
-                <span className="card-status prototype">◈ براءة اختراع</span>
+                <span className="card-status prototype">◈ براءة قيد التسجيل</span>
               </div>
               <h3 className="card-title">EDGE TACK</h3>
-              <p className="card-tagline">واقي شاشة مع أزرار ألعاب</p>
-              <p className="card-desc">ملحق ألعاب جوال — واقي شاشة مع أزرار هوائية قابلة للطي لتجربة ألعاب احترافية.</p>
+              <p className="card-tagline">واقي شاشة بأزرار ألعاب</p>
+              <p className="card-desc">ملحق ألعاب جوال يجمع واقي الشاشة مع أزرار هوائية قابلة للطي لتجربة لعب أدق.</p>
               <div className="card-tags"><span className="tag">ألعاب الجوال</span><span className="tag">براءة اختراع</span></div>
               <a href="/edgetack" className="card-link">اعرف أكثر ←</a>
             </article>
@@ -573,18 +573,18 @@ export default function HomeScreen() {
           <div className="about-text">
             <div className="section-label reveal">الاستوديو</div>
             <h2 className="section-title reveal delay-100">مصممة بعناية،<br/>مو تجميع</h2>
-            <p className="about-body reveal delay-200">مؤمن كرافتس استوديو تقني في الرياض يطوّر منصات ذكية في الصحة، القانون، اللياقة، العقار، والأجهزة.</p>
-            <p className="about-body reveal delay-300">أسسه <strong>مومن فرعون</strong> — مهندس برمجيات متكامل يصمم الأنظمة من الفكرة إلى الإطلاق.</p>
+            <p className="about-body reveal delay-200">مومن كرافتس استوديو اختراع ومنتجات في الرياض يطوّر أنظمة ذكية في الصحة، القانون، اللياقة، العقار، التمويل العائلي، والأجهزة.</p>
+            <p className="about-body reveal delay-300">أسسه <strong>مومن فرعون</strong> — مؤسس ومهندس يبني الفكرة من أول رسم إلى أول تجربة قابلة للاستخدام.</p>
             <div className="about-details reveal delay-400">
-              <div className="detail-row"><span className="detail-label">تأسست</span><span className="detail-value">2026</span></div>
+              <div className="detail-row"><span className="detail-label">التأسيس</span><span className="detail-value">2026</span></div>
               <div className="detail-row"><span className="detail-label">المقر</span><span className="detail-value">الرياض، السعودية</span></div>
               <div className="detail-row"><span className="detail-label">التواصل</span><span className="detail-value">momen@momencrafts.com</span></div>
             </div>
           </div>
           <div className="about-quote reveal delay-200">
             <blockquote>
-              <p>«أقوى التقنيات هي تلك التي تختفي — تصبح طبيعية لدرجة أن المستخدم ينسى أنه يتفاعل مع آلة.»</p>
-              <footer>— مومن فرعون، المؤسس · مؤمن كرافتس</footer>
+              <p>«أقوى التقنيات هي التي تختفي — تصبح طبيعية لدرجة أن المستخدم ينسى أنه يتفاعل مع آلة.»</p>
+              <footer>— مومن فرعون، المؤسس · مومن كرافتس</footer>
             </blockquote>
           </div>
         </div>
@@ -597,7 +597,7 @@ export default function HomeScreen() {
         <div className="container contact-inner">
           <div className="section-label reveal">تواصل معنا</div>
           <h2 className="section-title reveal delay-100">خلّنا<br/><em>نبني سوا</em></h2>
-          <p className="section-sub reveal delay-200">يسعدنا تواصلك — سواء مشروع، شراكة، أو استفسار.</p>
+          <p className="section-sub reveal delay-200">يسعدنا تواصلك — لفكرة، شراكة، تبنّي منتج، أو استفسار مباشر.</p>
           <form className="contact-form reveal delay-300" action="https://formsubmit.co/momen@momencrafts.com" method="POST">
             <input type="hidden" name="_subject" value="استفسار جديد من momencrafts.com" />
             <input type="hidden" name="_next" value="https://momencrafts.com/?sent=1" />
