@@ -208,6 +208,21 @@ export default function HomeScreen() {
   const [barVisible, setBarVisible] = useState(true)
   const barHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // ── & Co live data ──
+  const [coData, setCoData] = useState<{
+    journal: any[]; downloads: any[]; kpis: any[]; progress: any[];
+    impact: { bugs_reported: number; suggestions: number; ideas_shipped: number; co_builders: number };
+    board: any[]; registry: any[];
+  } | null>(null)
+
+  useEffect(() => {
+    if (!investorData) return
+    fetch('https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/co-data?r=all')
+      .then(r => r.json())
+      .then(d => setCoData(d))
+      .catch(() => {})
+  }, [investorData])
+
   useParticleCanvas(canvasRef)
   useReveal()
   useWatermark(name, token)
@@ -844,14 +859,14 @@ export default function HomeScreen() {
             <h2 className="co-title">جرّب وشكّل <span className="co-title-en">· Download. Test. Shape What Ships.</span></h2>
             <p className="co-sub">Every install is a vote. Every bug report earns credit. Download our apps and help shape the next release.</p>
             <div className="co-downloads-grid">
-              {[
-                { id:'cliniq-patient', name:'Cliniq Patient', nameAr:'كلينيك المريض', version:'v2.4.1', status:'live', emoji:'🏥', size:'63 MB', desc:'Patient-facing telemedicine app with AI intake' },
-                { id:'cliniq-doctor', name:'Cliniq Doctor', nameAr:'كلينيك الطبيب', version:'v2.3.0', status:'live', emoji:'⚕️', size:'58 MB', desc:'Doctor dashboard with AI-assisted consultations' },
-                { id:'rogerai', name:'Roger·AI', nameAr:'رجر AI', version:'v1.2.0', status:'beta', emoji:'🎙️', size:'45 MB', desc:'Voice-first executive assistant' },
-                { id:'ummi', name:'Ummi Wallet', nameAr:'محفظة أمي', version:'v3.1.0', status:'beta', emoji:'💚', size:'52 MB', desc:'Family finance OS with mother care' },
-                { id:'relaybot', name:'RelayBot', nameAr:'ريلي بوت', version:'v1.8.3', status:'dev', emoji:'⌨️', size:'12 MB', desc:'Companion app for RelayBot device' },
-              ].map(app => (
-                <div key={app.id} className="co-download-card">
+              {(coData?.downloads || [
+                { app_id:'cliniq-patient', name:'Cliniq Patient', name_ar:'كلينيك المريض', version:'v2.4.1', status:'live', emoji:'🏥', size:'63 MB', description:'Patient-facing telemedicine app with AI intake' },
+                { app_id:'cliniq-doctor', name:'Cliniq Doctor', name_ar:'كلينيك الطبيب', version:'v2.3.0', status:'live', emoji:'⚕️', size:'58 MB', description:'Doctor dashboard with AI-assisted consultations' },
+                { app_id:'rogerai', name:'Roger·AI', name_ar:'رجر AI', version:'v1.2.0', status:'beta', emoji:'🎙️', size:'45 MB', description:'Voice-first executive assistant' },
+                { app_id:'ummi', name:'Ummi Wallet', name_ar:'محفظة أمي', version:'v3.1.0', status:'beta', emoji:'💚', size:'52 MB', description:'Family finance OS with mother care' },
+                { app_id:'relaybot', name:'RelayBot', name_ar:'ريلي بوت', version:'v1.8.3', status:'dev', emoji:'⌨️', size:'12 MB', description:'Companion app for RelayBot device' },
+              ]).map((app: any) => (
+                <div key={app.app_id || app.id} className="co-download-card">
                   <div className="co-dl-header">
                     <span className="co-dl-emoji">{app.emoji}</span>
                     <span className={`co-dl-status co-dl-${app.status}`}>
@@ -859,8 +874,8 @@ export default function HomeScreen() {
                     </span>
                   </div>
                   <h4 className="co-dl-name">{app.name}</h4>
-                  <p className="co-dl-name-ar">{app.nameAr}</p>
-                  <p className="co-dl-desc">{app.desc}</p>
+                  <p className="co-dl-name-ar">{app.name_ar || app.nameAr}</p>
+                  <p className="co-dl-desc">{app.description || app.desc}</p>
                   <div className="co-dl-meta">
                     <span>{app.version}</span>
                     <span>{app.size}</span>
@@ -894,21 +909,21 @@ export default function HomeScreen() {
             <h2 className="co-title">يوميات الاستوديو <span className="co-title-en">· What's Happening Inside</span></h2>
             <p className="co-sub">Real-time updates from the studio. Launches, patents, milestones, and co-builder credits.</p>
             <div className="co-journal-feed">
-              {[
-                { cat: 'launch', date: 'Jun 12, 2026', title: 'Cliniq.one Landing Page — Live', body: 'The public-facing landing page for Cliniq.one is now deployed. Patients can learn about the platform and doctors can request onboarding.', product: 'Cliniq', credit: null, pinned: true },
-                { cat: 'update', date: 'Jun 10, 2026', title: 'MomenCrafts & Co — Brand Alignment Complete', body: 'The entire investor portal has been rebranded to reflect the & Co philosophy. Every section now speaks the co-builder language.', product: null, credit: null, pinned: true },
-                { cat: 'patent', date: 'May 2025', title: 'USPTO: Turbo Drone Circuit Patent Filed', body: 'Intelligent voltage sag compensation circuit for FPV drones. Patent covers the core detection and active compensation algorithm.', product: 'TDC', credit: null, pinned: false },
-                { cat: 'patent', date: 'May 2025', title: 'USPTO: Edge Tack Patent Filed', body: 'Collapsible pneumatic trigger buttons integrated into a screen protector for mobile gaming. Patent covers the mechanical design.', product: 'EdgeTack', credit: null, pinned: false },
-                { cat: 'milestone', date: 'Apr 2025', title: 'Ummi Wallet — 28 Modules Complete', body: 'All 28 financial modules are coded and functional: smart budgeting, pocket system, mother\'s salary, emergency fund, IoT piggy bank, and more.', product: 'Ummi', credit: null, pinned: false },
-                { cat: 'community', date: 'Coming soon', title: 'First & Co Registry Entry', body: 'The first investor to have their suggestion implemented will be the inaugural entry in the & Co registry. Your name. Your contribution. Permanently recorded.', product: null, credit: '— waiting for you', pinned: false },
-              ].map((entry, i) => (
+              {(coData?.journal || [
+                { category: 'launch', publish_date: 'Jun 12, 2026', title: 'Cliniq.one Landing Page — Live', body: 'The public-facing landing page for Cliniq.one is now deployed. Patients can learn about the platform and doctors can request onboarding.', product: 'Cliniq', credit: null, pinned: true },
+                { category: 'update', publish_date: 'Jun 10, 2026', title: 'MomenCrafts & Co — Brand Alignment Complete', body: 'The entire investor portal has been rebranded to reflect the & Co philosophy. Every section now speaks the co-builder language.', product: null, credit: null, pinned: true },
+                { category: 'patent', publish_date: 'May 2025', title: 'USPTO: Turbo Drone Circuit Patent Filed', body: 'Intelligent voltage sag compensation circuit for FPV drones. Patent covers the core detection and active compensation algorithm.', product: 'TDC', credit: null, pinned: false },
+                { category: 'patent', publish_date: 'May 2025', title: 'USPTO: Edge Tack Patent Filed', body: 'Collapsible pneumatic trigger buttons integrated into a screen protector for mobile gaming. Patent covers the mechanical design.', product: 'EdgeTack', credit: null, pinned: false },
+                { category: 'milestone', publish_date: 'Apr 2025', title: 'Ummi Wallet — 28 Modules Complete', body: 'All 28 financial modules are coded and functional: smart budgeting, pocket system, mother\'s salary, emergency fund, IoT piggy bank, and more.', product: 'Ummi', credit: null, pinned: false },
+                { category: 'community', publish_date: 'Coming soon', title: 'First & Co Registry Entry', body: 'The first investor to have their suggestion implemented will be the inaugural entry in the & Co registry. Your name. Your contribution. Permanently recorded.', product: null, credit: '— waiting for you', pinned: false },
+              ]).map((entry: any, i: number) => (
                 <article key={i} className={`co-journal-entry${entry.pinned ? ' co-journal-pinned' : ''}`}>
                   <div className="co-journal-meta">
-                    <span className={`co-journal-cat co-cat-${entry.cat}`}>
-                      {entry.cat === 'launch' ? '🚀 Launch' : entry.cat === 'patent' ? '📜 Patent' : entry.cat === 'update' ? '🔄 Update' : entry.cat === 'milestone' ? '🏆 Milestone' : '🏛 Community'}
+                    <span className={`co-journal-cat co-cat-${entry.category || entry.cat}`}>
+                      {(entry.category || entry.cat) === 'launch' ? '🚀 Launch' : (entry.category || entry.cat) === 'patent' ? '📜 Patent' : (entry.category || entry.cat) === 'update' ? '🔄 Update' : (entry.category || entry.cat) === 'milestone' ? '🏆 Milestone' : '🏛 Community'}
                     </span>
                     {entry.product && <span className="co-journal-product">{entry.product}</span>}
-                    <span className="co-journal-date">{entry.date}</span>
+                    <span className="co-journal-date">{entry.publish_date || entry.date}</span>
                     {entry.pinned && <span className="co-journal-pin">📌</span>}
                   </div>
                   <h4 className="co-journal-title">{entry.title}</h4>
@@ -929,14 +944,14 @@ export default function HomeScreen() {
 
             {/* Global KPIs */}
             <div className="co-kpi-grid">
-              {[
+              {(coData?.kpis || [
                 { label: 'Products Built', value: '10', icon: '📦' },
                 { label: 'Patents Filed', value: '2', icon: '📜' },
                 { label: 'Apps in Beta', value: '4', icon: '🧪' },
                 { label: 'Industries', value: '5', icon: '🏢' },
                 { label: 'Lines of Code', value: '280K+', icon: '💻' },
                 { label: 'Solo Founder', value: '1', icon: '👤' },
-              ].map(kpi => (
+              ]).map((kpi: any) => (
                 <div key={kpi.label} className="co-kpi-card">
                   <span className="co-kpi-icon">{kpi.icon}</span>
                   <span className="co-kpi-value">{kpi.value}</span>
@@ -948,16 +963,16 @@ export default function HomeScreen() {
             {/* Product Progress Bars */}
             <div className="co-progress-section">
               <h4 className="co-progress-heading">Product Readiness</h4>
-              {[
-                { name: 'Cliniq.one', pct: 85, status: 'Live with users', color: '#0e7490' },
-                { name: 'Ummi Wallet', pct: 75, status: 'Beta — 28 modules', color: '#22c55e' },
-                { name: 'Roger·AI', pct: 60, status: 'Private beta', color: '#C8A96E' },
-                { name: 'RelayBot', pct: 45, status: 'Hardware prototype', color: '#a855f7' },
-                { name: 'Qadaa', pct: 20, status: 'Architecture phase', color: '#3b82f6' },
-              ].map(p => (
-                <div key={p.name} className="co-progress-row">
+              {(coData?.progress || [
+                { product_name: 'Cliniq.one', pct: 85, status: 'Live with users', color: '#0e7490' },
+                { product_name: 'Ummi Wallet', pct: 75, status: 'Beta — 28 modules', color: '#22c55e' },
+                { product_name: 'Roger·AI', pct: 60, status: 'Private beta', color: '#C8A96E' },
+                { product_name: 'RelayBot', pct: 45, status: 'Hardware prototype', color: '#a855f7' },
+                { product_name: 'Qadaa', pct: 20, status: 'Architecture phase', color: '#3b82f6' },
+              ]).map((p: any) => (
+                <div key={p.product_name || p.name} className="co-progress-row">
                   <div className="co-progress-label">
-                    <span>{p.name}</span>
+                    <span>{p.product_name || p.name}</span>
                     <span className="co-progress-status">{p.status}</span>
                   </div>
                   <div className="co-progress-bar">
@@ -972,10 +987,10 @@ export default function HomeScreen() {
             <div className="co-impact-box">
               <h4 className="co-impact-heading">& Co Impact</h4>
               <div className="co-impact-grid">
-                <div className="co-impact-stat"><span className="co-impact-num">0</span><span className="co-impact-label">Bugs Reported</span></div>
-                <div className="co-impact-stat"><span className="co-impact-num">0</span><span className="co-impact-label">Suggestions</span></div>
-                <div className="co-impact-stat"><span className="co-impact-num">0</span><span className="co-impact-label">Ideas Shipped</span></div>
-                <div className="co-impact-stat"><span className="co-impact-num">0</span><span className="co-impact-label">Co-Builders</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.bugs_reported ?? 0}</span><span className="co-impact-label">Bugs Reported</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.suggestions ?? 0}</span><span className="co-impact-label">Suggestions</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.ideas_shipped ?? 0}</span><span className="co-impact-label">Ideas Shipped</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.co_builders ?? 0}</span><span className="co-impact-label">Co-Builders</span></div>
               </div>
               <p className="co-impact-note">These numbers update as co-builders contribute. Be the first.</p>
             </div>
@@ -1006,12 +1021,12 @@ export default function HomeScreen() {
             {/* Sample Board Posts */}
             <div className="co-board-posts">
               <h4 className="co-board-heading">Recent Ideas & Status</h4>
-              {[
-                { title: 'Body location picker for AI intake', product: 'Cliniq', status: 'reviewing', author: '—', votes: 0 },
-                { title: 'Dark mode for doctor dashboard', product: 'Cliniq', status: 'new', author: '—', votes: 0 },
-                { title: 'Offline mode for RelayBot companion', product: 'RelayBot', status: 'new', author: '—', votes: 0 },
-                { title: 'SAMA integration for Ummi Wallet', product: 'Ummi', status: 'new', author: '—', votes: 0 },
-              ].map((post, i) => (
+              {(coData?.board || [
+                { title: 'Body location picker for AI intake', product: 'Cliniq', status: 'reviewing', author_name: '—', votes: 0 },
+                { title: 'Dark mode for doctor dashboard', product: 'Cliniq', status: 'new', author_name: '—', votes: 0 },
+                { title: 'Offline mode for RelayBot companion', product: 'RelayBot', status: 'new', author_name: '—', votes: 0 },
+                { title: 'SAMA integration for Ummi Wallet', product: 'Ummi', status: 'new', author_name: '—', votes: 0 },
+              ]).map((post: any, i: number) => (
                 <div key={i} className="co-board-post">
                   <div className="co-board-post-main">
                     <span className={`co-board-status co-board-${post.status}`}>
@@ -1021,7 +1036,7 @@ export default function HomeScreen() {
                     <span className="co-board-product">{post.product}</span>
                   </div>
                   <div className="co-board-post-meta">
-                    <span className="co-board-author">By: {post.author}</span>
+                    <span className="co-board-author">By: {post.author_name || post.author || '—'}</span>
                     <span className="co-board-votes">▲ {post.votes}</span>
                   </div>
                 </div>
