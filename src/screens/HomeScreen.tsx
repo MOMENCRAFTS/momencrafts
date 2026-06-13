@@ -627,17 +627,17 @@ export default function HomeScreen() {
       ══════════════════════════ */}
       <footer className="footer">
         <div className="container footer-inner">
-          <div><span className="footer-logo">✦ مؤمن كرافتس</span><p>استوديو برمجيات الذكاء الاصطناعي</p><p>الرياض، المملكة العربية السعودية</p></div>
+          <div><span className="footer-logo">✦ مومن كرافتس</span><p>استوديو اختراع ومنتجات</p><p>الرياض، المملكة العربية السعودية</p></div>
           <div className="footer-links"><a href="#products">المنتجات</a><a href="#about">عن الاستوديو</a><a href="#contact">تواصل</a></div>
           <div style={{ textAlign:'left' }}><p>momen@momencrafts.com</p><p>الرياض · السعودية · 2026</p></div>
         </div>
-        <div className="container"><div className="footer-rule" /><div className="footer-copy"><span>© 2026 مؤمن كرافتس</span><span className="crafted">صُنع بواسطة مومن فرعون ✦</span></div></div>
+        <div className="container"><div className="footer-rule" /><div className="footer-copy"><span>© 2026 مومن كرافتس</span><span className="crafted">صُنع بواسطة مومن فرعون ✦</span></div></div>
       </footer>
 
       {/* ══════════════════════════
           WhatsApp Float Button
       ══════════════════════════ */}
-      <a id="wa-btn" href="https://wa.me/966535271122?text=مرحبا مؤمن كرافتس" target="_blank" rel="noopener" aria-label="واتساب">
+      <a id="wa-btn" href="https://wa.me/966535271122?text=مرحباً مومن كرافتس، أود معرفة المزيد." target="_blank" rel="noopener" aria-label="واتساب">
         <span id="wa-tooltip">تواصل عبر واتساب</span>
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
       </a>
@@ -652,10 +652,10 @@ export default function HomeScreen() {
           <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
             <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>01 · OUR STORY</div>
             <h2 style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:'clamp(1.8rem,4vw,3rem)', color:'#f0ebe3', margin:'0 0 2.5rem', fontWeight:700 }}>
-              ما بنيناه معاً <span style={{ fontSize:'.55em', color:'#C8A96E', fontStyle:'italic' }}>· What We’ve Built — Together</span>
+              ما نبنيه — مع الشركاء الصحيحين <span style={{ fontSize:'.55em', color:'#C8A96E', fontStyle:'italic' }}>· What We're Building — With the Right Co-Builders</span>
             </h2>
             <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))', gap:'1.5rem', marginBottom:'3rem' }}>
-              {[{n:10,label:'منتجات مبنية · Products'},{n:2,label:'براءات اختراع · Patents'},{n:5,label:'قطاعات · Industries'},{n:1,label:'مؤسس · Solo Founder'}].map((item,i) => (
+              {[{n:10,label:'منتجات مبنية · Products'},{n:2,label:'طلبات براءات · Patent Filings'},{n:5,label:'قطاعات · Industries'},{n:1,label:'مؤسس · Solo Founder'}].map((item,i) => (
                 <div key={item.n} style={{ background:'rgba(26,22,20,0.6)', backdropFilter:'blur(8px)', border:'1px solid rgba(200,169,110,0.15)', borderRadius:'14px', padding:'1.75rem', textAlign:'center', position:'relative', overflow:'hidden' }}>
                   <div style={{ position:'absolute', bottom:0, left:'10%', right:'10%', height:'2px', background:'linear-gradient(to right, transparent, rgba(200,169,110,0.3), transparent)' }} />
                   <div style={{ fontSize:'3rem', fontWeight:900, color: i===3 ? '#9B1B30' : '#C8A96E', fontFamily:'Georgia,serif', lineHeight:1 }}><CountUp end={item.n} duration={1200} /></div>
@@ -665,7 +665,7 @@ export default function HomeScreen() {
             </div>
             <div style={{ display:'flex', justifyContent:'space-between', gap:'1rem', flexWrap:'wrap', position:'relative', paddingTop:'1.5rem' }}>
               <div style={{ position:'absolute', top:'2rem', left:'5%', right:'5%', height:'2px', background:'linear-gradient(to right,transparent 0%,rgba(200,169,110,0.25) 15%,rgba(200,169,110,0.4) 50%,rgba(155,27,48,0.3) 85%,transparent 100%)' }} />
-              {[['2024','First Concept'],['2025 Q1','Cliniq.one Beta'],['2025 Q2','2 Patents Filed'],['2025 Q4','Ummi Wallet Beta'],['2026 →','Seeking Partners']].map(([year,label],i) => (
+              {[['2024','First Concepts'],['2025 Q1','Cliniq.one Beta'],['2025 Q2','Patent Filings'],['2025 Q4','Ummi Wallet Beta'],['2026 →','Early Initiation']].map(([year,label],i) => (
                 <div key={year} style={{ textAlign:'center', flex:1, minWidth:'100px' }}>
                   <div style={{
                     width: i===4 ? '16px' : '12px', height: i===4 ? '16px' : '12px',
@@ -689,9 +689,9 @@ export default function HomeScreen() {
             <h2 style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:'clamp(1.8rem,4vw,3rem)', color:'#f0ebe3', margin:'0 0 .75rem', fontWeight:700 }}>
               المحفظة الكاملة <span style={{ fontSize:'.55em', color:'#C8A96E', fontStyle:'italic' }}>· Full Portfolio</span>
             </h2>
-            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>10 products across 5 industries — each hand-built, solo, from concept to launch. Click any card to expand.</p>
+            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>10 products across 5 industries — each designed, built, and tested by the founder. Click any card to expand.</p>
             <div style={{ display:'flex', flexDirection:'column', gap:'.75rem' }} id="invPortfolioGrid">
-              <InvCard id="roger" name="ROGER·AI" tagline="مساعدك التنفيذي الذكي · Executive Voice Intelligence" cat="Voice AI" badge="inv-badge-beta"
+              <InvCard id="roger" name="ROGER·AI" tagline="مساعد تنفيذي ذكي · Executive Voice Intelligence" cat="Voice AI" badge="inv-badge-beta"
                 desc="Voice-first executive assistant with persistent memory, proactive reports, and full Arabic/English bilingual support. Built for C-level users who need intelligent, always-on operational support across iOS and Android."
                 details={[{label:'SECTOR',value:'Enterprise SaaS · Productivity'},{label:'REVENUE MODEL',value:'Monthly subscription · Enterprise licensing'},{label:'PLATFORM',value:'iOS · Android · Web'},{label:'STATUS',value:'Private beta — invite-only'}]}
                 demoLink="/rogerai" demoLabel="🤖 View ROGER·AI →" />
@@ -715,7 +715,7 @@ export default function HomeScreen() {
                 desc="AI-powered real estate platform built to support Vision 2030 — advanced market analysis, intelligent buyer-property matching, and full compliance with RERA regulations. Targets the booming Saudi real estate market."
                 details={[{label:'SECTOR',value:'PropTech · Vision 2030'},{label:'REVENUE MODEL',value:'Listing SaaS · Transaction commission'},{label:'COMPLIANCE',value:'RERA · Saudi NLRP'},{label:'MARKET',value:'SAR 1.2T Vision 2030 Digital Economy'}]}
                 demoLink="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20AQAR%20%C2%B7%20%D8%B9%D9%82%D8%A7%D8%B1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" demoLabel="💬 تحدث مع المؤسس" />
-              <InvCard id="relay" name="RELAYBOT" tagline="نقل النص الذكي · Intelligent Text Bridge for Locked Systems" cat="Hardware · IoT" badge="inv-badge-dev"
+              <InvCard id="relay" name="RELAYBOT" tagline="جسر نص ذكي · Intelligent Text Bridge for Locked Systems" cat="Hardware · IoT" badge="inv-badge-dev"
                 desc="Physical bridge device (ESP32-S3) that sits between a keyboard and any computer. AI enhances text on-device and injects it into any locked system — hospitals, government terminals, air-gapped machines — with zero software installation required."
                 details={[{label:'SECTOR',value:'Hardware · Enterprise · Gov'},{label:'REVENUE MODEL',value:'Device sales · Enterprise SaaS'},{label:'TECH',value:'ESP32-S3 · BLE · OTA'},{label:'IP',value:'Proprietary protocol — open-source core'}]}
                 demoLink="https://github.com/momencrafts/relaybot" demoLabel="📁 GitHub →" />
@@ -741,14 +741,14 @@ export default function HomeScreen() {
             <div>
               <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>03 · SHARED VISION</div>
               <blockquote style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:'clamp(1rem,2.2vw,1.5rem)', color:'#f0ebe3', lineHeight:1.7, borderLeft:'3px solid #9B1B30', paddingLeft:'1.5rem', margin:'1rem 0 2rem', fontStyle:'italic' }}>
-                "The most powerful technology disappears — it becomes so natural the user forgets they're interacting with a machine."
+                "The most powerful technology disappears — it becomes so natural the user forgets they are interacting with a machine."
               </blockquote>
               <p style={{ color:'#a09070', lineHeight:1.7, fontSize:'.88rem' }}>MomenCrafts & Co builds the missing tech layer for the Arab world — starting with healthcare, fintech, and IoT. This vision isn’t ours alone. Every co-builder who shapes a product shares in this mission.</p>
             </div>
             <div style={{ background:'#0C0A09', border:'1px solid #C8A96E22', borderRadius:'16px', padding:'2rem' }}>
-              <div style={{ fontFamily:'monospace', fontSize:'.68rem', color:'#C8A96E', marginBottom:'1rem', letterSpacing:'.15em' }}>MARKET OPPORTUNITY</div>
+              <div style={{ fontFamily:'monospace', fontSize:'.68rem', color:'#C8A96E', marginBottom:'1rem', letterSpacing:'.15em' }}>MARKET SIGNALS</div>
               <div style={{ display:'flex', flexDirection:'column', gap:'.9rem' }}>
-                {[['Digital Health (MENA)','$21.8B by 2028','#C8A96E'],['Islamic Fintech (Global)','$128B by 2025','#C8A96E'],['Vision 2030 Digital','SAR 1.2T','#C8A96E'],['Arabic-First AI Apps','UNDERSERVED ↑','#9B1B30']].map(([label,val,color],i) => (
+                {[['Digital Health','Arabic-first care workflows remain underserved','#C8A96E'],['Family Finance','Private dignity-first household finance — clear gap','#C8A96E'],['LegalTech','Arabic case intake needs better tools','#C8A96E'],['Smart Devices','Hardware bridges unlock restricted workflows','#9B1B30']].map(([label,val,color],i) => (
                   <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', paddingBottom: i<3 ? '.75rem' : 0, borderBottom: i<3 ? '1px solid #ffffff11' : 'none' }}>
                     <span style={{ color:'#a09070', fontSize:'.82rem' }}>{label}</span>
                     <span style={{ color, fontFamily:'monospace', fontWeight:700 }}>{val}</span>
@@ -769,10 +769,10 @@ export default function HomeScreen() {
             <div>
               <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>04 · FOUNDER</div>
               <h3 style={{ fontFamily:"'Playfair Display',serif", fontSize:'1.8rem', color:'#f0ebe3', margin:'0 0 .25rem' }}>Momen Pharaon</h3>
-              <div style={{ color:'#C8A96E', fontFamily:'monospace', fontSize:'.8rem', marginBottom:'1.5rem' }}>مؤمن فرعون · Founder &amp; Solo Engineer · Riyadh, KSA</div>
-              <p style={{ color:'#a09070', lineHeight:1.8, fontSize:'.88rem', marginBottom:'1.5rem' }}>Built all 10 products solo — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Former medical student turned full-stack engineer.</p>
+              <div style={{ color:'#C8A96E', fontFamily:'monospace', fontSize:'.8rem', marginBottom:'1.5rem' }}>مومن فرعون · Founder &amp; Engineer · Riyadh, KSA</div>
+              <p style={{ color:'#a09070', lineHeight:1.8, fontSize:'.88rem', marginBottom:'1.5rem' }}>Built all 10 products — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Founder and engineer from concept to first usable experience.</p>
               <div style={{ display:'flex', flexWrap:'wrap', gap:'.5rem' }}>
-                {['USPTO Patent Filer','MOH Compliance','10 Products Solo','Riyadh · KSA'].map(tag => (
+                {['USPTO Patent Filer','MOH Compliance','10 Products Built','Riyadh · KSA'].map(tag => (
                   <span key={tag} style={{ background:'#1A1614', border:'1px solid #C8A96E33', color:'#C8A96E', padding:'.3rem .8rem', borderRadius:'20px', fontSize:'.7rem', fontFamily:'monospace' }}>{tag}</span>
                 ))}
               </div>
@@ -785,7 +785,7 @@ export default function HomeScreen() {
           <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
             <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>05 · JOIN THE CO</div>
             <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>كيف تصبح & Co · How You Earn Your Seat</h2>
-            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>There are many ways to become & Co. Choose the path that fits you — every contribution counts.</p>
+            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>There are many ways to become & Co. Choose the path that fits — every validated contribution earns your seat.</p>
             <div className="inv-track-grid">
               <div className="inv-track-card" style={{ border:'1px solid #C8A96E33', borderTop:'3px solid #C8A96E' }}>
                 <div className="inv-track-icon">🌐</div>
