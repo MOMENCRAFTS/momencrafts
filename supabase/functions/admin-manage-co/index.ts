@@ -65,10 +65,11 @@ Deno.serve(async (req) => {
     switch (action) {
       // ── LIST ──
       case 'list': {
+        const orderCol = ['co_traction', 'co_product_progress'].includes(table) ? 'sort_order' : 'created_at'
         const { data: rows, error } = await supabase
           .from(table)
           .select('*')
-          .order('created_at' in (data || {}) ? 'created_at' : 'updated_at', { ascending: false })
+          .order(orderCol, { ascending: ['co_traction', 'co_product_progress'].includes(table) })
           .limit(100)
         if (error) throw error
         return json(200, { data: rows }, corsHeaders)
