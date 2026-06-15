@@ -9,6 +9,11 @@ const RogerAI  = lazy(() => import('@/screens/RogerAIScreen'))
 const EdgeTack = lazy(() => import('@/screens/EdgeTackScreen'))
 const TDC      = lazy(() => import('@/screens/TDCScreen'))
 const Qadaa    = lazy(() => import('@/screens/QadaaScreen').then(m => ({ default: m.QadaaScreen })))
+const Admin    = lazy(() => import('@/screens/AdminScreen'))
+
+/* Detect admin subdomain */
+const IS_ADMIN_SUBDOMAIN = typeof window !== 'undefined' &&
+  window.location.hostname === 'admin.momencrafts.com'
 
 /* ── Check if the stored token has expired ─────────────── */
 function isTokenExpired(): boolean {
@@ -92,10 +97,12 @@ export default function App() {
           <Route path="/edgetack" element={<AuthGuard><EdgeTack /></AuthGuard>} />
           <Route path="/tdc"      element={<AuthGuard><TDC /></AuthGuard>} />
           <Route path="/qadaa"    element={<AuthGuard><Qadaa /></AuthGuard>} />
+          <Route path="/admin"    element={<Admin />} />
           {/* Legacy redirects */}
           <Route path="/gate" element={<Navigate to="/" replace />} />
           <Route path="/room" element={<Navigate to="/" replace />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* admin subdomain: any path → /admin */}
+          <Route path="*" element={IS_ADMIN_SUBDOMAIN ? <Navigate to="/admin" replace /> : <Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

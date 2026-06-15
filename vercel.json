@@ -20,6 +20,11 @@
     { "source": "/room", "destination": "/", "permanent": false }
   ],
   "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "admin.momencrafts.com" }],
+      "destination": "/index.html"
+    },
     { "source": "/home",     "destination": "/index.html" },
     { "source": "/rogerai",  "destination": "/index.html" },
     { "source": "/tdc",      "destination": "/tdc/index.html" },
@@ -29,8 +34,8 @@
     { "source": "/ummiwallet",          "destination": "/ummiwallet/index.html" },
     { "source": "/ummiwallet/",         "destination": "/ummiwallet/index.html" },
     { "source": "/ummiwallet/:path*",   "destination": "/ummiwallet/:path*" },
-    { "source": "/admin",    "destination": "/admin/index.html" },
-    { "source": "/admin/",   "destination": "/admin/index.html" },
+    { "source": "/admin",    "destination": "/index.html" },
+    { "source": "/admin/",   "destination": "/index.html" },
     { "source": "/(.*)",     "destination": "/index.html" }
   ],
   "headers": [
