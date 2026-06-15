@@ -253,29 +253,27 @@ export default function GateScreen() {
     if (!pendingData) return
     setShowNDA(false)
 
-    // Finalise session in store + sessionStorage
-    sessionStorage.setItem('mcr_investor', '1')
-    sessionStorage.setItem('mcr_ts', new Date().toISOString())
-    setToken(pendingData.token, {
-      name: pendingData.name ?? '',
-      label: pendingData.name ?? '',
-      type: pendingData.type,
-      expires: pendingData.expires ?? null,
-      session: pendingData.session,
-      valid: true,
-    })
-
     // Track NDA acceptance (fire-and-forget)
     fetch('https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/track-event', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: pendingData.token, event: 'nda_accepted', sessionId: pendingData.session }),
     }).catch(() => {})
 
-    // Co-founder celebration screen for PERMANENT / STRATEGIC tokens
+    // Co-founder celebration screen — DON'T setToken yet or GateGuard will navigate away immediately
     if (COFOUNDER_TYPES.has(pendingData.type)) {
       setShowCoFounder(true)
     } else {
-      // Regular investors → vault flash then home
+      // Regular investors → finalise session then vault flash
+      sessionStorage.setItem('mcr_investor', '1')
+      sessionStorage.setItem('mcr_ts', new Date().toISOString())
+      setToken(pendingData.token, {
+        name: pendingData.name ?? '',
+        label: pendingData.name ?? '',
+        type: pendingData.type,
+        expires: pendingData.expires ?? null,
+        session: pendingData.session,
+        valid: true,
+      })
       setVaultOpen(true)
       setTimeout(() => navigate('/home'), 500)
     }
@@ -283,8 +281,21 @@ export default function GateScreen() {
 
   const handleCoFounderEnter = () => {
     setShowCoFounder(false)
+    // NOW finalise session — setToken triggers GateGuard to navigate to /home
+    if (pendingData) {
+      sessionStorage.setItem('mcr_investor', '1')
+      sessionStorage.setItem('mcr_ts', new Date().toISOString())
+      setToken(pendingData.token, {
+        name: pendingData.name ?? '',
+        label: pendingData.name ?? '',
+        type: pendingData.type,
+        expires: pendingData.expires ?? null,
+        session: pendingData.session,
+        valid: true,
+      })
+    }
     setVaultOpen(true)
-    setTimeout(() => navigate('/home'), 500)
+    setTimeout(() => navigate('/home'), 800)
   }
 
   const declineNDA = () => {
