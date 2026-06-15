@@ -1,0 +1,521 @@
+/* ════════════════════════════════════════════════════════
+   qadaa.css — QadaaScreen Design System
+   DNA: lawfirm.one/apps/landing/src/app/globals.css
+     Midnight navy #0B1423 / #0D1B2E
+     Gold palette  #9E7A20 → #C8A24A → #D4B76E → #EAD49E
+     Mahogany      #2A1E16 → #3D2E22
+     Surface       #E2D5C5
+     Font          Playfair Display (serif) + Inter
+   ════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+
+/* ── Keyframes ─────────────────────────────────────────── */
+@keyframes qFadeUp     { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes qFloat      { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes qGoldShimmer{ 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes qPulseGold  { 0%, 100% { box-shadow: 0 0 0 0 rgba(200,162,74,0.4); } 50% { box-shadow: 0 0 0 12px rgba(200,162,74,0); } }
+@keyframes qScalePulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }
+@keyframes qScrollLine { 0% { opacity: 0.6; } 50% { opacity: 0.2; } 100% { opacity: 0.6; } }
+
+/* ── Page shell ────────────────────────────────────────── */
+.qadaa-page {
+  min-height: 100vh;
+  background: #0B1423;
+  color: #E2D5C5;
+  font-family: 'Inter', 'Noto Sans Arabic', system-ui, sans-serif;
+  direction: rtl;
+  overflow-x: hidden;
+}
+
+/* ── Hero ──────────────────────────────────────────────── */
+.qadaa-hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.qadaa-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.qadaa-hero-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.qadaa-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, #0B1423 0%, rgba(11,20,35,0.75) 35%, rgba(11,20,35,0.45) 70%, rgba(11,20,35,0.2) 100%),
+    linear-gradient(to right, rgba(42,30,22,0.5) 0%, transparent 60%);
+}
+
+/* Ambient orbs */
+.qadaa-ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(200,162,74,0.05);
+  filter: blur(60px);
+  pointer-events: none;
+  animation: qFloat 4s ease-in-out infinite;
+}
+
+/* Hero content */
+.qadaa-hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
+  padding-top: 6rem;
+  padding-bottom: 4rem;
+}
+
+.qadaa-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: #C8A24A;
+  background: rgba(200,162,74,0.1);
+  border: 1px solid rgba(200,162,74,0.25);
+  border-radius: 999px;
+  padding: .35rem 1rem;
+  margin-bottom: 1.5rem;
+  animation: qFadeUp .8s ease forwards;
+  backdrop-filter: blur(8px);
+}
+
+.qadaa-hero-badge-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #C8A24A;
+  animation: qPulseGold 2s ease-in-out infinite;
+}
+
+.qadaa-hero-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  margin-bottom: 1.25rem;
+  animation: qFadeUp 1s ease .15s both;
+  opacity: 0;
+}
+
+.qadaa-hero-headline-white {
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+.qadaa-hero-headline-gold {
+  background: linear-gradient(135deg, #9E7A20 0%, #C8A24A 40%, #EAD49E 55%, #C8A24A 70%, #9E7A20 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: qFadeUp 1s ease .15s both, qGoldShimmer 4s ease-in-out infinite;
+}
+
+.qadaa-hero-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.8);
+  max-width: 540px;
+  margin: 0 auto 2rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  animation: qFadeUp 1s ease .3s both;
+  opacity: 0;
+}
+
+/* CTAs */
+.qadaa-hero-ctas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+  animation: qFadeUp 1s ease .45s both;
+  opacity: 0;
+}
+
+@media (min-width: 500px) {
+  .qadaa-hero-ctas { flex-direction: row; justify-content: center; }
+}
+
+/* Buttons */
+.qadaa-btn-gold {
+  background: linear-gradient(135deg, #9E7A20, #B8922E);
+  color: #FDFBF8 !important;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: .95rem;
+  padding: .85rem 2rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all .3s cubic-bezier(.25,.46,.45,.94);
+  box-shadow: 0 4px 20px rgba(158,122,32,0.3);
+}
+
+.qadaa-btn-gold:hover {
+  background: linear-gradient(135deg, #B8922E, #C8A24A);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(158,122,32,0.4);
+}
+
+.qadaa-btn-outline {
+  background: transparent;
+  color: #C8A24A !important;
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: .95rem;
+  padding: .85rem 2rem;
+  border-radius: 10px;
+  border: 1px solid rgba(200,162,74,0.35);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all .3s cubic-bezier(.25,.46,.45,.94);
+  backdrop-filter: blur(8px);
+}
+
+.qadaa-btn-outline:hover {
+  background: rgba(200,162,74,0.08);
+  border-color: rgba(200,162,74,0.6);
+  transform: translateY(-2px);
+}
+
+/* Trust chips */
+.qadaa-trust-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem;
+  animation: qFadeUp 1s ease .6s both;
+  opacity: 0;
+}
+
+.qadaa-trust-chip {
+  font-family: 'Inter', sans-serif;
+  font-size: .7rem;
+  color: rgba(255,255,255,0.75);
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px;
+  padding: .3rem .8rem;
+  backdrop-filter: blur(6px);
+}
+
+/* Floating stat card */
+.qadaa-hero-float-card {
+  position: absolute;
+  bottom: 7rem;
+  left: 2rem;
+  padding: 1rem 1.25rem;
+  background: rgba(11,20,35,0.55);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(200,162,74,0.2);
+  border-radius: 14px;
+  z-index: 10;
+  animation: qFadeUp 1s ease 1s both, qFloat 4s ease-in-out 2s infinite;
+  opacity: 0;
+}
+
+.qadaa-float-gold {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #9E7A20, #C8A24A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.qadaa-float-label {
+  font-size: .65rem;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-top: .15rem;
+}
+
+/* Scroll indicator */
+.qadaa-scroll-hint {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+}
+
+.qadaa-scroll-text {
+  font-size: .6rem;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: .3em;
+}
+
+.qadaa-scroll-line {
+  width: 1px;
+  height: 2rem;
+  background: linear-gradient(to bottom, rgba(200,162,74,0.5), transparent);
+  animation: qScrollLine 1.5s ease-in-out infinite;
+}
+
+/* ── Section shells ────────────────────────────────────── */
+.qadaa-section {
+  padding: 5rem 0;
+}
+
+.qadaa-section--dark {
+  background: linear-gradient(180deg, #0D1B2E 0%, #0B1423 100%);
+}
+
+.qadaa-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.qadaa-section-label {
+  font-family: 'Inter', sans-serif;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #C8A24A;
+  margin-bottom: .8rem;
+}
+
+.qadaa-section-label--light { color: #D4B76E; }
+
+.qadaa-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  color: #E2D5C5;
+  margin-bottom: .75rem;
+  line-height: 1.25;
+}
+
+.qadaa-section-title--light { color: #EAD49E; }
+
+.qadaa-section-sub {
+  font-size: .95rem;
+  line-height: 1.8;
+  color: rgba(226,213,197,0.65);
+  max-width: 600px;
+  margin-bottom: 3rem;
+}
+
+/* ── 5-App Grid ────────────────────────────────────────── */
+.qadaa-apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+
+.qadaa-app-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(200,162,74,0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all .4s cubic-bezier(.25,.46,.45,.94);
+  animation: qFadeUp .6s ease both;
+}
+
+.qadaa-app-card:hover {
+  background: rgba(200,162,74,0.04);
+  border-color: rgba(200,162,74,0.25);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3), 0 0 30px rgba(200,162,74,0.06);
+}
+
+.qadaa-app-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  background: rgba(200,162,74,0.05);
+  backdrop-filter: blur(8px);
+}
+
+.qadaa-app-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: .5rem;
+}
+
+.qadaa-app-desc {
+  font-size: .8rem;
+  line-height: 1.7;
+  color: rgba(226,213,197,0.6);
+  margin-bottom: .85rem;
+}
+
+.qadaa-app-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+
+.qadaa-app-tag {
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: .15rem .55rem;
+  border-radius: 20px;
+  border: 1px solid;
+  background: transparent;
+  opacity: 0.85;
+}
+
+/* ── Why Qadaa grid ────────────────────────────────────── */
+.qadaa-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.qadaa-why-card {
+  background: rgba(200,162,74,0.04);
+  border: 1px solid rgba(200,162,74,0.12);
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  transition: border-color .3s ease, transform .3s ease;
+}
+
+.qadaa-why-card:hover {
+  border-color: rgba(200,162,74,0.3);
+  transform: translateY(-4px);
+}
+
+.qadaa-why-icon { font-size: 1.8rem; margin-bottom: .75rem; }
+
+.qadaa-why-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #D4B76E;
+  margin-bottom: .5rem;
+}
+
+.qadaa-why-desc {
+  font-size: .8rem;
+  line-height: 1.75;
+  color: rgba(226,213,197,0.6);
+}
+
+/* ── CTA Section ───────────────────────────────────────── */
+.qadaa-cta-section {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(200,162,74,0.07) 0%, transparent 65%),
+    linear-gradient(180deg, #0B1423 0%, #0D1B2E 100%);
+  border-top: 1px solid rgba(200,162,74,0.1);
+}
+
+.qadaa-cta-inner {
+  text-align: center;
+  max-width: 640px;
+}
+
+.qadaa-cta-scales {
+  margin-bottom: 1.5rem;
+  animation: qScalePulse 3s ease-in-out infinite;
+  display: inline-block;
+  filter: drop-shadow(0 0 20px rgba(200,162,74,0.25));
+}
+
+.qadaa-cta-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: #E2D5C5;
+  margin-bottom: 1rem;
+}
+
+.qadaa-cta-title-gold {
+  background: linear-gradient(135deg, #9E7A20 0%, #C8A24A 50%, #9E7A20 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.qadaa-cta-sub {
+  font-size: .9rem;
+  line-height: 1.8;
+  color: rgba(226,213,197,0.6);
+  margin-bottom: 2rem;
+}
+
+.qadaa-cta-btn { font-size: 1rem; padding: 1rem 2.5rem; }
+
+.qadaa-cta-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  margin-top: 1.5rem;
+  font-size: .7rem;
+  color: rgba(200,162,74,0.5);
+  letter-spacing: .04em;
+}
+
+/* ── Back bar ──────────────────────────────────────────── */
+.qadaa-back-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  border-top: 1px solid rgba(200,162,74,0.08);
+  background: rgba(11,20,35,0.9);
+  backdrop-filter: blur(12px);
+}
+
+.qadaa-back-link {
+  font-family: 'Inter', sans-serif;
+  font-size: .8rem;
+  color: #C8A24A;
+  text-decoration: none;
+  transition: opacity .2s;
+}
+
+.qadaa-back-link:hover { opacity: .75; }
+
+.qadaa-back-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: .75rem;
+  color: rgba(200,162,74,0.45);
+  font-style: italic;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .qadaa-hero-float-card { display: none; }
+  .qadaa-apps-grid { grid-template-columns: 1fr; }
+  .qadaa-why-grid  { grid-template-columns: 1fr; }
+}

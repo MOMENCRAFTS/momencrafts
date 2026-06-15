@@ -351,7 +351,7 @@ export default function HomeScreen() {
       </div>
 
       {/* ── NAV ── */}
-      <nav id="nav" className={navOpen ? 'nav-open' : ''} style={{ top: '52px' }}>
+      <nav id="nav" className={navOpen ? 'nav-open' : ''} style={{ top: barVisible ? '52px' : '0', transition: 'top .38s cubic-bezier(.4,0,.2,1)' }}>
         <div className="nav-inner">
           <a href="#hero" className="nav-logo" id="nav-logo-ar">
             <img src="/logo.png" alt="مؤمن كرافتس" className="nav-logo-img" />
@@ -373,7 +373,7 @@ export default function HomeScreen() {
       {/* ══════════════════════════
           HERO
       ══════════════════════════ */}
-      <section id="hero" className="hero" style={{ paddingTop:'52px' }}>
+      <section id="hero" className="hero" style={{ paddingTop: barVisible ? '104px' : '52px', transition: 'padding-top .38s cubic-bezier(.4,0,.2,1)' }}>
         <div className="hero-ember" aria-hidden="true" />
         <div className="container hero-inner">
           <div className="hero-eyebrow reveal">
@@ -411,55 +411,207 @@ export default function HomeScreen() {
           <p className="section-sub reveal delay-200">١٠ منتجات صُممت بعناية — من الفكرة إلى النموذج، ومن النموذج إلى منتج قابل للتجربة.</p>
           <div className="products-grid">
 
-            {/* ROGER·AI */}
-            <article className="product-card featured reveal delay-100" id="card-roger-ar" data-accent="amber">
-              <div className="card-accent-bar" />
-              <div className="card-featured-badge">★ رائد</div>
+            {/* ROGER·AI — Neo-retro military NASA Mission Control card */}
+            <article className="product-card product-card--roger featured reveal delay-100" id="card-roger-ar" data-accent="roger">
+
+              {/* ── Gunmetal splash bg texture ── */}
+              <div className="roger-bg" aria-hidden="true" />
+
+              {/* ── CRT scanlines + sci-fi corner brackets ── */}
+              <svg className="roger-hud-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                {/* Scanlines */}
+                {[0,4,8,12,16,20,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80,84,88,92,96,100,104,108,112,116,120,124,128,132,136,140,144,148,152,156,160,164,168,172,176,180,184,188,192,196,200,204,208,212,216,220].map(y => (
+                  <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="rgba(0,0,0,0.06)" strokeWidth="1"/>
+                ))}
+                {/* Top-left corner bracket */}
+                <path d="M8 24 L8 8 L28 8" stroke="#d4a044" strokeWidth="1.2" opacity="0.5"/>
+                {/* Top-right corner bracket */}
+                <path d="M252 8 L272 8 L272 24" stroke="#d4a044" strokeWidth="1.2" opacity="0.5"/>
+                {/* Bottom-left corner bracket */}
+                <path d="M8 196 L8 212 L28 212" stroke="#d4a044" strokeWidth="1.2" opacity="0.5"/>
+                {/* Bottom-right corner bracket */}
+                <path d="M252 212 L272 212 L272 196" stroke="#d4a044" strokeWidth="1.2" opacity="0.5"/>
+                {/* Amber ember sparks */}
+                <circle cx="12"  cy="180" r="1.2" fill="#d4a044" opacity="0.6"/>
+                <circle cx="18"  cy="195" r="0.8" fill="#a84832" opacity="0.5"/>
+                <circle cx="268" cy="185" r="1"   fill="#d4a044" opacity="0.4"/>
+                <circle cx="8"   cy="60"  r="0.9" fill="#d4a044" opacity="0.35"/>
+                {/* LED strip hints — mascot colors */}
+                <rect x="80" y="215" width="50" height="2" rx="1" fill="#00cfff" opacity="0.25"/>
+                <rect x="135" y="215" width="50" height="2" rx="1" fill="#a855f7" opacity="0.2"/>
+              </svg>
+
+              {/* ── Amber command accent bar ── */}
+              <div className="roger-card-accent-bar" />
+
+              {/* ── Testing badge ── */}
+              <div className="roger-card-test-badge">🧪 TESTING</div>
+
+              {/* ── Featured badge ── */}
+              <div className="roger-card-featured">★ رائد</div>
+
               <div className="card-header">
-                <div className="card-icon amber-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+                {/* Walkie-talkie/mic icon with LED dot — gunmetal box */}
+                <div className="roger-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4a044" strokeWidth="1.8" strokeLinecap="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="22"/>
+                    <circle cx="19" cy="5" r="1.5" fill="#5a9c69" stroke="none"/>
+                  </svg>
                 </div>
-                <span className="card-status testing">🧪 قيد الاختبار</span>
+                <span className="roger-card-status">◉ قيد الاختبار</span>
               </div>
-              <h3 className="card-title">ROGER·AI</h3>
-              <p className="card-tagline">مساعد تنفيذي ذكي</p>
-              <p className="card-desc">مساعد تنفيذي صوتي للمدراء — ذاكرة مستمرة، تقارير استباقية، وتجربة عمل بالعربية والإنجليزية.</p>
-              <div className="card-tags"><span className="tag">صوتية أولاً</span><span className="tag">iOS · Android</span><span className="tag">ثنائي اللغة</span></div>
-              <a href="/rogerai" target="_blank" rel="noopener" className="card-link">اعرف أكثر ←</a>
+
+              <h3 className="roger-card-title">ROGER·AI</h3>
+              <p className="roger-card-tagline">مساعد تنفيذي ذكي</p>
+              <p className="roger-card-desc">مساعد تنفيذي صوتي للمدراء — ذاكرة مستمرة، تقارير استباقية، وتجربة عمل بالعربية والإنجليزية.</p>
+
+              <div className="roger-card-tags">
+                <span className="roger-tag roger-tag--amber">صوتية أولاً</span>
+                <span className="roger-tag roger-tag--green">iOS · Android</span>
+                <span className="roger-tag roger-tag--olive">ثنائي اللغة</span>
+              </div>
+
+              <a href="/rogerai" target="_blank" rel="noopener" className="roger-card-link">
+                اعرف أكثر <span className="roger-card-link-arrow">←</span>
+              </a>
             </article>
 
-            {/* CLINIQ.ONE */}
-            <article className="product-card featured reveal delay-200" id="card-cliniq-ar" data-accent="teal">
-              <div className="card-accent-bar" />
-              <div className="card-featured-badge">★ رائد</div>
+            {/* CLINIQ.ONE — Medical dark space themed card */}
+            <article className="product-card product-card--cliniq featured reveal delay-200" id="card-cliniq-ar" data-accent="cliniq">
+
+              {/* ── Deep space bg + teal nebula glow ── */}
+              <svg className="cliniq-bg-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                {/* Teal nebula orbs */}
+                <circle cx="240" cy="25"  r="55" fill="url(#cq1)" fillOpacity="0.18"/>
+                <circle cx="20"  cy="190" r="40" fill="url(#cq2)" fillOpacity="0.12"/>
+                <circle cx="130" cy="110" r="30" fill="url(#cq1)" fillOpacity="0.07"/>
+                {/* EKG / heartbeat trace across card */}
+                <path d="M0 110 L40 110 L55 75 L68 145 L82 90 L94 110 L280 110"
+                      stroke="#1A8A9E" strokeWidth="0.9" opacity="0.22" strokeLinecap="round" strokeLinejoin="round"/>
+                {/* Star field */}
+                <circle cx="60"  cy="30"  r="0.7" fill="white" opacity="0.35"/>
+                <circle cx="180" cy="55"  r="0.5" fill="white" opacity="0.25"/>
+                <circle cx="100" cy="180" r="0.6" fill="white" opacity="0.3"/>
+                <circle cx="250" cy="140" r="0.8" fill="white" opacity="0.2"/>
+                <circle cx="30"  cy="90"  r="0.5" fill="white" opacity="0.3"/>
+                <circle cx="210" cy="200" r="0.6" fill="#0ECFCF" opacity="0.4"/>
+                <defs>
+                  <radialGradient id="cq1" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#0ECFCF"/>
+                    <stop offset="100%" stopColor="#0ECFCF" stopOpacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="cq2" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#1A8A9E"/>
+                    <stop offset="100%" stopColor="#1A8A9E" stopOpacity="0"/>
+                  </radialGradient>
+                </defs>
+              </svg>
+
+              {/* ── Medical teal shimmer accent bar ── */}
+              <div className="cliniq-card-accent-bar" />
+
+              {/* ── LIVE badge (amber, matching app's beta banner) ── */}
+              <div className="cliniq-card-live-badge">🟢 LIVE</div>
+
+              {/* ── Featured star badge ── */}
+              <div className="cliniq-card-featured">★ رائد</div>
+
               <div className="card-header">
-                <div className="card-icon teal-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                {/* Medical EKG icon — the exact Cliniq.one identity */}
+                <div className="cliniq-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 12 L6 12 L8.5 5 L11.5 19 L14 10 L16 12 L22 12"
+                          stroke="#0ECFCF" strokeWidth="1.8"/>
+                  </svg>
                 </div>
-                <span className="card-status testing">● مرحلة تجريبية</span>
+                <span className="cliniq-card-status">● مرحلة تجريبية</span>
               </div>
-              <h3 className="card-title">CLINIQ.ONE</h3>
-              <p className="card-tagline">طب عن بُعد مصمم للمنطقة</p>
-              <p className="card-desc">منصة طب عن بُعد متكاملة تضم ٥ تطبيقات لربط المرضى والأطباء ضمن تجربة صحية عربية وسلسة.</p>
-              <div className="card-tags"><span className="tag">رعاية صحية</span><span className="tag">MENA</span><span className="tag">5 تطبيقات</span></div>
-              <span className="card-live-badge">🟢 LIVE</span>
-              <a href="https://www.cliniq.one" target="_blank" rel="noopener" className="card-link">زيارة cliniq.one ←</a>
+
+              <h3 className="cliniq-card-title">CLINIQ.ONE</h3>
+              <p className="cliniq-card-tagline">طب عن بُعد مصمم للمنطقة</p>
+              <p className="cliniq-card-desc">منصة طب عن بُعد متكاملة تضم ٥ تطبيقات لربط المرضى والأطباء ضمن تجربة صحية عربية وسلسة.</p>
+
+              <div className="cliniq-card-tags">
+                <span className="cliniq-tag cliniq-tag--teal">رعاية صحية</span>
+                <span className="cliniq-tag cliniq-tag--cyan">MENA</span>
+                <span className="cliniq-tag cliniq-tag--amber">٥ تطبيقات</span>
+              </div>
+
+              <a href="https://www.cliniq.one" target="_blank" rel="noopener" className="cliniq-card-link">
+                زيارة cliniq.one <span className="cliniq-card-link-arrow">←</span>
+              </a>
             </article>
 
-            {/* QADAA */}
-            <article className="product-card reveal delay-300" id="card-qadaa-ar" data-accent="blue">
-              <div className="card-accent-bar" />
+            {/* QADAA — Legal Prestige Dark card */}
+            <article className="product-card product-card--qadaa reveal delay-300" id="card-qadaa-ar" data-accent="qadaa">
+
+              {/* ── Midnight navy base + golden halo behind scales ── */}
+              <svg className="qadaa-bg-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                  <radialGradient id="qg1" cx="50%" cy="45%" r="50%">
+                    <stop offset="0%" stopColor="#C8A24A" stopOpacity="0.18"/>
+                    <stop offset="100%" stopColor="#C8A24A" stopOpacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="qg2" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#9E7A20" stopOpacity="0.12"/>
+                    <stop offset="100%" stopColor="#9E7A20" stopOpacity="0"/>
+                  </radialGradient>
+                </defs>
+                {/* Gold halo behind the scales icon area */}
+                <ellipse cx="140" cy="70" rx="90" ry="60" fill="url(#qg1)"/>
+                <ellipse cx="140" cy="80" rx="60" ry="40" fill="url(#qg2)"/>
+                {/* Scales of justice SVG — the actual Qadaa icon */}
+                <g transform="translate(105, 20) scale(0.5)" opacity="0.55">
+                  <line x1="70" y1="10" x2="70" y2="110" stroke="#C8A24A" strokeWidth="3" strokeLinecap="round"/>
+                  <line x1="20" y1="35" x2="120" y2="35" stroke="#C8A24A" strokeWidth="3" strokeLinecap="round"/>
+                  <line x1="25" y1="35" x2="25" y2="70" stroke="#C8A24A" strokeWidth="2" strokeLinecap="round" strokeDasharray="3,3"/>
+                  <line x1="115" y1="35" x2="115" y2="70" stroke="#C8A24A" strokeWidth="2" strokeLinecap="round" strokeDasharray="3,3"/>
+                  <path d="M8 70 Q25 80 42 70" stroke="#C8A24A" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+                  <path d="M98 70 Q115 80 132 70" stroke="#C8A24A" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+                  <line x1="55" y1="110" x2="85" y2="110" stroke="#C8A24A" strokeWidth="3" strokeLinecap="round"/>
+                  <circle cx="20" cy="35" r="4" fill="#C8A24A"/>
+                  <circle cx="120" cy="35" r="4" fill="#C8A24A"/>
+                  <circle cx="70" cy="12" r="5" fill="#C8A24A"/>
+                </g>
+                {/* Ambient dust particles */}
+                <circle cx="45"  cy="160" r="0.9" fill="#C8A24A" opacity="0.35"/>
+                <circle cx="235" cy="40"  r="0.7" fill="#C8A24A" opacity="0.3"/>
+                <circle cx="260" cy="170" r="0.8" fill="#D4B76E" opacity="0.25"/>
+                <circle cx="20"  cy="50"  r="0.6" fill="#C8A24A" opacity="0.2"/>
+                {/* Horizontal divider line with gold fade */}
+                <line x1="30" y1="140" x2="250" y2="140" stroke="url(#qg2)" strokeWidth="0.5"/>
+              </svg>
+
+              {/* ── Gold shimmer accent bar ── */}
+              <div className="qadaa-card-accent-bar"/>
+
+              {/* ── Dev badge ── */}
+              <div className="qadaa-card-dev-badge">◌ قيد التطوير</div>
+
               <div className="card-header">
-                <div className="card-icon blue-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                {/* Scales of justice icon — gold on dark glass */}
+                <div className="qadaa-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C8A24A" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 3v18M5 7h14M8 7v6a4 4 0 0 1-8 0V7M16 7v6a4 4 0 0 0 8 0V7M9 21h6"/>
+                  </svg>
                 </div>
-                <span className="card-status dev">◌ قيد التطوير</span>
+                <span className="qadaa-card-status">⚖ تقنية قانونية</span>
               </div>
-              <h3 className="card-title">QADAA · قضاء</h3>
-              <p className="card-tagline">منصة قانونية ذكية</p>
-              <p className="card-desc">منصة تربط العملاء بالمحامين وتدعم تحليل القضايا والمستندات بتجربة عربية واضحة.</p>
-              <div className="card-tags"><span className="tag">تقنية قانونية</span><span className="tag">السعودية · الإمارات</span></div>
-              <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20QADAA%20%C2%B7%20%D9%82%D8%B6%D8%A7%D8%A1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
+
+              <h3 className="qadaa-card-title">QADAA · قضاء</h3>
+              <p className="qadaa-card-tagline">قانون. مُعاد تصوره.</p>
+              <p className="qadaa-card-desc">منصة تربط العملاء بالمحامين وتدعم تحليل القضايا والمستندات بتجربة عربية واضحة وراقية.</p>
+
+              <div className="qadaa-card-tags">
+                <span className="qadaa-tag qadaa-tag--gold">تقنية قانونية</span>
+                <span className="qadaa-tag qadaa-tag--mahogany">السعودية · الإمارات</span>
+              </div>
+
+              <a href="/qadaa" className="qadaa-card-link">
+                اكتشف المنصة <span className="qadaa-card-link-arrow">←</span>
+              </a>
             </article>
 
             {/* MUSCLE HUSTLE */}
@@ -494,38 +646,142 @@ export default function HomeScreen() {
               <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20AQAR%20%C2%B7%20%D8%B9%D9%82%D8%A7%D8%B1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
 
-            {/* UMMI */}
-            <article className="product-card featured reveal delay-600" id="card-ummi-ar" data-accent="mint">
-              <div className="card-accent-bar" />
-              <div className="card-featured-badge">★ عرض تفاعلي</div>
+            {/* UMMI · أمي — Botanical Retro-Care card */}
+            <article className="product-card product-card--ummi featured reveal delay-600" id="card-ummi-ar" data-accent="ummi">
+
+              {/* ── Ivory warm background base ── */}
+              <div className="ummi-bg" aria-hidden="true" />
+
+              {/* ── Floating teardrop petals (FloatingPetals pattern) ── */}
+              <svg className="ummi-petals" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                {/* Pink petals */}
+                <path d="M248 18 Q254 24 254 30 Q254 36 248 42 Q242 36 242 30 Q242 24 248 18Z" fill="#F2C6D0" opacity="0.45"/>
+                <path d="M18 160 Q24 166 24 172 Q24 178 18 184 Q12 178 12 172 Q12 166 18 160Z" fill="#F2C6D0" opacity="0.35"/>
+                <path d="M140 6 Q145 11 145 16 Q145 21 140 26 Q135 21 135 16 Q135 11 140 6Z" fill="#FADAC8" opacity="0.4"/>
+                {/* Sage petals */}
+                <path d="M268 90 Q273 96 273 102 Q273 108 268 114 Q263 108 263 102 Q263 96 268 90Z" fill="#A8C8B0" opacity="0.3"/>
+                <path d="M8 60 Q13 66 13 72 Q13 78 8 84 Q3 78 3 72 Q3 66 8 60Z" fill="#A8C8B0" opacity="0.25"/>
+                <path d="M200 195 Q204 200 204 205 Q204 210 200 215 Q196 210 196 205 Q196 200 200 195Z" fill="#F6B89E" opacity="0.35"/>
+                {/* Vine divider hint */}
+                <path d="M0 200 Q35 196 70 200 Q105 204 140 200 Q175 196 210 200 L280 200" stroke="#A8C8B0" strokeWidth="0.8" opacity="0.3"/>
+                <path d="M48 198 Q46 194 48 190 Q50 194 48 198Z" fill="#A8C8B0" opacity="0.25"/>
+                <path d="M140 204 Q138 208 140 212 Q142 208 140 204Z" fill="#A8C8B0" opacity="0.22"/>
+                {/* Corner flourish top-right */}
+                <path d="M260 2 Q250 2 242 8 Q234 14 228 24" stroke="#A8C8B0" strokeWidth="0.9" opacity="0.35"/>
+                <path d="M258 4 Q252 7 250 12 Q250 9 253 7Z" fill="#A8C8B0" opacity="0.22"/>
+              </svg>
+
+              {/* ── Peach → mint botanical accent bar ── */}
+              <div className="ummi-card-accent-bar" />
+
+              {/* ── DEMO LIVE badge ── */}
+              <div className="ummi-card-demo-badge">🟢 DEMO LIVE</div>
+
               <div className="card-header">
-                <div className="card-icon mint-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                {/* WalletRoseIcon — exact app logo SVG */}
+                <div className="ummi-card-icon">
+                  <svg width="34" height="34" viewBox="0 0 64 64">
+                    <defs>
+                      <linearGradient id="wg" x1="16" y1="30" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stopColor="#FADAC8"/>
+                        <stop offset="1" stopColor="#F6B89E"/>
+                      </linearGradient>
+                      <linearGradient id="rg" x1="32" y1="4" x2="32" y2="30" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stopColor="#F6B89E"/>
+                        <stop offset="1" stopColor="#E8957A"/>
+                      </linearGradient>
+                    </defs>
+                    {/* Wallet body */}
+                    <rect x="14" y="32" rx="6" ry="6" width="36" height="24" fill="url(#wg)" stroke="#E8957A" strokeWidth="1.5"/>
+                    <rect x="40" y="38" rx="4" ry="4" width="10" height="10" fill="#FFFCF2" stroke="#E8957A" strokeWidth="1"/>
+                    <circle cx="45" cy="43" r="2" fill="#E8957A" opacity="0.5"/>
+                    {/* Heart petal on wallet */}
+                    <path d="M27 42 Q27 38 31 38 Q35 38 35 42 Q35 46 31 50 Q27 46 27 42Z" fill="#F2C6D0"/>
+                    {/* Stem */}
+                    <path d="M32 32 L32 18" stroke="#6BB89A" strokeWidth="2" strokeLinecap="round"/>
+                    {/* Leaves */}
+                    <path d="M32 26 Q26 22 24 26 Q26 30 32 26" fill="#8FCFB3"/>
+                    <path d="M32 22 Q38 18 40 22 Q38 26 32 22" fill="#B5E0CC"/>
+                    {/* Rose bloom */}
+                    <path d="M24 14 Q22 6 32 4 Q42 6 40 14 Q40 20 32 22 Q24 20 24 14Z" fill="url(#rg)"/>
+                    <path d="M28 12 Q28 8 32 6 Q36 8 36 12 Q36 18 32 20 Q28 18 28 12Z" fill="#F6B89E" opacity="0.6"/>
+                    <circle cx="37" cy="10" r="2" fill="white" opacity="0.7"/>
+                  </svg>
                 </div>
-                <span className="card-status testing">● مرحلة تجريبية</span>
+                <span className="ummi-card-badge">🌸 عرض تفاعلي</span>
               </div>
-              <h3 className="card-title">UMMI · أمي</h3>
-              <p className="card-tagline">محفظة العائلة ورعاية الأم</p>
-              <p className="card-desc">نظام مالي عائلي خاص لرعاية الأم — ميزانية ذكية، جيوب مخصصة، راتب تلقائي للأم، ونظام طوارئ — مصمم بدفء وكرامة للعائلات السعودية. ٢٨ وحدة، ٣ أدوار، ثنائي اللغة عربي/إنجليزي.</p>
-              <div className="card-tags"><span className="tag">تقنية مالية</span><span className="tag">عائلي</span><span className="tag">عربي أولاً</span><span className="tag">٢٨ وحدة</span><span className="tag">IoT</span></div>
-              <span className="card-live-badge">🟢 DEMO</span>
-              <a href="/ummiwallet/" className="card-link">شاهد العرض التفاعلي ←</a>
+
+              <h3 className="ummi-card-title">UMMI · أمي</h3>
+              <p className="ummi-card-tagline">محفظة العائلة ورعاية الأم</p>
+              <p className="ummi-card-desc">نظام مالي عائلي خاص — ميزانية ذكية، جيوب مخصصة، راتب تلقائي للأم، ونظام طوارئ. ٢٨ وحدة، ٤ أدوار، عربي/إنجليزي.</p>
+
+              <div className="ummi-card-tags">
+                <span className="ummi-tag ummi-tag--mint">تقنية مالية</span>
+                <span className="ummi-tag ummi-tag--peach">عائلي · ٤ أدوار</span>
+                <span className="ummi-tag ummi-tag--sage">٢٨ وحدة</span>
+              </div>
+
+              <a href="/ummiwallet/" className="ummi-card-link">
+                شاهد العرض التفاعلي <span className="ummi-card-link-arrow">←</span>
+              </a>
             </article>
 
-            {/* RELAYBOT */}
-            <article className="product-card reveal delay-100" id="card-relay-ar" data-accent="green">
-              <div className="card-accent-bar" />
+            {/* RELAYBOT — Neo-Brutalist themed card */}
+            <article className="product-card product-card--relay reveal delay-100" id="card-relay-ar" data-accent="relay">
+
+              {/* ── Teal scanlines + BLE ripple waves ── */}
+              <svg className="relay-bg-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                {/* Horizontal scanlines */}
+                {[20,36,52,68,84,100,116,132,148,164,180,196,212].map((y) => (
+                  <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="#AED4D3" strokeWidth="0.5"/>
+                ))}
+                {/* BLE ripple rings — top right */}
+                <circle cx="245" cy="35" r="18" stroke="#AED4D3" strokeWidth="1" fill="none" opacity="0.6"/>
+                <circle cx="245" cy="35" r="30" stroke="#AED4D3" strokeWidth="0.7" fill="none" opacity="0.4"/>
+                <circle cx="245" cy="35" r="44" stroke="#AED4D3" strokeWidth="0.5" fill="none" opacity="0.25"/>
+                {/* Small BLE device dot */}
+                <circle cx="245" cy="35" r="4" fill="#AED4D3" opacity="0.7"/>
+                {/* Red accent corner */}
+                <rect x="0" y="0" width="6" height="220" fill="#E6492D" opacity="0.12"/>
+              </svg>
+
+              {/* ── Solid red-orange accent bar ── */}
+              <div className="relay-card-accent-bar" />
+
+              {/* ── Blinking terminal DEV badge ── */}
+              <div className="relay-card-dev-badge">◌ UNDER DEV</div>
+
               <div className="card-header">
-                <div className="card-icon green-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="3" width="14" height="8" rx="1"/><path d="M12 11v4"/><path d="M8 19h8"/></svg>
+                {/* Cream icon box — RelayBot device icon */}
+                <div className="relay-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16324F" strokeWidth="2" strokeLinecap="round">
+                    {/* PCB/relay board shape */}
+                    <rect x="4" y="5" width="16" height="11" rx="1.5"/>
+                    {/* Pins */}
+                    <line x1="7" y1="16" x2="7" y2="19"/>
+                    <line x1="12" y1="16" x2="12" y2="19"/>
+                    <line x1="17" y1="16" x2="17" y2="19"/>
+                    {/* BLE signal dots */}
+                    <circle cx="19" cy="5.5" r="1" fill="#E6492D" stroke="none"/>
+                  </svg>
                 </div>
-                <span className="card-status dev">◌ قيد التطوير</span>
+                <span className="relay-card-status">◌ قيد التطوير</span>
               </div>
-              <h3 className="card-title">RELAYBOT</h3>
-              <p className="card-tagline">جسر نص ذكي للأنظمة المقيدة</p>
-              <p className="card-desc">جهاز يربط بين لوحة المفاتيح والحاسوب ليُدخل النصوص المحسّنة بالذكاء الاصطناعي إلى أي نظام دون تثبيت.</p>
-              <div className="card-tags"><span className="tag">أجهزة</span><span className="tag">بلا تثبيت</span></div>
-              <a href="https://github.com/momencrafts/relaybot" target="_blank" className="card-link">رابط المشروع على GitHub ←</a>
+
+              <h3 className="relay-card-title">RELAYBOT</h3>
+              <p className="relay-card-tagline">جسر نص ذكي للأنظمة المقيدة</p>
+              <p className="relay-card-desc">جهاز يربط بين لوحة المفاتيح والحاسوب ليُدخل النصوص المحسّنة بالذكاء الاصطناعي إلى أي نظام دون تثبيت.</p>
+
+              <div className="relay-card-tags">
+                <span className="relay-tag relay-tag--green">BLE</span>
+                <span className="relay-tag relay-tag--teal">بلا تثبيت</span>
+                <span className="relay-tag relay-tag--cream">أجهزة</span>
+                <span className="relay-tag relay-tag--red">ESP32</span>
+              </div>
+
+              <a href="https://github.com/momencrafts/relaybot" target="_blank" rel="noopener" className="relay-card-link">
+                GitHub <span className="relay-card-link-arrow">→</span>
+              </a>
             </article>
 
             {/* SABHA */}
@@ -544,20 +800,39 @@ export default function HomeScreen() {
               <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%AA%D8%AC%20SABHA%20%C2%B7%20%D8%B3%D8%A8%D8%AD%D8%A9%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
 
-            {/* TURBO DRONE CIRCUIT */}
-            <article className="product-card reveal delay-300" id="card-tdc-ar" data-accent="crimson">
-              <div className="card-accent-bar" />
+            {/* TURBO DRONE CIRCUIT — themed card */}
+            <article className="product-card product-card--tdc reveal delay-300" id="card-tdc-ar" data-accent="tdc">
+              {/* Dark space base + cyan electric glow layer */}
+              <div className="tdc-card-glow" aria-hidden="true" />
+              {/* Circuit trace SVG overlay */}
+              <svg className="tdc-card-circuit" viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M0 160 L40 160 L40 120 L90 120 L90 80 L140 80" stroke="#00E5FF" strokeWidth="0.6" strokeOpacity="0.18"/>
+                <path d="M280 40 L240 40 L240 90 L190 90 L190 130 L140 130" stroke="#00E5FF" strokeWidth="0.6" strokeOpacity="0.14"/>
+                <path d="M60 200 L60 150 L110 150 L110 100" stroke="#FF2D9B" strokeWidth="0.5" strokeOpacity="0.15"/>
+                <path d="M220 0 L220 60 L170 60" stroke="#FF2D9B" strokeWidth="0.5" strokeOpacity="0.12"/>
+                <circle cx="90" cy="120" r="2.5" fill="#00E5FF" fillOpacity="0.3"/>
+                <circle cx="190" cy="90" r="2.5" fill="#00E5FF" fillOpacity="0.22"/>
+                <circle cx="60" cy="150" r="2" fill="#FF2D9B" fillOpacity="0.28"/>
+                <circle cx="220" cy="60" r="2" fill="#FF2D9B" fillOpacity="0.22"/>
+              </svg>
+              {/* Accent bar — cyan electric */}
+              <div className="tdc-card-accent-bar" />
               <div className="card-header">
-                <div className="card-icon crimson-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <div className="tdc-card-icon">
+                  {/* Lightning bolt — neon cyan */}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#00E5FF" strokeWidth="0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 </div>
-                <span className="card-status prototype">◈ براءة قيد التسجيل</span>
+                <span className="tdc-card-badge">⚡ TURBO MODE</span>
               </div>
-              <h3 className="card-title">TURBO DRONE CIRCUIT</h3>
-              <p className="card-tagline">إدارة طاقة طائرات FPV</p>
-              <p className="card-desc">دائرة ذكية لمعالجة هبوط الجهد في بطاريات طائرات FPV وتعويضه تلقائياً.</p>
-              <div className="card-tags"><span className="tag">براءة اختراع</span><span className="tag">FPV · UAV</span></div>
-              <a href="/tdc" className="card-link">عرض المشروع ←</a>
+              <h3 className="tdc-card-title">TURBO DRONE CIRCUIT</h3>
+              <p className="tdc-card-tagline">إدارة طاقة طائرات FPV</p>
+              <p className="tdc-card-desc">دائرة 25×25mm تضيف الجهد من المكثف الفائق على التوالي — +15% فولت فوري. 150 أمبير. بدون برمجيات.</p>
+              <div className="tdc-card-tags">
+                <span className="tdc-tag tdc-tag--cyan">براءة اختراع</span>
+                <span className="tdc-tag tdc-tag--magenta">FPV · UAV</span>
+                <span className="tdc-tag tdc-tag--dim">150A · 19.3V</span>
+              </div>
+              <a href="/tdc" className="tdc-card-link">عرض المشروع <span className="tdc-card-link-arrow">←</span></a>
             </article>
 
             {/* EDGE TACK */}

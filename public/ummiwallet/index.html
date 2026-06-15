@@ -16,6 +16,12 @@
   <link rel="stylesheet" crossorigin href="/ummiwallet/assets/index-B6fgNUaP.css">
 </head>
 <body>
+  <!-- Gate check: redirect to token gate if not authenticated -->
+  <script>
+    if (!sessionStorage.getItem('mcr_investor')) {
+      window.location.replace('/');
+    }
+  </script>
   <div id="root"></div>
 </body>
 </html>

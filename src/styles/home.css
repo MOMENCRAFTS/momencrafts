@@ -106,6 +106,7 @@
   background: #fff !important;
   border-bottom: 2px solid var(--br-red-border) !important;
   box-shadow: 0 1px 12px rgba(155,27,48,.06) !important;
+  z-index: 1000 !important; /* sit above the investor bar peek tab (z-index 9998 context) */
 }
 .home-root .nav-logo,
 .home-root .nav-links a { color: var(--br-text) !important; position: relative; }
@@ -335,6 +336,738 @@
   border: 1px solid rgba(76,175,80,.25); border-radius: 4px;
   padding: .2rem .55rem; margin-bottom: .4rem; font-family: monospace;
 }
+
+/* ══════════════════════════════════════════════════════
+   TDC — TURBO DRONE CIRCUIT — Themed Product Card
+   Palette from hero.png & panels:
+     Deep space  #07090E  |  Cyan electric #00E5FF
+     Hot magenta #FF2D9B  |  Burn orange   #E6492D
+   ══════════════════════════════════════════════════════ */
+.product-card--tdc {
+  background: #07090E !important;
+  border: 1px solid rgba(0,229,255,0.12) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 16px rgba(0,229,255,.06), 0 0 0 1px rgba(0,229,255,.04) !important;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.35s cubic-bezier(.2,0,0,1), box-shadow 0.35s ease, border-color 0.35s ease !important;
+}
+.product-card--tdc:hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(0,229,255,0.28) !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 40px rgba(0,229,255,.12), 0 0 80px rgba(255,45,155,.06) !important;
+}
+/* Radial cyan + magenta energy glow layer */
+.tdc-card-glow {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 30% 0%, rgba(0,229,255,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(255,45,155,0.07) 0%, transparent 55%);
+  transition: background 0.35s ease;
+}
+.product-card--tdc:hover .tdc-card-glow {
+  background:
+    radial-gradient(ellipse 80% 65% at 30% 0%, rgba(0,229,255,0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 100%, rgba(255,45,155,0.13) 0%, transparent 55%);
+}
+/* Circuit trace SVG */
+.tdc-card-circuit {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+  transition: opacity 0.35s ease;
+}
+/* Cyan/magenta electric accent bar */
+.tdc-card-accent-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #00E5FF 40%, #FF2D9B 70%, transparent 100%);
+  z-index: 2; opacity: 0.7;
+  transition: opacity 0.35s ease;
+}
+.product-card--tdc:hover .tdc-card-accent-bar { opacity: 1; }
+/* Content stacking above overlays */
+.product-card--tdc .card-header,
+.product-card--tdc .tdc-card-title,
+.product-card--tdc .tdc-card-tagline,
+.product-card--tdc .tdc-card-desc,
+.product-card--tdc .tdc-card-tags,
+.product-card--tdc .tdc-card-link { position: relative; z-index: 2; }
+/* Neon cyan icon */
+.tdc-card-icon {
+  width: 40px; height: 40px;
+  background: rgba(0,229,255,0.08);
+  border: 1px solid rgba(0,229,255,0.2);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  filter: drop-shadow(0 0 6px rgba(0,229,255,.4));
+  transition: filter 0.3s ease, background 0.3s ease;
+}
+.product-card--tdc:hover .tdc-card-icon {
+  background: rgba(0,229,255,0.14);
+  filter: drop-shadow(0 0 12px rgba(0,229,255,.65));
+}
+/* TURBO MODE badge */
+.tdc-card-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .54rem; letter-spacing: .18em; font-weight: 700;
+  color: #E6492D; background: rgba(230,73,45,0.1);
+  border: 1px solid rgba(230,73,45,0.22); border-radius: 4px;
+  padding: .22rem .65rem;
+  animation: tdc-badge-pulse 2.4s ease-in-out infinite;
+}
+@keyframes tdc-badge-pulse {
+  0%,100% { color: #E6492D; border-color: rgba(230,73,45,0.22); }
+  50% { color: #FF6B4A; border-color: rgba(230,73,45,0.42); box-shadow: 0 0 8px rgba(230,73,45,.22); }
+}
+/* Text — light on dark */
+.tdc-card-title {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: .92rem !important; font-weight: 700 !important;
+  letter-spacing: .06em !important; color: #EDE8DC !important;
+  margin: .6rem 0 .25rem !important;
+}
+.tdc-card-tagline {
+  font-size: .78rem !important; color: #9A9485 !important; margin-bottom: .6rem !important;
+}
+.tdc-card-desc {
+  font-size: .77rem !important; line-height: 1.7 !important;
+  color: #6A6460 !important; margin-bottom: .9rem !important;
+}
+/* Tags */
+.tdc-card-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.tdc-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .54rem; font-weight: 600; letter-spacing: .1em;
+  padding: .18rem .55rem; border-radius: 3px;
+}
+.tdc-tag--cyan  { color: #00E5FF; background: rgba(0,229,255,0.08);  border: 1px solid rgba(0,229,255,0.2); }
+.tdc-tag--magenta { color: #FF2D9B; background: rgba(255,45,155,0.08); border: 1px solid rgba(255,45,155,0.2); }
+.tdc-tag--dim   { color: #5C5650; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+/* CTA link */
+.tdc-card-link {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: .68rem !important; font-weight: 700 !important;
+  letter-spacing: .1em; color: #00E5FF !important;
+  text-decoration: none;
+  transition: gap 0.25s ease, text-shadow 0.25s ease !important;
+}
+.tdc-card-link:hover { text-decoration: none !important; gap: .7rem; text-shadow: 0 0 12px rgba(0,229,255,.5); }
+.tdc-card-link-arrow { display: inline-block; transition: transform 0.25s cubic-bezier(.2,0,0,1); }
+.tdc-card-link:hover .tdc-card-link-arrow { transform: translateX(-3px); }
+
+
+/* ══════════════════════════════════════════════════════
+   UMMI WALLET — Botanical Retro-Care Card
+   Palette from FloralIcons.tsx:
+     Peach  #F6B89E  |  Peach Light  #FADAC8
+     Mint   #8FCFB3  |  Mint Dark    #6BB89A
+     Coral  #E8957A  |  Sage         #A8C8B0
+     Ivory  #FFFCF2  |  Pink         #F2C6D0
+   Aesthetic: warm hand-drawn botanical, family warmth
+   ══════════════════════════════════════════════════════ */
+.product-card--ummi {
+  background: linear-gradient(150deg, #FFFCF2 0%, #FFF5EB 55%, #F5FBF7 100%) !important;
+  border: 1.5px solid rgba(232,149,122,0.25) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 20px rgba(246,184,158,.12), 0 0 0 1px rgba(246,184,158,.06) !important;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.35s cubic-bezier(.2,0,0,1), box-shadow 0.35s ease, border-color 0.35s ease !important;
+}
+.product-card--ummi:hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(232,149,122,0.45) !important;
+  box-shadow:
+    0 20px 55px rgba(246,184,158,.18),
+    0 0 30px rgba(143,207,179,.1),
+    0 0 0 1.5px rgba(232,149,122,.15) !important;
+}
+.ummi-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 85% 5%, rgba(246,184,158,0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 5% 90%, rgba(143,207,179,0.1) 0%, transparent 50%);
+  transition: opacity 0.35s ease;
+}
+.product-card--ummi:hover .ummi-bg {
+  background:
+    radial-gradient(ellipse 80% 65% at 85% 5%, rgba(246,184,158,0.2) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 55% at 5% 90%, rgba(143,207,179,0.14) 0%, transparent 50%);
+}
+.ummi-petals { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.ummi-card-accent-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 2.5px;
+  background: linear-gradient(90deg, transparent 0%, #F6B89E 25%, #8FCFB3 75%, transparent 100%);
+  z-index: 2; opacity: 0.75; transition: opacity 0.35s ease;
+}
+.product-card--ummi:hover .ummi-card-accent-bar { opacity: 1; }
+.ummi-card-demo-badge {
+  position: absolute; top: 14px; left: 16px;
+  font-family: monospace; font-size: .55rem; font-weight: 700; letter-spacing: .12em;
+  color: #1a7a3a; background: rgba(76,175,80,.08);
+  border: 1px solid rgba(76,175,80,.22); border-radius: 4px;
+  padding: .2rem .55rem; z-index: 3;
+}
+.product-card--ummi .card-header,
+.product-card--ummi .ummi-card-title,
+.product-card--ummi .ummi-card-tagline,
+.product-card--ummi .ummi-card-desc,
+.product-card--ummi .ummi-card-tags,
+.product-card--ummi .ummi-card-link { position: relative; z-index: 2; }
+.ummi-card-icon {
+  width: 44px; height: 44px;
+  background: rgba(246,184,158,0.15);
+  border: 1.5px solid rgba(232,149,122,0.28);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  filter: drop-shadow(0 2px 6px rgba(232,149,122,.25));
+  transition: filter 0.3s ease, background 0.3s ease;
+  animation: ummi-rose-sway 4s ease-in-out infinite;
+}
+@keyframes ummi-rose-sway {
+  0%, 100% { transform: rotate(-1.5deg); filter: drop-shadow(0 2px 6px rgba(232,149,122,.22)); }
+  50%       { transform: rotate(1.5deg);  filter: drop-shadow(0 4px 10px rgba(232,149,122,.35)); }
+}
+.product-card--ummi:hover .ummi-card-icon {
+  background: rgba(246,184,158,0.25);
+  filter: drop-shadow(0 3px 12px rgba(232,149,122,.45));
+  animation: none; transform: none;
+}
+.ummi-card-badge {
+  font-family: 'Cairo', sans-serif !important;
+  font-size: .62rem; font-weight: 700;
+  color: #6BB89A; background: rgba(143,207,179,0.12);
+  border: 1px solid rgba(143,207,179,0.3); border-radius: 4px;
+  padding: .22rem .65rem;
+}
+.ummi-card-title {
+  font-family: 'Cairo', sans-serif !important;
+  font-size: 1.05rem !important; font-weight: 800 !important;
+  color: #3E2A1A !important; margin: .6rem 0 .2rem !important;
+}
+.ummi-card-tagline { font-size: .8rem !important; color: #8B4513 !important; margin-bottom: .55rem !important; opacity: 0.8; }
+.ummi-card-desc    { font-size: .78rem !important; line-height: 1.75 !important; color: #5a3e2b !important; margin-bottom: .9rem !important; }
+.ummi-card-tags    { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.ummi-tag { font-family: 'Cairo', sans-serif !important; font-size: .6rem; font-weight: 600; padding: .2rem .65rem; border-radius: 20px; }
+.ummi-tag--mint  { color: #4a9e80; background: rgba(143,207,179,0.15); border: 1px solid rgba(143,207,179,0.35); }
+.ummi-tag--peach { color: #c0622a; background: rgba(246,184,158,0.18); border: 1px solid rgba(246,184,158,0.4);  }
+.ummi-tag--sage  { color: #5a8a6a; background: rgba(168,200,176,0.18); border: 1px solid rgba(168,200,176,0.38); }
+.ummi-card-link {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: 'Cairo', sans-serif !important;
+  font-size: .78rem !important; font-weight: 700 !important;
+  color: #E8957A !important; text-decoration: none;
+  transition: gap 0.25s ease, color 0.25s ease !important;
+}
+.ummi-card-link:hover { text-decoration: none !important; gap: .7rem; color: #c0622a !important; }
+.ummi-card-link-arrow { display: inline-block; transition: transform 0.25s cubic-bezier(.2,0,0,1); }
+.ummi-card-link:hover .ummi-card-link-arrow { transform: translateX(-3px); }
+
+
+/* ══════════════════════════════════════════════════════
+   RELAYBOT — Neo-Brutalist Themed Card
+   Palette from relaybot-app/src/index.css:
+     Navy        #16324F  |  Cream        #F4E8D0
+     Card cream  #F7EEDC  |  Accent red   #E6492D
+     Term green  #00FF00  |  Teal         #AED4D3
+     Yellow-med  #F6DFA9  |  Brown text   #8B4513
+   Aesthetic: neo-brutalist, heavy borders, hard shadows
+   ══════════════════════════════════════════════════════ */
+.product-card--relay {
+  background:
+    radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, rgba(22,52,70,0.62) 100%),
+    url('/relay-splash-bg.png') center/cover !important;
+  border: 2.5px solid #000 !important;
+  border-radius: 10px !important;
+  box-shadow: 6px 6px 0px rgba(0,0,0,0.5) !important;
+  overflow: hidden; position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.product-card--relay:hover {
+  transform: translate(-3px, -3px) !important;
+  box-shadow: 9px 9px 0px rgba(0,0,0,0.55) !important;
+}
+/* Navy background SVG overlay — teal scanlines + BLE waves */
+.relay-bg-svg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0; opacity: 0.18;
+}
+/* Red-orange hard accent bar */
+.relay-card-accent-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: #E6492D; z-index: 2;
+}
+/* DEV badge */
+.relay-card-dev-badge {
+  position: absolute; top: 13px; left: 16px;
+  font-family: 'Courier New', monospace; font-size: .55rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: #00FF00; background: rgba(0,255,0,0.08);
+  border: 1px solid rgba(0,255,0,0.3); border-radius: 3px;
+  padding: .18rem .5rem; z-index: 3;
+  text-shadow: 0 0 8px rgba(0,255,0,0.6);
+  animation: relay-blink 2.5s step-end infinite;
+}
+@keyframes relay-blink {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.5; }
+}
+/* Content layering */
+.product-card--relay .card-header,
+.product-card--relay .relay-card-title,
+.product-card--relay .relay-card-tagline,
+.product-card--relay .relay-card-desc,
+.product-card--relay .relay-card-tags,
+.product-card--relay .relay-card-link { position: relative; z-index: 2; }
+/* Cream icon box with hard shadow */
+.relay-card-icon {
+  width: 42px; height: 42px;
+  background: #F7EEDC;
+  border: 2px solid #000;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 3px 3px 0px rgba(0,0,0,0.5);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.product-card--relay:hover .relay-card-icon {
+  box-shadow: 4px 4px 0px #E6492D;
+  transform: translate(-1px, -1px);
+}
+/* Status badge */
+.relay-card-status {
+  font-family: 'Courier New', monospace;
+  font-size: .58rem; font-weight: 700; letter-spacing: .1em;
+  color: #AED4D3; border: 1px solid rgba(174,212,211,0.35);
+  border-radius: 3px; padding: .18rem .5rem; background: rgba(174,212,211,0.08);
+}
+/* Text — light on navy */
+.relay-card-title {
+  font-family: 'Arimo', monospace, sans-serif !important;
+  font-size: 1.1rem !important; font-weight: 900 !important; letter-spacing: .08em !important;
+  color: #F4E8D0 !important; margin: .6rem 0 .2rem !important;
+  text-shadow: 2px 3px 0px #000;
+}
+.relay-card-tagline { font-size: .78rem !important; color: #AED4D3 !important; margin-bottom: .55rem !important; font-family: monospace !important; }
+.relay-card-desc    { font-size: .76rem !important; line-height: 1.7 !important; color: #c8b896 !important; margin-bottom: .85rem !important; }
+/* Tags — cream/green/teal variants */
+.relay-card-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.relay-tag {
+  font-family: 'Courier New', monospace;
+  font-size: .58rem; font-weight: 700; letter-spacing: .06em; padding: .18rem .6rem;
+  border-radius: 3px; border: 1.5px solid;
+}
+.relay-tag--green  { color: #00FF00; background: rgba(0,255,0,0.08);    border-color: rgba(0,255,0,0.35);    text-shadow: 0 0 6px rgba(0,255,0,0.4); }
+.relay-tag--cream  { color: #F4E8D0; background: rgba(244,232,208,0.1);  border-color: rgba(244,232,208,0.3); }
+.relay-tag--teal   { color: #AED4D3; background: rgba(174,212,211,0.1);  border-color: rgba(174,212,211,0.3); }
+.relay-tag--red    { color: #E6492D; background: rgba(230,73,45,0.1);    border-color: rgba(230,73,45,0.35);  }
+/* CTA link */
+.relay-card-link {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: 'Courier New', monospace !important;
+  font-size: .72rem !important; font-weight: 700 !important; letter-spacing: .04em;
+  color: #E6492D !important; text-decoration: none;
+  transition: gap 0.15s ease, text-shadow 0.15s ease !important;
+}
+.relay-card-link:hover { gap: .7rem !important; text-decoration: none !important; text-shadow: 2px 2px 0px #000; }
+.relay-card-link-arrow { display: inline-block; transition: transform 0.15s ease; }
+.relay-card-link:hover .relay-card-link-arrow { transform: translateX(-3px); }
+
+
+
+/* ══════════════════════════════════════════════════════
+   QADAA · قضاء — Legal Prestige Dark Card
+   Palette from lawfirm.one/apps/landing/src/app/globals.css:
+     BG midnight   #0B1423  |  Navy deep   #0D1B2E
+     Gold-600      #9E7A20  |  Gold-500    #B8922E
+     Gold-400      #C8A24A  |  Gold-300    #D4B76E
+     Mahogany-950  #2A1E16  |  Leather     #9B6E4A
+     Surface       #E2D5C5  |  Font        Playfair Display + Inter
+   Aesthetic: legal prestige, gold scales, glassmorphism
+   Assets: splash.png (Riyadh skyline golden hour)
+   ══════════════════════════════════════════════════════ */
+.product-card--qadaa {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 35%, rgba(200,162,74,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 0%, rgba(13,27,46,0.98) 0%, #0B1423 100%) !important;
+  border: 1px solid rgba(200,162,74,0.2) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 4px 24px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(200,162,74,0.06) !important;
+  overflow: hidden; position: relative;
+  transition: transform 0.4s cubic-bezier(.25,.46,.45,.94), box-shadow 0.4s ease, border-color 0.4s ease !important;
+}
+.product-card--qadaa:hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(200,162,74,0.45) !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.5),
+    0 0 40px rgba(200,162,74,0.08),
+    inset 0 1px 0 rgba(200,162,74,0.1) !important;
+}
+/* Gold scales + halo SVG overlay */
+.qadaa-bg-svg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+/* Gold shimmer accent bar — matches gold-shimmer animation */
+.qadaa-card-accent-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #9E7A20 15%, #C8A24A 40%, #EAD49E 55%, #C8A24A 70%, #9E7A20 85%, transparent 100%);
+  background-size: 200% 100%;
+  z-index: 2;
+  animation: qadaa-gold-shimmer 4s ease-in-out infinite;
+}
+@keyframes qadaa-gold-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+/* Dev badge */
+.qadaa-card-dev-badge {
+  position: absolute; top: 13px; right: 16px;
+  font-family: 'Inter', sans-serif; font-size: .56rem; font-weight: 600; letter-spacing: .08em;
+  color: #C8A24A; background: rgba(200,162,74,0.08);
+  border: 1px solid rgba(200,162,74,0.22); border-radius: 6px;
+  padding: .18rem .5rem; z-index: 3;
+}
+/* Content layering */
+.product-card--qadaa .card-header,
+.product-card--qadaa .qadaa-card-title,
+.product-card--qadaa .qadaa-card-tagline,
+.product-card--qadaa .qadaa-card-desc,
+.product-card--qadaa .qadaa-card-tags,
+.product-card--qadaa .qadaa-card-link { position: relative; z-index: 2; }
+/* Glass icon box with gold border */
+.qadaa-card-icon {
+  width: 42px; height: 42px;
+  background: rgba(200,162,74,0.07);
+  border: 1px solid rgba(200,162,74,0.25);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 16px rgba(200,162,74,0.1), inset 0 1px 0 rgba(255,255,255,0.04);
+  backdrop-filter: blur(8px);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+  animation: qadaa-pulse-gold 3s ease-in-out infinite;
+}
+@keyframes qadaa-pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200,162,74,0.3), inset 0 1px 0 rgba(255,255,255,0.04); }
+  50%       { box-shadow: 0 0 14px 3px rgba(200,162,74,0.12), inset 0 1px 0 rgba(255,255,255,0.06); }
+}
+.product-card--qadaa:hover .qadaa-card-icon {
+  border-color: rgba(200,162,74,0.5);
+  box-shadow: 0 0 28px rgba(200,162,74,0.22);
+  animation: none;
+}
+/* Status badge */
+.qadaa-card-status {
+  font-family: 'Inter', sans-serif; font-size: .58rem; font-weight: 600; letter-spacing: .06em;
+  color: #D4B76E; background: rgba(212,183,110,0.08);
+  border: 1px solid rgba(212,183,110,0.2); border-radius: 6px;
+  padding: .18rem .5rem;
+}
+/* Playfair Display title — gold gradient text */
+.qadaa-card-title {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 1.1rem !important; font-weight: 700 !important; letter-spacing: .02em !important;
+  background: linear-gradient(135deg, #9E7A20 0%, #C8A24A 50%, #9E7A20 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: .6rem 0 .2rem !important;
+  text-shadow: none !important;
+}
+.qadaa-card-tagline {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: .78rem !important; font-style: italic; color: #D4B76E !important;
+  margin-bottom: .5rem !important; letter-spacing: .04em;
+}
+.qadaa-card-desc { font-size: .75rem !important; line-height: 1.75 !important; color: rgba(226,213,197,0.65) !important; margin-bottom: .85rem !important; }
+/* Tags */
+.qadaa-card-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.qadaa-tag { font-family: 'Inter', sans-serif; font-size: .58rem; font-weight: 600; letter-spacing: .04em; padding: .2rem .65rem; border-radius: 20px; border: 1px solid; }
+.qadaa-tag--gold     { color: #C8A24A; background: rgba(200,162,74,0.1);  border-color: rgba(200,162,74,0.3); }
+.qadaa-tag--mahogany { color: #B8A090; background: rgba(90,69,56,0.2);    border-color: rgba(123,94,77,0.3);  }
+/* CTA link */
+.qadaa-card-link {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: .78rem !important; font-weight: 700 !important;
+  color: #C8A24A !important; text-decoration: none;
+  transition: gap 0.3s ease, text-shadow 0.3s ease !important;
+}
+.qadaa-card-link:hover { gap: .7rem !important; text-decoration: none !important; text-shadow: 0 0 16px rgba(200,162,74,0.5); }
+.qadaa-card-link-arrow { display: inline-block; transition: transform 0.3s cubic-bezier(.25,.46,.45,.94); }
+.qadaa-card-link:hover .qadaa-card-link-arrow { transform: translateX(-3px); }
+
+
+/* ══════════════════════════════════════════════════════
+   ROGER·AI — Neo-Retro Military Command Card
+   Palette from rogerAI/src/index.css:
+     BG gunmetal  #1a1f1e  |  Elevated   #242827
+     Amber gold   #d4a044  |  Amber dim  rgba(212,160,68,0.2)
+     Mil. green   #5a9c69  |  Burnt rust #a84832
+     Field olive  #4a5240  |  Parchment  #e8e5d8
+     Khaki gray   #9a9785  |  Font       Inter + JetBrains Mono
+   Aesthetic: 1970s NASA Mission Control, walkie-talkie PTT
+   Splash bg: gunmetal leather texture + amber ember sparks
+   ══════════════════════════════════════════════════════ */
+.product-card--roger {
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 40%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 60%, transparent 100%),
+    url('/roger-splash-bg.png') center/cover !important;
+  border: 1px solid rgba(212,160,68,0.22) !important;
+  border-radius: 6px !important;
+  box-shadow:
+    0 4px 24px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(212,160,68,0.08) !important;
+  overflow: hidden; position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
+}
+.product-card--roger:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(212,160,68,0.45) !important;
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.55),
+    0 0 30px rgba(212,160,68,0.1),
+    inset 0 1px 0 rgba(212,160,68,0.12) !important;
+}
+/* HUD SVG overlay */
+.roger-hud-svg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+/* Amber command accent bar with LED flicker */
+.roger-card-accent-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #a84832 10%, #d4a044 40%, #e8c068 55%, #d4a044 70%, transparent 100%);
+  z-index: 2;
+  animation: roger-amber-flicker 8s ease-in-out infinite;
+}
+@keyframes roger-amber-flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96%           { opacity: 0.7; }
+  97%           { opacity: 1; }
+  98%           { opacity: 0.8; }
+}
+/* Testing badge */
+.roger-card-test-badge {
+  position: absolute; top: 13px; left: 16px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: .52rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: #d4a044; background: rgba(212,160,68,0.08);
+  border: 1px solid rgba(212,160,68,0.3); border-radius: 2px;
+  padding: .18rem .5rem; z-index: 3;
+  text-shadow: 0 0 8px rgba(212,160,68,0.5);
+  animation: roger-led-pulse 2s ease-in-out infinite;
+}
+@keyframes roger-led-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+/* Featured badge */
+.roger-card-featured {
+  position: absolute; top: 13px; right: 16px;
+  font-family: 'JetBrains Mono', monospace; font-size: .56rem; font-weight: 700; letter-spacing: .08em;
+  color: #e8e5d8; background: rgba(74,82,64,0.3);
+  border: 1px solid rgba(74,82,64,0.5); border-radius: 2px;
+  padding: .18rem .5rem; z-index: 3;
+}
+/* Content layering */
+.product-card--roger .card-header,
+.product-card--roger .roger-card-title,
+.product-card--roger .roger-card-tagline,
+.product-card--roger .roger-card-desc,
+.product-card--roger .roger-card-tags,
+.product-card--roger .roger-card-link { position: relative; z-index: 2; }
+/* Gunmetal icon box — amber glow on hover */
+.roger-card-icon {
+  width: 42px; height: 42px;
+  background: rgba(36,40,39,0.85);
+  border: 1px solid rgba(212,160,68,0.3);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 12px rgba(212,160,68,0.1), inset 0 1px 0 rgba(255,255,255,0.04);
+  backdrop-filter: blur(4px);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.product-card--roger:hover .roger-card-icon {
+  border-color: rgba(212,160,68,0.6);
+  box-shadow: 0 0 20px rgba(212,160,68,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+/* Status badge */
+.roger-card-status {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: .56rem; font-weight: 600; letter-spacing: .1em;
+  color: #d4a044; background: rgba(212,160,68,0.08);
+  border: 1px solid rgba(212,160,68,0.25); border-radius: 2px;
+  padding: .18rem .5rem;
+  text-shadow: 0 0 6px rgba(212,160,68,0.4);
+}
+/* Text — parchment on gunmetal */
+.roger-card-title {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 1.08rem !important; font-weight: 800 !important; letter-spacing: .1em !important;
+  color: #e8e5d8 !important; margin: .6rem 0 .2rem !important;
+  text-shadow: 0 0 16px rgba(212,160,68,0.2), 0 1px 4px rgba(0,0,0,0.6);
+}
+.roger-card-tagline { font-size: .76rem !important; color: #d4a044 !important; margin-bottom: .5rem !important; font-family: 'JetBrains Mono', monospace !important; letter-spacing: .04em; }
+.roger-card-desc    { font-size: .74rem !important; line-height: 1.72 !important; color: #9a9785 !important; margin-bottom: .85rem !important; }
+/* Tags — amber/green/olive */
+.roger-card-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.roger-tag {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: .56rem; font-weight: 600; letter-spacing: .06em; padding: .18rem .6rem;
+  border-radius: 2px; border: 1px solid;
+}
+.roger-tag--amber { color: #d4a044; background: rgba(212,160,68,0.1);  border-color: rgba(212,160,68,0.3); text-shadow: 0 0 5px rgba(212,160,68,0.3); }
+.roger-tag--green { color: #5a9c69; background: rgba(90,156,105,0.08); border-color: rgba(90,156,105,0.3); }
+.roger-tag--olive { color: #9a9785; background: rgba(74,82,64,0.15);   border-color: rgba(74,82,64,0.4);   }
+/* CTA link */
+.roger-card-link {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: .7rem !important; font-weight: 700 !important; letter-spacing: .05em;
+  color: #d4a044 !important; text-decoration: none;
+  transition: gap 0.2s ease, text-shadow 0.2s ease !important;
+}
+.roger-card-link:hover { gap: .7rem !important; text-decoration: none !important; text-shadow: 0 0 12px rgba(212,160,68,0.6); }
+.roger-card-link-arrow { display: inline-block; transition: transform 0.2s ease; }
+.roger-card-link:hover .roger-card-link-arrow { transform: translateX(-3px); }
+
+
+/* ══════════════════════════════════════════════════════
+   CLINIQ.ONE — Medical Dark Space Card
+   Palette from SplashPage.tsx + index.css:
+     BG space     #0A0E1A  |  Overlay  rgba(10,14,26,0.45)
+     Teal CTA     #1A8A9E  →  #0F766E  →  #0D9488
+     Glow cyan    #0ECFCF  |  Cyan2    #3EC6D5  |  #2DD4BF
+     Amber beta   #F59E0B  |  Font     Inter
+   Aesthetic: dark medical SaaS, glassmorphism premium
+   ══════════════════════════════════════════════════════ */
+.product-card--cliniq {
+  background:
+    radial-gradient(ellipse 80% 70% at 88% 8%,  rgba(14,207,207,0.09) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 5% 95%,  rgba(26,138,158,0.08) 0%, transparent 50%),
+    #0A0E1A !important;
+  border: 1px solid rgba(14,207,207,0.15) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 4px 24px rgba(14,207,207,0.06),
+    0 0 0 1px rgba(14,207,207,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.04) !important;
+  overflow: hidden; position: relative;
+  transition: transform 0.35s cubic-bezier(.2,0,0,1), box-shadow 0.35s ease, border-color 0.35s ease !important;
+}
+.product-card--cliniq:hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(14,207,207,0.3) !important;
+  box-shadow:
+    0 20px 60px rgba(14,207,207,0.12),
+    0 0 40px rgba(26,138,158,0.1),
+    0 0 0 1px rgba(14,207,207,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+/* Nebula SVG overlay */
+.cliniq-bg-svg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+/* Animated teal-to-cyan shimmer accent bar — matches ctaShimmer */
+.cliniq-card-accent-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #1A8A9E 25%, #0ECFCF 60%, #2DD4BF 85%, transparent 100%);
+  z-index: 2;
+  overflow: hidden;
+}
+.cliniq-card-accent-bar::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+  animation: cliniq-shimmer 2.5s ease-in-out infinite;
+}
+@keyframes cliniq-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+/* LIVE badge */
+.cliniq-card-live-badge {
+  position: absolute; top: 14px; left: 16px;
+  font-family: 'Inter', sans-serif; font-size: .55rem; font-weight: 700; letter-spacing: .1em;
+  color: #22c55e; background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.22); border-radius: 4px;
+  padding: .18rem .5rem; z-index: 3;
+}
+/* Featured badge */
+.cliniq-card-featured {
+  position: absolute; top: 14px; right: 16px;
+  font-family: 'Inter', sans-serif; font-size: .58rem; font-weight: 700; letter-spacing: .08em;
+  color: #F59E0B; background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.22); border-radius: 4px;
+  padding: .18rem .5rem; z-index: 3;
+  animation: cliniq-amber-pulse 3s ease-in-out infinite;
+}
+@keyframes cliniq-amber-pulse {
+  0%, 100% { opacity: 0.7; } 50% { opacity: 1; }
+}
+/* Content layering */
+.product-card--cliniq .card-header,
+.product-card--cliniq .cliniq-card-title,
+.product-card--cliniq .cliniq-card-tagline,
+.product-card--cliniq .cliniq-card-desc,
+.product-card--cliniq .cliniq-card-tags,
+.product-card--cliniq .cliniq-card-link { position: relative; z-index: 2; }
+/* EKG icon box — glass premium on dark */
+.cliniq-card-icon {
+  width: 42px; height: 42px;
+  background: rgba(14,207,207,0.08);
+  border: 1px solid rgba(14,207,207,0.2);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 16px rgba(14,207,207,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+  animation: cliniq-ekg-glow 3s ease-in-out infinite;
+}
+@keyframes cliniq-ekg-glow {
+  0%, 100% { box-shadow: 0 0 12px rgba(14,207,207,0.1), inset 0 1px 0 rgba(255,255,255,0.05); }
+  50%       { box-shadow: 0 0 24px rgba(14,207,207,0.25), inset 0 1px 0 rgba(255,255,255,0.08); }
+}
+.product-card--cliniq:hover .cliniq-card-icon {
+  background: rgba(14,207,207,0.14);
+  box-shadow: 0 0 30px rgba(14,207,207,0.3);
+  animation: none;
+}
+/* Status badge */
+.cliniq-card-status {
+  font-family: 'Inter', sans-serif; font-size: .58rem; font-weight: 600; letter-spacing: .06em;
+  color: #3EC6D5; background: rgba(62,198,213,0.08);
+  border: 1px solid rgba(62,198,213,0.2); border-radius: 4px;
+  padding: .18rem .5rem;
+}
+/* Text — light on deep space */
+.cliniq-card-title {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 1.05rem !important; font-weight: 800 !important; letter-spacing: .04em !important;
+  color: #F1F5F9 !important; margin: .6rem 0 .2rem !important;
+  text-shadow: 0 0 20px rgba(14,207,207,0.2);
+}
+.cliniq-card-tagline { font-size: .78rem !important; color: #3EC6D5 !important; margin-bottom: .55rem !important; font-family: 'Inter', sans-serif !important; }
+.cliniq-card-desc    { font-size: .76rem !important; line-height: 1.75 !important; color: #94A3B8 !important; margin-bottom: .85rem !important; }
+/* Tags */
+.cliniq-card-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.cliniq-tag { font-family: 'Inter', sans-serif; font-size: .58rem; font-weight: 600; letter-spacing: .04em; padding: .2rem .65rem; border-radius: 20px; }
+.cliniq-tag--teal  { color: #2DD4BF; background: rgba(45,212,191,0.1);  border: 1px solid rgba(45,212,191,0.22); }
+.cliniq-tag--cyan  { color: #0ECFCF; background: rgba(14,207,207,0.08); border: 1px solid rgba(14,207,207,0.2);  }
+.cliniq-tag--amber { color: #F59E0B; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);  }
+/* CTA link — teal shimmer */
+.cliniq-card-link {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: 'Inter', sans-serif !important;
+  font-size: .76rem !important; font-weight: 700 !important;
+  color: #0ECFCF !important; text-decoration: none;
+  transition: gap 0.25s ease, text-shadow 0.25s ease !important;
+}
+.cliniq-card-link:hover { gap: .7rem !important; text-decoration: none !important; text-shadow: 0 0 14px rgba(14,207,207,0.6); }
+.cliniq-card-link-arrow { display: inline-block; transition: transform 0.25s cubic-bezier(.2,0,0,1); }
+.cliniq-card-link:hover .cliniq-card-link-arrow { transform: translateX(-3px); }
+
+
+
 
 /* ══════════════════════════
    INVESTOR PORTFOLIO LAYER
@@ -635,6 +1368,7 @@
   cursor: pointer; pointer-events: all;
   transition: opacity .3s;
   opacity: 1;
+  z-index: -1; /* sit behind the nav bar so it doesn't overlap it */
 }
 #investor-bar.inv-bar-hidden::after {
   /* When bar is hidden, tab stays at the very top edge */

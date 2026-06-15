@@ -19,6 +19,15 @@ function staticSubSites() {
             return
           }
         }
+        // /tdc or /tdc/ → serve public/tdc/index.html
+        if (url === '/tdc' || url === '/tdc/') {
+          const file = resolve(__dirname, 'public/tdc/index.html')
+          if (fs.existsSync(file)) {
+            res.setHeader('Content-Type', 'text/html')
+            res.end(fs.readFileSync(file, 'utf-8'))
+            return
+          }
+        }
         next()
       })
     }

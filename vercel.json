@@ -22,7 +22,9 @@
   "rewrites": [
     { "source": "/home",     "destination": "/index.html" },
     { "source": "/rogerai",  "destination": "/index.html" },
-    { "source": "/tdc",      "destination": "/index.html" },
+    { "source": "/tdc",      "destination": "/tdc/index.html" },
+    { "source": "/tdc/",     "destination": "/tdc/index.html" },
+    { "source": "/tdc/:path*", "destination": "/tdc/:path*" },
     { "source": "/edgetack", "destination": "/index.html" },
     { "source": "/ummiwallet",          "destination": "/ummiwallet/index.html" },
     { "source": "/ummiwallet/",         "destination": "/ummiwallet/index.html" },

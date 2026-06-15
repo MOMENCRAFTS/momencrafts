@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 export interface InvestorData {
   name: string
@@ -44,7 +44,10 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'mcr-store',
+      // Use sessionStorage instead of localStorage — session ends when tab closes
+      storage: createJSONStorage(() => sessionStorage),
       partialize: (s) => ({ lang: s.lang, token: s.token, investorData: s.investorData }),
     }
   )
 )
+
