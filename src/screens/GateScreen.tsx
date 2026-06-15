@@ -2,7 +2,11 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
 import { verifyToken } from '@/services/supabase'
+import { CoFounderWelcome } from '@/components/CoFounderWelcome'
 import '@/styles/gate.css'
+
+/* Co-founder token types → celebration screen */
+const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER'])
 
 /* ── Bilingual strings ─────────────────────────────────── */
 const INSIGHTS_EN = [
@@ -177,8 +181,9 @@ export default function GateScreen() {
   const [loading, setLoading]       = useState(false)
   const [inputState, setInputState] = useState<'default' | 'error' | 'success'>('default')
   const [insightIdx, setInsightIdx] = useState(0)
-  const [showNDA, setShowNDA]       = useState(false)
-  const [vaultOpen, setVaultOpen]   = useState(false)
+  const [showNDA,        setShowNDA]        = useState(false)
+  const [vaultOpen,      setVaultOpen]      = useState(false)
+  const [showCoFounder,  setShowCoFounder]  = useState(false)
   const [pendingData, setPendingData] = useState<{ token: string; name?: string; type: string; expires?: string | null; session: string } | null>(null)
 
   const insights = lang === 'ar' ? INSIGHTS_AR : INSIGHTS_EN
@@ -247,8 +252,8 @@ export default function GateScreen() {
   const acceptNDA = async () => {
     if (!pendingData) return
     setShowNDA(false)
-    setVaultOpen(true)
-    // Finalise session
+
+    // Finalise session in store + sessionStorage
     sessionStorage.setItem('mcr_investor', '1')
     sessionStorage.setItem('mcr_ts', new Date().toISOString())
     setToken(pendingData.token, {
@@ -259,11 +264,26 @@ export default function GateScreen() {
       session: pendingData.session,
       valid: true,
     })
+
     // Track NDA acceptance (fire-and-forget)
     fetch('https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/track-event', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: pendingData.token, event: 'nda_accepted', sessionId: pendingData.session }),
     }).catch(() => {})
+
+    // Co-founder celebration screen for PERMANENT / STRATEGIC tokens
+    if (COFOUNDER_TYPES.has(pendingData.type)) {
+      setShowCoFounder(true)
+    } else {
+      // Regular investors → vault flash then home
+      setVaultOpen(true)
+      setTimeout(() => navigate('/home'), 500)
+    }
+  }
+
+  const handleCoFounderEnter = () => {
+    setShowCoFounder(false)
+    setVaultOpen(true)
     setTimeout(() => navigate('/home'), 500)
   }
 
@@ -408,6 +428,15 @@ export default function GateScreen() {
           lang={lang}
           onAccept={acceptNDA}
           onDecline={declineNDA}
+        />
+      )}
+
+      {/* Co-Founder Welcome Overlay — PERMANENT / STRATEGIC tokens only */}
+      {showCoFounder && pendingData && (
+        <CoFounderWelcome
+          name={pendingData.name}
+          lang={lang}
+          onEnter={handleCoFounderEnter}
         />
       )}
 

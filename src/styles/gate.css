@@ -627,3 +627,174 @@ body:has(.gate-layout) {
   .lang-toggle { top: 1rem; left: 1rem; }
   .token-card { max-width: 100%; }
 }
+
+/* ══════════════════════════════════════════════════════
+   CO-FOUNDER WELCOME OVERLAY
+   Fires after NDA acceptance for PERMANENT / STRATEGIC tokens.
+   z-index: 9500 (above NDA at 9000, below vault at 9999)
+   ══════════════════════════════════════════════════════ */
+@keyframes cofound-fade-in    { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cofound-scale-in   { from { opacity: 0; transform: scale(.88) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes cofound-seal-pop   { 0% { transform: scale(0) rotate(-20deg); opacity: 0; } 60% { transform: scale(1.12) rotate(4deg); } 80% { transform: scale(.96) rotate(-2deg); } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+@keyframes cofound-ring-pulse { 0%, 100% { transform: scale(1); opacity: .5; } 50% { transform: scale(1.18); opacity: .18; } }
+@keyframes cofound-shimmer    { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes cofound-badge-dot  { 0%, 100% { box-shadow: 0 0 0 0 rgba(200,169,110,.6); } 50% { box-shadow: 0 0 0 8px rgba(200,169,110,0); } }
+@keyframes cofound-content-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+.cofound-overlay {
+  position: fixed; inset: 0;
+  background: rgba(8,7,6,.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 9500;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: max(2rem, env(safe-area-inset-top)) 1rem max(2rem, env(safe-area-inset-bottom));
+}
+.cofound-overlay--in {
+  opacity: 1; pointer-events: all;
+  animation: cofound-fade-in .55s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+.cofound-confetti-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+.cofound-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(200,169,110,.08) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+.cofound-card {
+  position: relative; z-index: 1;
+  background: linear-gradient(145deg, rgba(26,22,20,.98) 0%, rgba(17,16,8,.97) 100%);
+  border: 1px solid rgba(200,169,110,.22);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  max-width: 560px; width: 92%;
+  box-shadow:
+    0 40px 100px rgba(0,0,0,.7),
+    0 0 60px rgba(200,169,110,.06),
+    inset 0 1px 0 rgba(200,169,110,.08);
+  text-align: center;
+  opacity: 0;
+  flex-shrink: 0; margin: auto;
+}
+.cofound-card--in { animation: cofound-scale-in .7s cubic-bezier(.34,1.56,.64,1) .1s forwards; }
+
+.cofound-seal {
+  position: relative;
+  width: 82px; height: 82px;
+  margin: 0 auto 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+}
+.cofound-seal--in { animation: cofound-seal-pop .65s cubic-bezier(.34,1.56,.64,1) .3s forwards; }
+.cofound-seal-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(200,169,110,.35);
+}
+.cofound-seal-ring--1 { animation: cofound-ring-pulse 2.4s ease-in-out infinite; }
+.cofound-seal-ring--2 { inset: -10px; border-color: rgba(200,169,110,.15); animation: cofound-ring-pulse 2.4s ease-in-out .6s infinite; }
+.cofound-seal-mark {
+  font-size: 2.4rem; color: var(--g-gold); line-height: 1;
+  text-shadow: 0 0 30px rgba(200,169,110,.5), 0 0 60px rgba(200,169,110,.2);
+}
+
+.cofound-registry-label {
+  font-family: var(--g-font-mono);
+  font-size: .62rem; letter-spacing: .22em;
+  color: rgba(200,169,110,.5);
+  margin-bottom: 1.1rem; opacity: 0;
+}
+.cofound-name-plate {
+  display: flex; flex-direction: column; gap: .25rem;
+  background: rgba(200,169,110,.06);
+  border: 1px solid rgba(200,169,110,.18);
+  border-radius: 10px; padding: .75rem 1.25rem;
+  margin-bottom: 1.25rem; opacity: 0;
+}
+.cofound-name-label {
+  font-family: var(--g-font-mono); font-size: .6rem; letter-spacing: .18em;
+  color: rgba(200,169,110,.5);
+}
+.cofound-name-value {
+  font-family: var(--g-font-sans); font-size: 1.1rem; font-weight: 700; color: var(--g-cream);
+}
+.cofound-headline {
+  font-family: var(--g-font-serif);
+  font-size: clamp(1.65rem, 5vw, 2.4rem); font-weight: 900;
+  line-height: 1.15; margin-bottom: 1.25rem; opacity: 0;
+}
+.cofound-headline-line { display: block; color: var(--g-cream); }
+.cofound-headline-gold {
+  display: block; font-style: italic;
+  background: linear-gradient(135deg, #C8A96E 0%, #EAD5A0 35%, #C8A96E 60%, #D4B87A 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: cofound-shimmer 3.5s ease-in-out infinite;
+}
+.cofound-body-wrap { opacity: 0; margin-bottom: 1.5rem; }
+.cofound-body {
+  font-family: var(--g-font-sans); font-size: .9rem; line-height: 1.75;
+  color: rgba(240,235,227,.65);
+}
+.cofound-body--ar {
+  font-family: var(--g-font-ar); direction: rtl; text-align: right; font-size: .92rem;
+}
+.cofound-body strong { color: var(--g-cream); font-weight: 600; }
+.cofound-winwin { color: var(--g-gold) !important; font-weight: 800 !important; letter-spacing: .04em; }
+
+.cofound-badge {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--g-font-sans); font-size: .72rem; font-weight: 500;
+  color: var(--g-gold);
+  background: rgba(200,169,110,.07); border: 1px solid rgba(200,169,110,.2);
+  border-radius: 999px; padding: .4rem 1.1rem; margin-bottom: 1.75rem; opacity: 0;
+}
+.cofound-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--g-gold);
+  animation: cofound-badge-dot 2s ease-in-out infinite; flex-shrink: 0;
+}
+.cofound-cta {
+  width: 100%; padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #9B7A28 0%, var(--g-gold) 50%, #A8852E 100%);
+  background-size: 200% 200%;
+  color: #0C0A09;
+  font-family: var(--g-font-sans); font-size: .95rem; font-weight: 700; letter-spacing: .04em;
+  border: none; border-radius: 10px; cursor: pointer;
+  transition: transform .2s ease, box-shadow .3s ease;
+  box-shadow: 0 4px 24px rgba(200,169,110,.25);
+  margin-bottom: 1.5rem; opacity: 0;
+  animation: cofound-shimmer 3.5s ease-in-out infinite;
+}
+.cofound-cta:hover { transform: translateY(-2px) scale(1.01); box-shadow: 0 10px 40px rgba(200,169,110,.45); }
+.cofound-cta:active { transform: translateY(0) scale(.99); }
+.cofound-divider {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,169,110,.15), transparent);
+  margin-bottom: 1rem;
+}
+.cofound-footer {
+  font-family: var(--g-font-mono); font-size: .62rem; letter-spacing: .1em;
+  color: rgba(240,235,227,.2);
+}
+.cofound-content--in { animation: cofound-content-in .55s cubic-bezier(.25,.46,.45,.94) forwards; }
+.cofound-content--delay-1 { animation-delay: .05s; }
+.cofound-content--delay-2 { animation-delay: .12s; }
+.cofound-content--delay-3 { animation-delay: .2s;  }
+.cofound-content--delay-4 { animation-delay: .28s; }
+.cofound-content--delay-5 { animation-delay: .36s; }
+
+@media (max-width: 600px) {
+  .cofound-card { padding: 2rem 1.25rem; border-radius: 16px; }
+  .cofound-headline { font-size: 1.5rem; }
+  .cofound-seal { width: 64px; height: 64px; }
+  .cofound-seal-mark { font-size: 1.9rem; }
+}
+
