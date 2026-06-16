@@ -6,7 +6,7 @@ import { CoFounderWelcome } from '@/components/CoFounderWelcome'
 import '@/styles/gate.css'
 
 /* Co-founder token types → celebration screen */
-const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER'])
+const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER', 'FOUNDER'])
 
 /* ── Bilingual strings ─────────────────────────────────── */
 const INSIGHTS_EN = [
@@ -35,8 +35,11 @@ const INSIGHTS_AR = [
 ]
 
 const TYPE_LABELS: Record<string, string> = {
+  HALF_HOUR: '30-Minute Access',
   HOUR: '1-Hour Access', WEEK: '7-Day Access', MONTH: '30-Day Access',
-  STRATEGIC: 'Strategic Partner', PERMANENT: 'Permanent Access',
+  '3MONTH': '90-Day Access',
+  STRATEGIC: 'Strategic Partner', COFOUNDER: 'Co-Founder',
+  PERMANENT: 'Permanent Access', FOUNDER: 'Founder',
 }
 
 /* ── Particle canvas hook ──────────────────────────────── */
@@ -198,6 +201,28 @@ export default function GateScreen() {
   useEffect(() => {
     const t = setTimeout(() => document.getElementById('tokenInput')?.focus(), 300)
     return () => clearTimeout(t)
+  }, [])
+
+  // Auto-fill token from URL param (?token=MCR-XXXXXXXX) — from Request Access flow
+  const autoSubmitRef = useRef(false)
+  useEffect(() => {
+    if (autoSubmitRef.current) return
+    const params = new URLSearchParams(window.location.search)
+    const urlToken = params.get('token')
+    if (urlToken && /^MCR-[A-Z0-9]{8}$/.test(urlToken.toUpperCase())) {
+      autoSubmitRef.current = true
+      setTokenVal(urlToken.toUpperCase())
+      setInputState('default')
+      // Clean URL without reload
+      window.history.replaceState({}, '', '/')
+      // Auto-submit after brief delay so user sees the token filled in
+      setTimeout(() => {
+        document.getElementById('tokenInput')?.focus()
+        // Trigger submit programmatically
+        const submitBtn = document.querySelector('.token-submit') as HTMLButtonElement
+        submitBtn?.click()
+      }, 600)
+    }
   }, [])
 
   // Update html dir on lang change

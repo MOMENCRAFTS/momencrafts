@@ -124,6 +124,9 @@
         <a href="#products" id="hero-cta-primary" class="btn btn-primary">
           Explore Our Work <span class="btn-arrow">â†’</span>
         </a>
+        <button type="button" id="hero-request-access" class="btn btn-request" onclick="openRequestModal()">
+          Request Access <span class="btn-arrow">â†’</span>
+        </button>
         <a href="#about" id="hero-cta-secondary" class="btn btn-ghost">About the Studio</a>
       </div>
 
@@ -582,6 +585,132 @@
       </div>
     </div>
   </footer>
+
+  <!-- Request Access Modal -->
+  <div id="request-modal" class="ra-overlay" role="dialog" aria-modal="true" aria-labelledby="ra-title" style="display:none">
+    <div class="ra-backdrop" onclick="closeRequestModal()"></div>
+    <div class="ra-card">
+      <button class="ra-close" onclick="closeRequestModal()" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Step Indicator -->
+      <div class="ra-steps">
+        <div class="ra-step active" id="ra-step-dot-1"><span>1</span></div>
+        <div class="ra-step-line"></div>
+        <div class="ra-step" id="ra-step-dot-2"><span>2</span></div>
+        <div class="ra-step-line"></div>
+        <div class="ra-step" id="ra-step-dot-3"><span>3</span></div>
+      </div>
+
+      <!-- STEP 1: Info -->
+      <div id="ra-step-1" class="ra-step-panel">
+        <div class="ra-badge">REQUEST ACCESS</div>
+        <h2 id="ra-title" class="ra-heading">Get <em>Studio Access</em></h2>
+        <p class="ra-sub">Enter your details and verify your phone number to receive a 30-minute access token.</p>
+
+        <div class="ra-form">
+          <div class="ra-field">
+            <label for="ra-name">FULL NAME *</label>
+            <input type="text" id="ra-name" placeholder="Your full name" required autocomplete="name" />
+          </div>
+          <div class="ra-field">
+            <label for="ra-email">EMAIL *</label>
+            <input type="email" id="ra-email" placeholder="your@email.com" required autocomplete="email" />
+          </div>
+          <div class="ra-field">
+            <label for="ra-phone">PHONE NUMBER *</label>
+            <div class="ra-phone-wrap">
+              <select id="ra-country-code" aria-label="Country code">
+                <option value="+966" selected>🇸🇦 +966</option>
+                <option value="+971">🇦🇪 +971</option>
+                <option value="+973">🇧🇭 +973</option>
+                <option value="+974">🇶🇦 +974</option>
+                <option value="+965">🇰🇼 +965</option>
+                <option value="+968">🇴🇲 +968</option>
+                <option value="+20">🇪🇬 +20</option>
+                <option value="+962">🇯🇴 +962</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+49">🇩🇪 +49</option>
+                <option value="+33">🇫🇷 +33</option>
+                <option value="+91">🇮🇳 +91</option>
+                <option value="+86">🇨🇳 +86</option>
+                <option value="+81">🇯🇵 +81</option>
+                <option value="+82">🇰🇷 +82</option>
+              </select>
+              <input type="tel" id="ra-phone" placeholder="5XXXXXXXX" required autocomplete="tel" inputmode="tel" />
+            </div>
+          </div>
+          <div class="ra-field">
+            <label for="ra-company">COMPANY / ROLE <span class="ra-optional">(optional)</span></label>
+            <input type="text" id="ra-company" placeholder="Your company or role" autocomplete="organization" />
+          </div>
+        </div>
+
+        <div id="ra-error-1" class="ra-error" role="alert"></div>
+
+        <button type="button" id="ra-submit-info" class="ra-btn" onclick="submitRequestInfo()">
+          <span class="ra-btn-text">Send Verification Code →</span>
+          <span class="ra-btn-spinner"></span>
+        </button>
+      </div>
+
+      <!-- STEP 2: OTP Verify -->
+      <div id="ra-step-2" class="ra-step-panel" style="display:none">
+        <div class="ra-badge">VERIFY PHONE</div>
+        <h2 class="ra-heading">Enter <em>Code</em></h2>
+        <p class="ra-sub">We sent a 6-digit code to <strong id="ra-phone-display"></strong></p>
+
+        <div class="ra-otp-wrap">
+          <input type="text" class="ra-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="0" autofocus />
+          <input type="text" class="ra-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="1" />
+          <input type="text" class="ra-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="2" />
+          <span class="ra-otp-sep">—</span>
+          <input type="text" class="ra-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="3" />
+          <input type="text" class="ra-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="4" />
+          <input type="text" class="ra-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="5" />
+        </div>
+
+        <div id="ra-error-2" class="ra-error" role="alert"></div>
+
+        <button type="button" id="ra-submit-otp" class="ra-btn" onclick="submitOTP()">
+          <span class="ra-btn-text">Verify & Get Token →</span>
+          <span class="ra-btn-spinner"></span>
+        </button>
+
+        <div class="ra-resend-row">
+          <span id="ra-resend-timer">Resend in 60s</span>
+          <button type="button" id="ra-resend-btn" class="ra-resend" onclick="resendOTP()" disabled>Resend Code</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Success -->
+      <div id="ra-step-3" class="ra-step-panel" style="display:none">
+        <div class="ra-success-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00A651" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="ra-badge ra-badge-success">ACCESS GRANTED</div>
+        <h2 class="ra-heading">Welcome, <em id="ra-welcome-name"></em></h2>
+        <p class="ra-sub">Your 30-minute access token has been generated.</p>
+
+        <div class="ra-token-display">
+          <span class="ra-token-label">YOUR ACCESS TOKEN</span>
+          <span class="ra-token-value" id="ra-token-value"></span>
+          <span class="ra-token-expiry" id="ra-token-expiry"></span>
+        </div>
+
+        <button type="button" id="ra-enter-studio" class="ra-btn ra-btn-success" onclick="enterStudio()">
+          Enter the Studio →
+        </button>
+
+        <p class="ra-success-note">A notification has been sent to the studio. Your session is logged.</p>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 

@@ -116,3 +116,309 @@ body{background:#fff;color:var(--txt);background-image:none}
 
 /* PROGRESS BAR */
 #progress-bar{background:linear-gradient(90deg,var(--cr),var(--cr-deep))}
+
+/* ═══════════════════════════════════════════════════════════
+   REQUEST ACCESS — Button + Modal
+   ═══════════════════════════════════════════════════════════ */
+
+/* Hero CTA — Request Access button */
+.btn-request{
+  background:var(--gr)!important;color:#fff!important;
+  border:1px solid var(--gr)!important;
+  box-shadow:0 0 0 0 rgba(0,108,53,0);
+  transition:all .3s ease;
+  position:relative;overflow:hidden;
+}
+.btn-request:hover{
+  background:var(--gr-bright)!important;
+  box-shadow:0 8px 24px rgba(0,166,81,.3)!important;
+  transform:translateY(-2px);
+}
+.btn-request:active{transform:none;box-shadow:none!important}
+.btn-request::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.15) 50%,transparent 70%);
+  transform:translateX(-100%);transition:transform .5s;
+}
+.btn-request:hover::before{transform:translateX(100%)}
+
+/* ── Modal Overlay ── */
+.ra-overlay{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+}
+.ra-backdrop{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  animation:raFadeIn .3s ease;
+}
+.ra-card{
+  position:relative;z-index:1;
+  width:100%;max-width:480px;
+  background:#fff;
+  border:1px solid rgba(181,0,15,.15);
+  border-radius:16px;
+  padding:2rem 2rem 1.75rem;
+  box-shadow:0 24px 64px rgba(0,0,0,.25),0 0 0 1px rgba(181,0,15,.08);
+  animation:raSlideUp .4s cubic-bezier(.34,1.56,.64,1);
+  max-height:90vh;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.ra-close{
+  position:absolute;top:1rem;right:1rem;
+  background:none;border:none;cursor:pointer;
+  color:var(--txt-3);padding:.25rem;
+  border-radius:6px;transition:all .2s;
+}
+.ra-close:hover{color:var(--cr);background:var(--cr-pale)}
+
+/* ── Step Indicator ── */
+.ra-steps{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;margin-bottom:1.75rem;
+}
+.ra-step{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;
+  border:2px solid rgba(181,0,15,.15);
+  color:var(--txt-3);background:#fff;
+  transition:all .3s ease;
+}
+.ra-step.active{
+  border-color:var(--cr);color:#fff;
+  background:var(--cr);
+  box-shadow:0 0 0 4px rgba(181,0,15,.12);
+}
+.ra-step.done{
+  border-color:var(--gr);color:#fff;
+  background:var(--gr);
+}
+.ra-step-line{
+  width:32px;height:2px;
+  background:rgba(181,0,15,.12);
+  margin:0 4px;
+  transition:background .3s;
+}
+.ra-step.done ~ .ra-step-line,
+.ra-step.done + .ra-step-line{background:var(--gr)}
+
+/* ── Badge ── */
+.ra-badge{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;letter-spacing:.2em;font-weight:600;
+  color:var(--cr);
+  margin-bottom:.5rem;
+}
+.ra-badge-success{color:var(--gr)!important}
+
+/* ── Heading ── */
+.ra-heading{
+  font-family:'Playfair Display',serif;
+  font-size:1.75rem;font-weight:700;
+  color:var(--txt);
+  margin:0 0 .5rem;line-height:1.2;
+}
+.ra-heading em{color:var(--cr);font-style:italic}
+
+/* ── Sub ── */
+.ra-sub{
+  font-family:'Inter',sans-serif;
+  font-size:.88rem;color:var(--txt-2);
+  margin:0 0 1.5rem;line-height:1.5;
+}
+.ra-sub strong{color:var(--cr);font-weight:600}
+
+/* ── Form Fields ── */
+.ra-form{display:flex;flex-direction:column;gap:1rem}
+.ra-field{display:flex;flex-direction:column;gap:.35rem}
+.ra-field label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;letter-spacing:.18em;font-weight:500;
+  color:var(--txt-3);
+}
+.ra-optional{
+  font-weight:400;letter-spacing:.08em;
+  color:rgba(154,117,117,.6);
+}
+.ra-field input,
+.ra-field select{
+  font-family:'Inter',sans-serif;
+  font-size:.92rem;
+  padding:.7rem .85rem;
+  border:1px solid rgba(181,0,15,.18);
+  border-radius:8px;
+  background:#fff;color:var(--txt);
+  transition:all .2s;
+  outline:none;
+}
+.ra-field input::placeholder{color:var(--txt-3);font-weight:300}
+.ra-field input:focus,
+.ra-field select:focus{
+  border-color:var(--cr);
+  box-shadow:0 0 0 3px rgba(181,0,15,.08);
+}
+
+/* Phone number row */
+.ra-phone-wrap{
+  display:flex;gap:.5rem;
+}
+.ra-phone-wrap select{
+  width:120px;flex-shrink:0;
+  font-size:.82rem;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239A7575' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right .6rem center;
+  padding-right:1.8rem;
+  cursor:pointer;
+}
+.ra-phone-wrap input{flex:1;min-width:0}
+
+/* ── Error ── */
+.ra-error{
+  font-family:'Inter',sans-serif;
+  font-size:.8rem;color:var(--cr);
+  min-height:1.2rem;
+  margin:.25rem 0;
+  transition:opacity .2s;
+}
+
+/* ── Button ── */
+.ra-btn{
+  width:100%;
+  padding:.85rem 1.5rem;
+  border:none;border-radius:8px;
+  background:var(--cr);color:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:.92rem;font-weight:600;
+  cursor:pointer;
+  transition:all .25s ease;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  margin-top:.5rem;
+}
+.ra-btn:hover{background:var(--cr-deep);transform:translateY(-1px);box-shadow:0 6px 20px rgba(181,0,15,.25)}
+.ra-btn:active{transform:none;box-shadow:none}
+.ra-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+.ra-btn.loading .ra-btn-text{opacity:0}
+.ra-btn.loading .ra-btn-spinner{display:block}
+.ra-btn-spinner{
+  display:none;
+  width:20px;height:20px;
+  border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:raSpin .6s linear infinite;
+  position:absolute;
+}
+
+.ra-btn-success{
+  background:var(--gr)!important;
+}
+.ra-btn-success:hover{
+  background:var(--gr-bright)!important;
+  box-shadow:0 6px 20px rgba(0,166,81,.3)!important;
+}
+
+/* ── OTP Input ── */
+.ra-otp-wrap{
+  display:flex;align-items:center;justify-content:center;
+  gap:.5rem;margin:1.25rem 0;
+}
+.ra-otp-digit{
+  width:48px;height:56px;
+  text-align:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.4rem;font-weight:700;
+  color:var(--txt);
+  border:2px solid rgba(181,0,15,.18);
+  border-radius:10px;
+  background:#fff;
+  outline:none;
+  transition:all .2s;
+  caret-color:var(--cr);
+}
+.ra-otp-digit:focus{
+  border-color:var(--cr);
+  box-shadow:0 0 0 3px rgba(181,0,15,.1);
+  transform:translateY(-2px);
+}
+.ra-otp-digit.filled{border-color:var(--cr);background:var(--cr-pale)}
+.ra-otp-sep{
+  color:var(--txt-3);font-weight:300;font-size:1.2rem;
+  margin:0 .15rem;
+}
+
+/* ── Resend Row ── */
+.ra-resend-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:.75rem;margin-top:1rem;
+  font-family:'Inter',sans-serif;font-size:.8rem;
+}
+#ra-resend-timer{color:var(--txt-3);font-variant-numeric:tabular-nums}
+.ra-resend{
+  background:none;border:none;
+  color:var(--cr);font-weight:600;
+  cursor:pointer;font-size:.8rem;
+  text-decoration:underline;
+  transition:opacity .2s;
+}
+.ra-resend:disabled{opacity:.3;cursor:not-allowed;text-decoration:none}
+
+/* ── Success State ── */
+.ra-success-icon{
+  display:flex;justify-content:center;
+  margin-bottom:1rem;
+  animation:raBounce .6s ease;
+}
+.ra-token-display{
+  display:flex;flex-direction:column;align-items:center;
+  gap:.5rem;
+  padding:1.25rem;margin:1rem 0 1.25rem;
+  background:rgba(0,108,53,.06);
+  border:1px solid rgba(0,166,81,.2);
+  border-radius:12px;
+}
+.ra-token-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;letter-spacing:.2em;font-weight:500;
+  color:var(--txt-3);
+}
+.ra-token-value{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.6rem;font-weight:700;
+  color:var(--gr);letter-spacing:.1em;
+}
+.ra-token-expiry{
+  font-family:'Inter',sans-serif;
+  font-size:.75rem;color:var(--txt-3);
+}
+.ra-success-note{
+  font-family:'Inter',sans-serif;
+  font-size:.75rem;color:var(--txt-3);
+  text-align:center;
+  margin-top:1rem;
+  font-style:italic;
+}
+
+/* ── Animations ── */
+@keyframes raFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes raSlideUp{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes raSpin{to{transform:rotate(360deg)}}
+@keyframes raBounce{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes raShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+.ra-shake{animation:raShake .4s ease}
+
+/* ── Responsive ── */
+@media(max-width:480px){
+  .ra-card{padding:1.5rem 1.25rem 1.25rem;border-radius:12px;margin:.5rem}
+  .ra-heading{font-size:1.4rem}
+  .ra-otp-digit{width:40px;height:48px;font-size:1.2rem}
+  .ra-otp-wrap{gap:.35rem}
+  .ra-phone-wrap select{width:100px}
+  .ra-token-value{font-size:1.3rem}
+}
