@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO -->
+  <title>DART — Drone Arena Radio Tag | FPV Combat System</title>
+  <meta name="description" content="DART is a modular FPV drone combat platform. RF lock-on, IR hit detection, pilot haptic feedback. Lock. Tag. Fly.">
+  <meta name="keywords" content="FPV, drone combat, radio tag, laser tag drones, DART, MomenCrafts, FPV racing, drone arena">
+  <meta name="author" content="MomenCrafts">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="DART — Drone Arena Radio Tag">
+  <meta property="og:description" content="The combat layer for FPV drones. RF lock-on, IR hit detection, pilot haptic feedback.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="hero-drone.png">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo" id="nav-logo">
+        <div class="nav__logo-icon">🎯</div>
+        DART
+      </a>
+      <div class="nav__links">
+        <a href="#how-it-works" class="nav__link" id="nav-how">How It Works</a>
+        <a href="#layers" class="nav__link" id="nav-layers">Technology</a>
+        <a href="#modules" class="nav__link" id="nav-modules">Modules</a>
+        <a href="#roadmap" class="nav__link" id="nav-roadmap">Roadmap</a>
+        <a href="#specs" class="nav__link" id="nav-specs">Specs</a>
+      </div>
+      <a href="https://github.com/MOMENCRAFTS" target="_blank" class="nav__cta" id="nav-github">
+        VIEW ON GITHUB
+      </a>
+      <div class="nav__hamburger" id="nav-hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <img src="hero-drone.png" alt="DART FPV Combat Drone" id="hero-image">
+    </div>
+    <div class="hero__grid"></div>
+    <div class="hero__particles" id="hero-particles"></div>
+    
+    <div class="hero__content">
+      <div class="hero__badge reveal" id="hero-badge">
+        <span class="dot"></span>
+        PRE-PROTOTYPE · ARCHITECTURE PHASE
+      </div>
+      
+      <h1 class="hero__title reveal reveal-delay-1" id="hero-title">
+        <span>DRONE ARENA</span>
+        <span class="line-accent">RADIO TAG</span>
+      </h1>
+      
+      <p class="hero__subtitle reveal reveal-delay-2" id="hero-subtitle">
+        Lock. Tag. Fly.
+      </p>
+      
+      <p class="hero__desc reveal reveal-delay-3" id="hero-desc">
+        A modular combat layer for FPV drones. RF directional lock-on, 
+        IR optical hit detection, and haptic pilot feedback — turn 
+        freestyle flying into aerial combat sport.
+      </p>
+      
+      <div class="hero__actions reveal reveal-delay-4" id="hero-actions">
+        <a href="#how-it-works" class="btn btn--primary" id="btn-explore">
+          EXPLORE THE SYSTEM
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 8h8M8 4l4 4-4 4"/>
+          </svg>
+        </a>
+        <a href="DART_Technical_Specification.md" class="btn btn--ghost" id="btn-docs" target="_blank">
+          TECHNICAL DOCS
+        </a>
+      </div>
+      
+      <div class="hero__stats reveal reveal-delay-4" id="hero-stats">
+        <div class="hero__stat">
+          <div class="hero__stat-value">2.4<span class="unit">GHz</span></div>
+          <div class="hero__stat-label">RF Lock-On Frequency</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-value">940<span class="unit">nm</span></div>
+          <div class="hero__stat-label">IR Hit Detection</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-value">360<span class="unit">°</span></div>
+          <div class="hero__stat-label">Sensor Coverage</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-value">&lt;2<span class="unit">ms</span></div>
+          <div class="hero__stat-label">ESP-NOW Latency</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CHAMPIONSHIP STORY ARC ═══ -->
+  <section class="story-arc container" id="how-it-works">
+    <div class="story-arc__header reveal">
+      <div class="section-label">CHAMPIONSHIP STORY ARC</div>
+      <h2 class="section-title">First of its Kind</h2>
+      <p class="section-desc">
+        A combat-racing FPV tournament where pilots score by flying gates, locking targets, landing IR tags, and surviving hits.
+      </p>
+    </div>
+    
+    <div class="story-grid">
+      <!-- Panel 1 -->
+      <div class="story-panel reveal reveal-delay-1">
+        <div class="story-panel__frame">
+          <img src="panels/1.png" alt="Panel 1 — Workbench Reveal" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>DART CHAMPIONSHIP 001</strong><br>
+            FIRST ORGANIZED COMBAT RACING<br>
+            FPV TOURNAMENT
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">01</div>
+          <div class="story-panel__title">Workbench Reveal</div>
+          <div class="story-panel__caption">
+            "TOMORROW, THE FIRST DART CHAMPIONSHIP BEGINS. TONIGHT, EVERY SIGNAL MUST BE PERFECT."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 2 -->
+      <div class="story-panel reveal reveal-delay-2">
+        <div class="story-panel__frame">
+          <img src="panels/2.png" alt="Panel 2 — Pilot Prepares" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>PILOT: BLUE-03</strong><br>
+            EVENT: DART CHAMPIONSHIP 001<br>
+            STATUS: PRE-RACE INSPECTION
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">02</div>
+          <div class="story-panel__title">Pilot Prepares</div>
+          <div class="story-panel__caption">
+            "NO MISS-WIRES. NO DIRTY LOCKS. NO SECOND CHANCES."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 3 -->
+      <div class="story-panel reveal reveal-delay-3">
+        <div class="story-panel__frame">
+          <img src="panels/3.png" alt="Panel 3 — Safety Check" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>MOMENCRAFTS DART — TOURNAMENT CHECK</strong><br>
+            DART Core: ONLINE<br>
+            RF Lock-On: CALIBRATED<br>
+            IR Sensors: 6/6 READY<br>
+            CRSF Bridge: PASSIVE SAFE<br>
+            Flight Control: PROTECTED<br>
+            Team: BLUE | Pilot ID: BLUE-03<br>
+            Match Mode: CHAMPIONSHIP<br>
+            <span class="hud-green">APPROVED FOR ARENA</span>
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">03</div>
+          <div class="story-panel__title">Safety Check</div>
+          <div class="story-panel__caption">
+            "SYSTEMS GREEN. PILOT REGISTERED. BLUE-03 IS IN."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 4 -->
+      <div class="story-panel reveal reveal-delay-1">
+        <div class="story-panel__frame">
+          <img src="panels/4.png" alt="Panel 4 — RF Calibration" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>RF SWEEP ACTIVE</strong><br>
+            TARGET BEACON: RED-07 SIM<br>
+            RSSI FRONT: -46 | RSSI LEFT: -69<br>
+            LOCK STABILITY: 61%<br>
+            TOURNAMENT MINIMUM: 70%<br>
+            <span class="hud-red">RESULT: RETUNE REQUIRED</span>
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">04</div>
+          <div class="story-panel__title">RF Calibration</div>
+          <div class="story-panel__caption">
+            "THE LOCK IS CLOSE… BUT CLOSE DOESN’T SCORE."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 5 -->
+      <div class="story-panel reveal reveal-delay-2">
+        <div class="story-panel__frame">
+          <img src="panels/5.png" alt="Panel 5 — Starting Pad" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>DART CHAMPIONSHIP 001</strong><br>
+            <strong>FIRST OF ITS KIND</strong><br><br>
+            COUNTDOWN: 3 — 2 — 1<br><br>
+            DART: ARMED<br>
+            PILOT: BLUE-03 | OPPONENT: RED-07<br>
+            HP: 100 | LOCK: READY<br>
+            LAP: 0/3 | MODE: COMBAT RACING
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">05</div>
+          <div class="story-panel__title">Starting Pad</div>
+          <div class="story-panel__caption">
+            "RACE THE GATES. LOCK THE TARGET. SURVIVE THE TAGS."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 6 -->
+      <div class="story-panel reveal reveal-delay-3">
+        <div class="story-panel__frame">
+          <img src="panels/6.png" alt="Panel 6 — First Lock-On" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>TARGET ID: RED-07</strong><br>
+            RF LOCK: ACQUIRING<br>
+            RSSI: -60 → -51<br>
+            LOCK: 68% (REQUIRED: 70%)<br>
+            HAPTIC: RISING<br>
+            IR TAG: STANDBY
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">06</div>
+          <div class="story-panel__title">First Lock-On Attempt</div>
+          <div class="story-panel__caption">
+            "SIGNAL FOUND. NOSE STEADY. LOCK ALMOST THERE."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 7 -->
+      <div class="story-panel reveal reveal-delay-1">
+        <div class="story-panel__frame">
+          <img src="panels/7.png" alt="Panel 7 — First Shot Misses" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>IR TAG SENT</strong><br>
+            LOCK: BROKEN<br>
+            <span class="hud-red">RESULT: MISS</span><br>
+            SHOT ID: 1441<br>
+            COOLDOWN: 3.0s<br>
+            TARGET HP: 100<br>
+            HAPTIC: MISS BUZZ<br><br>
+            <span class="hud-warning">RF GUIDES. IR CONFIRMS. BAD TIMING WASTES THE SHOT.</span>
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">07</div>
+          <div class="story-panel__title">First Shot Misses</div>
+          <div class="story-panel__caption">
+            "TOO EARLY. LOCK BROKE. TAG MISSED."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 8 -->
+      <div class="story-panel reveal reveal-delay-2">
+        <div class="story-panel__frame">
+          <img src="panels/8.png" alt="Panel 8 — Counter Hit" class="story-panel__img">
+          <div class="story-panel__hud">
+            <span class="hud-red"><strong>INCOMING HIT</strong></span><br>
+            FROM: RED-07<br>
+            HP: 100 → 90<br>
+            LOCK BREAK: 1.5s<br>
+            TAG DELAY: 2.5s<br>
+            HAPTIC: WARNING PULSE<br>
+            <span class="hud-green">FLIGHT CONTROL: SAFE</span><br><br>
+            <span class="hud-warning">DART DOES NOT MODIFY THROTTLE / ROLL / PITCH / YAW</span>
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">08</div>
+          <div class="story-panel__title">Opponent Counter-Hit</div>
+          <div class="story-panel__caption">
+            "HIT TAKEN. SYSTEM DELAYS THE TAG WINDOW. THE DRONE STILL FLIES CLEAN."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 9 -->
+      <div class="story-panel reveal reveal-delay-3">
+        <div class="story-panel__frame">
+          <img src="panels/9.png" alt="Panel 9 — Pilot Feels the Delay" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>DART PILOT — BLUE-03</strong><br>
+            OWN HP: 90<br>
+            HIT RECEIVED<br>
+            TAG DELAY: 1.8s<br>
+            LOCK DISABLED: 1.2s<br>
+            HAPTIC: WARNING x2<br>
+            NEXT GATE: 03<br>
+            STRATEGY: EVADE / RELOCK
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">09</div>
+          <div class="story-panel__title">Pilot Feels the Delay</div>
+          <div class="story-panel__caption">
+            "THE HIT DOESN’T CRASH YOU. IT COSTS YOU TIME."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 10 -->
+      <div class="story-panel reveal reveal-delay-1">
+        <div class="story-panel__frame">
+          <img src="panels/10.png" alt="Panel 10 — Relock and Clean Hit" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>TARGET ID: RED-07</strong><br>
+            RF LOCK: STRONG<br>
+            LOCK: 96% | RSSI: -44<br>
+            IR TAG: SENT<br>
+            PACKET CRC: VALID<br>
+            <span class="hud-green">RESULT: HIT CONFIRMED</span>
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">10</div>
+          <div class="story-panel__title">Relock and Clean Hit</div>
+          <div class="story-panel__caption">
+            "THIS TIME, HE WAITS. LOCK STRONG. TAG CLEAN."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 11 -->
+      <div class="story-panel reveal reveal-delay-2">
+        <div class="story-panel__frame">
+          <img src="panels/11.png" alt="Panel 11 — Scoreboard Swing" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>DART CHAMPIONSHIP 001</strong><br><br>
+            BLUE-03: 1 TAG / HP 90<br>
+            RED-07: 1 TAG / HP 90<br>
+            BLUE TEAM: 3 TAGS<br>
+            RED TEAM: 3 TAGS<br><br>
+            MATCH TIME: 01:12<br>
+            NEXT GATE: 04<br>
+            <span class="hud-warning">FINAL LAP: ACTIVE</span>
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">11</div>
+          <div class="story-panel__title">Scoreboard Swing</div>
+          <div class="story-panel__caption">
+            "ONE MISS. ONE HIT TAKEN. ONE CLEAN TAG. NOW IT’S EVEN."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Panel 12 -->
+      <div class="story-panel reveal reveal-delay-3">
+        <div class="story-panel__frame">
+          <img src="panels/12.png" alt="Panel 12 — A New Category" class="story-panel__img">
+          <div class="story-panel__hud">
+            <strong>DART CHAMPIONSHIP 001</strong><br>
+            THE FIRST ORGANIZED COMBAT RACING FPV TOURNAMENT<br><br>
+            RF LOCK-ON. IR HIT CONFIRMATION.<br>
+            PILOT HAPTICS. LIVE SCORING. SAFE FLIGHT.<br><br>
+            <span class="hud-green">LOCK. TAG. FLY.</span>
+          </div>
+        </div>
+        <div class="story-panel__content">
+          <div class="story-panel__number">12</div>
+          <div class="story-panel__title">A New Category</div>
+          <div class="story-panel__caption">
+            "A NEW KIND OF FPV IS BORN."
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- ═══ SYSTEM LAYERS ═══ -->
+  <section class="layers" id="layers">
+    <div class="container">
+      <div class="layers__header reveal">
+        <div class="section-label">THREE-LAYER ARCHITECTURE</div>
+        <h2 class="section-title">Hybrid Combat Stack</h2>
+        <p class="section-desc">
+          DART operates as a three-layer hybrid system — each layer handles 
+          a different aspect of the combat experience.
+        </p>
+      </div>
+      
+      <div class="layers__grid">
+        <div class="layer-card reveal reveal-delay-1" id="layer-rf">
+          <div class="layer-card__tag">
+            <span class="pulse"></span>
+            LAYER 01
+          </div>
+          <div class="layer-card__icon">📡</div>
+          <div class="layer-card__title">RF Lock-On Layer</div>
+          <div class="layer-card__desc">
+            Target discovery, directional hot/cold feedback, 
+            and proximity estimation via RSSI. Team and player 
+            beaconing for arena-wide identification.
+          </div>
+          <div class="layer-card__specs">
+            <div class="layer-card__spec">ESP-NOW @ 2.4 GHz ISM band</div>
+            <div class="layer-card__spec">Directional patch antenna array</div>
+            <div class="layer-card__spec">Multi-antenna RSSI comparison</div>
+            <div class="layer-card__spec">Player ID & team beaconing</div>
+          </div>
+        </div>
+        
+        <div class="layer-card reveal reveal-delay-2" id="layer-ir">
+          <div class="layer-card__tag">
+            <span class="pulse"></span>
+            LAYER 02
+          </div>
+          <div class="layer-card__icon">🔴</div>
+          <div class="layer-card__title">IR Optical Hit Layer</div>
+          <div class="layer-card__desc">
+            Actual hit confirmation via line-of-sight IR tagging. 
+            Encoded packets with CRC validation ensure only 
+            legitimate hits are scored.
+          </div>
+          <div class="layer-card__specs">
+            <div class="layer-card__spec">940nm IR LED + 38 kHz carrier</div>
+            <div class="layer-card__spec">Encoded packet: ID, team, damage, CRC</div>
+            <div class="layer-card__spec">360° multi-sensor ring</div>
+            <div class="layer-card__spec">Cooldown & team validation</div>
+          </div>
+        </div>
+        
+        <div class="layer-card reveal reveal-delay-3" id="layer-feedback">
+          <div class="layer-card__tag">
+            <span class="pulse"></span>
+            LAYER 03
+          </div>
+          <div class="layer-card__icon">🎮</div>
+          <div class="layer-card__title">Flight & Pilot Feedback</div>
+          <div class="layer-card__desc">
+            LEDs, buzzer, vibration on the drone. CRSF telemetry 
+            to pilot radio for haptic hit notification and game 
+            state display.
+          </div>
+          <div class="layer-card__specs">
+            <div class="layer-card__spec">NeoPixel LED damage indicators</div>
+            <div class="layer-card__spec">CRSF/SBUS telemetry passthrough</div>
+            <div class="layer-card__spec">Haptic pilot feedback via radio</div>
+            <div class="layer-card__spec">AUX channel injection (DART Bridge)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MODULES ═══ -->
+  <section class="modules container" id="modules">
+    <div class="modules__header reveal">
+      <div class="section-label">MODULAR SYSTEM</div>
+      <h2 class="section-title">DART Product Modules</h2>
+      <p class="section-desc">
+        Each module is independent, swappable, and designed to be 
+        developed and tested in isolation before integration.
+      </p>
+    </div>
+    
+    <div class="modules__grid">
+      <div class="module-card reveal reveal-delay-1" id="mod-core">
+        <div class="module-card__icon">🧠</div>
+        <div class="module-card__content">
+          <div class="module-card__name">DART CORE</div>
+          <div class="module-card__desc">Main onboard MCU. Game logic, HP tracking, state machine, hit validation, and inter-module communication.</div>
+        </div>
+      </div>
+      
+      <div class="module-card reveal reveal-delay-2" id="mod-seeker">
+        <div class="module-card__icon">📡</div>
+        <div class="module-card__content">
+          <div class="module-card__name">DART SEEKER</div>
+          <div class="module-card__desc">Directional RF receiver with patch antenna array. RSSI-based lock-on and direction finding.</div>
+        </div>
+      </div>
+      
+      <div class="module-card reveal reveal-delay-1" id="mod-beacon">
+        <div class="module-card__icon">📶</div>
+        <div class="module-card__content">
+          <div class="module-card__name">DART BEACON</div>
+          <div class="module-card__desc">RF identity transmitter. Broadcasts player ID, team, and arena sync data via ESP-NOW.</div>
+        </div>
+      </div>
+      
+      <div class="module-card reveal reveal-delay-2" id="mod-bridge">
+        <div class="module-card__icon">🔌</div>
+        <div class="module-card__content">
+          <div class="module-card__name">DART BRIDGE</div>
+          <div class="module-card__desc">RC receiver-to-FC interposer. CRSF/SBUS passive sniffer with optional AUX channel injection.</div>
+        </div>
+      </div>
+      
+      <div class="module-card reveal reveal-delay-1" id="mod-tagger">
+        <div class="module-card__icon">💥</div>
+        <div class="module-card__content">
+          <div class="module-card__name">DART TAGGER</div>
+          <div class="module-card__desc">IR weapon emitter. 940nm modulated LED with encoded packet transmission for scoring.</div>
+        </div>
+      </div>
+      
+      <div class="module-card reveal reveal-delay-2" id="mod-sensor">
+        <div class="module-card__icon">🛡️</div>
+        <div class="module-card__content">
+          <div class="module-card__name">DART SENSOR RING</div>
+          <div class="module-card__desc">Multi-direction IR hit sensor array. 4-6 receivers for 360° coverage with directional hit detection.</div>
+        </div>
+      </div>
+      
+      <div class="module-card reveal reveal-delay-1" id="mod-haptic">
+        <div class="module-card__icon">📳</div>
+        <div class="module-card__content">
+          <div class="module-card__name">DART HAPTIC</div>
+          <div class="module-card__desc">Pilot feedback module. Vibration, buzzer, and LED mapped to lock strength and hit events.</div>
+        </div>
+      </div>
+      
+      <div class="module-card reveal reveal-delay-2" id="mod-arena">
+        <div class="module-card__icon">🏟️</div>
+        <div class="module-card__content">
+          <div class="module-card__name">DART ARENA</div>
+          <div class="module-card__desc">Game rules, scoring, match management. HP, teams, respawn timers, kill count, and leaderboard.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ARENA SECTION ═══ -->
+  <section class="arena" id="arena">
+    <div class="container">
+      <div class="arena__inner">
+        <div class="arena__image reveal" id="arena-image">
+          <img src="arena-scene.png" alt="DART Arena — FPV drone combat">
+        </div>
+        
+        <div class="arena__content reveal reveal-delay-2">
+          <div class="section-label">WHAT MAKES DART DIFFERENT</div>
+          <h2 class="section-title">Not Toy Laser Tag</h2>
+          <p class="section-desc">
+            DART is a modular FPV drone combat platform. Built for 
+            real pilots, real drones, and real competitive gameplay.
+          </p>
+          
+          <div class="arena__features">
+            <div class="arena__feature">
+              <div class="arena__feature-icon">🎯</div>
+              <div class="arena__feature-text">
+                <h4>Dual-Layer Confirmation</h4>
+                <p>RF for lock-on, IR for hit. No false positives from reflections or multipath.</p>
+              </div>
+            </div>
+            <div class="arena__feature">
+              <div class="arena__feature-icon">🔗</div>
+              <div class="arena__feature-text">
+                <h4>Flight Controller Integration</h4>
+                <p>CRSF/SBUS interposer injects game events directly into the FC via AUX channels.</p>
+              </div>
+            </div>
+            <div class="arena__feature">
+              <div class="arena__feature-icon">📳</div>
+              <div class="arena__feature-text">
+                <h4>Pilot Haptic Feedback</h4>
+                <p>Feel the lock, feel the hit. Vibration mapped to signal strength — eyes on FPV, hands on sticks.</p>
+              </div>
+            </div>
+            <div class="arena__feature">
+              <div class="arena__feature-icon">🔓</div>
+              <div class="arena__feature-text">
+                <h4>Fail-Safe Architecture</h4>
+                <p>Hardware bypass on DART Bridge. If MCU fails, RC signal passes through uninterrupted.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TECH SPECS ═══ -->
+  <section class="specs container" id="specs">
+    <div class="specs__header reveal">
+      <div class="section-label">SPECIFICATIONS</div>
+      <h2 class="section-title">Under The Hood</h2>
+    </div>
+    
+    <div class="specs__grid">
+      <div class="specs__terminal reveal" id="specs-terminal">
+        <div class="terminal__header">
+          <div class="terminal__dot terminal__dot--red"></div>
+          <div class="terminal__dot terminal__dot--yellow"></div>
+          <div class="terminal__dot terminal__dot--green"></div>
+          <span class="terminal__title">dart_system_info.sh</span>
+        </div>
+        <div class="terminal__body">
+          <div class="terminal__line">
+            <span class="terminal__prompt">$</span>
+            <span class="terminal__value--accent">dart --system-info</span>
+          </div>
+          <br>
+          <div class="terminal__line">
+            <span class="terminal__key">RF_FREQUENCY</span>
+            <span class="terminal__value">2.400 – 2.4835 GHz</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">RF_PROTOCOL</span>
+            <span class="terminal__value">ESP-NOW (250 byte packets)</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">RF_LATENCY</span>
+            <span class="terminal__value--green">~1-2 ms</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">IR_WAVELENGTH</span>
+            <span class="terminal__value">940 nm</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">IR_CARRIER</span>
+            <span class="terminal__value">38 kHz modulated</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">IR_PACKET</span>
+            <span class="terminal__value">ID + Team + Dmg + CRC</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">MCU_RF</span>
+            <span class="terminal__value--accent">ESP32-S3 (dual-core)</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">MCU_BRIDGE</span>
+            <span class="terminal__value--accent">RP2040 → STM32G4</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">RC_PROTOCOL</span>
+            <span class="terminal__value">CRSF (ExpressLRS)</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">SENSOR_RING</span>
+            <span class="terminal__value">4-6× TSOP382xx</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">ANTENNA_TYPE</span>
+            <span class="terminal__value">2.4 GHz Patch (directional)</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">LOCK_THRESHOLD</span>
+            <span class="terminal__value--green">-55 dBm</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">RSSI_FILTER</span>
+            <span class="terminal__value">EMA (α = 0.2)</span>
+          </div>
+          <div class="terminal__line">
+            <span class="terminal__key">POWER_SOURCE</span>
+            <span class="terminal__value">Drone BEC 5V</span>
+          </div>
+          <br>
+          <div class="terminal__line">
+            <span class="terminal__prompt">$</span>
+            <span class="terminal__value--green">System ready ■</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="specs__visual reveal reveal-delay-2" id="specs-image">
+        <img src="module-board.png" alt="DART Core Module PCB">
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ROADMAP ═══ -->
+  <section class="roadmap" id="roadmap">
+    <div class="container">
+      <div class="roadmap__header reveal">
+        <div class="section-label">DEVELOPMENT PHASES</div>
+        <h2 class="section-title">Build Roadmap</h2>
+        <p class="section-desc">
+          Phased hardware prototyping — validate RF behavior before 
+          adding complexity. Each phase builds on the previous.
+        </p>
+      </div>
+      
+      <div class="roadmap__timeline">
+        <div class="phase reveal" id="phase-1">
+          <div class="phase__marker phase__marker--active"></div>
+          <div class="phase__tag">PHASE 01</div>
+          <div class="phase__title">ESP-NOW Basic Beacon</div>
+          <div class="phase__desc">
+            TX sends packet every 100ms. RX prints RSSI in Serial Monitor. 
+            Verify signal changes as you move TX closer/farther.
+          </div>
+          <div class="phase__status phase__status--ready">● READY TO BUILD</div>
+        </div>
+        
+        <div class="phase reveal" id="phase-2">
+          <div class="phase__marker"></div>
+          <div class="phase__tag">PHASE 02</div>
+          <div class="phase__title">OLED Display Integration</div>
+          <div class="phase__desc">
+            Real-time RSSI, average RSSI, packet loss, lock status, 
+            and signal level bar on 0.96" I2C OLED.
+          </div>
+          <div class="phase__status phase__status--next">NEXT</div>
+        </div>
+        
+        <div class="phase reveal" id="phase-3">
+          <div class="phase__marker"></div>
+          <div class="phase__tag">PHASE 03</div>
+          <div class="phase__title">Buzzer & Vibration Feedback</div>
+          <div class="phase__desc">
+            Hot/cold feedback — faster beep and stronger vibration as 
+            signal strengthens. Eyes-closed locate test.
+          </div>
+          <div class="phase__status phase__status--next">NEXT</div>
+        </div>
+        
+        <div class="phase reveal" id="phase-4">
+          <div class="phase__marker"></div>
+          <div class="phase__tag">PHASE 04</div>
+          <div class="phase__title">Antenna Comparison Testing</div>
+          <div class="phase__desc">
+            Whip vs patch vs panel vs Yagi. RSSI at 0°, 30°, 60°, 90°, 180° 
+            for each antenna. Measure real directionality.
+          </div>
+          <div class="phase__status phase__status--next">NEXT</div>
+        </div>
+        
+        <div class="phase reveal" id="phase-5">
+          <div class="phase__marker"></div>
+          <div class="phase__tag">PHASE 05-09</div>
+          <div class="phase__title">Direction Finding → IR → DART Bridge</div>
+          <div class="phase__desc">
+            Two-direction receiver, drone frame mockup, flight-safe power, 
+            IR hit detection system, and CRSF passive sniffer.
+          </div>
+          <div class="phase__status phase__status--next">FUTURE</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-section container" id="cta">
+    <div class="cta__inner reveal" id="cta-inner">
+      <h2 class="cta__title">Lock the Signal.<br>Tag the Drone.<br>Win the Sky.</h2>
+      <p class="cta__desc">
+        DART is open-source hardware in active development. 
+        Join the build, contribute firmware, or follow the journey.
+      </p>
+      <div class="cta__actions">
+        <a href="https://github.com/MOMENCRAFTS" target="_blank" class="btn btn--primary" id="cta-github">
+          GITHUB
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 8h8M8 4l4 4-4 4"/>
+          </svg>
+        </a>
+        <a href="DART_Technical_Specification.md" class="btn btn--ghost" id="cta-spec" target="_blank">
+          FULL SPEC DOCUMENT
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <span class="footer__logo">DART</span>
+          <span class="footer__tagline">Lock. Tag. Fly.</span>
+        </div>
+        <div class="footer__right">
+          <span class="footer__copy">
+            © 2026 <a href="https://momencrafts.com" target="_blank">MomenCrafts</a>
+          </span>
+          <span class="footer__copy">Riyadh, Saudi Arabia</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ SCRIPTS ═══ -->
+  <script src="landing.js"></script>
+</body>
+</html>

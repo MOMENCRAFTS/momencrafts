@@ -23,7 +23,8 @@ function getCorsHeaders(req: Request) {
   }
 }
 
-// Duration map
+// Duration map — co-founder types have null expiry
+const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER', 'FOUNDER'])
 const DURATIONS: Record<string, number> = {
   HOUR:   60 * 60 * 1000,
   WEEK:   7 * 24 * 60 * 60 * 1000,
@@ -89,9 +90,9 @@ Deno.serve(async (req) => {
         }
         const token = 'MCR-' + suffix
 
-        const expiresAt = tokenType === 'PERMANENT'
+        const expiresAt = COFOUNDER_TYPES.has(tokenType)
           ? null
-          : new Date(Date.now() + DURATIONS[tokenType]).toISOString()
+          : new Date(Date.now() + (DURATIONS[tokenType] ?? DURATIONS.MONTH)).toISOString()
 
         const { data, error } = await supabase.from('investor_tokens').insert({
           token,
@@ -139,9 +140,9 @@ Deno.serve(async (req) => {
         const { tokenId, extendBy } = body
         if (!tokenId || !extendBy) return json(400, { error: 'tokenId and extendBy required' }, corsHeaders)
 
-        if (extendBy === 'PERMANENT') {
+        if (extendBy === 'PERMANENT' || COFOUNDER_TYPES.has(extendBy)) {
           await supabase.from('investor_tokens')
-            .update({ expires_at: null, token_type: 'PERMANENT' })
+            .update({ expires_at: null, token_type: extendBy === 'PERMANENT' ? 'PERMANENT' : extendBy })
             .eq('id', tokenId)
         } else {
           // Get current expiry

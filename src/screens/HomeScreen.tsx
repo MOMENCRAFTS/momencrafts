@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
+import { FeedbackPanel } from '@/components/FeedbackPanel'
 import '@/styles/home.css'
 
 // ── WhatsApp track messages ──
@@ -78,9 +79,230 @@ function InvCard({ id, name, tagline, cat, badge, desc, details, demoLink, demoL
               {demoLabel}
             </a>
           )}
+          {/* ── Premium Feedback Panel ── */}
+          <FeedbackPanel productId={id} productName={name} />
         </div>
       </div>
     </div>
+  )
+}
+
+// ── Co-Founder Exclusive Section ──────────────────────────
+const BALLOT_PRODUCTS = [
+  { id: 'cliniq',   label: 'CLINIQ.ONE' },
+  { id: 'ummi',     label: 'UMMI · أمي' },
+  { id: 'roger',    label: 'ROGER·AI' },
+  { id: 'qadaa',    label: 'QADAA · قضاء' },
+  { id: 'muscle',   label: 'MUSCLE HUSTLE' },
+  { id: 'aqar',     label: 'AQAR · عقار' },
+  { id: 'relay',    label: 'RELAYBOT' },
+  { id: 'sabha',    label: 'SABHA · سبحة' },
+  { id: 'tdc',      label: 'TURBO DRONE CIRCUIT' },
+  { id: 'edgetack', label: 'EDGE TACK' },
+]
+const SUPABASE_FN = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1'
+
+function CoFounderExclusive({ type, name, token }: { type: string; name: string; token: string }) {
+  const [ballot, setBallot]         = useState<string[]>([])
+  const [ballotDone, setBallotDone] = useState(false)
+  const [ballotLoading, setBallotLoading] = useState(false)
+
+  const toggleBallot = (id: string) => {
+    setBallot(prev =>
+      prev.includes(id)
+        ? prev.filter(x => x !== id)
+        : [...prev, id]
+    )
+  }
+
+  const submitBallot = async () => {
+    if (ballot.length < 3) return
+    setBallotLoading(true)
+    try {
+      await fetch(`${SUPABASE_FN}/submit-feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token,
+          productId: '_ballot',
+          feedbackType: 'ballot',
+          payload: { ranking: ballot },
+        }),
+      })
+      setBallotDone(true)
+    } catch { /* silent */ }
+    setBallotLoading(false)
+  }
+
+  const registeredSince = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })
+
+  return (
+    <section id="inv-cofounder" data-section="cofounder" className="inv-cofounder-section">
+      <div className="inv-cf-inner">
+        {/* Header */}
+        <div className="inv-cf-header">
+          <span className="inv-cf-star">✦</span>
+          <div>
+            <div className="inv-cf-label">CO-FOUNDER ACCESS · المؤسسون المشاركون</div>
+            <h2 className="inv-cf-title">& Co Registry</h2>
+          </div>
+          <span className="inv-cf-type-badge">{type}</span>
+        </div>
+
+        {/* Cards grid */}
+        <div className="inv-cf-grid">
+
+          {/* Registry card */}
+          <div className="inv-cf-card">
+            <div className="inv-cf-card-header">
+              <span className="inv-cf-card-ico">📋</span>
+              <span className="inv-cf-card-title">Your Registry Entry</span>
+            </div>
+            <div className="inv-cf-registry-name">{name}</div>
+            <div className="inv-cf-registry-meta">
+              <div className="inv-cf-registry-row">
+                <span>Status</span>
+                <span><span className="inv-cf-status-dot"/>Active</span>
+              </div>
+              <div className="inv-cf-registry-row">
+                <span>Access Tier</span>
+                <span>{type}</span>
+              </div>
+              <div className="inv-cf-registry-row">
+                <span>Registered</span>
+                <span>{registeredSince}</span>
+              </div>
+              <div className="inv-cf-registry-row">
+                <span>Token</span>
+                <span style={{ fontFamily: 'monospace', fontSize: '.65rem', color: '#6a5c3e' }}>
+                  MCR-••••{token.slice(-4)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Roadmap card */}
+          <div className="inv-cf-card">
+            <div className="inv-cf-card-header">
+              <span className="inv-cf-card-ico">🗺</span>
+              <span className="inv-cf-card-title">Co-Builder Roadmap</span>
+            </div>
+            <div className="inv-cf-roadmap-steps">
+              <div className="inv-cf-step">
+                <div className="inv-cf-step-dot done"/>
+                <div className="inv-cf-step-text">
+                  <strong>Portal Access Granted</strong>
+                  Full investor view + feedback tools
+                </div>
+              </div>
+              <div className="inv-cf-step">
+                <div className="inv-cf-step-dot next"/>
+                <div className="inv-cf-step-text">
+                  <strong>Shape the Roadmap</strong>
+                  Ballot + product feedback below each card
+                </div>
+              </div>
+              <div className="inv-cf-step">
+                <div className="inv-cf-step-dot future"/>
+                <div className="inv-cf-step-text">
+                  <strong>Contribution Review</strong>
+                  Ideas and intros reviewed quarterly
+                </div>
+              </div>
+              <div className="inv-cf-step">
+                <div className="inv-cf-step-dot future"/>
+                <div className="inv-cf-step-text">
+                  <strong>& Co Credit</strong>
+                  Validated contributions logged publicly
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Direct contact card */}
+          <div className="inv-cf-card">
+            <div className="inv-cf-card-header">
+              <span className="inv-cf-card-ico">📡</span>
+              <span className="inv-cf-card-title">Direct Line · خط مباشر</span>
+            </div>
+            <div className="inv-cf-contact-name">Momen Pharaon</div>
+            <div className="inv-cf-contact-role">مومن فرعون · Founder & Engineer · MomenCrafts</div>
+            <div className="inv-cf-contact-btns">
+              <a
+                href={`https://wa.me/966535271122?text=${encodeURIComponent(`مرحباً مومن — أنا ${name} (${type}). أريد التحدث عن المشاريع.`)}`}
+                target="_blank" rel="noopener"
+                className="inv-cf-btn inv-cf-btn--wa"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                WhatsApp Momen directly
+              </a>
+              <a
+                href="mailto:momen@momencrafts.com"
+                className="inv-cf-btn inv-cf-btn--email"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                momen@momencrafts.com
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Priority Ballot */}
+        <div className="inv-cf-ballot">
+          <div className="inv-cf-ballot-header">
+            <span style={{ fontSize: '1.1rem' }}>🗳</span>
+            <span className="inv-cf-ballot-title">Priority Ballot · ما الذي نبنيه أولاً؟</span>
+            <span className="inv-cf-ballot-sub">Click to rank — first click = top priority</span>
+          </div>
+          {ballotDone ? (
+            <div className="inv-cf-ballot-success">
+              ✓ Ballot submitted — your product priorities have been logged. Thank you.
+            </div>
+          ) : (
+            <>
+              <div className="inv-cf-ballot-grid">
+                {BALLOT_PRODUCTS.map(p => {
+                  const rank = ballot.indexOf(p.id)
+                  const isRanked = rank >= 0
+                  return (
+                    <button
+                      key={p.id}
+                      className={`inv-cf-ballot-chip${isRanked ? ' ranked' : ''}`}
+                      onClick={() => toggleBallot(p.id)}
+                      id={`ballot-${p.id}`}
+                    >
+                      {isRanked && <span className="inv-cf-ballot-rank">{rank + 1}</span>}
+                      {p.label}
+                    </button>
+                  )
+                })}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <button
+                  className="inv-cf-ballot-submit"
+                  onClick={submitBallot}
+                  disabled={ballot.length < 3 || ballotLoading}
+                  id="ballot-submit-btn"
+                >
+                  {ballotLoading ? 'Submitting...' : `Submit Priorities (${ballot.length}/10 selected)`}
+                </button>
+                {ballot.length > 0 && ballot.length < 3 && (
+                  <span style={{ fontFamily: 'monospace', fontSize: '.65rem', color: '#6a5c3e' }}>
+                    Select at least 3 to submit
+                  </span>
+                )}
+                {ballot.length > 0 && (
+                  <button
+                    onClick={() => setBallot([])}
+                    style={{ background: 'none', border: 'none', color: '#6a5c3e', cursor: 'pointer', fontFamily: 'monospace', fontSize: '.65rem' }}
+                  >Clear</button>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -193,7 +415,9 @@ export default function HomeScreen() {
 
   const TYPE_LABELS: Record<string, string> = {
     HOUR: '1-Hour Access', WEEK: '7-Day Access', MONTH: '30-Day Access',
-    STRATEGIC: 'Strategic Partner', PERMANENT: 'Permanent Access', FOUNDER: 'Founder Access',
+    '3MONTH': '90-Day Access',
+    STRATEGIC: 'Strategic Partner', COFOUNDER: 'Co-Founder',
+    PERMANENT: 'Permanent Access', FOUNDER: 'Founder',
   }
   let typeLabel = TYPE_LABELS[type] || type
   if (expires) {
@@ -327,7 +551,12 @@ export default function HomeScreen() {
           <span className="inv-sep">|</span>
           <span id="inv-type-display">{typeLabel}</span>
           <span className="inv-sep">|</span>
-          <span className="inv-bar-nda">✓ & Co</span>
+          {/* Co-founder badge vs NDA tick */}
+          {['PERMANENT','STRATEGIC','COFOUNDER','FOUNDER'].includes(type) ? (
+            <span className="inv-bar-cofound-badge">✦ &amp; Co</span>
+          ) : (
+            <span className="inv-bar-nda">✓ &amp; Co</span>
+          )}
           {countdown && type === 'HOUR' && (
             <span id="inv-expiry-badge" className="inv-expiry-badge" style={{ animation: countdown < '10:00' ? 'pulse 1.2s infinite' : 'none' }}>
               ⏱ <span id="inv-countdown">{countdown}</span>
@@ -335,13 +564,19 @@ export default function HomeScreen() {
           )}
         </div>
         <nav id="inv-section-nav" style={{ display:'flex', gap:'1.2rem', fontSize:'.66rem' }}>
-          {[['#inv-traction','Our Story'],['#inv-portfolio','Portfolio'],['#inv-vision','Vision'],['#inv-downloads','Test & Shape'],['#inv-journal','Journal'],['#inv-traction-live','Progress'],['#inv-cobuilder','Board'],['#inv-letsbuild','Become & Co →']].map(([href, label]) => (
-            <a key={href} href={href} style={{ color: label.includes('→') ? '#C8A96E' : '#a09070', textDecoration:'none', fontWeight: label.includes('→') ? 700 : 400 }}>{label}</a>
+          {[['#inv-traction','Our Story'],['#inv-portfolio','Portfolio'],
+            ...(['PERMANENT','STRATEGIC','COFOUNDER','FOUNDER'].includes(type) ? [['#inv-cofounder','& Co Hub']] : []),
+            ['#inv-vision','Vision'],['#inv-downloads','Test & Shape'],['#inv-journal','Journal'],['#inv-traction-live','Progress'],['#inv-cobuilder','Board'],
+            ...(!['PERMANENT','STRATEGIC','COFOUNDER','FOUNDER'].includes(type) ? [['#inv-letsbuild','Become & Co →']] : []),
+          ].map(([href, label]) => (
+            <a key={href} href={href} style={{ color: label.includes('→') || label.includes('Hub') ? '#C8A96E' : '#a09070', textDecoration:'none', fontWeight: label.includes('→') || label.includes('Hub') ? 700 : 400 }}>{label}</a>
           ))}
         </nav>
         <div className="inv-bar-actions">
           <button onClick={handleExit} className="inv-bar-exit">Exit</button>
-          <a href="#inv-letsbuild" className="inv-bar-cta">Become & Co →</a>
+          {!['PERMANENT','STRATEGIC','COFOUNDER','FOUNDER'].includes(type) && (
+            <a href="#inv-letsbuild" className="inv-bar-cta">Become &amp; Co →</a>
+          )}
         </div>
       </div>
 
@@ -1024,6 +1259,14 @@ export default function HomeScreen() {
             </div>
           </div>
         </section>
+
+        {/* ════════════════════════════════════════
+            CO-FOUNDER EXCLUSIVE SECTION
+            Visible only to STRATEGIC / COFOUNDER / PERMANENT / FOUNDER
+        ════════════════════════════════════════ */}
+        {['STRATEGIC','COFOUNDER','PERMANENT','FOUNDER'].includes(type) && (
+          <CoFounderExclusive type={type} name={name} token={token} />
+        )}
 
         {/* 03 VISION */}
         <section id="inv-vision" data-section="vision" style={{ background:'#0C0A09', padding:'5rem 1.5rem' }}>
