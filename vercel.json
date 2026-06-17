@@ -4,18 +4,6 @@
   "framework": "vite",
   "cleanUrls": false,
   "redirects": [
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "cliniq.one" }],
-      "destination": "https://momencrafts.com/cliniq.one",
-      "permanent": true
-    },
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "www.cliniq.one" }],
-      "destination": "https://momencrafts.com/cliniq.one",
-      "permanent": true
-    },
     { "source": "/gate", "destination": "/", "permanent": false },
     { "source": "/room", "destination": "/", "permanent": false }
   ],
