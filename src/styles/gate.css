@@ -867,3 +867,206 @@ body:has(.gate-layout) {
   background: rgba(200,169,110,0.13);
   box-shadow: 0 4px 16px rgba(200,169,110,0.12);
 }
+
+/* ══════════════════════════════════════════════════════════
+   REQUEST ACCESS FORM (3-step)
+   ══════════════════════════════════════════════════════════ */
+
+/* Panel now needs room for the full form */
+.gate-request-panel.open { max-height: 700px; }
+
+/* ── Form panel wrapper ── */
+.raf-panel {
+  padding: .85rem 0 .2rem;
+  display: flex; flex-direction: column; gap: .55rem;
+}
+.raf-panel--granted {
+  align-items: center; text-align: center; gap: .7rem;
+}
+
+/* ── Step badge ── */
+.raf-step-badge {
+  font-family: var(--font-mono);
+  font-size: .48rem; font-weight: 700; letter-spacing: .22em;
+  color: var(--gold); background: rgba(200,169,110,0.08);
+  border: 1px solid rgba(200,169,110,0.22);
+  border-radius: 3px; padding: .2rem .6rem;
+  display: inline-block; align-self: flex-start;
+}
+
+/* ── Description ── */
+.raf-desc {
+  font-family: var(--font-mono);
+  font-size: .65rem; line-height: 1.65; color: var(--cream-mute);
+  margin: 0;
+}
+
+/* ── Field group ── */
+.raf-field { display: flex; flex-direction: column; gap: .28rem; }
+.raf-label {
+  font-family: var(--font-mono);
+  font-size: .48rem; font-weight: 700; letter-spacing: .18em;
+  color: rgba(200,169,110,0.55);
+}
+
+/* ── Inputs ── */
+.raf-input {
+  background: rgba(240,235,227,0.04);
+  border: 1px solid rgba(200,169,110,0.18);
+  border-radius: 7px;
+  color: var(--cream); font-family: var(--font-mono); font-size: .72rem;
+  padding: .6rem .75rem;
+  outline: none; width: 100%; box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.raf-input::placeholder { color: rgba(200,169,110,0.25); }
+.raf-input:focus {
+  border-color: rgba(200,169,110,0.45);
+  box-shadow: 0 0 0 3px rgba(200,169,110,0.07);
+}
+
+/* ── Select ── */
+.raf-select {
+  background: rgba(240,235,227,0.04);
+  border: 1px solid rgba(200,169,110,0.18);
+  border-radius: 7px;
+  color: var(--cream); font-family: var(--font-mono); font-size: .72rem;
+  padding: .6rem .75rem;
+  outline: none; cursor: pointer;
+  transition: border-color 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(200%2C169%2C110%2C0.4)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .65rem center;
+  padding-right: 2rem;
+}
+.raf-select:focus { border-color: rgba(200,169,110,0.45); }
+.raf-select--full { width: 100%; box-sizing: border-box; }
+.raf-select option { background: #1a1612; color: #EDE8DC; }
+
+/* ── Phone row ── */
+.raf-phone-row { display: flex; gap: .4rem; }
+.raf-cc-select  { flex-shrink: 0; width: 88px; }
+.raf-phone-input { flex: 1; }
+
+/* ── Error ── */
+.raf-error {
+  font-family: var(--font-mono); font-size: .62rem;
+  color: #ff6b6b; background: rgba(255,107,107,0.08);
+  border: 1px solid rgba(255,107,107,0.2);
+  border-radius: 6px; padding: .45rem .7rem;
+}
+
+/* ── Submit button ── */
+.raf-submit {
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  width: 100%; padding: .75rem;
+  background: var(--gold);
+  color: #0C0A09; font-family: var(--font-mono);
+  font-size: .68rem; font-weight: 800; letter-spacing: .08em;
+  border: none; border-radius: 8px; cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  margin-top: .2rem;
+}
+.raf-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+.raf-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.raf-submit.loading .btn-spinner { display: block; }
+.raf-submit.loading .btn-text    { opacity: 0.6; }
+
+/* ── OTP hint ── */
+.raf-otp-hint {
+  display: flex; align-items: center; gap: .5rem;
+  color: var(--cream-mute); font-family: var(--font-mono);
+  font-size: .65rem; line-height: 1.5;
+  padding: .6rem .8rem;
+  background: rgba(200,169,110,0.05);
+  border: 1px solid rgba(200,169,110,0.12);
+  border-radius: 7px;
+}
+.raf-otp-hint svg { flex-shrink: 0; color: var(--gold); }
+
+/* ── OTP boxes ── */
+.raf-otp-boxes {
+  display: flex; gap: .45rem; justify-content: center;
+  margin: .2rem 0;
+}
+.raf-otp-box {
+  width: 44px; height: 52px;
+  background: rgba(240,235,227,0.04);
+  border: 1.5px solid rgba(200,169,110,0.25);
+  border-radius: 8px;
+  color: var(--cream); font-family: var(--font-mono);
+  font-size: 1.3rem; font-weight: 700; text-align: center;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.raf-otp-box:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(200,169,110,0.12);
+}
+.raf-otp-box.error { border-color: #ff6b6b; }
+
+/* ── Resend row ── */
+.raf-resend-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: .15rem;
+}
+.raf-resend-btn, .raf-back-btn {
+  font-family: var(--font-mono); font-size: .58rem;
+  background: transparent; border: none; cursor: pointer;
+  transition: color 0.2s ease;
+}
+.raf-resend-btn { color: var(--gold); }
+.raf-resend-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.raf-back-btn { color: var(--cream-mute); }
+.raf-resend-btn:hover:not(:disabled), .raf-back-btn:hover { color: var(--cream); }
+
+/* ── Granted state ── */
+.raf-granted-mark {
+  font-size: 1.6rem; color: var(--gold);
+  animation: pulse-gold 2s ease-in-out infinite;
+}
+@keyframes pulse-gold {
+  0%, 100% { opacity: 1; text-shadow: 0 0 12px rgba(200,169,110,.4); }
+  50%       { opacity: 0.7; text-shadow: 0 0 24px rgba(200,169,110,.7); }
+}
+.raf-granted-title {
+  font-family: var(--font-sans); font-size: 1rem; font-weight: 700;
+  color: var(--cream);
+}
+.raf-granted-sub {
+  font-family: var(--font-mono); font-size: .65rem; color: var(--cream-mute);
+}
+.raf-granted-token-wrap {
+  width: 100%;
+  background: rgba(200,169,110,0.06);
+  border: 1px solid rgba(200,169,110,0.25);
+  border-radius: 10px; padding: .85rem 1rem;
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+}
+.raf-granted-token-label {
+  font-family: var(--font-mono); font-size: .48rem;
+  letter-spacing: .22em; color: rgba(200,169,110,.5);
+}
+.raf-granted-token {
+  font-family: var(--font-mono); font-size: 1.25rem; font-weight: 900;
+  letter-spacing: .12em; color: var(--gold);
+  text-shadow: 0 0 16px rgba(200,169,110,.35);
+}
+.raf-granted-expiry {
+  font-family: var(--font-mono); font-size: .58rem; color: var(--cream-mute);
+}
+.raf-granted-email-note {
+  font-family: var(--font-mono); font-size: .6rem; color: var(--cream-mute);
+  margin: 0;
+}
+.raf-enter-btn {
+  width: 100%; padding: .8rem;
+  background: linear-gradient(135deg, #006C35 0%, #004D26 100%);
+  color: #fff; font-family: var(--font-mono);
+  font-size: .72rem; font-weight: 800; letter-spacing: .08em;
+  border: none; border-radius: 8px; cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 0 20px rgba(0,108,53,0.3);
+}
+.raf-enter-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 24px rgba(0,108,53,0.4); }

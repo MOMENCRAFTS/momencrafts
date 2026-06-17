@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════
-// MOMENCRAFTS — request-access Edge Function
-// Receives visitor data, initiates Twilio Verify OTP
+// MOMENCRAFTS — request-access Edge Function v2
+// Receives visitor data + category/linkedin, initiates Twilio Verify OTP
 // Deploy: supabase functions deploy request-access --no-verify-jwt --project-ref isciigqmdfcozrtojqcm
 // ═══════════════════════════════════════════════════════════
 
@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { name, email, phone, company } = await req.json()
+    const { name, email, phone, category, linkedin } = await req.json()
 
     // ── Validate required fields ──
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
@@ -78,7 +78,8 @@ Deno.serve(async (req) => {
         name: name.trim(),
         email: email.trim().toLowerCase(),
         phone: normalizedPhone,
-        company: company?.trim() || null,
+        category: category?.trim() || null,
+        linkedin: linkedin?.trim() || null,
         ip_address: ip,
         user_agent: req.headers.get('user-agent') || 'unknown',
         status: 'pending_verification',
@@ -92,11 +93,11 @@ Deno.serve(async (req) => {
     }
 
     // ── Send OTP via Twilio Verify ──
-    const TWILIO_SID = Deno.env.get('TWILIO_ACCOUNT_SID')!
-    const TWILIO_TOKEN = Deno.env.get('TWILIO_AUTH_TOKEN')!
-    const VERIFY_SID = Deno.env.get('TWILIO_VERIFY_SID')!
+    const TWILIO_SID    = Deno.env.get('TWILIO_ACCOUNT_SID')!
+    const TWILIO_TOKEN  = Deno.env.get('TWILIO_AUTH_TOKEN')!
+    const VERIFY_SID    = Deno.env.get('TWILIO_VERIFY_SID')!
 
-    const twilioUrl = `https://verify.twilio.com/v2/Services/${VERIFY_SID}/Verifications`
+    const twilioUrl  = `https://verify.twilio.com/v2/Services/${VERIFY_SID}/Verifications`
     const twilioAuth = btoa(`${TWILIO_SID}:${TWILIO_TOKEN}`)
 
     const twilioRes = await fetch(twilioUrl, {
@@ -115,7 +116,6 @@ Deno.serve(async (req) => {
 
     if (!twilioRes.ok) {
       console.error('Twilio error:', twilioData)
-      // Clean up the pending request
       await supabase.from('access_requests').delete().eq('id', request.id)
       return json(500, { error: 'Failed to send verification code. Please check your phone number.' })
     }

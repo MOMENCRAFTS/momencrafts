@@ -29,18 +29,16 @@ function generateToken(): string {
   return `MCR-${code}`
 }
 
-/** Send notification email via Resend */
+/** Send notification email to admin via Resend */
 async function sendNotificationEmail(
   resendKey: string,
-  request: { name: string; email: string; phone: string; company: string | null },
+  request: { name: string; email: string; phone: string; company: string | null; category?: string | null; linkedin?: string | null },
   token: string,
   expiresAt: string,
   ip: string,
 ) {
   const expiryFormatted = new Date(expiresAt).toLocaleString('en-SA', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: 'Asia/Riyadh',
+    dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Riyadh',
   })
 
   const html = `
@@ -52,43 +50,22 @@ async function sendNotificationEmail(
       </div>
       <div style="padding: 32px;">
         <p style="color: #C8A96E; font-family: monospace; font-size: 12px; letter-spacing: 0.2em; margin: 0 0 20px;">VISITOR DETAILS</p>
-        
         <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-          <tr>
-            <td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15); width: 120px;">Name</td>
-            <td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15); font-weight: 500;">${request.name}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">Email</td>
-            <td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15);">
-              <a href="mailto:${request.email}" style="color: #00A651; text-decoration: none;">${request.email}</a>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">Phone</td>
-            <td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15);">${request.phone} ✓ verified</td>
-          </tr>
-          ${request.company ? `
-          <tr>
-            <td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">Company</td>
-            <td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15);">${request.company}</td>
-          </tr>` : ''}
+          <tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15); width: 120px;">Name</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15); font-weight: 500;">${request.name}</td></tr>
+          <tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">Email</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15);"><a href="mailto:${request.email}" style="color: #00A651;">${request.email}</a></td></tr>
+          <tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">Phone</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15);">${request.phone} ✓ verified</td></tr>
+          ${request.category ? `<tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">Interest</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15);">${request.category}</td></tr>` : ''}
+          ${request.linkedin ? `<tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">LinkedIn</td><td style="padding: 10px 0; border-bottom: 1px solid rgba(200,169,110,0.15);"><a href="${request.linkedin}" style="color: #00A651;">${request.linkedin}</a></td></tr>` : ''}
         </table>
-
         <div style="margin: 28px 0; padding: 20px; background: rgba(0,108,53,0.15); border: 1px solid rgba(0,166,81,0.3); border-radius: 8px;">
           <p style="color: #C8A96E; font-family: monospace; font-size: 11px; letter-spacing: 0.2em; margin: 0 0 8px;">TOKEN ISSUED</p>
           <p style="font-family: monospace; font-size: 22px; color: #00A651; margin: 0; font-weight: 700; letter-spacing: 0.1em;">${token}</p>
           <p style="font-size: 12px; color: #9A9485; margin: 8px 0 0;">Expires: ${expiryFormatted} (Riyadh) · 30 min access</p>
         </div>
-
-        <p style="color: #9A9485; font-size: 11px; font-family: monospace; letter-spacing: 0.05em; margin: 24px 0 0;">
-          IP: ${ip} · ${new Date().toISOString()}
-        </p>
+        <p style="color: #9A9485; font-size: 11px; font-family: monospace; letter-spacing: 0.05em; margin: 24px 0 0;">IP: ${ip} · ${new Date().toISOString()}</p>
       </div>
       <div style="padding: 16px 32px; background: rgba(255,255,255,0.03); border-top: 1px solid rgba(200,169,110,0.1);">
-        <p style="color: #5C5650; font-size: 11px; margin: 0; text-align: center;">
-          MomenCrafts & Co · Riyadh, Saudi Arabia · momencrafts.com
-        </p>
+        <p style="color: #5C5650; font-size: 11px; margin: 0; text-align: center;">MomenCrafts & Co · Riyadh, Saudi Arabia · momencrafts.com</p>
       </div>
     </div>
   `
@@ -96,27 +73,82 @@ async function sendNotificationEmail(
   try {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        from: 'MomenCrafts <onboarding@resend.dev>',
+        from: 'MomenCrafts <hello@momencrafts.com>',
         to: ['momen@momencrafts.com'],
-        subject: `🔑 New Access Request — ${request.name}`,
+        subject: `🔑 New Access Request — ${request.name} (${request.category ?? 'Unknown'})`,
         html,
       }),
     })
-
-    if (!res.ok) {
-      const err = await res.text()
-      console.error('Resend error:', err)
-    }
+    if (!res.ok) console.error('Admin email error:', await res.text())
   } catch (err) {
-    console.error('Email send error:', err)
-    // Don't fail the request — email is non-critical
+    console.error('Admin email send error:', err)
   }
 }
+
+/** Send the visitor their token + magic link */
+async function sendVisitorEmail(
+  resendKey: string,
+  visitorEmail: string,
+  visitorName: string,
+  token: string,
+  expiresAt: string,
+) {
+  const magicLink = `https://momencrafts.com/?token=${token}`
+  const expiryFormatted = new Date(expiresAt).toLocaleString('en-SA', {
+    dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Riyadh',
+  })
+
+  const html = `
+    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0C0A09; color: #EDE8DC; border-radius: 12px; overflow: hidden;">
+      <div style="background: linear-gradient(135deg, #1a1207 0%, #0C0A09 100%); padding: 36px 32px 24px; text-align: center; border-bottom: 1px solid rgba(200,169,110,0.15);">
+        <div style="font-size: 28px; margin-bottom: 8px;">✦</div>
+        <div style="font-family: monospace; font-size: 11px; letter-spacing: 0.3em; color: rgba(200,169,110,0.6); margin-bottom: 4px;">MOMENCRAFTS & CO</div>
+        <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #EDE8DC;">Your Access Key</h1>
+      </div>
+      <div style="padding: 32px;">
+        <p style="color: #9A9485; font-size: 15px; line-height: 1.6; margin: 0 0 28px;">
+          Hi ${visitorName}, your identity has been verified. Here is your 30-minute access pass to MomenCrafts & Co.
+        </p>
+
+        <div style="background: rgba(200,169,110,0.06); border: 1px solid rgba(200,169,110,0.25); border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 24px;">
+          <div style="font-family: monospace; font-size: 10px; letter-spacing: 0.25em; color: rgba(200,169,110,0.5); margin-bottom: 10px;">ACCESS KEY</div>
+          <div style="font-family: monospace; font-size: 28px; font-weight: 900; letter-spacing: 0.12em; color: #C8A96E; margin-bottom: 10px;">${token}</div>
+          <div style="font-family: monospace; font-size: 11px; color: #5C5650;">⏱ Expires: ${expiryFormatted} (Riyadh time)</div>
+        </div>
+
+        <a href="${magicLink}" style="display: block; background: #006C35; color: #fff; text-align: center; padding: 16px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; letter-spacing: 0.08em; margin-bottom: 20px;">
+          Enter the Studio →
+        </a>
+
+        <p style="font-size: 12px; color: #5C5650; font-family: monospace; text-align: center; margin: 0;">
+          Or paste this key at momencrafts.com · Valid for 30 minutes only
+        </p>
+      </div>
+      <div style="padding: 16px 32px; background: rgba(255,255,255,0.02); border-top: 1px solid rgba(200,169,110,0.08);">
+        <p style="color: #3a3530; font-size: 11px; margin: 0; text-align: center;">MomenCrafts & Co · Riyadh, Saudi Arabia</p>
+      </div>
+    </div>
+  `
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'MomenCrafts <hello@momencrafts.com>',
+        to: [visitorEmail],
+        subject: `✦ Your MomenCrafts Access Key — ${token}`,
+        html,
+      }),
+    })
+    if (!res.ok) console.error('Visitor email error:', await res.text())
+  } catch (err) {
+    console.error('Visitor email send error:', err)
+  }
+}
+
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -230,6 +262,7 @@ Deno.serve(async (req) => {
       const RESEND_KEY = Deno.env.get('RESEND_API_KEY')!
       const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
       await sendNotificationEmail(RESEND_KEY, request, token2, expiresAt, ip)
+      await sendVisitorEmail(RESEND_KEY, request.email, request.name, token2, expiresAt)
 
       return json(200, {
         success: true,
@@ -267,10 +300,11 @@ Deno.serve(async (req) => {
       })
       .eq('id', request_id)
 
-    // ── 7. Send notification email via Resend ──
+    // ── 7. Send emails via Resend ──
     const RESEND_KEY = Deno.env.get('RESEND_API_KEY')!
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
     await sendNotificationEmail(RESEND_KEY, request, token, expiresAt, ip)
+    await sendVisitorEmail(RESEND_KEY, request.email, request.name, token, expiresAt)
 
     // ── 8. Return token to client ──
     return json(200, {
