@@ -7,13 +7,13 @@
     {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "cliniq.one" }],
-      "destination": "https://momencrafts.com/cliniq",
+      "destination": "https://momencrafts.com/cliniq.one",
       "permanent": true
     },
     {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "www.cliniq.one" }],
-      "destination": "https://momencrafts.com/cliniq",
+      "destination": "https://momencrafts.com/cliniq.one",
       "permanent": true
     },
     { "source": "/gate", "destination": "/", "permanent": false },
@@ -37,6 +37,9 @@
     { "source": "/ummiwallet",          "destination": "/ummiwallet/index.html" },
     { "source": "/ummiwallet/",         "destination": "/ummiwallet/index.html" },
     { "source": "/ummiwallet/:path*",   "destination": "/ummiwallet/:path*" },
+    { "source": "/cliniq.one",          "destination": "/cliniq.one/index.html" },
+    { "source": "/cliniq.one/",         "destination": "/cliniq.one/index.html" },
+    { "source": "/cliniq.one/:path*",   "destination": "/cliniq.one/:path*" },
     { "source": "/admin",    "destination": "/index.html" },
     { "source": "/admin/",   "destination": "/index.html" },
     { "source": "/(.*)",     "destination": "/index.html" }
