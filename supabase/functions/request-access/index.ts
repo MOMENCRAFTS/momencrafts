@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { name, email, phone, category, linkedin } = await req.json()
+    const { name, email, phone, category, company, job_title, referral_source, message, linkedin } = await req.json()
 
     // ── Validate required fields ──
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
@@ -79,6 +79,10 @@ Deno.serve(async (req) => {
         email: email.trim().toLowerCase(),
         phone: normalizedPhone,
         category: category?.trim() || null,
+        company: company?.trim() || null,
+        job_title: job_title?.trim() || null,
+        referral_source: referral_source?.trim() || null,
+        message: message?.trim() || null,
         linkedin: linkedin?.trim() || null,
         ip_address: ip,
         user_agent: req.headers.get('user-agent') || 'unknown',

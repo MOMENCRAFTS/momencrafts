@@ -59,6 +59,10 @@ export function RequestAccessForm({ lang, onTokenGranted }: Props) {
   const [countryCode, setCC]      = useState('+966')
   const [phone, setPhone]         = useState('')
   const [category, setCategory]   = useState('')
+  const [company, setCompany]     = useState('')
+  const [jobTitle, setJobTitle]   = useState('')
+  const [referral, setReferral]   = useState('')
+  const [message, setMessage]     = useState('')
   const [linkedin, setLinkedin]   = useState('')
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -102,6 +106,10 @@ export function RequestAccessForm({ lang, onTokenGranted }: Props) {
       setFormError(lang === 'ar' ? 'اختر مجال اهتمامك' : 'Please select your area of interest')
       return
     }
+    if (!company.trim() || company.trim().length < 2) {
+      setFormError(lang === 'ar' ? 'اسم الشركة أو المؤسسة مطلوب' : 'Company / Organization is required')
+      return
+    }
 
     const fullPhone = countryCode + phone.replace(/^0/, '').replace(/\D/g, '')
 
@@ -115,6 +123,10 @@ export function RequestAccessForm({ lang, onTokenGranted }: Props) {
           email: email.trim().toLowerCase(),
           phone: fullPhone,
           category,
+          company: company.trim(),
+          job_title: jobTitle.trim() || undefined,
+          referral_source: referral || undefined,
+          message: message.trim() || undefined,
           linkedin: linkedin.trim() || undefined,
         }),
       })
@@ -130,7 +142,7 @@ export function RequestAccessForm({ lang, onTokenGranted }: Props) {
     } finally {
       setSubmitting(false)
     }
-  }, [name, email, countryCode, phone, category, linkedin, lang])
+  }, [name, email, countryCode, phone, category, company, jobTitle, referral, message, linkedin, lang])
 
   // ── OTP box input handler ──
   const handleOtpChange = (idx: number, val: string) => {
@@ -187,7 +199,7 @@ export function RequestAccessForm({ lang, onTokenGranted }: Props) {
       const res = await fetch(`${SUPABASE_URL}/functions/v1/request-access`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone: fullPhone, category, linkedin: linkedin || undefined }),
+        body: JSON.stringify({ name, email, phone: fullPhone, category, company, job_title: jobTitle || undefined, referral_source: referral || undefined, message: message || undefined, linkedin: linkedin || undefined }),
       })
       const data = await res.json()
       if (res.ok) {
@@ -198,7 +210,7 @@ export function RequestAccessForm({ lang, onTokenGranted }: Props) {
         otpRefs.current[0]?.focus()
       }
     } catch { /* ignore */ }
-  }, [resendCooldown, countryCode, phone, name, email, category, linkedin])
+  }, [resendCooldown, countryCode, phone, name, email, category, company, jobTitle, referral, message, linkedin])
 
   // ── Enter Studio ──
   const enterStudio = () => {
@@ -290,7 +302,35 @@ export function RequestAccessForm({ lang, onTokenGranted }: Props) {
         </select>
       </div>
 
-      {/* LinkedIn / Social */}
+      {/* Company — REQUIRED */}
+      <div className="raf-field">
+        <label className="raf-label">{lang === 'ar' ? 'الشركة / المؤسسة' : 'COMPANY / ORGANIZATION'}</label>
+        <input
+          className="raf-input"
+          type="text"
+          placeholder={lang === 'ar' ? 'اسم الشركة أو "مستقل"' : 'Company name or "Independent"'}
+          value={company}
+          onChange={e => setCompany(e.target.value)}
+          autoComplete="organization"
+        />
+      </div>
+
+      {/* Job Title — GRACEFUL */}
+      <div className="raf-field">
+        <label className="raf-label">
+          {lang === 'ar' ? 'المسمى الوظيفي (اختياري)' : 'JOB TITLE (OPTIONAL)'}
+        </label>
+        <input
+          className="raf-input"
+          type="text"
+          placeholder={lang === 'ar' ? 'مثل: مدير تنفيذي، مهندس...' : 'e.g. CEO, Engineer, Researcher...'}
+          value={jobTitle}
+          onChange={e => setJobTitle(e.target.value)}
+          autoComplete="organization-title"
+        />
+      </div>
+
+      {/* LinkedIn / Social — GRACEFUL */}
       <div className="raf-field">
         <label className="raf-label">
           {lang === 'ar' ? 'لينكدإن أو وسائل التواصل (اختياري)' : 'LINKEDIN / SOCIAL (OPTIONAL)'}
@@ -302,6 +342,41 @@ export function RequestAccessForm({ lang, onTokenGranted }: Props) {
           value={linkedin}
           onChange={e => setLinkedin(e.target.value)}
           dir="ltr"
+        />
+      </div>
+
+      {/* How did you hear — GRACEFUL */}
+      <div className="raf-field">
+        <label className="raf-label">
+          {lang === 'ar' ? 'كيف سمعت عنا؟ (اختياري)' : 'HOW DID YOU HEAR ABOUT US? (OPTIONAL)'}
+        </label>
+        <select
+          className="raf-select raf-select--full"
+          value={referral}
+          onChange={e => setReferral(e.target.value)}
+        >
+          <option value="">{lang === 'ar' ? '— اختر —' : '— Select —'}</option>
+          <option value="Social Media">{lang === 'ar' ? 'وسائل التواصل الاجتماعي' : 'Social Media'}</option>
+          <option value="Referral">{lang === 'ar' ? 'إحالة / توصية' : 'Referral'}</option>
+          <option value="Event / Conference">{lang === 'ar' ? 'فعالية / مؤتمر' : 'Event / Conference'}</option>
+          <option value="Search Engine">{lang === 'ar' ? 'محرك بحث' : 'Search Engine'}</option>
+          <option value="News / Press">{lang === 'ar' ? 'أخبار / صحافة' : 'News / Press'}</option>
+          <option value="Other">{lang === 'ar' ? 'أخرى' : 'Other'}</option>
+        </select>
+      </div>
+
+      {/* Brief message — GRACEFUL */}
+      <div className="raf-field">
+        <label className="raf-label">
+          {lang === 'ar' ? 'رسالة قصيرة (اختياري)' : 'BRIEF MESSAGE (OPTIONAL)'}
+        </label>
+        <textarea
+          className="raf-input raf-textarea"
+          placeholder={lang === 'ar' ? 'ما الذي يثير اهتمامك في MomenCrafts؟' : 'What interests you about MomenCrafts?'}
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          rows={2}
+          maxLength={500}
         />
       </div>
 

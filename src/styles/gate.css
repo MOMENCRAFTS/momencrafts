@@ -1070,3 +1070,10 @@ body:has(.gate-layout) {
   box-shadow: 0 0 20px rgba(0,108,53,0.3);
 }
 .raf-enter-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 24px rgba(0,108,53,0.4); }
+
+/* Textarea for brief message */
+.raf-textarea {
+  resize: vertical; min-height: 56px; max-height: 140px;
+  line-height: 1.5;
+}
+.gate-request-panel.open { max-height: 1200px; }

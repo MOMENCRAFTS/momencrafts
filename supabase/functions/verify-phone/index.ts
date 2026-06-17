@@ -32,7 +32,7 @@ function generateToken(): string {
 /** Send notification email to admin via Resend */
 async function sendNotificationEmail(
   resendKey: string,
-  request: { name: string; email: string; phone: string; company: string | null; category?: string | null; linkedin?: string | null },
+  request: { name: string; email: string; phone: string; company?: string | null; category?: string | null; job_title?: string | null; referral_source?: string | null; message?: string | null; linkedin?: string | null },
   token: string,
   expiresAt: string,
   ip: string,
@@ -40,6 +40,9 @@ async function sendNotificationEmail(
   const expiryFormatted = new Date(expiresAt).toLocaleString('en-SA', {
     dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Riyadh',
   })
+
+  const row = (label: string, val: string, isLink = false) =>
+    `<tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15); width: 120px;">${label}</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15); font-weight: 500;">${isLink ? `<a href="${val}" style="color: #00A651;">${val}</a>` : val}</td></tr>`
 
   const html = `
     <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0C0A09; color: #EDE8DC; border-radius: 12px; overflow: hidden;">
@@ -51,12 +54,20 @@ async function sendNotificationEmail(
       <div style="padding: 32px;">
         <p style="color: #C8A96E; font-family: monospace; font-size: 12px; letter-spacing: 0.2em; margin: 0 0 20px;">VISITOR DETAILS</p>
         <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-          <tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15); width: 120px;">Name</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15); font-weight: 500;">${request.name}</td></tr>
-          <tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">Email</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15);"><a href="mailto:${request.email}" style="color: #00A651;">${request.email}</a></td></tr>
-          <tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">Phone</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15);">${request.phone} ✓ verified</td></tr>
-          ${request.category ? `<tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">Interest</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15);">${request.category}</td></tr>` : ''}
-          ${request.linkedin ? `<tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15);">LinkedIn</td><td style="padding: 10px 0; border-bottom: 1px solid rgba(200,169,110,0.15);"><a href="${request.linkedin}" style="color: #00A651;">${request.linkedin}</a></td></tr>` : ''}
+          ${row('Name', request.name)}
+          ${row('Email', request.email)}
+          ${row('Phone', request.phone + ' ✓ verified')}
+          ${request.category ? row('Interest', request.category) : ''}
+          ${request.company ? row('Company', request.company) : ''}
+          ${request.job_title ? row('Title', request.job_title) : ''}
+          ${request.linkedin ? row('LinkedIn', request.linkedin, true) : ''}
+          ${request.referral_source ? row('Source', request.referral_source) : ''}
         </table>
+        ${request.message ? `
+        <div style="margin: 20px 0 0; padding: 16px; background: rgba(200,169,110,0.06); border: 1px solid rgba(200,169,110,0.15); border-radius: 8px;">
+          <p style="color: #C8A96E; font-family: monospace; font-size: 10px; letter-spacing: 0.2em; margin: 0 0 8px;">MESSAGE</p>
+          <p style="color: #EDE8DC; font-size: 14px; line-height: 1.6; margin: 0;">${request.message}</p>
+        </div>` : ''}
         <div style="margin: 28px 0; padding: 20px; background: rgba(0,108,53,0.15); border: 1px solid rgba(0,166,81,0.3); border-radius: 8px;">
           <p style="color: #C8A96E; font-family: monospace; font-size: 11px; letter-spacing: 0.2em; margin: 0 0 8px;">TOKEN ISSUED</p>
           <p style="font-family: monospace; font-size: 22px; color: #00A651; margin: 0; font-weight: 700; letter-spacing: 0.1em;">${token}</p>
@@ -77,7 +88,8 @@ async function sendNotificationEmail(
       body: JSON.stringify({
         from: 'MomenCrafts <hello@momencrafts.com>',
         to: ['momen@momencrafts.com'],
-        subject: `🔑 New Access Request — ${request.name} (${request.category ?? 'Unknown'})`,
+        subject: `🔑 New Access Request — ${request.name} · ${request.company ?? 'Unknown'} (${request.category ?? 'N/A'})`,
+
         html,
       }),
     })
