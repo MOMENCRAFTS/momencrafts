@@ -1035,90 +1035,178 @@ export default function HomeScreen() {
               <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%AA%D8%AC%20SABHA%20%C2%B7%20%D8%B3%D8%A8%D8%AD%D8%A9%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
             </article>
 
-            {/* TURBO DRONE CIRCUIT — themed card */}
+            {/* ─── TDC — COMIC FPV REMASTER ─── */}
             <article className="product-card product-card--tdc reveal delay-300" id="card-tdc-ar" data-accent="tdc">
-              {/* Dark space base + cyan electric glow layer */}
-              <div className="tdc-card-glow" aria-hidden="true" />
-              {/* Circuit trace SVG overlay */}
-              <svg className="tdc-card-circuit" viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M0 160 L40 160 L40 120 L90 120 L90 80 L140 80" stroke="#00E5FF" strokeWidth="0.6" strokeOpacity="0.18"/>
-                <path d="M280 40 L240 40 L240 90 L190 90 L190 130 L140 130" stroke="#00E5FF" strokeWidth="0.6" strokeOpacity="0.14"/>
-                <path d="M60 200 L60 150 L110 150 L110 100" stroke="#FF2D9B" strokeWidth="0.5" strokeOpacity="0.15"/>
-                <path d="M220 0 L220 60 L170 60" stroke="#FF2D9B" strokeWidth="0.5" strokeOpacity="0.12"/>
-                <circle cx="90" cy="120" r="2.5" fill="#00E5FF" fillOpacity="0.3"/>
-                <circle cx="190" cy="90" r="2.5" fill="#00E5FF" fillOpacity="0.22"/>
-                <circle cx="60" cy="150" r="2" fill="#FF2D9B" fillOpacity="0.28"/>
-                <circle cx="220" cy="60" r="2" fill="#FF2D9B" fillOpacity="0.22"/>
-              </svg>
-              {/* Accent bar — cyan electric */}
-              <div className="tdc-card-accent-bar" />
-              <div className="card-header">
-                <div className="tdc-card-icon">
-                  {/* Lightning bolt — neon cyan */}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#00E5FF" strokeWidth="0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              {/* Speed-line burst background */}
+              <div className="tdc2-bg" aria-hidden="true">
+                <svg className="tdc2-speedlines" viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  {/* Radial speed lines from top-right */}
+                  <line x1="300" y1="0" x2="180" y2="110" stroke="#00E5FF" strokeWidth="0.7" strokeOpacity="0.13"/>
+                  <line x1="300" y1="0" x2="160" y2="130" stroke="#00E5FF" strokeWidth="0.5" strokeOpacity="0.09"/>
+                  <line x1="300" y1="0" x2="140" y2="100" stroke="#00E5FF" strokeWidth="0.6" strokeOpacity="0.11"/>
+                  <line x1="300" y1="0" x2="200" y2="90" stroke="#FF2D9B" strokeWidth="0.5" strokeOpacity="0.1"/>
+                  <line x1="300" y1="0" x2="220" y2="130" stroke="#FF2D9B" strokeWidth="0.4" strokeOpacity="0.08"/>
+                  <line x1="300" y1="0" x2="150" y2="80" stroke="#E6492D" strokeWidth="0.6" strokeOpacity="0.12"/>
+                  <line x1="300" y1="0" x2="130" y2="60" stroke="#E6492D" strokeWidth="0.5" strokeOpacity="0.09"/>
+                  {/* Halftone dot cluster — bottom left */}
+                  <circle cx="20" cy="180" r="2" fill="#00E5FF" fillOpacity="0.18"/>
+                  <circle cx="36" cy="192" r="1.5" fill="#00E5FF" fillOpacity="0.13"/>
+                  <circle cx="28" cy="200" r="1" fill="#00E5FF" fillOpacity="0.1"/>
+                  <circle cx="50" cy="178" r="2" fill="#FF2D9B" fillOpacity="0.15"/>
+                  <circle cx="10" cy="165" r="1.5" fill="#FF2D9B" fillOpacity="0.12"/>
+                  <circle cx="42" cy="165" r="1" fill="#E6492D" fillOpacity="0.14"/>
+                  {/* Circuit nodes */}
+                  <circle cx="120" cy="195" r="3" fill="none" stroke="#00E5FF" strokeWidth="0.8" strokeOpacity="0.18"/>
+                  <circle cx="120" cy="195" r="1" fill="#00E5FF" fillOpacity="0.25"/>
+                  <path d="M120 195 L80 195 L80 175" stroke="#00E5FF" strokeWidth="0.6" strokeOpacity="0.15"/>
+                </svg>
+                {/* Halftone texture overlay */}
+                <div className="tdc2-halftone" aria-hidden="true" />
+              </div>
+
+              {/* Top ink accent bar */}
+              <div className="tdc2-ink-bar" />
+
+              {/* Panel corner stamp */}
+              <div className="tdc2-corner-stamp" aria-hidden="true">TDC</div>
+
+              <div className="tdc2-content">
+                {/* Header row */}
+                <div className="tdc2-header">
+                  <div className="tdc2-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#00E5FF" className="tdc2-bolt">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                  </div>
+                  <div className="tdc2-badge">⚡ TURBO MODE</div>
                 </div>
-                <span className="tdc-card-badge">⚡ TURBO MODE</span>
+
+                {/* Comic title block */}
+                <div className="tdc2-title-block">
+                  <div className="tdc2-action-text">TURBO</div>
+                  <div className="tdc2-title">DRONE CIRCUIT</div>
+                  <p className="tdc2-tagline">إدارة طاقة طائرات FPV</p>
+                </div>
+
+                <p className="tdc2-desc">دائرة 25×25mm تضيف الجهد من المكثف الفائق على التوالي — +15% فولت فوري. 150 أمبير. بدون برمجيات.</p>
+
+                <div className="tdc2-tags">
+                  <span className="tdc2-tag tdc2-tag--cyan">براءة اختراع</span>
+                  <span className="tdc2-tag tdc2-tag--magenta">FPV · UAV</span>
+                  <span className="tdc2-tag tdc2-tag--dim">150A · 19.3V</span>
+                </div>
+
+                {/* Stat bar */}
+                <div className="tdc2-stat-bar">
+                  <div className="tdc2-stat">
+                    <span className="tdc2-stat-val">+15%</span>
+                    <span className="tdc2-stat-label">فولت</span>
+                  </div>
+                  <div className="tdc2-stat-divider" />
+                  <div className="tdc2-stat">
+                    <span className="tdc2-stat-val">150A</span>
+                    <span className="tdc2-stat-label">تيار</span>
+                  </div>
+                  <div className="tdc2-stat-divider" />
+                  <div className="tdc2-stat">
+                    <span className="tdc2-stat-val">25mm</span>
+                    <span className="tdc2-stat-label">حجم</span>
+                  </div>
+                </div>
+
+                <a href="/tdc" className="tdc2-link">عرض المشروع <span className="tdc2-link-arrow">←</span></a>
               </div>
-              <h3 className="tdc-card-title">TURBO DRONE CIRCUIT</h3>
-              <p className="tdc-card-tagline">إدارة طاقة طائرات FPV</p>
-              <p className="tdc-card-desc">دائرة 25×25mm تضيف الجهد من المكثف الفائق على التوالي — +15% فولت فوري. 150 أمبير. بدون برمجيات.</p>
-              <div className="tdc-card-tags">
-                <span className="tdc-tag tdc-tag--cyan">براءة اختراع</span>
-                <span className="tdc-tag tdc-tag--magenta">FPV · UAV</span>
-                <span className="tdc-tag tdc-tag--dim">150A · 19.3V</span>
-              </div>
-              <a href="/tdc" className="tdc-card-link">عرض المشروع <span className="tdc-card-link-arrow">←</span></a>
             </article>
 
-            {/* DART — FPV Combat System card */}
-            <article className="product-card product-card--tdc reveal delay-400" id="card-dart-ar" data-accent="dart">
-              {/* Dark tactical base + radar rings + RF sweep */}
-              <div className="tdc-card-glow" aria-hidden="true" style={{ background: 'radial-gradient(ellipse at 70% 30%, rgba(255,68,56,0.12) 0%, transparent 65%)' }} />
-              <svg className="tdc-card-circuit" viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                {/* Radar rings — top right */}
-                <circle cx="240" cy="40" r="22" stroke="#FF4438" strokeWidth="0.7" strokeOpacity="0.22"/>
-                <circle cx="240" cy="40" r="38" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.14"/>
-                <circle cx="240" cy="40" r="56" stroke="#FF8A3D" strokeWidth="0.4" strokeOpacity="0.1"/>
-                {/* RF sweep line */}
-                <line x1="240" y1="40" x2="265" y2="15" stroke="#FF4438" strokeWidth="0.8" strokeOpacity="0.3"/>
-                {/* Lock-on crosshair center */}
-                <circle cx="240" cy="40" r="3" fill="#FF4438" fillOpacity="0.4"/>
-                {/* Circuit traces — bottom left */}
-                <path d="M0 170 L35 170 L35 130 L80 130 L80 100 L120 100" stroke="#FF8A3D" strokeWidth="0.6" strokeOpacity="0.15"/>
-                <path d="M0 140 L20 140 L20 110 L60 110" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.12"/>
-                <circle cx="80" cy="130" r="2.5" fill="#FF4438" fillOpacity="0.28"/>
-                <circle cx="35" cy="170" r="2" fill="#FF8A3D" fillOpacity="0.3"/>
-              </svg>
-              {/* Accent bar — combat red */}
-              <div className="tdc-card-accent-bar" style={{ background: 'linear-gradient(90deg, #FF4438, #FF8A3D)' }} />
-              {/* Badge */}
-              <div className="tdc-card-badge" style={{ color: '#FF8A3D', borderColor: 'rgba(255,138,61,0.3)' }}>⚡ بطولة DART</div>
-              <div className="card-header">
-                <div className="tdc-card-icon" style={{ background: 'rgba(255,68,56,0.1)', border: '1px solid rgba(255,68,56,0.25)' }}>
-                  {/* RF target / crosshair icon */}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF4438" strokeWidth="1.8" strokeLinecap="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <circle cx="12" cy="12" r="4"/>
-                    <line x1="12" y1="2" x2="12" y2="6"/>
-                    <line x1="12" y1="18" x2="12" y2="22"/>
-                    <line x1="2" y1="12" x2="6" y2="12"/>
-                    <line x1="18" y1="12" x2="22" y2="12"/>
-                  </svg>
+            {/* ─── DART — COMIC COMBAT FPV REMASTER ─── */}
+            <article className="product-card product-card--dart2 reveal delay-400" id="card-dart-ar" data-accent="dart">
+              {/* War-comic hatching + targeting overlay */}
+              <div className="dart2-bg" aria-hidden="true">
+                <svg className="dart2-overlay" viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  {/* Targeting reticle — top right */}
+                  <circle cx="248" cy="46" r="28" stroke="#FF4438" strokeWidth="1" strokeOpacity="0.25" strokeDasharray="3 3"/>
+                  <circle cx="248" cy="46" r="16" stroke="#FF4438" strokeWidth="0.8" strokeOpacity="0.35"/>
+                  <circle cx="248" cy="46" r="5" fill="#FF4438" fillOpacity="0.35"/>
+                  <circle cx="248" cy="46" r="2.5" fill="#FF4438" fillOpacity="0.6"/>
+                  {/* Crosshair lines */}
+                  <line x1="248" y1="18" x2="248" y2="30" stroke="#FF4438" strokeWidth="1.2" strokeOpacity="0.5"/>
+                  <line x1="248" y1="62" x2="248" y2="74" stroke="#FF4438" strokeWidth="1.2" strokeOpacity="0.5"/>
+                  <line x1="220" y1="46" x2="232" y2="46" stroke="#FF4438" strokeWidth="1.2" strokeOpacity="0.5"/>
+                  <line x1="264" y1="46" x2="276" y2="46" stroke="#FF4438" strokeWidth="1.2" strokeOpacity="0.5"/>
+                  {/* RF sweep */}
+                  <line x1="248" y1="46" x2="280" y2="14" stroke="#FF8A3D" strokeWidth="1" strokeOpacity="0.28"/>
+                  {/* Hatching lines — bottom left */}
+                  <line x1="0" y1="160" x2="60" y2="220" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.08"/>
+                  <line x1="15" y1="160" x2="75" y2="220" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.07"/>
+                  <line x1="30" y1="160" x2="90" y2="220" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.06"/>
+                  <line x1="45" y1="160" x2="105" y2="220" stroke="#FF8A3D" strokeWidth="0.4" strokeOpacity="0.07"/>
+                  {/* Circuit trace */}
+                  <path d="M0 140 L40 140 L40 110 L90 110 L90 90" stroke="#FF8A3D" strokeWidth="0.7" strokeOpacity="0.15"/>
+                  <circle cx="40" cy="140" r="2.5" fill="none" stroke="#FF8A3D" strokeWidth="0.8" strokeOpacity="0.3"/>
+                  <circle cx="40" cy="140" r="1" fill="#FF8A3D" fillOpacity="0.35"/>
+                </svg>
+                <div className="dart2-halftone" aria-hidden="true" />
+              </div>
+
+              {/* Combat accent bar */}
+              <div className="dart2-ink-bar" />
+
+              {/* Panel corner stamp */}
+              <div className="dart2-corner-stamp" aria-hidden="true">DART</div>
+
+              <div className="dart2-content">
+                {/* Header row */}
+                <div className="dart2-header">
+                  <div className="dart2-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF4438" strokeWidth="1.8" strokeLinecap="round" className="dart2-reticle">
+                      <circle cx="12" cy="12" r="10"/>
+                      <circle cx="12" cy="12" r="4"/>
+                      <line x1="12" y1="2" x2="12" y2="6"/>
+                      <line x1="12" y1="18" x2="12" y2="22"/>
+                      <line x1="2" y1="12" x2="6" y2="12"/>
+                      <line x1="18" y1="12" x2="22" y2="12"/>
+                    </svg>
+                  </div>
+                  <div className="dart2-badge">◈ نموذج أولي</div>
                 </div>
-                <span className="tdc-card-badge" style={{ background: 'rgba(255,68,56,0.08)', color: '#ff6b63', border: '1px solid rgba(255,68,56,0.2)', fontSize: '0.6rem', padding: '3px 8px', borderRadius: '3px', letterSpacing: '0.1em' }}>◈ نموذج أولي</span>
+
+                {/* Comic title block */}
+                <div className="dart2-title-block">
+                  <div className="dart2-action-text">LOCK.</div>
+                  <div className="dart2-title">DART</div>
+                  <p className="dart2-tagline">إشارة راديوية للمعركة الجوية</p>
+                </div>
+
+                <p className="dart2-desc">طبقة قتالية معيارية لطائرات FPV — تأمين اتجاهي بالراديو، كشف ضربات بالأشعة الإجلاء، وردود فعل لمسية للطيار.</p>
+
+                <div className="dart2-tags">
+                  <span className="dart2-tag dart2-tag--orange">FPV · UAV</span>
+                  <span className="dart2-tag dart2-tag--red">RF تأمين</span>
+                  <span className="dart2-tag dart2-tag--dim">ESP32</span>
+                </div>
+
+                {/* Stat bar */}
+                <div className="dart2-stat-bar">
+                  <div className="dart2-stat">
+                    <span className="dart2-stat-val">2.4G</span>
+                    <span className="dart2-stat-label">RF</span>
+                  </div>
+                  <div className="dart2-stat-divider" />
+                  <div className="dart2-stat">
+                    <span className="dart2-stat-val">940nm</span>
+                    <span className="dart2-stat-label">IR</span>
+                  </div>
+                  <div className="dart2-stat-divider" />
+                  <div className="dart2-stat">
+                    <span className="dart2-stat-val">&lt;2ms</span>
+                    <span className="dart2-stat-label">تأخر</span>
+                  </div>
+                </div>
+
+                <a href="/dart/" className="dart2-link">عرض البطولة <span className="dart2-link-arrow">←</span></a>
               </div>
-              <h3 className="tdc-card-title" style={{ color: '#f0f0f5' }}>DART</h3>
-              <p className="tdc-card-tagline" style={{ color: '#FF8A3D' }}>إشارة راديوية للمعركة الجوية</p>
-              <p className="tdc-card-desc" style={{ color: '#8888a0' }}>طبقة قتالية معيارية لطائرات FPV — تأمين اتجاهي بالراديو، كشف ضربات بالأشعة الإجلاء، وردود فعل لمسية للطيار. أول بطولة DART تُعرّف فئة جوية قتالية جديدة.</p>
-              <div className="tdc-card-tags">
-                <span className="tdc-tag tdc-tag--cyan" style={{ color: '#FF8A3D', borderColor: 'rgba(255,138,61,0.3)', background: 'rgba(255,138,61,0.08)' }}>FPV · UAV</span>
-                <span className="tdc-tag tdc-tag--magenta" style={{ color: '#ff6b63', borderColor: 'rgba(255,68,56,0.3)', background: 'rgba(255,68,56,0.08)' }}>RF تأمين</span>
-                <span className="tdc-tag tdc-tag--dim">ESP32</span>
-              </div>
-              <a href="/dart/" className="tdc-card-link" style={{ color: '#FF8A3D' }}>
-                عرض البطولة <span className="tdc-card-link-arrow">←</span>
-              </a>
             </article>
+
 
 
             <article className="product-card reveal delay-400" id="card-edgetack-ar" data-accent="blue">

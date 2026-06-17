@@ -1,4 +1,4 @@
-/* ════════════════════════════════════════════════════════
+﻿/* ════════════════════════════════════════════════════════
    HOME.CSS — White + Billiard Red Theme
    ════════════════════════════════════════════════════════ */
 
@@ -337,125 +337,220 @@
   padding: .2rem .55rem; margin-bottom: .4rem; font-family: monospace;
 }
 
-/* ══════════════════════════════════════════════════════
-   TDC — TURBO DRONE CIRCUIT — Themed Product Card
-   Palette from hero.png & panels:
-     Deep space  #07090E  |  Cyan electric #00E5FF
-     Hot magenta #FF2D9B  |  Burn orange   #E6492D
-   ══════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════
+   TDC2 — TURBO DRONE CIRCUIT — COMIC FPV REMASTER
+   Palette: Deep space #07090E | Cyan #00E5FF | Magenta #FF2D9B | Burn #E6492D
+   ══════════════════════════════════════════════════════════════ */
 .product-card--tdc {
   background: #07090E !important;
-  border: 1px solid rgba(0,229,255,0.12) !important;
-  border-radius: 14px !important;
-  box-shadow: 0 2px 16px rgba(0,229,255,.06), 0 0 0 1px rgba(0,229,255,.04) !important;
-  overflow: hidden;
-  position: relative;
-  transition: transform 0.35s cubic-bezier(.2,0,0,1), box-shadow 0.35s ease, border-color 0.35s ease !important;
+  border: 2px solid rgba(0,229,255,0.22) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 20px rgba(0,229,255,.06), 4px 4px 0 rgba(0,229,255,0.06), inset 0 1px 0 rgba(0,229,255,0.08) !important;
+  overflow: hidden; position: relative;
+  transition: transform 0.3s cubic-bezier(.2,0,0,1), box-shadow 0.3s ease, border-color 0.3s ease !important;
 }
 .product-card--tdc:hover {
-  transform: translateY(-8px) !important;
-  border-color: rgba(0,229,255,0.28) !important;
-  box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 40px rgba(0,229,255,.12), 0 0 80px rgba(255,45,155,.06) !important;
+  transform: translateY(-8px) skewX(-0.4deg) !important;
+  border-color: rgba(0,229,255,0.55) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,.7), 0 0 40px rgba(0,229,255,.15), 0 0 80px rgba(255,45,155,.07), 4px 4px 0 rgba(0,229,255,0.12) !important;
 }
-/* Radial cyan + magenta energy glow layer */
-.tdc-card-glow {
+.tdc2-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.tdc2-speedlines { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 0.3s ease; }
+.product-card--tdc:hover .tdc2-speedlines { opacity: 1.4; }
+.tdc2-halftone {
   position: absolute; inset: 0;
-  pointer-events: none; z-index: 0;
-  background:
-    radial-gradient(ellipse 70% 55% at 30% 0%, rgba(0,229,255,0.09) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(255,45,155,0.07) 0%, transparent 55%);
-  transition: background 0.35s ease;
+  background-image: radial-gradient(circle, rgba(0,229,255,0.06) 1px, transparent 1px);
+  background-size: 14px 14px; background-position: 7px 7px;
+  opacity: 0.5; transition: opacity 0.3s ease;
 }
-.product-card--tdc:hover .tdc-card-glow {
-  background:
-    radial-gradient(ellipse 80% 65% at 30% 0%, rgba(0,229,255,0.16) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 100%, rgba(255,45,155,0.13) 0%, transparent 55%);
+.product-card--tdc:hover .tdc2-halftone { opacity: 0.85; }
+.tdc2-ink-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #00E5FF 0%, #FF2D9B 45%, #E6492D 75%, #00E5FF 100%);
+  background-size: 200% 100%; z-index: 3; opacity: 0.85;
+  animation: tdc2-bar-sweep 3s ease-in-out infinite;
 }
-/* Circuit trace SVG */
-.tdc-card-circuit {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  pointer-events: none; z-index: 0;
-  transition: opacity 0.35s ease;
+@keyframes tdc2-bar-sweep {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
 }
-/* Cyan/magenta electric accent bar */
-.tdc-card-accent-bar {
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent 0%, #00E5FF 40%, #FF2D9B 70%, transparent 100%);
-  z-index: 2; opacity: 0.7;
-  transition: opacity 0.35s ease;
+.tdc2-corner-stamp {
+  position: absolute; top: 12px; right: 14px; z-index: 4;
+  font-family: 'JetBrains Mono', monospace; font-size: .48rem; font-weight: 900; letter-spacing: .22em;
+  color: rgba(0,229,255,0.35); border: 1px solid rgba(0,229,255,0.15);
+  border-radius: 3px; padding: .12rem .45rem; transform: rotate(1.5deg); user-select: none;
 }
-.product-card--tdc:hover .tdc-card-accent-bar { opacity: 1; }
-/* Content stacking above overlays */
-.product-card--tdc .card-header,
-.product-card--tdc .tdc-card-title,
-.product-card--tdc .tdc-card-tagline,
-.product-card--tdc .tdc-card-desc,
-.product-card--tdc .tdc-card-tags,
-.product-card--tdc .tdc-card-link { position: relative; z-index: 2; }
-/* Neon cyan icon */
-.tdc-card-icon {
-  width: 40px; height: 40px;
-  background: rgba(0,229,255,0.08);
-  border: 1px solid rgba(0,229,255,0.2);
-  border-radius: 10px;
+.tdc2-content { position: relative; z-index: 2; padding: 1.2rem 1.15rem 1.1rem; display: flex; flex-direction: column; }
+.tdc2-header  { display: flex; align-items: center; gap: .6rem; margin-bottom: .6rem; }
+.tdc2-icon {
+  width: 38px; height: 38px; background: rgba(0,229,255,0.07);
+  border: 1.5px solid rgba(0,229,255,0.25); border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
-  filter: drop-shadow(0 0 6px rgba(0,229,255,.4));
-  transition: filter 0.3s ease, background 0.3s ease;
+  filter: drop-shadow(0 0 5px rgba(0,229,255,.35)); transition: filter 0.3s ease, background 0.3s ease;
 }
-.product-card--tdc:hover .tdc-card-icon {
-  background: rgba(0,229,255,0.14);
-  filter: drop-shadow(0 0 12px rgba(0,229,255,.65));
+.product-card--tdc:hover .tdc2-icon { background: rgba(0,229,255,0.13); filter: drop-shadow(0 0 14px rgba(0,229,255,.7)); }
+.tdc2-bolt { transition: transform 0.5s cubic-bezier(.2,0,0,1); }
+.product-card--tdc:hover .tdc2-bolt { transform: rotate(20deg) scale(1.15); }
+.tdc2-badge {
+  font-family: 'JetBrains Mono', monospace; font-size: .52rem; font-weight: 700; letter-spacing: .18em;
+  color: #E6492D; background: rgba(230,73,45,0.1); border: 1px solid rgba(230,73,45,0.28);
+  border-radius: 3px; padding: .2rem .6rem; animation: tdc2-badge-flicker 2.8s ease-in-out infinite;
 }
-/* TURBO MODE badge */
-.tdc-card-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .54rem; letter-spacing: .18em; font-weight: 700;
-  color: #E6492D; background: rgba(230,73,45,0.1);
-  border: 1px solid rgba(230,73,45,0.22); border-radius: 4px;
-  padding: .22rem .65rem;
-  animation: tdc-badge-pulse 2.4s ease-in-out infinite;
+@keyframes tdc2-badge-flicker {
+  0%, 100% { opacity: 1; color: #E6492D; }
+  45% { opacity: 0.85; color: #FF6B4A; box-shadow: 0 0 8px rgba(230,73,45,.2); }
+  50% { opacity: 0.6; }
+  55% { opacity: 1; }
 }
-@keyframes tdc-badge-pulse {
-  0%,100% { color: #E6492D; border-color: rgba(230,73,45,0.22); }
-  50% { color: #FF6B4A; border-color: rgba(230,73,45,0.42); box-shadow: 0 0 8px rgba(230,73,45,.22); }
-}
-/* Text — light on dark */
-.tdc-card-title {
+.tdc2-title-block { margin-bottom: .45rem; }
+.tdc2-action-text {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: .92rem !important; font-weight: 700 !important;
-  letter-spacing: .06em !important; color: #EDE8DC !important;
-  margin: .6rem 0 .25rem !important;
+  font-size: 2.4rem !important; font-weight: 900 !important; font-style: italic;
+  line-height: 0.9 !important; color: transparent !important;
+  -webkit-text-stroke: 1.5px rgba(0,229,255,0.22);
+  letter-spacing: -0.03em !important; user-select: none;
 }
-.tdc-card-tagline {
-  font-size: .78rem !important; color: #9A9485 !important; margin-bottom: .6rem !important;
+.tdc2-title {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 1.05rem !important; font-weight: 900 !important; letter-spacing: .08em !important;
+  color: #EDE8DC !important; text-shadow: 0 0 20px rgba(0,229,255,0.2); margin-bottom: .2rem !important;
 }
-.tdc-card-desc {
-  font-size: .77rem !important; line-height: 1.7 !important;
-  color: #6A6460 !important; margin-bottom: .9rem !important;
+.tdc2-tagline { font-size: .74rem !important; color: #00E5FF !important; opacity: 0.7; margin: 0 0 .45rem !important; }
+.tdc2-desc    { font-size: .74rem !important; line-height: 1.72 !important; color: #5a5a6a !important; margin-bottom: .65rem !important; }
+.tdc2-tags    { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .75rem; }
+.tdc2-tag     { font-family: 'JetBrains Mono', monospace; font-size: .5rem; font-weight: 700; letter-spacing: .12em; padding: .16rem .52rem; border-radius: 3px; }
+.tdc2-tag--cyan    { color: #00E5FF; background: rgba(0,229,255,0.08);  border: 1px solid rgba(0,229,255,0.22); }
+.tdc2-tag--magenta { color: #FF2D9B; background: rgba(255,45,155,0.08); border: 1px solid rgba(255,45,155,0.22); }
+.tdc2-tag--dim     { color: #444455; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+.tdc2-stat-bar {
+  display: flex; align-items: center;
+  background: rgba(0,229,255,0.04); border: 1px solid rgba(0,229,255,0.1);
+  border-radius: 6px; overflow: hidden; margin-bottom: .85rem;
+  transition: border-color 0.3s ease, background 0.3s ease;
 }
-/* Tags */
-.tdc-card-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
-.tdc-tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .54rem; font-weight: 600; letter-spacing: .1em;
-  padding: .18rem .55rem; border-radius: 3px;
-}
-.tdc-tag--cyan  { color: #00E5FF; background: rgba(0,229,255,0.08);  border: 1px solid rgba(0,229,255,0.2); }
-.tdc-tag--magenta { color: #FF2D9B; background: rgba(255,45,155,0.08); border: 1px solid rgba(255,45,155,0.2); }
-.tdc-tag--dim   { color: #5C5650; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
-/* CTA link */
-.tdc-card-link {
+.product-card--tdc:hover .tdc2-stat-bar { border-color: rgba(0,229,255,0.22); background: rgba(0,229,255,0.07); }
+.tdc2-stat { flex: 1; display: flex; flex-direction: column; align-items: center; padding: .45rem .3rem; }
+.tdc2-stat-val   { font-family: 'JetBrains Mono', monospace; font-size: .78rem; font-weight: 900; color: #00E5FF; text-shadow: 0 0 8px rgba(0,229,255,.4); line-height: 1; }
+.tdc2-stat-label { font-family: 'JetBrains Mono', monospace; font-size: .42rem; color: rgba(0,229,255,0.45); letter-spacing: .1em; margin-top: .15rem; }
+.tdc2-stat-divider { width: 1px; height: 32px; background: rgba(0,229,255,0.12); flex-shrink: 0; }
+.tdc2-link {
   display: inline-flex; align-items: center; gap: .4rem;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: .68rem !important; font-weight: 700 !important;
-  letter-spacing: .1em; color: #00E5FF !important;
-  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace !important; font-size: .65rem !important; font-weight: 700 !important;
+  letter-spacing: .1em; color: #00E5FF !important; text-decoration: none;
   transition: gap 0.25s ease, text-shadow 0.25s ease !important;
 }
-.tdc-card-link:hover { text-decoration: none !important; gap: .7rem; text-shadow: 0 0 12px rgba(0,229,255,.5); }
-.tdc-card-link-arrow { display: inline-block; transition: transform 0.25s cubic-bezier(.2,0,0,1); }
-.tdc-card-link:hover .tdc-card-link-arrow { transform: translateX(-3px); }
+.tdc2-link:hover { text-decoration: none !important; gap: .7rem; text-shadow: 0 0 14px rgba(0,229,255,.6); }
+.tdc2-link-arrow { display: inline-block; transition: transform 0.25s cubic-bezier(.2,0,0,1); }
+.tdc2-link:hover .tdc2-link-arrow { transform: translateX(-4px); }
+
+
+/* ══════════════════════════════════════════════════════════════
+   DART2 — DRONE ARENA RADIO TAG — COMBAT COMIC REMASTER
+   Palette: Void #0C0608 | Combat red #FF4438 | Burn orange #FF8A3D
+   ══════════════════════════════════════════════════════════════ */
+.product-card--dart2 {
+  background: #0C0608 !important;
+  border: 2px solid rgba(255,68,56,0.22) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 20px rgba(255,68,56,.06), 4px 4px 0 rgba(255,68,56,0.07), inset 0 1px 0 rgba(255,68,56,0.06) !important;
+  overflow: hidden; position: relative;
+  transition: transform 0.3s cubic-bezier(.2,0,0,1), box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+.product-card--dart2:hover {
+  transform: translateY(-8px) skewX(0.4deg) !important;
+  border-color: rgba(255,68,56,0.55) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,.7), 0 0 40px rgba(255,68,56,.15), 0 0 80px rgba(255,138,61,.08), 4px 4px 0 rgba(255,68,56,0.12) !important;
+}
+.dart2-bg      { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.dart2-overlay { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 0.3s ease; }
+.dart2-halftone {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(-45deg, rgba(255,68,56,0.035) 0px, rgba(255,68,56,0.035) 1px, transparent 1px, transparent 12px);
+  opacity: 0.7; transition: opacity 0.3s ease;
+}
+.product-card--dart2:hover .dart2-halftone { opacity: 1.1; }
+.dart2-ink-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #FF4438 0%, #FF8A3D 40%, #FFB347 65%, #FF4438 100%);
+  background-size: 200% 100%; z-index: 3; opacity: 0.85;
+  animation: dart2-bar-sweep 2.5s ease-in-out infinite;
+}
+@keyframes dart2-bar-sweep {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+.dart2-corner-stamp {
+  position: absolute; top: 12px; right: 14px; z-index: 4;
+  font-family: 'JetBrains Mono', monospace; font-size: .48rem; font-weight: 900; letter-spacing: .22em;
+  color: rgba(255,68,56,0.4); border: 1px solid rgba(255,68,56,0.18);
+  border-radius: 3px; padding: .12rem .45rem; transform: rotate(-1.5deg); user-select: none;
+}
+.dart2-content { position: relative; z-index: 2; padding: 1.2rem 1.15rem 1.1rem; display: flex; flex-direction: column; }
+.dart2-header  { display: flex; align-items: center; gap: .6rem; margin-bottom: .6rem; }
+.dart2-icon {
+  width: 38px; height: 38px; background: rgba(255,68,56,0.07);
+  border: 1.5px solid rgba(255,68,56,0.28); border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  filter: drop-shadow(0 0 5px rgba(255,68,56,.32)); transition: filter 0.3s ease, background 0.3s ease;
+}
+.product-card--dart2:hover .dart2-icon { background: rgba(255,68,56,0.13); filter: drop-shadow(0 0 14px rgba(255,68,56,.65)); }
+.dart2-reticle { transition: transform 0.6s cubic-bezier(.2,0,0,1); }
+.product-card--dart2:hover .dart2-reticle { transform: rotate(45deg); }
+.dart2-badge {
+  font-family: 'JetBrains Mono', monospace; font-size: .52rem; font-weight: 700; letter-spacing: .15em;
+  color: #FF8A3D; background: rgba(255,138,61,0.08); border: 1px solid rgba(255,138,61,0.25);
+  border-radius: 3px; padding: .2rem .6rem; animation: dart2-badge-pulse 3s ease-in-out infinite;
+}
+@keyframes dart2-badge-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; box-shadow: 0 0 8px rgba(255,68,56,.2); }
+}
+.dart2-title-block { margin-bottom: .45rem; }
+.dart2-action-text {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 2.4rem !important; font-weight: 900 !important; font-style: italic;
+  line-height: 0.9 !important; color: transparent !important;
+  -webkit-text-stroke: 1.5px rgba(255,68,56,0.2);
+  letter-spacing: -0.02em !important; user-select: none;
+}
+.dart2-title {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 1.05rem !important; font-weight: 900 !important; letter-spacing: .1em !important;
+  color: #f5f0ee !important; text-shadow: 0 0 20px rgba(255,68,56,0.2); margin-bottom: .2rem !important;
+}
+.dart2-tagline { font-size: .74rem !important; color: #FF8A3D !important; opacity: 0.8; margin: 0 0 .45rem !important; }
+.dart2-desc    { font-size: .74rem !important; line-height: 1.72 !important; color: #5a4a4a !important; margin-bottom: .65rem !important; }
+.dart2-tags    { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .75rem; }
+.dart2-tag     { font-family: 'JetBrains Mono', monospace; font-size: .5rem; font-weight: 700; letter-spacing: .12em; padding: .16rem .52rem; border-radius: 3px; }
+.dart2-tag--orange { color: #FF8A3D; background: rgba(255,138,61,0.08); border: 1px solid rgba(255,138,61,0.25); }
+.dart2-tag--red    { color: #FF4438; background: rgba(255,68,56,0.08);  border: 1px solid rgba(255,68,56,0.25); }
+.dart2-tag--dim    { color: #443535; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+.dart2-stat-bar {
+  display: flex; align-items: center;
+  background: rgba(255,68,56,0.04); border: 1px solid rgba(255,68,56,0.12);
+  border-radius: 6px; overflow: hidden; margin-bottom: .85rem;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.product-card--dart2:hover .dart2-stat-bar { border-color: rgba(255,68,56,0.28); background: rgba(255,68,56,0.08); }
+.dart2-stat  { flex: 1; display: flex; flex-direction: column; align-items: center; padding: .45rem .3rem; }
+.dart2-stat-val   { font-family: 'JetBrains Mono', monospace; font-size: .78rem; font-weight: 900; color: #FF4438; text-shadow: 0 0 8px rgba(255,68,56,.4); line-height: 1; }
+.dart2-stat-label { font-family: 'JetBrains Mono', monospace; font-size: .42rem; color: rgba(255,68,56,0.45); letter-spacing: .1em; margin-top: .15rem; }
+.dart2-stat-divider { width: 1px; height: 32px; background: rgba(255,68,56,0.12); flex-shrink: 0; }
+.dart2-link {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: 'JetBrains Mono', monospace !important; font-size: .65rem !important; font-weight: 700 !important;
+  letter-spacing: .1em; color: #FF8A3D !important; text-decoration: none;
+  transition: gap 0.25s ease, text-shadow 0.25s ease !important;
+}
+.dart2-link:hover { text-decoration: none !important; gap: .7rem; text-shadow: 0 0 14px rgba(255,138,61,.6); }
+.dart2-link-arrow { display: inline-block; transition: transform 0.25s cubic-bezier(.2,0,0,1); }
+.dart2-link:hover .dart2-link-arrow { transform: translateX(-4px); }
+
+/* Prevent white-wash from .home-root .product-card blanket rule */
+.home-root .product-card--tdc   { background: #07090E !important; }
+.home-root .product-card--dart2 { background: #0C0608 !important; }
+
 
 
 /* ══════════════════════════════════════════════════════
