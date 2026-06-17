@@ -1070,7 +1070,57 @@ export default function HomeScreen() {
               <a href="/tdc" className="tdc-card-link">عرض المشروع <span className="tdc-card-link-arrow">←</span></a>
             </article>
 
-            {/* EDGE TACK */}
+            {/* DART — FPV Combat System card */}
+            <article className="product-card product-card--tdc reveal delay-400" id="card-dart-ar" data-accent="dart">
+              {/* Dark tactical base + radar rings + RF sweep */}
+              <div className="tdc-card-glow" aria-hidden="true" style={{ background: 'radial-gradient(ellipse at 70% 30%, rgba(255,68,56,0.12) 0%, transparent 65%)' }} />
+              <svg className="tdc-card-circuit" viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                {/* Radar rings — top right */}
+                <circle cx="240" cy="40" r="22" stroke="#FF4438" strokeWidth="0.7" strokeOpacity="0.22"/>
+                <circle cx="240" cy="40" r="38" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.14"/>
+                <circle cx="240" cy="40" r="56" stroke="#FF8A3D" strokeWidth="0.4" strokeOpacity="0.1"/>
+                {/* RF sweep line */}
+                <line x1="240" y1="40" x2="265" y2="15" stroke="#FF4438" strokeWidth="0.8" strokeOpacity="0.3"/>
+                {/* Lock-on crosshair center */}
+                <circle cx="240" cy="40" r="3" fill="#FF4438" fillOpacity="0.4"/>
+                {/* Circuit traces — bottom left */}
+                <path d="M0 170 L35 170 L35 130 L80 130 L80 100 L120 100" stroke="#FF8A3D" strokeWidth="0.6" strokeOpacity="0.15"/>
+                <path d="M0 140 L20 140 L20 110 L60 110" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.12"/>
+                <circle cx="80" cy="130" r="2.5" fill="#FF4438" fillOpacity="0.28"/>
+                <circle cx="35" cy="170" r="2" fill="#FF8A3D" fillOpacity="0.3"/>
+              </svg>
+              {/* Accent bar — combat red */}
+              <div className="tdc-card-accent-bar" style={{ background: 'linear-gradient(90deg, #FF4438, #FF8A3D)' }} />
+              {/* Badge */}
+              <div className="tdc-card-badge" style={{ color: '#FF8A3D', borderColor: 'rgba(255,138,61,0.3)' }}>⚡ بطولة DART</div>
+              <div className="card-header">
+                <div className="tdc-card-icon" style={{ background: 'rgba(255,68,56,0.1)', border: '1px solid rgba(255,68,56,0.25)' }}>
+                  {/* RF target / crosshair icon */}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF4438" strokeWidth="1.8" strokeLinecap="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <line x1="12" y1="2" x2="12" y2="6"/>
+                    <line x1="12" y1="18" x2="12" y2="22"/>
+                    <line x1="2" y1="12" x2="6" y2="12"/>
+                    <line x1="18" y1="12" x2="22" y2="12"/>
+                  </svg>
+                </div>
+                <span className="tdc-card-badge" style={{ background: 'rgba(255,68,56,0.08)', color: '#ff6b63', border: '1px solid rgba(255,68,56,0.2)', fontSize: '0.6rem', padding: '3px 8px', borderRadius: '3px', letterSpacing: '0.1em' }}>◈ نموذج أولي</span>
+              </div>
+              <h3 className="tdc-card-title" style={{ color: '#f0f0f5' }}>DART</h3>
+              <p className="tdc-card-tagline" style={{ color: '#FF8A3D' }}>إشارة راديوية للمعركة الجوية</p>
+              <p className="tdc-card-desc" style={{ color: '#8888a0' }}>طبقة قتالية معيارية لطائرات FPV — تأمين اتجاهي بالراديو، كشف ضربات بالأشعة الإجلاء، وردود فعل لمسية للطيار. أول بطولة DART تُعرّف فئة جوية قتالية جديدة.</p>
+              <div className="tdc-card-tags">
+                <span className="tdc-tag tdc-tag--cyan" style={{ color: '#FF8A3D', borderColor: 'rgba(255,138,61,0.3)', background: 'rgba(255,138,61,0.08)' }}>FPV · UAV</span>
+                <span className="tdc-tag tdc-tag--magenta" style={{ color: '#ff6b63', borderColor: 'rgba(255,68,56,0.3)', background: 'rgba(255,68,56,0.08)' }}>RF تأمين</span>
+                <span className="tdc-tag tdc-tag--dim">ESP32</span>
+              </div>
+              <a href="/dart/" className="tdc-card-link" style={{ color: '#FF8A3D' }}>
+                عرض البطولة <span className="tdc-card-link-arrow">←</span>
+              </a>
+            </article>
+
+
             <article className="product-card reveal delay-400" id="card-edgetack-ar" data-accent="blue">
               <div className="card-accent-bar" />
               <div className="card-header">
