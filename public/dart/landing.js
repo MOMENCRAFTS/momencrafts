@@ -3,6 +3,19 @@
    Landing Page Interactions
    ═══════════════════════════════════════════════════════════ */
 
+// ─── Scroll Progress Bar ───
+const progressBar = document.getElementById('progress-bar');
+
+function updateProgressBar() {
+  if (!progressBar) return;
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  progressBar.style.width = Math.min(pct, 100) + '%';
+}
+
+window.addEventListener('scroll', updateProgressBar, { passive: true });
+
 // ─── Navigation Scroll ───
 const nav = document.getElementById('nav');
 
@@ -257,4 +270,148 @@ window.addEventListener('load', () => {
   requestAnimationFrame(() => {
     document.body.style.opacity = '1';
   });
+});
+
+// ─── Countdown Animation (Chapter 03 — Starting Pad) ───
+function runCountdown() {
+  const numEl = document.getElementById('countdown-number');
+  const display = document.getElementById('countdown-display');
+  if (!numEl || !display) return;
+
+  const steps = [
+    { label: '3', color: 'var(--red-400)', scale: '1' },
+    { label: '2', color: 'var(--orange-400)', scale: '1.1' },
+    { label: '1', color: 'var(--amber-400)', scale: '1.2' },
+    { label: 'GO', color: '#00ff88', scale: '1.35' },
+  ];
+
+  let i = 0;
+  function tick() {
+    if (i >= steps.length) {
+      // Reset after "GO" holds
+      setTimeout(() => {
+        numEl.textContent = '3';
+        numEl.style.color = 'var(--red-400)';
+        numEl.style.transform = 'scale(1)';
+        display.style.borderColor = 'rgba(255,68,56,0.2)';
+      }, 1800);
+      return;
+    }
+
+    const step = steps[i];
+    numEl.style.transform = 'scale(0.7)';
+    numEl.style.transition = 'transform 0.1s ease, color 0.2s ease';
+
+    setTimeout(() => {
+      numEl.textContent = step.label;
+      numEl.style.color = step.color;
+      numEl.style.transform = `scale(${step.scale})`;
+      display.style.borderColor = step.color.includes('#') ? step.color : step.color;
+    }, 100);
+
+    i++;
+    if (i < steps.length) {
+      setTimeout(tick, i === steps.length - 1 ? 900 : 800);
+    } else {
+      setTimeout(tick, 1200);
+    }
+  }
+
+  tick();
+}
+
+// Trigger countdown when chapter-03 enters viewport
+const ch03 = document.getElementById('chapter-03');
+if (ch03) {
+  let countdownFired = false;
+  const cdObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !countdownFired) {
+        countdownFired = true;
+        setTimeout(runCountdown, 600);
+        // Re-run every time section is visible (re-observe after delay)
+        setTimeout(() => { countdownFired = false; }, 8000);
+      }
+    });
+  }, { threshold: 0.3 });
+  cdObserver.observe(ch03);
+}
+
+// ─── Arc Step Stagger on Enter ───
+const arcSection = document.getElementById('arc');
+if (arcSection) {
+  const arcSteps = arcSection.querySelectorAll('.arc-step');
+  arcSteps.forEach((step, i) => {
+    step.style.opacity = '0';
+    step.style.transform = 'translateY(16px)';
+    step.style.transition = `opacity 0.5s ${i * 0.08}s ease, transform 0.5s ${i * 0.08}s ease`;
+  });
+
+  const arcObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        arcSteps.forEach(step => {
+          step.style.opacity = '1';
+          step.style.transform = 'translateY(0)';
+        });
+        arcObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  arcObserver.observe(arcSection);
+}
+
+// ─── HUD Mockup Entrance Stagger ───
+document.querySelectorAll('.hud-mockup').forEach((hud) => {
+  hud.style.opacity = '0';
+  hud.style.transform = 'translateY(20px)';
+  hud.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+
+  const hudObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        hudObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  hudObserver.observe(hud);
+});
+
+// ─── Lap Label Pulse on Enter ───
+document.querySelectorAll('.lap-label').forEach(label => {
+  label.style.opacity = '0';
+  label.style.transform = 'translateX(-16px)';
+  label.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+
+  const lapObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateX(0)';
+        lapObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  lapObserver.observe(label);
+});
+
+// ─── Dialogue Bubble Slide-in ───
+document.querySelectorAll('.dialogue-line').forEach((line, i) => {
+  const isRight = line.classList.contains('dialogue-line--right');
+  line.style.opacity = '0';
+  line.style.transform = `translateX(${isRight ? '20px' : '-20px'})`;
+  line.style.transition = `opacity 0.5s ${i * 0.1}s ease, transform 0.5s ${i * 0.1}s ease`;
+
+  const dlObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateX(0)';
+        dlObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+  dlObserver.observe(line);
 });

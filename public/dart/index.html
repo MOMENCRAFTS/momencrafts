@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="progress-bar"></div>
 
   <!-- ═══ NAVIGATION ═══ -->
   <nav class="nav" id="nav">
@@ -111,288 +112,699 @@
     </div>
   </section>
 
-  <!-- ═══ CHAMPIONSHIP STORY ARC ═══ -->
-  <section class="story-arc container" id="how-it-works">
-    <div class="story-arc__header reveal">
-      <div class="section-label">CHAMPIONSHIP STORY ARC</div>
-      <h2 class="section-title">First of its Kind</h2>
-      <p class="section-desc">
-        A combat-racing FPV tournament where pilots score by flying gates, locking targets, landing IR tags, and surviving hits.
-      </p>
-    </div>
-    
-    <div class="story-grid">
-      <!-- Panel 1 -->
-      <div class="story-panel reveal reveal-delay-1">
-        <div class="story-panel__frame">
-          <img src="panels/1.png" alt="Panel 1 — Workbench Reveal" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>DART CHAMPIONSHIP 001</strong><br>
-            FIRST ORGANIZED COMBAT RACING<br>
-            FPV TOURNAMENT
-          </div>
-        </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">01</div>
-          <div class="story-panel__title">Workbench Reveal</div>
-          <div class="story-panel__caption">
-            "TOMORROW, THE FIRST DART CHAMPIONSHIP BEGINS. TONIGHT, EVERY SIGNAL MUST BE PERFECT."
+  <!-- ═══ CHAMPIONSHIP STORY NARRATIVE ═══ -->
+  <div class="story-narrative" id="how-it-works">
+
+    <!-- PROLOGUE -->
+    <section class="prologue reveal" id="story">
+      <div class="prologue__label">DART CHAMPIONSHIP 001</div>
+      <div class="prologue__time">22:<span>00</span></div>
+      <div class="prologue__subtitle">The Arena Is Empty. Tomorrow It Won't Be.</div>
+      <div class="prologue__body">
+        <p>The first DART Championship is 12 hours away. Eight pilots. Three laps each. One ruleset nobody's tried before: combat racing — fly the gates <em>and</em> tag your opponents.</p>
+        <p>RF lock-on guides you in. IR confirms the hit. A haptic pulse on your radio tells you the score changed. The drone never knows anything happened.</p>
+      </div>
+    </section>
+
+    <div class="divider--glow"></div>
+
+    <!-- ═══ CHAPTER 01 — NIGHT BEFORE ═══ -->
+    <section class="chapter reveal" id="chapter-01">
+      <div class="chapter-inner">
+        <div class="chapter-header">
+          <div class="chapter-number">01</div>
+          <div class="chapter-meta">
+            <div class="chapter-phase">Phase 01 · Night Before</div>
+            <div class="chapter-title">System Setup</div>
           </div>
         </div>
       </div>
-      
-      <!-- Panel 2 -->
-      <div class="story-panel reveal reveal-delay-2">
-        <div class="story-panel__frame">
-          <img src="panels/2.png" alt="Panel 2 — Pilot Prepares" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>PILOT: BLUE-03</strong><br>
-            EVENT: DART CHAMPIONSHIP 001<br>
-            STATUS: PRE-RACE INSPECTION
-          </div>
+
+      <!-- Panel 01 — Workbench Reveal -->
+      <div class="cinematic-panel cinematic-panel--full reveal">
+        <img src="panels/1.png" alt="Workbench Reveal — DART system wiring">
+        <div class="cinematic-panel__overlay"></div>
+        <div class="cinematic-panel__badge">PANEL 01 / 12</div>
+        <div class="cinematic-panel__caption">
+          <div class="cinematic-panel__title">Workbench Reveal</div>
+          <div class="cinematic-panel__sub">DART CHAMPIONSHIP 001 · T-MINUS 12:00</div>
         </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">02</div>
-          <div class="story-panel__title">Pilot Prepares</div>
-          <div class="story-panel__caption">
-            "NO MISS-WIRES. NO DIRTY LOCKS. NO SECOND CHANCES."
+      </div>
+
+      <div class="narrative reveal">
+        <div class="narrative__body">
+          <p>The bench is covered in wire. Four ESP32-S3s, a patch antenna array, a reel of 940nm IR LEDs, and three RP2040 prototypes. Tonight every signal must be perfect.</p>
+        </div>
+      </div>
+
+      <!-- Panel 02 — Pilot Prepares -->
+      <div class="cinematic-panel cinematic-panel--full reveal">
+        <img src="panels/2.png" alt="Pilot Prepares — pre-flight inspection">
+        <div class="cinematic-panel__overlay"></div>
+        <div class="cinematic-panel__badge">PANEL 02 / 12</div>
+        <div class="cinematic-panel__caption">
+          <div class="cinematic-panel__title">Pilot Prepares</div>
+          <div class="cinematic-panel__sub">PILOT: BLUE-03 · PRE-RACE INSPECTION</div>
+        </div>
+      </div>
+
+      <!-- HUD: System Check -->
+      <div class="hud-area reveal">
+        <div class="hud-mockup" style="max-width:480px">
+          <div class="hud-title">
+            <span class="hud-title-dot"></span>
+            DART SYSTEM CHECK
+          </div>
+          <div class="hud-body">
+            <div class="hud-row">
+              <span class="hud-row__key">DART Core</span>
+              <span class="hud-row__val hud-row__val--green">ONLINE</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">RF Lock-On</span>
+              <span class="hud-row__val hud-row__val--green">CALIBRATED</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">IR Sensors</span>
+              <span class="hud-row__val hud-row__val--green">6 / 6 READY</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">CRSF Bridge</span>
+              <span class="hud-row__val hud-row__val--green">PASSIVE SAFE</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">Flight Control</span>
+              <span class="hud-row__val hud-row__val--green">PROTECTED</span>
+            </div>
+            <div class="hud-separator"></div>
+            <div class="hud-row">
+              <span class="hud-row__key">Status</span>
+              <span class="hud-row__val">STANDBY</span>
+            </div>
+          </div>
+          <div class="hud-btn">[ ENTER ARENA ]</div>
+        </div>
+      </div>
+
+      <div class="narrative reveal">
+        <blockquote class="narrative-quote">"No miss-wires. No dirty locks. No second chances."</blockquote>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══ CHAPTER 02 — SAFETY CHECK ═══ -->
+    <section class="chapter reveal" id="chapter-02">
+      <div class="chapter-inner">
+        <div class="chapter-header">
+          <div class="chapter-number">02</div>
+          <div class="chapter-meta">
+            <div class="chapter-phase">Phase 02 · Tournament Day</div>
+            <div class="chapter-title">Safety Check & RF Calibration</div>
           </div>
         </div>
       </div>
-      
-      <!-- Panel 3 -->
-      <div class="story-panel reveal reveal-delay-3">
-        <div class="story-panel__frame">
-          <img src="panels/3.png" alt="Panel 3 — Safety Check" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>MOMENCRAFTS DART — TOURNAMENT CHECK</strong><br>
-            DART Core: ONLINE<br>
-            RF Lock-On: CALIBRATED<br>
-            IR Sensors: 6/6 READY<br>
-            CRSF Bridge: PASSIVE SAFE<br>
-            Flight Control: PROTECTED<br>
-            Team: BLUE | Pilot ID: BLUE-03<br>
-            Match Mode: CHAMPIONSHIP<br>
-            <span class="hud-green">APPROVED FOR ARENA</span>
+
+      <!-- Panels 03 + 04 — paired -->
+      <div class="panel-pair reveal">
+        <div class="cinematic-panel cinematic-panel--medium">
+          <img src="panels/3.png" alt="Safety Check — tournament inspector">
+          <div class="cinematic-panel__overlay"></div>
+          <div class="cinematic-panel__badge">PANEL 03</div>
+          <div class="cinematic-panel__caption">
+            <div class="cinematic-panel__title">Safety Check</div>
+            <div class="cinematic-panel__sub">SYSTEMS GREEN — PILOT APPROVED</div>
           </div>
         </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">03</div>
-          <div class="story-panel__title">Safety Check</div>
-          <div class="story-panel__caption">
-            "SYSTEMS GREEN. PILOT REGISTERED. BLUE-03 IS IN."
+        <div class="cinematic-panel cinematic-panel--medium">
+          <img src="panels/4.png" alt="RF Calibration — retune required">
+          <div class="cinematic-panel__overlay"></div>
+          <div class="cinematic-panel__badge">PANEL 04</div>
+          <div class="cinematic-panel__caption">
+            <div class="cinematic-panel__title">RF Calibration</div>
+            <div class="cinematic-panel__sub">LOCK STABILITY: 61% — RETUNE REQUIRED</div>
           </div>
         </div>
       </div>
-      
-      <!-- Panel 4 -->
-      <div class="story-panel reveal reveal-delay-1">
-        <div class="story-panel__frame">
-          <img src="panels/4.png" alt="Panel 4 — RF Calibration" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>RF SWEEP ACTIVE</strong><br>
-            TARGET BEACON: RED-07 SIM<br>
-            RSSI FRONT: -46 | RSSI LEFT: -69<br>
-            LOCK STABILITY: 61%<br>
-            TOURNAMENT MINIMUM: 70%<br>
-            <span class="hud-red">RESULT: RETUNE REQUIRED</span>
+
+      <!-- HUD pair: before + after retune -->
+      <div class="hud-area reveal">
+        <div class="hud-pair">
+          <div class="hud-mockup hud-mockup--orange">
+            <div class="hud-title hud-title--orange">
+              <span class="hud-title-dot"></span>
+              RF SWEEP · BEFORE RETUNE
+            </div>
+            <div class="hud-body">
+              <div class="hud-row">
+                <span class="hud-row__key">Target Beacon</span>
+                <span class="hud-row__val">RED-07 SIM</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">RSSI Front</span>
+                <span class="hud-row__val">-46 dBm</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">RSSI Left</span>
+                <span class="hud-row__val">-69 dBm</span>
+              </div>
+              <div class="hud-separator"></div>
+              <div class="hud-row">
+                <span class="hud-row__key">Lock Stability</span>
+                <span class="hud-row__val hud-row__val--warn">61% ← WARN</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Required</span>
+                <span class="hud-row__val">≥ 70%</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Result</span>
+                <span class="hud-row__val hud-row__val--red">RETUNE REQUIRED</span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">04</div>
-          <div class="story-panel__title">RF Calibration</div>
-          <div class="story-panel__caption">
-            "THE LOCK IS CLOSE… BUT CLOSE DOESN’T SCORE."
-          </div>
-        </div>
-      </div>
-      
-      <!-- Panel 5 -->
-      <div class="story-panel reveal reveal-delay-2">
-        <div class="story-panel__frame">
-          <img src="panels/5.png" alt="Panel 5 — Starting Pad" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>DART CHAMPIONSHIP 001</strong><br>
-            <strong>FIRST OF ITS KIND</strong><br><br>
-            COUNTDOWN: 3 — 2 — 1<br><br>
-            DART: ARMED<br>
-            PILOT: BLUE-03 | OPPONENT: RED-07<br>
-            HP: 100 | LOCK: READY<br>
-            LAP: 0/3 | MODE: COMBAT RACING
-          </div>
-        </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">05</div>
-          <div class="story-panel__title">Starting Pad</div>
-          <div class="story-panel__caption">
-            "RACE THE GATES. LOCK THE TARGET. SURVIVE THE TAGS."
-          </div>
-        </div>
-      </div>
-      
-      <!-- Panel 6 -->
-      <div class="story-panel reveal reveal-delay-3">
-        <div class="story-panel__frame">
-          <img src="panels/6.png" alt="Panel 6 — First Lock-On" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>TARGET ID: RED-07</strong><br>
-            RF LOCK: ACQUIRING<br>
-            RSSI: -60 → -51<br>
-            LOCK: 68% (REQUIRED: 70%)<br>
-            HAPTIC: RISING<br>
-            IR TAG: STANDBY
-          </div>
-        </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">06</div>
-          <div class="story-panel__title">First Lock-On Attempt</div>
-          <div class="story-panel__caption">
-            "SIGNAL FOUND. NOSE STEADY. LOCK ALMOST THERE."
-          </div>
-        </div>
-      </div>
-      
-      <!-- Panel 7 -->
-      <div class="story-panel reveal reveal-delay-1">
-        <div class="story-panel__frame">
-          <img src="panels/7.png" alt="Panel 7 — First Shot Misses" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>IR TAG SENT</strong><br>
-            LOCK: BROKEN<br>
-            <span class="hud-red">RESULT: MISS</span><br>
-            SHOT ID: 1441<br>
-            COOLDOWN: 3.0s<br>
-            TARGET HP: 100<br>
-            HAPTIC: MISS BUZZ<br><br>
-            <span class="hud-warning">RF GUIDES. IR CONFIRMS. BAD TIMING WASTES THE SHOT.</span>
-          </div>
-        </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">07</div>
-          <div class="story-panel__title">First Shot Misses</div>
-          <div class="story-panel__caption">
-            "TOO EARLY. LOCK BROKE. TAG MISSED."
+          <div class="hud-mockup hud-mockup--green">
+            <div class="hud-title hud-title--green">
+              <span class="hud-title-dot"></span>
+              RF SWEEP · AFTER RETUNE
+            </div>
+            <div class="hud-body">
+              <div class="hud-row">
+                <span class="hud-row__key">Target Beacon</span>
+                <span class="hud-row__val">RED-07 SIM</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">RSSI Front</span>
+                <span class="hud-row__val">-41 dBm</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">RSSI Left</span>
+                <span class="hud-row__val">-58 dBm</span>
+              </div>
+              <div class="hud-separator"></div>
+              <div class="hud-row">
+                <span class="hud-row__key">Lock Stability</span>
+                <span class="hud-row__val hud-row__val--green">82% ✓</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Required</span>
+                <span class="hud-row__val">≥ 70%</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Result</span>
+                <span class="hud-row__val hud-row__val--green">APPROVED ✓</span>
+              </div>
+            </div>
+            <div class="hud-btn hud-btn--green">[ APPROVED FOR ARENA ]</div>
           </div>
         </div>
       </div>
-      
-      <!-- Panel 8 -->
-      <div class="story-panel reveal reveal-delay-2">
-        <div class="story-panel__frame">
-          <img src="panels/8.png" alt="Panel 8 — Counter Hit" class="story-panel__img">
-          <div class="story-panel__hud">
-            <span class="hud-red"><strong>INCOMING HIT</strong></span><br>
-            FROM: RED-07<br>
-            HP: 100 → 90<br>
-            LOCK BREAK: 1.5s<br>
-            TAG DELAY: 2.5s<br>
-            HAPTIC: WARNING PULSE<br>
-            <span class="hud-green">FLIGHT CONTROL: SAFE</span><br><br>
-            <span class="hud-warning">DART DOES NOT MODIFY THROTTLE / ROLL / PITCH / YAW</span>
-          </div>
-        </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">08</div>
-          <div class="story-panel__title">Opponent Counter-Hit</div>
-          <div class="story-panel__caption">
-            "HIT TAKEN. SYSTEM DELAYS THE TAG WINDOW. THE DRONE STILL FLIES CLEAN."
+
+      <div class="narrative reveal">
+        <blockquote class="narrative-quote">"The lock is close… but close doesn't score."</blockquote>
+      </div>
+    </section>
+
+    <div class="divider--glow"></div>
+
+    <!-- ═══ CHAPTER 03 — STARTING PAD ═══ -->
+    <section class="chapter reveal" id="chapter-03">
+      <div class="chapter-inner">
+        <div class="chapter-header">
+          <div class="chapter-number">03</div>
+          <div class="chapter-meta">
+            <div class="chapter-phase">Phase 03 · Race Day</div>
+            <div class="chapter-title">On the Starting Pad</div>
           </div>
         </div>
       </div>
-      
-      <!-- Panel 9 -->
-      <div class="story-panel reveal reveal-delay-3">
-        <div class="story-panel__frame">
-          <img src="panels/9.png" alt="Panel 9 — Pilot Feels the Delay" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>DART PILOT — BLUE-03</strong><br>
-            OWN HP: 90<br>
-            HIT RECEIVED<br>
-            TAG DELAY: 1.8s<br>
-            LOCK DISABLED: 1.2s<br>
-            HAPTIC: WARNING x2<br>
-            NEXT GATE: 03<br>
-            STRATEGY: EVADE / RELOCK
-          </div>
+
+      <!-- Panel 05 — Starting Pad -->
+      <div class="cinematic-panel cinematic-panel--full reveal">
+        <img src="panels/5.png" alt="Starting Pad — DART armed and ready">
+        <div class="cinematic-panel__overlay"></div>
+        <div class="cinematic-panel__badge">PANEL 05 / 12</div>
+        <div class="cinematic-panel__caption">
+          <div class="cinematic-panel__title">Starting Pad</div>
+          <div class="cinematic-panel__sub">DART CHAMPIONSHIP 001 · PILOT: BLUE-03 · MODE: COMBAT RACING</div>
         </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">09</div>
-          <div class="story-panel__title">Pilot Feels the Delay</div>
-          <div class="story-panel__caption">
-            "THE HIT DOESN’T CRASH YOU. IT COSTS YOU TIME."
+      </div>
+
+      <!-- Armed State HUD + Countdown -->
+      <div class="hud-area reveal">
+        <div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
+          <div class="hud-mockup" style="flex:1; min-width:280px;">
+            <div class="hud-title">
+              <span class="hud-title-dot"></span>
+              DART CHAMPIONSHIP 001
+            </div>
+            <div class="hud-body">
+              <div class="hud-row">
+                <span class="hud-row__key">DART</span>
+                <span class="hud-row__val hud-row__val--red">ARMED</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Pilot</span>
+                <span class="hud-row__val">BLUE-03</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Opponent</span>
+                <span class="hud-row__val">RED-07</span>
+              </div>
+              <div class="hud-separator"></div>
+              <div class="hud-row">
+                <span class="hud-row__key">HP</span>
+                <span class="hud-row__val hud-row__val--green">100</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Lock</span>
+                <span class="hud-row__val hud-row__val--green">READY</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Lap</span>
+                <span class="hud-row__val">0 / 3</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Mode</span>
+                <span class="hud-row__val">COMBAT RACING</span>
+              </div>
+            </div>
+          </div>
+          <!-- Countdown display -->
+          <div id="countdown-display" style="flex-shrink:0; display:flex; align-items:center; justify-content:center; width:180px; height:180px; background:rgba(255,68,56,0.06); border:1px solid rgba(255,68,56,0.2); border-radius:12px; flex-direction:column; gap:4px;">
+            <div style="font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.2em; color:var(--text-tertiary); text-transform:uppercase;">COUNTDOWN</div>
+            <div id="countdown-number" style="font-family:var(--font-display); font-size:5rem; font-weight:900; color:var(--red-400); line-height:1; letter-spacing:-0.05em;">3</div>
           </div>
         </div>
       </div>
-      
-      <!-- Panel 10 -->
-      <div class="story-panel reveal reveal-delay-1">
-        <div class="story-panel__frame">
-          <img src="panels/10.png" alt="Panel 10 — Relock and Clean Hit" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>TARGET ID: RED-07</strong><br>
-            RF LOCK: STRONG<br>
-            LOCK: 96% | RSSI: -44<br>
-            IR TAG: SENT<br>
-            PACKET CRC: VALID<br>
-            <span class="hud-green">RESULT: HIT CONFIRMED</span>
+
+      <div class="narrative reveal">
+        <blockquote class="narrative-quote">"Race the gates. Lock the target. Survive the tags."</blockquote>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══ CHAPTER 04 — THE MATCH ═══ -->
+    <section class="chapter reveal" id="chapter-04">
+      <div class="chapter-inner">
+        <div class="chapter-header">
+          <div class="chapter-number">04</div>
+          <div class="chapter-meta">
+            <div class="chapter-phase">Phase 04 · The Match</div>
+            <div class="chapter-title">Three Laps. Three Stories.</div>
           </div>
         </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">10</div>
-          <div class="story-panel__title">Relock and Clean Hit</div>
-          <div class="story-panel__caption">
-            "THIS TIME, HE WAITS. LOCK STRONG. TAG CLEAN."
+
+        <!-- LAP 1 -->
+        <div class="lap-label lap-label--red reveal">01 / Lap 1 — First Lock-On Attempt</div>
+      </div>
+
+      <!-- Panels 06 + 07 -->
+      <div class="panel-pair reveal">
+        <div class="cinematic-panel cinematic-panel--medium">
+          <img src="panels/6.png" alt="First Lock-On Attempt">
+          <div class="cinematic-panel__overlay"></div>
+          <div class="cinematic-panel__badge">PANEL 06</div>
+          <div class="cinematic-panel__caption">
+            <div class="cinematic-panel__title">First Lock-On Attempt</div>
+            <div class="cinematic-panel__sub">RSSI: -60 → -51 · LOCK: 68% · HAPTIC: RISING</div>
+          </div>
+        </div>
+        <div class="cinematic-panel cinematic-panel--medium">
+          <img src="panels/7.png" alt="First Shot Misses">
+          <div class="cinematic-panel__overlay"></div>
+          <div class="cinematic-panel__badge">PANEL 07</div>
+          <div class="cinematic-panel__caption">
+            <div class="cinematic-panel__title">First Shot Misses</div>
+            <div class="cinematic-panel__sub">IR TAG SENT · LOCK: BROKEN · RESULT: MISS</div>
           </div>
         </div>
       </div>
-      
-      <!-- Panel 11 -->
-      <div class="story-panel reveal reveal-delay-2">
-        <div class="story-panel__frame">
-          <img src="panels/11.png" alt="Panel 11 — Scoreboard Swing" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>DART CHAMPIONSHIP 001</strong><br><br>
-            BLUE-03: 1 TAG / HP 90<br>
-            RED-07: 1 TAG / HP 90<br>
-            BLUE TEAM: 3 TAGS<br>
-            RED TEAM: 3 TAGS<br><br>
-            MATCH TIME: 01:12<br>
-            NEXT GATE: 04<br>
-            <span class="hud-warning">FINAL LAP: ACTIVE</span>
-          </div>
-        </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">11</div>
-          <div class="story-panel__title">Scoreboard Swing</div>
-          <div class="story-panel__caption">
-            "ONE MISS. ONE HIT TAKEN. ONE CLEAN TAG. NOW IT’S EVEN."
+
+      <!-- Timing table -->
+      <div class="timing-table-wrap reveal">
+        <div class="timing-table-label">Signal Acquisition Timeline</div>
+        <table class="timing-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Event</th>
+              <th>Lock %</th>
+              <th>Pilot Haptic</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0 ms</td>
+              <td>RF sweep begins — target acquired</td>
+              <td>—</td>
+              <td>Nothing</td>
+            </tr>
+            <tr>
+              <td>200 ms</td>
+              <td>RSSI climbing: -60 → -51 dBm</td>
+              <td>52%</td>
+              <td>Slow pulse</td>
+            </tr>
+            <tr>
+              <td>400 ms</td>
+              <td>Signal strengthening, target converging</td>
+              <td>68%</td>
+              <td>Fast pulse</td>
+            </tr>
+            <tr>
+              <td>500 ms</td>
+              <td class="td--red">IR TAG FIRED — lock was below 70%</td>
+              <td class="td--red">68% ✗</td>
+              <td class="td--red">MISS BUZZ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="announcer-callout reveal">
+        <div class="announcer-callout__inner">
+          <div class="announcer-icon">📡</div>
+          <div class="announcer-text">
+            Shot fired — <em>too early!</em> Lock was at 68%.<br>
+            RF guides the nose. IR confirms the hit. Bad timing wastes the shot.
           </div>
         </div>
       </div>
-      
-      <!-- Panel 12 -->
-      <div class="story-panel reveal reveal-delay-3">
-        <div class="story-panel__frame">
-          <img src="panels/12.png" alt="Panel 12 — A New Category" class="story-panel__img">
-          <div class="story-panel__hud">
-            <strong>DART CHAMPIONSHIP 001</strong><br>
-            THE FIRST ORGANIZED COMBAT RACING FPV TOURNAMENT<br><br>
-            RF LOCK-ON. IR HIT CONFIRMATION.<br>
-            PILOT HAPTICS. LIVE SCORING. SAFE FLIGHT.<br><br>
-            <span class="hud-green">LOCK. TAG. FLY.</span>
+
+      <div class="chapter-inner">
+        <!-- LAP 2 -->
+        <div class="lap-label lap-label--orange reveal">02 / Lap 2 — Counter-Hit &amp; Recovery</div>
+      </div>
+
+      <!-- Panels 08 + 09 -->
+      <div class="panel-pair reveal">
+        <div class="cinematic-panel cinematic-panel--medium">
+          <img src="panels/8.png" alt="Opponent Counter-Hit">
+          <div class="cinematic-panel__overlay"></div>
+          <div class="cinematic-panel__badge">PANEL 08</div>
+          <div class="cinematic-panel__caption">
+            <div class="cinematic-panel__title">Opponent Counter-Hit</div>
+            <div class="cinematic-panel__sub">INCOMING HIT · HP: 100 → 90 · FLIGHT CONTROL: SAFE</div>
           </div>
         </div>
-        <div class="story-panel__content">
-          <div class="story-panel__number">12</div>
-          <div class="story-panel__title">A New Category</div>
-          <div class="story-panel__caption">
-            "A NEW KIND OF FPV IS BORN."
+        <div class="cinematic-panel cinematic-panel--medium">
+          <img src="panels/9.png" alt="Pilot Feels the Delay">
+          <div class="cinematic-panel__overlay"></div>
+          <div class="cinematic-panel__badge">PANEL 09</div>
+          <div class="cinematic-panel__caption">
+            <div class="cinematic-panel__title">Pilot Feels the Delay</div>
+            <div class="cinematic-panel__sub">TAG DELAY: 2.5s · LOCK DISABLED: 1.5s · STRATEGY: EVADE / RELOCK</div>
           </div>
         </div>
       </div>
-      
-    </div>
-  </section>
+
+      <!-- Hit HUD -->
+      <div class="hud-area reveal">
+        <div class="hud-mockup hud-mockup--orange" style="max-width:480px">
+          <div class="hud-title hud-title--orange">
+            <span class="hud-title-dot"></span>
+            INCOMING HIT — FROM: RED-07
+          </div>
+          <div class="hud-body">
+            <div class="hud-row">
+              <span class="hud-row__key">HP</span>
+              <span class="hud-row__val hud-row__val--orange">100 → 90</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">Lock Break</span>
+              <span class="hud-row__val hud-row__val--warn">1.5 s</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">Tag Delay</span>
+              <span class="hud-row__val hud-row__val--warn">2.5 s</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">Haptic</span>
+              <span class="hud-row__val">WARNING PULSE</span>
+            </div>
+            <div class="hud-separator"></div>
+            <div class="hud-row">
+              <span class="hud-row__key">Flight Control</span>
+              <span class="hud-row__val hud-row__val--green">SAFE ✓ — NEVER MODIFIED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="safety-block reveal">
+        <div class="safety-block__inner">
+          <div class="safety-block__icon">🛡️</div>
+          <div class="safety-block__text">
+            DART BRIDGE IS PURELY PASSIVE.<br>
+            HARDWARE BYPASS ACTIVE IF MCU FAILS.<br>
+            DART DOES NOT MODIFY THROTTLE / ROLL / PITCH / YAW. EVER.
+          </div>
+        </div>
+      </div>
+
+      <div class="narrative reveal">
+        <blockquote class="narrative-quote">"The hit doesn't crash you. It costs you time."</blockquote>
+      </div>
+
+      <div class="chapter-inner">
+        <!-- LAP 3 -->
+        <div class="lap-label lap-label--gold reveal">03 / Lap 3 — Relock &amp; The Win</div>
+      </div>
+
+      <!-- Panels 10 + 11 -->
+      <div class="panel-pair reveal">
+        <div class="cinematic-panel cinematic-panel--medium">
+          <img src="panels/10.png" alt="Relock and Clean Hit">
+          <div class="cinematic-panel__overlay"></div>
+          <div class="cinematic-panel__badge">PANEL 10</div>
+          <div class="cinematic-panel__caption">
+            <div class="cinematic-panel__title">Relock and Clean Hit</div>
+            <div class="cinematic-panel__sub">RF LOCK: 96% · IR TAG: SENT · CRC: VALID</div>
+          </div>
+        </div>
+        <div class="cinematic-panel cinematic-panel--medium">
+          <img src="panels/11.png" alt="Scoreboard Swing">
+          <div class="cinematic-panel__overlay"></div>
+          <div class="cinematic-panel__badge">PANEL 11</div>
+          <div class="cinematic-panel__caption">
+            <div class="cinematic-panel__title">Scoreboard Swing</div>
+            <div class="cinematic-panel__sub">BLUE-03: 1 TAG / HP 90 · RED-07: 1 TAG / HP 90 · FINAL LAP ACTIVE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirmed hit HUD -->
+      <div class="hud-area reveal">
+        <div class="hud-mockup hud-mockup--gold" style="max-width:480px">
+          <div class="hud-title hud-title--gold">
+            <span class="hud-title-dot"></span>
+            TARGET ID: RED-07 — HIT EVENT
+          </div>
+          <div class="hud-body">
+            <div class="hud-row">
+              <span class="hud-row__key">RF Lock</span>
+              <span class="hud-row__val hud-row__val--green">STRONG — 96%</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">RSSI</span>
+              <span class="hud-row__val hud-row__val--green">-44 dBm</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">IR Tag</span>
+              <span class="hud-row__val">SENT</span>
+            </div>
+            <div class="hud-row">
+              <span class="hud-row__key">Packet CRC</span>
+              <span class="hud-row__val hud-row__val--green">VALID</span>
+            </div>
+            <div class="hud-separator"></div>
+            <div class="hud-row">
+              <span class="hud-row__key">Result</span>
+              <span class="hud-row__val hud-row__val--green">HIT CONFIRMED ✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="announcer-callout reveal">
+        <div class="announcer-callout__inner announcer-callout__inner--gold">
+          <div class="announcer-icon">🏆</div>
+          <div class="announcer-text">
+            This time he waited. <span class="em-gold">Lock strong at 96%.</span> He pressed fire.<br>
+            Packet CRC valid. IR confirmed. <span class="em-gold">Tag clean.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 12 — A New Category — FULL WIDTH -->
+      <div class="cinematic-panel cinematic-panel--full reveal">
+        <img src="panels/12.png" alt="A New Category — DART Championship 001">
+        <div class="cinematic-panel__overlay"></div>
+        <div class="cinematic-panel__badge">PANEL 12 / 12</div>
+        <div class="cinematic-panel__caption">
+          <div class="cinematic-panel__title">A New Category</div>
+          <div class="cinematic-panel__sub">DART CHAMPIONSHIP 001 · LOCK. TAG. FLY. · A NEW KIND OF FPV IS BORN.</div>
+        </div>
+      </div>
+
+      <div class="announcer-callout reveal">
+        <div class="announcer-callout__inner announcer-callout__inner--green">
+          <div class="announcer-icon">🎯</div>
+          <div class="announcer-text">
+            <span class="em-green">DART CHAMPIONSHIP 001 — COMPLETE.</span><br>
+            The first organized combat racing FPV tournament. A new kind of FPV is born.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider--glow"></div>
+
+    <!-- ═══ CHAPTER 05 — PIT REVIEW ═══ -->
+    <section class="chapter reveal" id="chapter-05">
+      <div class="chapter-inner">
+        <div class="chapter-header">
+          <div class="chapter-number">05</div>
+          <div class="chapter-meta">
+            <div class="chapter-phase">Phase 05 · Post-Match</div>
+            <div class="chapter-title">Pit Review</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Log -->
+      <div class="session-log reveal">
+        <div class="session-log__inner">
+          <div class="hud-mockup">
+            <div class="hud-title">
+              <span class="hud-title-dot"></span>
+              DART CHAMPIONSHIP 001 — SESSION LOG
+            </div>
+            <div class="hud-body">
+              <div class="hud-row">
+                <span class="hud-row__key">Total Laps</span>
+                <span class="hud-row__val">3</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Shots Fired</span>
+                <span class="hud-row__val">2</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Hits Landed</span>
+                <span class="hud-row__val hud-row__val--green">1</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Hits Received</span>
+                <span class="hud-row__val hud-row__val--orange">1</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Final HP</span>
+                <span class="hud-row__val">90</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Lock Failures</span>
+                <span class="hud-row__val hud-row__val--warn">1</span>
+              </div>
+              <div class="hud-separator"></div>
+              <div class="hud-row">
+                <span class="hud-row__key">Safety Events</span>
+                <span class="hud-row__val hud-row__val--green">0</span>
+              </div>
+              <div class="hud-row">
+                <span class="hud-row__key">Flight Control Modified</span>
+                <span class="hud-row__val hud-row__val--green">NEVER</span>
+              </div>
+            </div>
+            <div class="hud-btn">[ EXPORT SESSION LOG ]</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dialogue block -->
+      <div class="dialogue-block reveal">
+        <div class="dialogue-line">
+          <div class="dialogue-speaker">Pilot</div>
+          <div class="dialogue-bubble">"Bro, how does your DART know you took a hit?"</div>
+        </div>
+        <div class="dialogue-line dialogue-line--right">
+          <div class="dialogue-speaker">Blue-03</div>
+          <div class="dialogue-bubble">"Haptic motor on the radio. IR hit confirmed, CRSF channel fires, radio vibrates."</div>
+        </div>
+        <div class="dialogue-line">
+          <div class="dialogue-speaker">Pilot</div>
+          <div class="dialogue-bubble">"And your drone didn't crash or glitch?"</div>
+        </div>
+        <div class="dialogue-line dialogue-line--right">
+          <div class="dialogue-speaker">Blue-03</div>
+          <div class="dialogue-bubble">"DART Bridge is purely passive. Hardware bypass if anything fails. The drone never even knows."</div>
+        </div>
+      </div>
+
+      <div class="narrative narrative--centered reveal">
+        <div class="narrative__body">
+          <blockquote class="narrative-quote">"It worked exactly as designed — invisible during flight, decisive in the moment."</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══ EMOTIONAL ARC ═══ -->
+    <section class="arc-section reveal" id="arc">
+      <div class="arc-section__header">
+        <div class="section-label">CHAMPIONSHIP ARC</div>
+        <h2 class="section-title">The Journey</h2>
+        <p class="section-desc">From bench to arena. One pilot. Three laps. Eight decisions.</p>
+      </div>
+      <div class="arc-timeline">
+        <div class="arc-steps">
+          <div class="arc-step">
+            <div class="arc-step__dot"></div>
+            <div class="arc-step__label">Setup</div>
+            <div class="arc-step__quote">"Calibrated"</div>
+          </div>
+          <div class="arc-step">
+            <div class="arc-step__dot"></div>
+            <div class="arc-step__label">RF Check</div>
+            <div class="arc-step__quote">"Close..."</div>
+          </div>
+          <div class="arc-step">
+            <div class="arc-step__dot"></div>
+            <div class="arc-step__label">Armed</div>
+            <div class="arc-step__quote">"Ready."</div>
+          </div>
+          <div class="arc-step">
+            <div class="arc-step__dot"></div>
+            <div class="arc-step__label">Lap 1 Miss</div>
+            <div class="arc-step__quote">"Too early"</div>
+          </div>
+          <div class="arc-step arc-step--orange">
+            <div class="arc-step__dot"></div>
+            <div class="arc-step__label">Hit Taken</div>
+            <div class="arc-step__quote">"Cost me time"</div>
+          </div>
+          <div class="arc-step arc-step--orange">
+            <div class="arc-step__dot"></div>
+            <div class="arc-step__label">Relock</div>
+            <div class="arc-step__quote">"Wait for it"</div>
+          </div>
+          <div class="arc-step arc-step--gold">
+            <div class="arc-step__dot"></div>
+            <div class="arc-step__label">Clean Tag</div>
+            <div class="arc-step__quote">"CONFIRMED"</div>
+          </div>
+          <div class="arc-step arc-step--green">
+            <div class="arc-step__dot"></div>
+            <div class="arc-step__label">Champion</div>
+            <div class="arc-step__quote">"First ever."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /story-narrative -->
 
   <!-- ═══ SYSTEM LAYERS ═══ -->
   <section class="layers" id="layers">
