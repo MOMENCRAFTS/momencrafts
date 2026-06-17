@@ -17,7 +17,7 @@
   <meta property="og:image" content="hero-drone.png">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle fill='none' stroke='%2300aaff' stroke-width='5' cx='32' cy='32' r='22'/%3E%3Ccircle fill='none' stroke='%2300aaff' stroke-width='3' cx='32' cy='32' r='12'/%3E%3Ccircle fill='%2300aaff' cx='32' cy='32' r='5'/%3E%3Cpath fill='none' stroke='%2300aaff' stroke-width='4' stroke-linecap='round' d='M32 4v10M32 50v10M4 32h10M50 32h10'/%3E%3C/svg%3E">
   
   <!-- Styles -->
   <link rel="stylesheet" href="style.css">
@@ -30,13 +30,59 @@
     }
   </script>
 
+  <!-- ═══ DART SVG ICON SYSTEM ═══ -->
+  <style>
+    :root{--dart-cyan:#00aaff;--dart-blue:#006dff;--dart-magenta:#ff1fbf;--dart-green:#2eff7a;--dart-red:#ff2f3a;--dart-yellow:#ffc928}
+    .dart-svg-icon{width:1.35em;height:1.35em;display:inline-block;vertical-align:-0.22em;color:var(--dart-cyan);filter:drop-shadow(0 0 5px currentColor);flex-shrink:0}
+    .dart-svg-icon--lg{width:2.1em;height:2.1em;display:block}
+    .dart-svg-icon--target{color:var(--dart-cyan)}
+    .dart-svg-icon--shield{color:var(--dart-green)}
+    .dart-svg-icon--rf{color:var(--dart-green)}
+    .dart-svg-icon--ir{color:var(--dart-magenta)}
+    .dart-svg-icon--haptic{color:var(--dart-magenta)}
+    .dart-svg-icon--bridge{color:var(--dart-yellow)}
+    .dart-svg-icon--arena{color:var(--dart-blue)}
+    .dart-svg-icon--tagger{color:var(--dart-red)}
+    .dart-svg-icon--trophy{color:var(--dart-yellow)}
+    .dart-svg-icon--core{color:var(--dart-cyan)}
+    .dart-svg-icon--sensor{color:var(--dart-magenta)}
+    .dart-svg-icon--beacon{color:var(--dart-green)}
+  </style>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <defs>
+      <style>
+        .ds{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+        .ds2{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+        .df{fill:currentColor}
+        .da{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.48}
+      </style>
+    </defs>
+    <symbol id="dart-icon-target" viewBox="0 0 64 64"><circle class="ds" cx="32" cy="32" r="22"/><circle class="ds2" cx="32" cy="32" r="13"/><circle class="df" cx="32" cy="32" r="4"/><path class="ds" d="M32 4v10M32 50v10M4 32h10M50 32h10"/><path class="da" d="M46 18l8-8M18 46l-8 8"/></symbol>
+    <symbol id="dart-icon-shield-passive" viewBox="0 0 64 64"><path class="ds" d="M32 6l21 8v15c0 15-8.5 24.5-21 29C19.5 53.5 11 44 11 29V14l21-8z"/><path class="ds" d="M21 31l7 7 16-18"/><path class="da" d="M18 16l14-5 14 5"/></symbol>
+    <symbol id="dart-icon-radio-call" viewBox="0 0 64 64"><path class="ds" d="M16 52h32M32 52V31"/><circle class="df" cx="32" cy="28" r="4"/><path class="ds" d="M20 28c0-6.6 5.4-12 12-12s12 5.4 12 12"/><path class="ds2" d="M12 28c0-11 9-20 20-20s20 9 20 20"/><path class="ds2" d="M24 52l8-21 8 21"/></symbol>
+    <symbol id="dart-icon-trophy" viewBox="0 0 64 64"><path class="ds" d="M22 10h20v13c0 8-4 14-10 14s-10-6-10-14V10z"/><path class="ds" d="M22 15H10v6c0 8 5 12 12 12M42 15h12v6c0 8-5 12-12 12"/><path class="ds" d="M32 37v9M22 54h20M26 46h12v8H26z"/><path class="da" d="M28 18h8"/></symbol>
+    <symbol id="dart-icon-layer-rf-lock" viewBox="0 0 64 64"><path class="ds" d="M10 48h44M32 48V28"/><circle class="df" cx="32" cy="25" r="4"/><path class="ds2" d="M22 25c0-5.5 4.5-10 10-10s10 4.5 10 10"/><path class="ds2" d="M15 25c0-9.4 7.6-17 17-17s17 7.6 17 17"/><path class="ds" d="M21 48l11-20 11 20"/></symbol>
+    <symbol id="dart-icon-layer-ir-hit" viewBox="0 0 64 64"><circle class="ds" cx="32" cy="32" r="17"/><circle class="ds2" cx="32" cy="32" r="7"/><path class="ds" d="M32 5v9M32 50v9M5 32h9M50 32h9"/><path class="ds2" d="M14 14l6 6M50 14l-6 6M14 50l6-6M50 50l-6-6"/></symbol>
+    <symbol id="dart-icon-layer-haptic-bridge" viewBox="0 0 64 64"><rect class="ds" x="22" y="18" width="20" height="28" rx="5"/><path class="ds" d="M12 24h10M12 40h10M42 24h10M42 40h10"/><path class="ds2" d="M9 18c-4 8-4 20 0 28M55 18c4 8 4 20 0 28"/><path class="ds2" d="M30 27h4M28 36h8"/></symbol>
+    <symbol id="dart-module-core" viewBox="0 0 64 64"><rect class="ds" x="17" y="17" width="30" height="30" rx="5"/><rect class="ds2" x="24" y="24" width="16" height="16" rx="2"/><path class="ds2" d="M20 8v9M32 8v9M44 8v9M20 47v9M32 47v9M44 47v9M8 20h9M8 32h9M8 44h9M47 20h9M47 32h9M47 44h9"/></symbol>
+    <symbol id="dart-module-seeker" viewBox="0 0 64 64"><path class="ds" d="M32 52V34M17 34c5-16 25-16 30 0"/><path class="ds2" d="M24 34c3-8 13-8 16 0"/><circle class="df" cx="32" cy="31" r="3"/><path class="ds" d="M18 52h28"/></symbol>
+    <symbol id="dart-module-beacon" viewBox="0 0 64 64"><path class="ds" d="M32 56V30"/><circle class="df" cx="32" cy="27" r="4"/><path class="ds2" d="M22 27c0-5.5 4.5-10 10-10s10 4.5 10 10"/><path class="ds2" d="M15 27c0-9.4 7.6-17 17-17s17 7.6 17 17"/><path class="ds" d="M24 56h16"/></symbol>
+    <symbol id="dart-module-bridge" viewBox="0 0 64 64"><rect class="ds" x="22" y="22" width="20" height="20" rx="3"/><circle class="df" cx="10" cy="32" r="4"/><circle class="df" cx="54" cy="32" r="4"/><circle class="df" cx="32" cy="10" r="4"/><circle class="df" cx="32" cy="54" r="4"/><path class="ds" d="M14 32h8M42 32h8M32 14v8M32 42v8"/></symbol>
+    <symbol id="dart-module-tagger" viewBox="0 0 64 64"><path class="ds" d="M10 32h22M32 22v20l22-10-22-10z"/><path class="ds2" d="M45 20c6 3 9 7 9 12s-3 9-9 12"/><path class="ds2" d="M13 24l-5-5M13 40l-5 5"/></symbol>
+    <symbol id="dart-module-sensor-ring" viewBox="0 0 64 64"><circle class="ds" cx="32" cy="32" r="22"/><circle class="df" cx="32" cy="10" r="3"/><circle class="df" cx="32" cy="54" r="3"/><circle class="df" cx="10" cy="32" r="3"/><circle class="df" cx="54" cy="32" r="3"/><circle class="df" cx="16.5" cy="16.5" r="3"/><circle class="df" cx="47.5" cy="16.5" r="3"/><circle class="df" cx="16.5" cy="47.5" r="3"/><circle class="df" cx="47.5" cy="47.5" r="3"/><path class="ds2" d="M24 32h16M32 24v16"/></symbol>
+    <symbol id="dart-module-haptic" viewBox="0 0 64 64"><rect class="ds" x="23" y="17" width="18" height="30" rx="5"/><path class="ds2" d="M16 22c-4 6-4 14 0 20M48 22c4 6 4 14 0 20M10 16c-7 10-7 22 0 32M54 16c7 10 7 22 0 32"/><circle class="df" cx="32" cy="39" r="2"/></symbol>
+    <symbol id="dart-module-arena" viewBox="0 0 64 64"><path class="ds" d="M10 50V18h44v32M20 50V28h24v22"/><path class="ds2" d="M10 18l10-8h24l10 8M18 18v32M46 18v32"/><path class="da" d="M26 36h12"/></symbol>
+    <symbol id="dart-feature-scoring" viewBox="0 0 64 64"><rect class="ds" x="10" y="14" width="44" height="34" rx="4"/><path class="ds" d="M19 35l7-7 7 5 12-13"/><path class="ds2" d="M16 54h32M24 48v6M40 48v6"/><circle class="df" cx="19" cy="35" r="2"/><circle class="df" cx="26" cy="28" r="2"/><circle class="df" cx="33" cy="33" r="2"/><circle class="df" cx="45" cy="20" r="2"/></symbol>
+    <symbol id="dart-feature-safe-flight" viewBox="0 0 64 64"><path class="ds" d="M32 6l21 8v15c0 15-8.5 24.5-21 29C19.5 53.5 11 44 11 29V14l21-8z"/><path class="ds" d="M20 36l8 7 17-22"/><path class="ds2" d="M24 26h16"/></symbol>
+  </svg>
+
   <div id="progress-bar"></div>
 
   <!-- ═══ NAVIGATION ═══ -->
   <nav class="nav" id="nav">
     <div class="nav__inner">
       <a href="#" class="nav__logo" id="nav-logo">
-        <div class="nav__logo-icon">🎯</div>
+        <div class="nav__logo-icon"><svg class="dart-svg-icon dart-svg-icon--target" aria-hidden="true"><use href="#dart-icon-target"></use></svg></div>
         DART
       </a>
       <div class="nav__links">
@@ -492,7 +538,7 @@
 
       <div class="announcer-callout reveal">
         <div class="announcer-callout__inner">
-          <div class="announcer-icon">📡</div>
+          <div class="announcer-icon"><svg class="dart-svg-icon dart-svg-icon--rf" aria-hidden="true"><use href="#dart-icon-radio-call"></use></svg></div>
           <div class="announcer-text">
             Shot fired — <em>too early!</em> Lock was at 68%.<br>
             RF guides the nose. IR confirms the hit. Bad timing wastes the shot.
@@ -562,7 +608,7 @@
 
       <div class="safety-block reveal">
         <div class="safety-block__inner">
-          <div class="safety-block__icon">🛡️</div>
+          <div class="safety-block__icon"><svg class="dart-svg-icon dart-svg-icon--shield" aria-hidden="true" style="width:2em;height:2em"><use href="#dart-icon-shield-passive"></use></svg></div>
           <div class="safety-block__text">
             DART BRIDGE IS PURELY PASSIVE.<br>
             HARDWARE BYPASS ACTIVE IF MCU FAILS.<br>
@@ -637,7 +683,7 @@
 
       <div class="announcer-callout reveal">
         <div class="announcer-callout__inner announcer-callout__inner--gold">
-          <div class="announcer-icon">🏆</div>
+          <div class="announcer-icon"><svg class="dart-svg-icon dart-svg-icon--trophy" aria-hidden="true"><use href="#dart-icon-trophy"></use></svg></div>
           <div class="announcer-text">
             This time he waited. <span class="em-gold">Lock strong at 96%.</span> He pressed fire.<br>
             Packet CRC valid. IR confirmed. <span class="em-gold">Tag clean.</span>
@@ -658,7 +704,7 @@
 
       <div class="announcer-callout reveal">
         <div class="announcer-callout__inner announcer-callout__inner--green">
-          <div class="announcer-icon">🎯</div>
+          <div class="announcer-icon"><svg class="dart-svg-icon dart-svg-icon--target" aria-hidden="true"><use href="#dart-icon-target"></use></svg></div>
           <div class="announcer-text">
             <span class="em-green">DART CHAMPIONSHIP 001 — COMPLETE.</span><br>
             The first organized combat racing FPV tournament. A new kind of FPV is born.
@@ -831,7 +877,7 @@
             <span class="pulse"></span>
             LAYER 01
           </div>
-          <div class="layer-card__icon">📡</div>
+          <div class="layer-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--rf" aria-hidden="true"><use href="#dart-icon-layer-rf-lock"></use></svg></div>
           <div class="layer-card__title">RF Lock-On Layer</div>
           <div class="layer-card__desc">
             Target discovery, directional hot/cold feedback, 
@@ -851,7 +897,7 @@
             <span class="pulse"></span>
             LAYER 02
           </div>
-          <div class="layer-card__icon">🔴</div>
+          <div class="layer-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--ir" aria-hidden="true"><use href="#dart-icon-layer-ir-hit"></use></svg></div>
           <div class="layer-card__title">IR Optical Hit Layer</div>
           <div class="layer-card__desc">
             Actual hit confirmation via line-of-sight IR tagging. 
@@ -871,7 +917,7 @@
             <span class="pulse"></span>
             LAYER 03
           </div>
-          <div class="layer-card__icon">🎮</div>
+          <div class="layer-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--haptic" aria-hidden="true"><use href="#dart-icon-layer-haptic-bridge"></use></svg></div>
           <div class="layer-card__title">Flight & Pilot Feedback</div>
           <div class="layer-card__desc">
             LEDs, buzzer, vibration on the drone. CRSF telemetry 
@@ -902,7 +948,7 @@
     
     <div class="modules__grid">
       <div class="module-card reveal reveal-delay-1" id="mod-core">
-        <div class="module-card__icon">🧠</div>
+        <div class="module-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--core" aria-hidden="true"><use href="#dart-module-core"></use></svg></div>
         <div class="module-card__content">
           <div class="module-card__name">DART CORE</div>
           <div class="module-card__desc">Main onboard MCU. Game logic, HP tracking, state machine, hit validation, and inter-module communication.</div>
@@ -910,7 +956,7 @@
       </div>
       
       <div class="module-card reveal reveal-delay-2" id="mod-seeker">
-        <div class="module-card__icon">📡</div>
+        <div class="module-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--rf" aria-hidden="true"><use href="#dart-module-seeker"></use></svg></div>
         <div class="module-card__content">
           <div class="module-card__name">DART SEEKER</div>
           <div class="module-card__desc">Directional RF receiver with patch antenna array. RSSI-based lock-on and direction finding.</div>
@@ -918,7 +964,7 @@
       </div>
       
       <div class="module-card reveal reveal-delay-1" id="mod-beacon">
-        <div class="module-card__icon">📶</div>
+        <div class="module-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--beacon" aria-hidden="true"><use href="#dart-module-beacon"></use></svg></div>
         <div class="module-card__content">
           <div class="module-card__name">DART BEACON</div>
           <div class="module-card__desc">RF identity transmitter. Broadcasts player ID, team, and arena sync data via ESP-NOW.</div>
@@ -926,7 +972,7 @@
       </div>
       
       <div class="module-card reveal reveal-delay-2" id="mod-bridge">
-        <div class="module-card__icon">🔌</div>
+        <div class="module-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--bridge" aria-hidden="true"><use href="#dart-module-bridge"></use></svg></div>
         <div class="module-card__content">
           <div class="module-card__name">DART BRIDGE</div>
           <div class="module-card__desc">RC receiver-to-FC interposer. CRSF/SBUS passive sniffer with optional AUX channel injection.</div>
@@ -934,7 +980,7 @@
       </div>
       
       <div class="module-card reveal reveal-delay-1" id="mod-tagger">
-        <div class="module-card__icon">💥</div>
+        <div class="module-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--tagger" aria-hidden="true"><use href="#dart-module-tagger"></use></svg></div>
         <div class="module-card__content">
           <div class="module-card__name">DART TAGGER</div>
           <div class="module-card__desc">IR weapon emitter. 940nm modulated LED with encoded packet transmission for scoring.</div>
@@ -942,7 +988,7 @@
       </div>
       
       <div class="module-card reveal reveal-delay-2" id="mod-sensor">
-        <div class="module-card__icon">🛡️</div>
+        <div class="module-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--sensor" aria-hidden="true"><use href="#dart-module-sensor-ring"></use></svg></div>
         <div class="module-card__content">
           <div class="module-card__name">DART SENSOR RING</div>
           <div class="module-card__desc">Multi-direction IR hit sensor array. 4-6 receivers for 360° coverage with directional hit detection.</div>
@@ -950,7 +996,7 @@
       </div>
       
       <div class="module-card reveal reveal-delay-1" id="mod-haptic">
-        <div class="module-card__icon">📳</div>
+        <div class="module-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--haptic" aria-hidden="true"><use href="#dart-module-haptic"></use></svg></div>
         <div class="module-card__content">
           <div class="module-card__name">DART HAPTIC</div>
           <div class="module-card__desc">Pilot feedback module. Vibration, buzzer, and LED mapped to lock strength and hit events.</div>
@@ -958,7 +1004,7 @@
       </div>
       
       <div class="module-card reveal reveal-delay-2" id="mod-arena">
-        <div class="module-card__icon">🏟️</div>
+        <div class="module-card__icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--arena" aria-hidden="true"><use href="#dart-module-arena"></use></svg></div>
         <div class="module-card__content">
           <div class="module-card__name">DART ARENA</div>
           <div class="module-card__desc">Game rules, scoring, match management. HP, teams, respawn timers, kill count, and leaderboard.</div>
@@ -985,28 +1031,28 @@
           
           <div class="arena__features">
             <div class="arena__feature">
-              <div class="arena__feature-icon">🎯</div>
+              <div class="arena__feature-icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--target" aria-hidden="true"><use href="#dart-feature-scoring"></use></svg></div>
               <div class="arena__feature-text">
                 <h4>Dual-Layer Confirmation</h4>
                 <p>RF for lock-on, IR for hit. No false positives from reflections or multipath.</p>
               </div>
             </div>
             <div class="arena__feature">
-              <div class="arena__feature-icon">🔗</div>
+              <div class="arena__feature-icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--bridge" aria-hidden="true"><use href="#dart-module-bridge"></use></svg></div>
               <div class="arena__feature-text">
                 <h4>Flight Controller Integration</h4>
                 <p>CRSF/SBUS interposer injects game events directly into the FC via AUX channels.</p>
               </div>
             </div>
             <div class="arena__feature">
-              <div class="arena__feature-icon">📳</div>
+              <div class="arena__feature-icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--haptic" aria-hidden="true"><use href="#dart-module-haptic"></use></svg></div>
               <div class="arena__feature-text">
                 <h4>Pilot Haptic Feedback</h4>
                 <p>Feel the lock, feel the hit. Vibration mapped to signal strength — eyes on FPV, hands on sticks.</p>
               </div>
             </div>
             <div class="arena__feature">
-              <div class="arena__feature-icon">🔓</div>
+              <div class="arena__feature-icon"><svg class="dart-svg-icon dart-svg-icon--lg dart-svg-icon--shield" aria-hidden="true"><use href="#dart-feature-safe-flight"></use></svg></div>
               <div class="arena__feature-text">
                 <h4>Fail-Safe Architecture</h4>
                 <p>Hardware bypass on DART Bridge. If MCU fails, RC signal passes through uninterrupted.</p>
