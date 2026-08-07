@@ -220,7 +220,7 @@
 const CONFIG = {
   SUPABASE_URL: "https://isciigqmdfcozrtojqcm.supabase.co",
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzY2lpZ3FtZGZjb3pydG9qcWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMDk4ODYsImV4cCI6MjA5NjU4NTg4Nn0.OUV0dUWUt0UBU9bdJpwWiXI2PgclddNO0t1cA4ZLF_8",
-  GATE_TOKEN_HASH: "76289c4578e0fe4d77293fe176330b3c23425ffdd869011d26c4b03b338f71b1",
+  VERIFY_TOKEN_URL: "https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/verify-token",
 };
 
 /* --------------------------- Vision content ------------------------------ */
@@ -803,9 +803,12 @@ document.addEventListener("click", async (e) => {
 
   if (act === "gate-unlock") {
     const tok = (document.getElementById("gate-token")?.value || "").trim();
-    if (!tok) { renderGate("Enter your access token."); return; }
-    const ok = await tryUnlockGate(tok);
-    if (ok) { boot(); } else { renderGate("Invalid token. Access denied."); }
+    if (!tok) { renderGate("Enter your MomenCrafts access token."); return; }
+    const btn2 = document.querySelector('[data-act="gate-unlock"]');
+    if (btn2) { btn2.textContent = "Verifying…"; btn2.disabled = true; }
+    const result = await tryUnlockGate(tok);
+    if (result === true) { boot(); }
+    else { renderGate(result || "Invalid or unauthorized token."); }
     return;
   }
 
@@ -895,37 +898,52 @@ document.addEventListener("click", async (e) => {
 });
 
 /* ------------------------------- Gate + Boot ------------------------------ */
-async function sha256(text) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-}
+const COFOUNDER_TIERS = new Set(["PERMANENT", "STRATEGIC", "COFOUNDER", "FOUNDER"]);
 let gateUnlocked = false;
+
 function checkGateFromURL() {
   const params = new URLSearchParams(window.location.search);
   return params.get("key") || "";
 }
+
 async function tryUnlockGate(token) {
-  if (!token) return false;
-  const hash = await sha256(token.trim());
-  if (hash === CONFIG.GATE_TOKEN_HASH) {
+  if (!token) return "Token is required.";
+  try {
+    const res = await fetch(CONFIG.VERIFY_TOKEN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: token.toUpperCase().trim() }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.valid) return data.error || "Invalid access key.";
+    if (!COFOUNDER_TIERS.has(data.tokenType)) return "This token does not have XHB access. Co-founder tier required.";
     gateUnlocked = true;
     sessionStorage.setItem("xhb_gate", token.trim());
+    sessionStorage.setItem("xhb_gate_name", data.investorLabel || "");
     return true;
+  } catch {
+    return "Network error — check your connection.";
   }
-  return false;
 }
+
 async function gateBoot() {
-  if (!LIVE || !CONFIG.GATE_TOKEN_HASH) { boot(); return; }
+  if (!LIVE || !CONFIG.VERIFY_TOKEN_URL) { boot(); return; }
   // Check sessionStorage first (already unlocked this session)
   const stored = sessionStorage.getItem("xhb_gate");
-  if (stored && await tryUnlockGate(stored)) { boot(); return; }
+  if (stored) {
+    const result = await tryUnlockGate(stored);
+    if (result === true) { boot(); return; }
+    sessionStorage.removeItem("xhb_gate");
+  }
   // Check URL ?key= parameter
   const urlKey = checkGateFromURL();
-  if (urlKey && await tryUnlockGate(urlKey)) {
-    // Clean URL so token isn't visible in address bar
-    const clean = window.location.pathname + window.location.hash;
-    window.history.replaceState({}, "", clean);
-    boot(); return;
+  if (urlKey) {
+    const result = await tryUnlockGate(urlKey);
+    if (result === true) {
+      const clean = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, "", clean);
+      boot(); return;
+    }
   }
   // Show gate
   renderGate();
