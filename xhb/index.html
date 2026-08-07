@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>XHB Founders' HQ · MomenCrafts</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --plum:#3D2952; --night:#241933; --lavender:#9B85B0;
+    --gold:#B8863A; --gold-soft:#D4A855; --cream:#F7F3ED;
+    --cream-dim:#CFC6BC; --line:rgba(247,243,237,.12);
+    --card:#2E2042; --card-deep:#281C39; --ok:#7FB069; --warn:#C9743A; --blue:#6E8FBF;
+    --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(1200px 800px at 85% -10%, #4A3263 0%, var(--night) 55%) fixed, var(--night);
+    color:var(--cream);
+    font:15px/1.55 "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  }
+  h1,h2,h3,.serif{font-family:Georgia, "Times New Roman", serif; letter-spacing:.2px;}
+  button{font:inherit; cursor:pointer; border:none; border-radius:9px;}
+  input,textarea,select{font:inherit; color:var(--cream); background:var(--night); border:1px solid var(--line); border-radius:9px; padding:9px 11px; width:100%;}
+  input:focus,textarea:focus,select:focus{outline:1.5px solid var(--gold); border-color:transparent;}
+  textarea{min-height:88px; resize:vertical;}
+  ::placeholder{color:rgba(247,243,237,.35);}
+  a{color:var(--gold-soft);}
+
+  .app{display:grid; grid-template-columns:270px 1fr; min-height:100vh;}
+  /* ---------- Sidebar ---------- */
+  .side{background:linear-gradient(180deg, #1F152D 0%, #241933 100%); border-right:1px solid var(--line); padding:24px 18px; display:flex; flex-direction:column; gap:18px;}
+  .brand .mark{font-family:Georgia, serif; font-size:28px; font-weight:700; letter-spacing:4px;}
+  .brand .rule{width:44px; height:3px; background:var(--gold); margin:7px 0 7px;}
+  .brand .sub{color:var(--lavender); font-size:12px; letter-spacing:.6px;}
+  .brand .co{margin-top:4px; font-size:11px; color:var(--cream-dim);}
+  .co b{color:var(--gold-soft); font-weight:600;}
+  .nav{display:flex; flex-direction:column; gap:5px; flex:1;}
+  .nav button{background:transparent; text-align:left; color:var(--cream-dim); border:1px solid transparent; padding:9px 12px; border-radius:10px; font-weight:600; font-size:14px; display:flex; justify-content:space-between; align-items:center;}
+  .nav button:hover{color:var(--cream); border-color:var(--line);}
+  .nav button.active{background:var(--plum); color:var(--cream); border-color:var(--gold);}
+  .nav .cnt{font-size:11px; background:var(--night); border:1px solid var(--line); color:var(--lavender); padding:1px 8px; border-radius:999px;}
+  .whoami{border-top:1px solid var(--line); padding-top:12px; font-size:12px; color:var(--cream-dim);}
+  .whoami b{color:var(--cream); display:block; font-size:13px;}
+  .link{background:none; color:var(--lavender); text-decoration:underline; padding:0; font-size:12px;}
+
+  .btn{padding:10px 14px; font-weight:600;}
+  .btn-gold{background:var(--gold); color:#241933;}
+  .btn-gold:hover{background:var(--gold-soft);}
+  .btn-ghost{background:transparent; color:var(--cream); border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--lavender);}
+  .btn-sm{padding:7px 11px; font-size:13px; font-weight:600;}
+
+  /* ---------- Main ---------- */
+  .main{padding:26px 32px 70px; max-width:1080px; width:100%;}
+  .demo-banner{background:linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 100%); color:#241933; border-radius:10px; padding:10px 16px; font-size:13px; margin-bottom:16px; font-weight:600;}
+  .nudge-banner{background:var(--plum); border:1px solid var(--gold); border-radius:12px; padding:13px 16px; margin-bottom:16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+  .nudge-banner .txt{flex:1; min-width:220px; font-size:13.5px;}
+  .nudge-banner .txt b{color:var(--gold-soft);}
+  .pagehead{display:flex; align-items:flex-end; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+  .pagehead h1{font-size:26px;}
+  .pagehead .meta{color:var(--lavender); font-size:13px; margin-top:3px;}
+  .hint{color:var(--cream-dim); font-size:13px; margin-bottom:16px; max-width:780px;}
+  .hint b{color:var(--gold-soft);}
+
+  .chip{font-size:11px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase; padding:5px 11px; border-radius:999px; white-space:nowrap; display:inline-block;}
+  .chip.sealed{background:#241933; color:var(--lavender); border:1px solid var(--lavender);}
+  .chip.revealed{background:var(--gold); color:#241933;}
+  .chip.aligned{background:var(--ok); color:#1E2A18;}
+  .chip.divergent{background:var(--warn); color:#2A1708;}
+  .chip.decided{background:var(--cream); color:var(--plum);}
+  .chip.later{background:#241933; color:var(--cream-dim); border:1px solid var(--line);}
+  .chip.next{background:var(--lavender); color:#241933;}
+  .chip.now{background:var(--gold); color:#241933;}
+  .chip.done{background:var(--ok); color:#1E2A18;}
+  .chip.source{background:var(--gold); color:#241933;}
+  .chip.derived{background:#241933; color:var(--lavender); border:1px solid var(--lavender);}
+  .chip.legal{background:var(--cream); color:var(--plum);}
+  .chip.other{background:#241933; color:var(--cream-dim); border:1px solid var(--line);}
+
+  /* ---------- Vision ---------- */
+  .v-quote{background:var(--plum); border-left:4px solid var(--gold); border-radius:0 var(--radius) var(--radius) 0; padding:20px 24px; font-family:Georgia, serif; font-size:19px; font-style:italic; margin-bottom:18px; line-height:1.6;}
+  .v-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:13px; margin:16px 0;}
+  .v-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px;}
+  .v-card h3{color:var(--gold-soft); font-size:16px; margin-bottom:7px;}
+  .v-card p{font-size:13.5px; color:var(--cream-dim);}
+  .v-sec{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px 22px; margin-bottom:14px;}
+  .v-sec h2{font-size:17px; color:var(--gold-soft); margin-bottom:10px;}
+  .v-sec p{font-size:14px; margin-bottom:8px;}
+  .v-sec ul{margin:4px 0 4px 20px; font-size:13.5px; color:var(--cream-dim);}
+  .v-sec li{margin-bottom:5px;}
+  .v-foot{font-size:12.5px; color:var(--cream-dim); margin-top:14px;}
+
+  /* ---------- Plan ---------- */
+  .phase-block{margin-bottom:20px;}
+  .phase-block h2{font-size:15px; color:var(--gold-soft); letter-spacing:.8px; margin-bottom:9px;}
+  .plan-item{background:var(--card); border:1px solid var(--line); border-radius:11px; padding:11px 14px; margin-bottom:8px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+  .plan-item .t{flex:1; min-width:220px; font-size:14px;}
+  .plan-item .sub{display:block; font-size:12px; color:var(--cream-dim); margin-top:2px;}
+  .plan-item .chipbtn{background:none; padding:0;}
+  .addbar{background:var(--card); border:1px dashed var(--lavender); border-radius:var(--radius); padding:14px 16px; margin-top:10px; display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; gap:9px; align-items:center;}
+
+  /* ---------- Q&A (sessions) ---------- */
+  .sess-chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;}
+  .sess-chip{background:transparent; border:1px solid var(--line); color:var(--cream); padding:8px 14px; border-radius:999px; font-size:13px; font-weight:600;}
+  .sess-chip.active{background:var(--plum); border-color:var(--gold);}
+  .qcard{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:19px 21px; margin-bottom:16px;}
+  .qhead{display:flex; justify-content:space-between; gap:12px; align-items:flex-start;}
+  .qhead h3{font-size:17px; line-height:1.4; max-width:78%;}
+  .qctx{color:var(--cream-dim); font-size:13px; margin-top:6px; max-width:80%;}
+  .answers{display:grid; grid-template-columns:1fr 1fr; gap:13px; margin-top:15px;}
+  .apanel{background:var(--card-deep); border:1px solid var(--line); border-radius:11px; padding:12px 14px; min-height:110px; display:flex; flex-direction:column; gap:8px;}
+  .apanel .who{font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--gold-soft);}
+  .apanel .who.partner{color:var(--lavender);}
+  .apanel .body{white-space:pre-wrap; font-size:14px;}
+  .locked{display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; color:var(--cream-dim); gap:6px; text-align:center; font-size:13px;}
+  .locked .ic{font-size:20px;}
+  .saved-note{font-size:12px; color:var(--ok);}
+  .qactions{display:flex; gap:10px; margin-top:13px; flex-wrap:wrap; align-items:center;}
+  .qactions .note{font-size:12.5px; color:var(--cream-dim);}
+  .resolve{margin-top:15px; border-top:1px dashed var(--line); padding-top:13px; display:grid; gap:10px;}
+  .resolve .row{display:grid; grid-template-columns:170px 1fr 180px; gap:10px;}
+  .decision-view{margin-top:13px; background:#221732; border-left:3px solid var(--gold); border-radius:0 10px 10px 0; padding:10px 14px; font-size:14px;}
+  .decision-view .lbl{font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:var(--gold-soft); font-weight:700;}
+  .decision-view .own{color:var(--cream-dim); font-size:12.5px; margin-top:4px;}
+  .addq{background:var(--card); border:1px dashed var(--lavender); border-radius:var(--radius); padding:16px 20px; margin-top:6px;}
+  .addq h3{font-size:14px; color:var(--lavender); margin-bottom:9px;}
+  .addq .grid{display:grid; gap:9px;}
+
+  /* ---------- Decisions / tables ---------- */
+  table.log{width:100%; border-collapse:collapse; background:var(--card); border-radius:var(--radius); overflow:hidden;}
+  .log th{background:var(--plum); text-align:left; font-size:11.5px; letter-spacing:1.2px; text-transform:uppercase; padding:10px 13px; color:var(--cream);}
+  .log td{padding:11px 13px; border-top:1px solid var(--line); font-size:13.5px; vertical-align:top;}
+  .log td.q{max-width:320px;}
+
+  /* ---------- Updates ---------- */
+  .compose{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:15px 17px; margin-bottom:18px; display:grid; gap:10px;}
+  .post{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:15px 18px; margin-bottom:12px;}
+  .post.pinned{border-color:var(--gold);}
+  .post .ph{display:flex; justify-content:space-between; gap:10px; font-size:12.5px; color:var(--cream-dim); margin-bottom:7px; flex-wrap:wrap;}
+  .post .ph b{color:var(--gold-soft);}
+  .post .body{white-space:pre-wrap; font-size:14px;}
+
+  /* ---------- Documents ---------- */
+  .doc-row{background:var(--card); border:1px solid var(--line); border-radius:11px; padding:13px 16px; margin-bottom:9px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+  .doc-row .t{flex:1; min-width:230px;}
+  .doc-row .t b{font-size:14.5px;}
+  .doc-row .st{display:block; font-size:12.5px; color:var(--cream-dim); margin-top:2px;}
+  .ack{font-size:12px; color:var(--cream-dim);}
+  .ack .yes{color:var(--ok); font-weight:700;}
+  .doc-add{background:var(--card); border:1px dashed var(--lavender); border-radius:var(--radius); padding:14px 16px; margin-top:12px; display:grid; grid-template-columns:2fr 1fr 2fr auto; gap:9px;}
+
+  /* ---------- Ask ---------- */
+  .ask-box{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; display:grid; gap:11px; margin-bottom:16px;}
+  .ask-ans{background:var(--card-deep); border-left:3px solid var(--gold); border-radius:0 12px 12px 0; padding:15px 18px; white-space:pre-wrap; font-size:14px;}
+  .ask-note{background:var(--plum); border-radius:12px; padding:15px 18px; font-size:13.5px;}
+  .ask-note b{color:var(--gold-soft);}
+
+  /* ---------- Podcast ---------- */
+  .ep-row{background:var(--card); border:1px solid var(--line); border-radius:11px; padding:12px 15px; margin-bottom:9px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+  .ep-row .t{flex:1; min-width:220px;}
+  .ep-row .t b{font-size:14.5px;}
+  .ep-row .st{display:block; font-size:12.5px; color:var(--cream-dim); margin-top:2px;}
+  .ep-add{background:var(--card); border:1px dashed var(--lavender); border-radius:var(--radius); padding:14px 16px; margin-top:12px; display:grid; grid-template-columns:2fr 2fr auto; gap:9px;}
+  #player-dock{display:none; position:fixed; left:18px; bottom:18px; z-index:70; background:var(--plum); border:1px solid var(--gold); border-radius:14px; padding:10px 14px; gap:11px; align-items:center; box-shadow:0 10px 34px rgba(0,0,0,.5); max-width:420px;}
+  #player-dock .pl-t{font-size:13px; font-weight:600; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  #player-dock .pl-ic{font-size:18px;}
+
+  .empty{border:1px dashed var(--line); border-radius:var(--radius); padding:34px; text-align:center; color:var(--cream-dim);}
+  .toast{position:fixed; bottom:22px; right:22px; background:var(--cream); color:var(--plum); font-weight:600; padding:11px 17px; border-radius:10px; box-shadow:0 8px 30px rgba(0,0,0,.4); z-index:80; font-size:13.5px;}
+
+  /* ---------- Auth & modal ---------- */
+  .center-wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:30px;}
+  .authcard{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:40px 42px; max-width:430px; width:100%; text-align:center;}
+  .authcard .mark{font-family:Georgia, serif; font-size:38px; letter-spacing:5px; font-weight:700;}
+  .authcard .rule{width:52px; height:3px; background:var(--gold); margin:12px auto;}
+  .authcard p{color:var(--cream-dim); font-size:13.5px; margin-bottom:18px;}
+  .authcard .grid{display:grid; gap:11px; text-align:left;}
+  .msg{font-size:13px; color:var(--gold-soft); margin-top:12px; min-height:18px;}
+  .overlay{position:fixed; inset:0; background:rgba(20,12,30,.72); display:flex; align-items:center; justify-content:center; z-index:50; padding:24px;}
+  .modal{background:var(--card); border:1px solid var(--lavender); border-radius:16px; padding:25px 27px; width:100%; max-width:500px;}
+  .modal h2{font-size:19px; margin-bottom:13px;}
+  .modal .grid{display:grid; gap:11px;}
+  .modal label{font-size:11.5px; letter-spacing:1px; text-transform:uppercase; color:var(--gold-soft); font-weight:700;}
+  .modal .foot{display:flex; justify-content:flex-end; gap:10px; margin-top:15px; flex-wrap:wrap;}
+  .tpl-desc{font-size:12.5px; color:var(--cream-dim);}
+
+  @media (max-width: 940px){
+    .app{grid-template-columns:1fr;}
+    .side{border-right:none; border-bottom:1px solid var(--line);}
+    .nav{flex-direction:row; flex-wrap:wrap;}
+    .answers,.v-grid{grid-template-columns:1fr;}
+    .resolve .row,.addbar,.doc-add{grid-template-columns:1fr;}
+    .main{padding:18px 15px 70px;}
+    .qhead h3,.qctx{max-width:100%;}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="player-dock"></div>
+<audio id="bg-audio" preload="none"></audio>
+
+<script>
+/* =========================================================================
+   XHB × MomenCrafts — Founders' HQ  (v2)
+   Vision · Plan · Q&A sessions · Decisions · Updates · Documents · Ask XHB
+   -------------------------------------------------------------------------
+   SETUP (live mode):
+     1. Run supabase_setup_v2.sql in your Supabase SQL editor
+        (edit MULHAM_EMAIL_HERE first).
+     2. Fill SUPABASE_URL and SUPABASE_ANON_KEY below.
+     3. Auth -> enable Email (magic link); add this page's URL to redirects.
+     4. Optional, for the Ask-XHB tab: deploy the ask-xhb edge function and
+        set the ANTHROPIC_API_KEY secret (see DEPLOY_GUIDE).
+   Leave config empty for DEMO MODE (in-memory sample data).
+   ========================================================================= */
+const CONFIG = {
+  SUPABASE_URL: "https://isciigqmdfcozrtojqcm.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzY2lpZ3FtZGZjb3pydG9qcWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMDk4ODYsImV4cCI6MjA5NjU4NTg4Nn0.OUV0dUWUt0UBU9bdJpwWiXI2PgclddNO0t1cA4ZLF_8",
+  GATE_TOKEN_HASH: "76289c4578e0fe4d77293fe176330b3c23425ffdd869011d26c4b03b338f71b1",
+};
+
+/* --------------------------- Vision content ------------------------------ */
+const VISION = {
+  line: "Compass governs the promise. Anchor verifies the proof. Field Evidence captures reality at the source.",
+  definition: "XHB is a governed decision-assurance platform for capital projects. Its shared Core converts traceable evidence into methodologically appropriate research, independent market challenge, cautious forecasts, and execution-feasible options — before an authorized human decides. The promise is not that AI knows the future. The promise is that XHB makes uncertainty visible, detects failure earlier, shows what evidence supports a conclusion, and separates what is technically possible from what an organization can realistically execute.",
+  products: [
+    ["Compass 🧭", "For capital owners and investment committees. What should we fund, why, and can the organization realistically deliver it?"],
+    ["Anchor ⚓", "For delivery assurance. What was actually delivered, what does the evidence prove, and are the claims justified?"],
+    ["Field Evidence 📱", "Mobile capture at the source. What was observed on site, by whom, and is its chain of custody preserved?"]
+  ],
+  nongoals: [
+    "No autonomous critical actions — a named human decides at every gate.",
+    "No personnel honesty or reliability scores — we measure submission and evidence quality only.",
+    "No invented probabilities — risk flags and benchmarked ranges until models are validated.",
+    "No Field Evidence app before Phase 4.",
+    "No consultant marketplace — two contracted consultants and a protocol first.",
+    "No dispute adjudication — the system prepares, humans and law decide.",
+    "No cross-client data mixing, ever.",
+    "No dozens of agents before one closed loop proves value."
+  ],
+  phases: [
+    ["P0", "Governed foundation — entity, evidence snapshots, node registry, one defined decision."],
+    ["P1", "6–8 week historical feasibility pilot on 3–5 completed projects. Detection lead time is the headline number."],
+    ["P2", "Research assurance — method router, consultant dual-track, 20–50 project benchmark."],
+    ["P3", "Execution feasibility — workforce capacity, lead-times, constraint scheduling."],
+    ["P4", "Product connection — validated Compass + Anchor workflows, Field Evidence capture."],
+    ["P5", "Controlled expansion — disputes, validated forecasts, pricing research."]
+  ],
+  credit: "Concept & architecture: Mulham Al Zahabi · Technical build: Momen Pharaon — MomenCrafts · Source of truth: AI Forest Remastered Master Architecture v1.0"
+};
+
+/* ------------------------- Question templates ---------------------------- */
+const TEMPLATES = {
+  "founding": { name: "Founding & Equity", desc: "Entity, split, roles, triggers — the Part III §21 set.",
+    questions: [
+      ["Do we form the XHB entity now, and in which jurisdiction?", "IP is already accumulating across two contributors and three documents. Formation before code starts keeps ownership clean."],
+      ["What is the equity split between Mulham and Momen/MomenCrafts, and what vesting ties it to milestones?", "Consider Phase 1 delivery, first paid client, and funding close as vesting gates."],
+      ["Is Momen engaged as co-founder & technical lead, or MomenCrafts as a contracted studio?", "The two answers produce very different investor diligence outcomes — choose deliberately, not by default."],
+      ["What triggers full-time commitment for each of us?", "Funding amount, pilot signed, or a calendar date — name it."],
+      ["If HUMAIN's answer is slow or no, what is the runway plan and who funds Phase 1?", "Tranche structure, NTDP, private lane — decide the fallback before it is needed."]
+    ]},
+  "ip": { name: "IP & Ownership", desc: "Assignment, patent, employment cleanliness.",
+    questions: [
+      ["Do we assign the concept, all documents (deck, spec, remaster), and all code to the entity on formation?", "One owner for everything, from day one."],
+      ["Who files the provisional patent on evidence-quality / submission-reliability scoring, and by when?", "File before the mechanism is shown externally."],
+      ["Is Mulham's employment IP position reviewed and documented?", "One page, lawyer-reviewed, ready for diligence. Owner and date."],
+      ["What is our policy on open-sourcing any component?", "Default: nothing, until decided here."],
+      ["Who owns the XHB brand assets and domain strategy?", "xhb.momencrafts.com now — standalone domain when?"]
+    ]},
+  "phase1": { name: "Phase 1 Pilot (SOW)", desc: "The 6–8 week historical feasibility pilot from the remaster.",
+    questions: [
+      ["Which 3–5 completed projects do we use, and who controls access to their documents?", "At least one healthy control project. This is the single most important open item."],
+      ["What is the precise endpoint definition and organizational recognition date for each project?", "Remaster §31 step 2 — vague endpoints invalidate the backtest."],
+      ["Which five warning checks ship in the pilot?", "Suggested: milestone slippage, aging decisions, cost-progress divergence, unsupported VO/invoice evidence, expired critical assumption."],
+      ["Who is consultant #1 for the dual-track sealed review, and on what fee basis?", "Fixed or effort-based, never conclusion-dependent."],
+      ["What does pilot success mean commercially?", "Does the pilot organization convert to a paid Foundation Phase? Record the buyer's name."],
+      ["What is the pilot start date, counted from document access?", "The 6–8 week timebox begins only when documents are in hand."]
+    ]},
+  "product": { name: "Product & Architecture", desc: "Source of truth, ALLAM narrative, MVP exclusions.",
+    questions: [
+      ["What is our one ALLAM sentence for HUMAIN, used identically everywhere?", "Core + gateway narrative — decided once."],
+      ["Do we adopt the remaster as single source of truth v1.0 and freeze documents until Phase 1 produces data?", "Deck and spec become derived documents."],
+      ["Which MVP exclusions do we both commit not to build early?", "Per the remaster's own exclusion list."],
+      ["Who owns deck v2 reconciliation, and by when?", "Trust-score wording, 11-agents slide, ALLAM framing — one pass."],
+      ["What stack do we lock for the pilot?", "Hosting, data store, model access path — revisited after Phase 1."]
+    ]},
+  "wow": { name: "Ways of Working", desc: "Decision rights, cadence, deadlocks, confidentiality.",
+    questions: [
+      ["Decision rights: what does Mulham decide alone, what does Momen decide alone, what needs both?", "Domain truth vs. technical architecture vs. money."],
+      ["What is our meeting cadence, and is this HQ the official decision log?", "If a decision is not logged here, did it happen?"],
+      ["How do we resolve a deadlock?", "Defer to domain owner, third adjudicator, or park with expiry."],
+      ["What are our confidentiality rules for sharing XHB material?", "Who may see the remaster, the deck, the pilot data."],
+      ["When do we revisit equity and roles?", "A fixed date or a milestone — agreed now."]
+    ]},
+  "custom": { name: "Blank session", desc: "Start empty and add your own questions.", questions: [] }
+};
+
+const PHASES = ["P0","P1","P2","P3","P4","P5","General"];
+const PLAN_STATUS = ["later","next","now","done"];
+
+/* ------------------------------ State ------------------------------------ */
+const LIVE = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY);
+let sb = null;
+let me = null;
+let members = [];
+let nav = "vision";
+let sessions = [], currentSession = null, questions = [];
+let planItems = [], updatesFeed = [], docsList = [], nudges = [], episodesList = [];
+let currentEp = null;
+let confirmReveal = {};
+let channel = null;
+let askAnswer = "", askBusy = false;
+const demoStore = {};
+
+/* ------------------------------ Demo data -------------------------------- */
+const DEMO_ME = { email: "momen@momencrafts.com", name: "Momen" };
+const DEMO_PARTNER = { email: "mulham@xhb.sa", name: "Mulham" };
+const now = () => new Date().toISOString();
+
+function demoSeed() {
+  members = [{ email: DEMO_ME.email, display_name: DEMO_ME.name }, { email: DEMO_PARTNER.email, display_name: DEMO_PARTNER.name }];
+  const sid = "demo-1";
+  sessions = [{ id: sid, title: "Founding & Equity", template: "founding", created_at: now() }];
+  const t = TEMPLATES.founding.questions;
+  questions = t.map((q, i) => ({ id: "dq" + i, session_id: sid, position: i, prompt: q[0], context: q[1], status: "sealed", outcome: null, decision: "", decision_owner: "", answers: {} }));
+  questions[0].status = "revealed";
+  questions[0].answers[DEMO_ME.email] = { body: "Form now — KSA LLC before any code is written, so IP flows to one owner from day one." };
+  questions[0].answers[DEMO_PARTNER.email] = { body: "Agree on forming now. One week to compare KSA mainland vs. holding structure with an advisor." };
+  questions[2].status = "resolved"; questions[2].outcome = "decided";
+  questions[2].decision = "Momen joins as co-founder & technical lead; MomenCrafts remains a brand, not the contracting party.";
+  questions[2].decision_owner = "Both — " + new Date().toLocaleDateString("en-GB");
+  questions[2].answers[DEMO_ME.email] = { body: "Co-founder & technical lead." };
+  questions[2].answers[DEMO_PARTNER.email] = { body: "Co-founder. Closes the deck's biggest team gap properly." };
+  currentSession = sessions[0];
+  demoStore[sid] = questions;
+
+  planItems = [
+    { id: "p1", title: "Choose the 3–5 completed pilot projects (incl. one healthy control)", detail: "Identify who controls their documents", phase: "P0", status: "now", owner: "Mulham", due: "Week 1", position: 0 },
+    { id: "p2", title: "Entity decision + MomenCrafts / co-founder terms in writing", detail: "MOU signature after lawyer review", phase: "P0", status: "now", owner: "Both", due: "Week 1–2", position: 1 },
+    { id: "p3", title: "Draft Phase 1 Statement of Work", detail: "Scope = remaster Phase 0+1 exactly; MVP exclusions verbatim", phase: "P0", status: "next", owner: "Momen", due: "Week 2", position: 2 },
+    { id: "p4", title: "Sign consultant #1 for dual-track review", detail: "Fixed fee, sealed protocol", phase: "P1", status: "next", owner: "Mulham", due: "Week 2", position: 3 },
+    { id: "p5", title: "Freeze document set — remaster = source of truth v1.0", detail: "Deck & spec marked derived, reconciliation pass", phase: "P0", status: "later", owner: "Mulham", due: "Week 2", position: 4 },
+    { id: "p6", title: "Evidence snapshot store + ingestion of pilot documents", detail: "Immutable monthly snapshots, hindsight-leakage controls", phase: "P1", status: "later", owner: "Momen", due: "Week 3+", position: 5 }
+  ];
+  updatesFeed = [
+    { id: "u1", author_email: DEMO_ME.email, body: "HQ v2 is live: Vision, Plan, Decisions register, Documents vault and the nudge flow. Mulham — start with the Founding & Equity session, your sealed answers are awaited on 3 questions.", pinned: true, created_at: now() },
+    { id: "u2", author_email: DEMO_PARTNER.email, body: "Reviewed the MOU draft. Two edits coming on clause 5.3 wording, then it goes to the lawyer. Also shortlisting pilot projects — three candidates so far, one healthy control still needed.", pinned: false, created_at: now() }
+  ];
+  docsList = [
+    { id: "d1", title: "AI Forest — Remastered Master Architecture", kind: "source", status: "v1.0 — SOURCE OF TRUTH (frozen until Phase 1 data)", url: "", approvals: {} },
+    { id: "d2", title: "XHB Investor Deck (34 slides)", kind: "derived", status: "Derived — awaiting v2 reconciliation pass", url: "", approvals: {} },
+    { id: "d3", title: "XHB Complete Specification (30 pages)", kind: "derived", status: "Derived — awaiting v2 reconciliation pass", url: "", approvals: {} },
+    { id: "d4", title: "Founders' MOU & Good-Faith Acknowledgment", kind: "legal", status: "Draft — awaiting lawyer review, then signature", url: "", approvals: { "momen@momencrafts.com": "2026-08-07" } },
+    { id: "d5", title: "Phase 1 Statement of Work", kind: "legal", status: "To be drafted from remaster Phase 0+1", url: "", approvals: {} },
+    { id: "d6", title: "Founders' / Shareholders' Agreement", kind: "legal", status: "Later — at incorporation, supersedes the MOU", url: "", approvals: {} }
+  ];
+  nudges = [
+    { id: "n1", session_id: sid, from_email: DEMO_PARTNER.email, to_email: DEMO_ME.email, message: "Revised my answer plan for Q2 — please seal yours so we can reveal and close equity this week.", seen: false, created_at: now() }
+  ];
+  episodesList = [
+    { id: "e1", title: "Ep 1 — The XHB story, in 12 minutes", url: "", note: "Generate an audio overview from the Investor Deck (NotebookLM or similar), host the MP3 (Supabase storage works), and paste the link here.", created_at: now() },
+    { id: "e2", title: "Ep 2 — The AI Forest remaster, explained", url: "", note: "Audio walkthrough of the architecture — for listening on the go.", created_at: now() },
+    { id: "e3", title: "Ep 3 — Capex failure patterns (Flyvbjerg) — background listening", url: "", note: "Any podcast episode URL works: paste a direct MP3 link and press play.", created_at: now() }
+  ];
+}
+
+/* --------------------------- Data layer ---------------------------------- */
+const norm = (e) => (e || "").trim().toLowerCase();
+function nameFor(email) {
+  const m = members.find(x => norm(x.email) === norm(email));
+  if (m && m.display_name) return m.display_name;
+  return (email || "").split("@")[0] || "Partner";
+}
+function partnerOf(meEmail) {
+  const other = members.find(x => norm(x.email) !== norm(meEmail));
+  return other ? { email: norm(other.email), name: nameFor(other.email) } : { email: null, name: "Partner" };
+}
+
+async function loadMembers() {
+  if (!LIVE) return;
+  const { data } = await sb.from("allowed_users").select("email, display_name");
+  members = data || [];
+}
+async function loadSessions() {
+  if (!LIVE) return;
+  const { data } = await sb.from("sessions").select("*").order("created_at", { ascending: false });
+  sessions = data || [];
+  if (currentSession) currentSession = sessions.find(s => s.id === currentSession.id) || sessions[0] || null;
+  else currentSession = sessions[0] || null;
+}
+async function loadQuestions() {
+  if (!LIVE) { questions = currentSession ? (demoStore[currentSession.id] || []) : []; return; }
+  if (!currentSession) { questions = []; return; }
+  const { data: qs } = await sb.from("questions").select("*").eq("session_id", currentSession.id).order("position").order("created_at");
+  const ids = (qs || []).map(q => q.id);
+  let ansRows = [];
+  if (ids.length) { const { data: ans } = await sb.from("answers").select("*").in("question_id", ids); ansRows = ans || []; }
+  questions = (qs || []).map(q => {
+    const a = {};
+    ansRows.filter(r => r.question_id === q.id).forEach(r => { a[norm(r.author_email)] = { body: r.body, updated_at: r.updated_at }; });
+    return { ...q, answers: a };
+  });
+}
+async function loadAllResolved() {
+  if (!LIVE) {
+    const out = [];
+    sessions.forEach(s => (demoStore[s.id] || []).forEach(q => { if (q.status === "resolved") out.push({ ...q, session_title: s.title }); }));
+    return out;
+  }
+  const { data } = await sb.from("questions").select("*, sessions(title)").eq("status", "resolved").order("resolved_at", { ascending: false });
+  return (data || []).map(q => ({ ...q, session_title: q.sessions ? q.sessions.title : "" }));
+}
+async function loadTable(table, order) {
+  if (!LIVE) return;
+  const { data } = await sb.from(table).select("*").order(order.col, { ascending: order.asc });
+  if (table === "plan_items") planItems = data || [];
+  if (table === "updates") updatesFeed = data || [];
+  if (table === "documents") docsList = data || [];
+  if (table === "nudges") nudges = data || [];
+  if (table === "episodes") episodesList = data || [];
+}
+async function dbInsert(table, row, demoArr) {
+  if (!LIVE) { row.id = "x" + Math.random().toString(36).slice(2, 9); row.created_at = now(); demoArr.unshift(row); render(); return row; }
+  const { data, error } = await sb.from(table).insert(row).select().single();
+  if (error) { toast("Save failed: " + error.message); return null; }
+  await refresh(); return data;
+}
+async function dbUpdate(table, id, patch, demoArr) {
+  if (!LIVE) { const it = demoArr.find(x => x.id === id); if (it) Object.assign(it, patch); render(); return; }
+  const { error } = await sb.from(table).update(patch).eq("id", id);
+  if (error) toast("Update failed: " + error.message); else await refresh();
+}
+
+async function createSession(title, templateKey) {
+  const tpl = TEMPLATES[templateKey] || TEMPLATES.custom;
+  if (!LIVE) {
+    const sid = "demo-" + Math.random().toString(36).slice(2, 8);
+    sessions.unshift({ id: sid, title, template: templateKey, created_at: now() });
+    demoStore[sid] = tpl.questions.map((q, i) => ({ id: sid + "-q" + i, session_id: sid, position: i, prompt: q[0], context: q[1], status: "sealed", outcome: null, decision: "", decision_owner: "", answers: {} }));
+    currentSession = sessions[0]; questions = demoStore[sid]; render(); return;
+  }
+  const { data, error } = await sb.from("sessions").insert({ title, template: templateKey, created_by: me.email }).select().single();
+  if (error) { toast("Could not create session: " + error.message); return; }
+  if (tpl.questions.length) {
+    const rows = tpl.questions.map((q, i) => ({ session_id: data.id, position: i, prompt: q[0], context: q[1], created_by: me.email }));
+    await sb.from("questions").insert(rows);
+  }
+  currentSession = data; await refresh();
+}
+async function addQuestion(prompt, context) {
+  if (!LIVE) { questions.push({ id: "dq" + Math.random().toString(36).slice(2, 8), session_id: currentSession.id, position: questions.length, prompt, context, status: "sealed", outcome: null, decision: "", decision_owner: "", answers: {} }); render(); return; }
+  const { error } = await sb.from("questions").insert({ session_id: currentSession.id, position: questions.length, prompt, context, created_by: me.email });
+  if (error) toast("Could not add: " + error.message); else await refresh();
+}
+async function saveAnswer(q, body) {
+  if (!body.trim()) { toast("Write an answer first."); return; }
+  if (!LIVE) { q.answers[norm(me.email)] = { body, updated_at: now() }; render(); toast("Answer sealed ✓"); return; }
+  const { error } = await sb.from("answers").upsert({ question_id: q.id, author_email: norm(me.email), body, updated_at: now() }, { onConflict: "question_id,author_email" });
+  if (error) toast("Save failed: " + error.message); else { await refresh(); toast("Answer sealed ✓"); }
+}
+async function setQuestion(q, patch) {
+  if (!LIVE) { Object.assign(q, patch); render(); return; }
+  const { error } = await sb.from("questions").update(patch).eq("id", q.id);
+  if (error) toast("Update failed: " + error.message); else await refresh();
+}
+async function refresh() {
+  if (!LIVE) { render(); return; }
+  await loadSessions(); await loadQuestions();
+  await loadTable("plan_items", { col: "position", asc: true });
+  await loadTable("updates", { col: "created_at", asc: false });
+  await loadTable("documents", { col: "created_at", asc: true });
+  await loadTable("nudges", { col: "created_at", asc: false });
+  await loadTable("episodes", { col: "created_at", asc: true });
+  render();
+}
+
+function subscribeRealtime() {
+  if (!LIVE || channel) return;
+  try {
+    channel = sb.channel("hq");
+    ["sessions", "questions", "answers", "plan_items", "updates", "documents", "nudges", "episodes"].forEach(t => {
+      channel.on("postgres_changes", { event: "*", schema: "public", table: t }, () => refresh());
+    });
+    channel.subscribe();
+  } catch (e) { /* optional */ }
+}
+
+/* ------------------------------ Render ------------------------------------ */
+const app = document.getElementById("app");
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : "";
+
+function chipQ(q) {
+  if (q.status === "sealed") return '<span class="chip sealed">Sealed</span>';
+  if (q.status === "revealed") return '<span class="chip revealed">Revealed</span>';
+  const map = { aligned: ["aligned", "Aligned"], divergent: ["divergent", "Divergent — parked"], decided: ["decided", "Decided"] };
+  const m = map[q.outcome] || ["decided", "Resolved"];
+  return '<span class="chip ' + m[0] + '">' + m[1] + '</span>';
+}
+
+/* ----- Vision view ----- */
+function viewVision() {
+  return '<div class="pagehead"><div><h1>Vision</h1><div class="meta">The north star — and what we are deliberately not building yet</div></div></div>' +
+    '<div class="v-quote">“' + esc(VISION.line) + '”</div>' +
+    '<div class="v-sec"><h2>What XHB is</h2><p>' + esc(VISION.definition) + '</p></div>' +
+    '<div class="v-grid">' + VISION.products.map(p => '<div class="v-card"><h3>' + esc(p[0]) + '</h3><p>' + esc(p[1]) + '</p></div>').join("") + '</div>' +
+    '<div class="v-sec"><h2>Non-goals right now</h2><ul>' + VISION.nongoals.map(n => '<li>' + esc(n) + '</li>').join("") + '</ul></div>' +
+    '<div class="v-sec"><h2>Phase horizons</h2><ul>' + VISION.phases.map(p => '<li><b style="color:var(--gold-soft);">' + p[0] + '</b> — ' + esc(p[1]) + '</li>').join("") + '</ul></div>' +
+    '<div class="v-foot">' + esc(VISION.credit) + '</div>';
+}
+
+/* ----- Plan view ----- */
+function viewPlan() {
+  const groups = PHASES.map(ph => {
+    const items = planItems.filter(i => (i.phase || "General") === ph);
+    if (!items.length) return "";
+    return '<div class="phase-block"><h2>' + ph + (ph === "P0" ? " — Governed foundation" : ph === "P1" ? " — Feasibility pilot" : "") + '</h2>' +
+      items.map(i =>
+        '<div class="plan-item"><button class="chipbtn" data-act="plan-cycle" data-id="' + i.id + '"><span class="chip ' + esc(i.status) + '">' + esc(i.status) + '</span></button>' +
+        '<div class="t" dir="auto">' + esc(i.title) + (i.detail || i.owner || i.due ? '<span class="sub">' + esc(i.detail || "") + (i.owner ? " · Owner: " + esc(i.owner) : "") + (i.due ? " · " + esc(i.due) : "") + '</span>' : "") + '</div></div>').join("") + '</div>';
+  }).join("");
+  return '<div class="pagehead"><div><h1>Plan</h1><div class="meta">Click a status chip to cycle it: later → next → now → done</div></div></div>' +
+    (groups || '<div class="empty">No plan items yet.</div>') +
+    '<div class="addbar"><input dir="auto" id="plan-title" placeholder="New milestone…" /><select id="plan-phase">' + PHASES.map(p => '<option>' + p + '</option>').join("") + '</select><input id="plan-owner" placeholder="Owner" /><input id="plan-due" placeholder="Due (e.g. Week 3)" /><button class="btn btn-gold btn-sm" data-act="plan-add">Add</button></div>';
+}
+
+/* ----- Sessions (Q&A) view ----- */
+function qCard(q) {
+  const meKey = norm(me.email);
+  const partner = partnerOf(me.email);
+  const mine = q.answers[meKey];
+  const theirsKey = Object.keys(q.answers).find(k => k !== meKey);
+  const theirs = theirsKey ? q.answers[theirsKey] : null;
+  const bothIn = !!mine && !!theirs;
+  const sealed = q.status === "sealed";
+  let mePanel;
+  if (sealed) {
+    mePanel = '<div class="apanel"><span class="who">You · ' + esc(me.name) + '</span>' +
+      '<textarea dir="auto" id="ans-' + q.id + '" placeholder="Write your independent answer…">' + esc(mine ? mine.body : "") + '</textarea>' +
+      '<div style="display:flex; gap:8px; align-items:center;"><button class="btn btn-gold btn-sm" data-act="save" data-q="' + q.id + '">' + (mine ? "Update sealed answer" : "Seal my answer") + '</button>' +
+      (mine ? '<span class="saved-note">Sealed ✓</span>' : "") + '</div></div>';
+  } else {
+    mePanel = '<div class="apanel"><span class="who">You · ' + esc(me.name) + '</span><div class="body" dir="auto">' + esc(mine ? mine.body : "— no answer recorded —") + '</div></div>';
+  }
+  let themPanel;
+  if (sealed) {
+    themPanel = '<div class="apanel"><span class="who partner">' + esc(partner.name) + '</span><div class="locked"><span class="ic">🔒</span><span>' + (theirs ? esc(partner.name) + " has sealed an answer.<br>Reveal to compare." : "Waiting for " + esc(partner.name) + "'s sealed answer…") + '</span></div></div>';
+  } else {
+    themPanel = '<div class="apanel"><span class="who partner">' + esc(partner.name) + '</span><div class="body" dir="auto">' + esc(theirs ? theirs.body : "— no answer recorded —") + '</div></div>';
+  }
+  let actions = "";
+  if (sealed) {
+    if (bothIn) actions = '<button class="btn btn-gold btn-sm" data-act="reveal" data-q="' + q.id + '">Reveal both answers</button><span class="note">Both answers are in.</span>';
+    else if (mine && !theirs) actions = confirmReveal[q.id]
+      ? '<button class="btn btn-gold btn-sm" data-act="reveal" data-q="' + q.id + '">Confirm reveal with one answer missing</button><span class="note">This breaks the sealed protocol for this question.</span>'
+      : '<button class="btn btn-ghost btn-sm" data-act="force" data-q="' + q.id + '">Force reveal…</button><span class="note">Best practice: wait for both sealed answers.</span>';
+    else actions = '<span class="note">Answers stay hidden from each other until both are sealed.</span>';
+  } else if (q.status === "revealed") actions = '<span class="note">Discuss, then record the outcome below.</span>';
+  else actions = '<button class="btn btn-ghost btn-sm" data-act="reopen" data-q="' + q.id + '">Reopen</button>';
+  let resolveBlock = "";
+  if (q.status === "revealed") {
+    resolveBlock = '<div class="resolve"><div class="row">' +
+      '<select id="out-' + q.id + '"><option value="decided">Decided</option><option value="aligned">Aligned as-is</option><option value="divergent">Divergent — park it</option></select>' +
+      '<input dir="auto" id="dec-' + q.id + '" placeholder="What did we agree? (one or two sentences)" />' +
+      '<input dir="auto" id="own-' + q.id + '" placeholder="Owner / follow-up" /></div>' +
+      '<div><button class="btn btn-gold btn-sm" data-act="resolve" data-q="' + q.id + '">Log the outcome</button></div></div>';
+  }
+  if (q.status === "resolved" && (q.decision || q.outcome)) {
+    resolveBlock = '<div class="decision-view"><span class="lbl">' + (q.outcome === "divergent" ? "Parked divergence" : "Decision") + '</span><div dir="auto">' + esc(q.decision || "(recorded without text)") + '</div>' + (q.decision_owner ? '<div class="own">Owner: ' + esc(q.decision_owner) + '</div>' : "") + '</div>';
+  }
+  return '<div class="qcard"><div class="qhead"><div><h3 dir="auto">' + esc(q.prompt) + '</h3>' + (q.context ? '<div class="qctx" dir="auto">' + esc(q.context) + '</div>' : "") + '</div>' + chipQ(q) + '</div>' +
+    '<div class="answers">' + mePanel + themPanel + '</div><div class="qactions">' + actions + '</div>' + resolveBlock + '</div>';
+}
+function viewSessions() {
+  const partner = partnerOf(me.email);
+  const chips = sessions.map(s => '<button class="sess-chip' + (currentSession && s.id === currentSession.id ? " active" : "") + '" data-act="open" data-s="' + s.id + '" dir="auto">' + esc(s.title) + '</button>').join("") +
+    '<button class="sess-chip" data-act="new-session" style="border-style:dashed; color:var(--gold-soft);">+ New</button>';
+  if (!currentSession) return '<div class="pagehead"><div><h1>Alignment sessions</h1></div></div><div class="sess-chips">' + chips + '</div><div class="empty">Create your first session — start with <b>Founding & Equity</b>.</div>';
+  const open = questions.filter(q => q.status !== "resolved").length;
+  return '<div class="pagehead"><div><h1 dir="auto">' + esc(currentSession.title) + '</h1><div class="meta">' + open + ' open · sealed answers unlock only when both of you have written</div></div>' +
+    '<div style="display:flex; gap:9px;"><button class="btn btn-gold btn-sm" data-act="nudge">Push to ' + esc(partner.name) + ' →</button><button class="btn btn-ghost btn-sm" data-act="refresh">↻</button></div></div>' +
+    '<div class="sess-chips">' + chips + '</div>' +
+    '<div class="hint"><b>The method:</b> answer independently → seal → reveal together → discuss → log the decision.</div>' +
+    questions.map(qCard).join("") +
+    '<div class="addq"><h3>Add a question</h3><div class="grid"><input dir="auto" id="new-q" placeholder="The question you both need to answer…" /><input dir="auto" id="new-ctx" placeholder="Context (optional)" /><div><button class="btn btn-gold btn-sm" data-act="addq">Add to session</button></div></div></div>';
+}
+
+/* ----- Decisions view ----- */
+let resolvedCache = [];
+function viewDecisions() {
+  if (!resolvedCache.length) return '<div class="pagehead"><div><h1>Decision register</h1><div class="meta">Every logged outcome, across all sessions — the record your MOU points to</div></div></div><div class="empty">Nothing logged yet. Reveal a question in a session and record the outcome.</div>';
+  const rows = resolvedCache.map(q =>
+    '<tr><td>' + esc(q.session_title || "") + '</td><td class="q" dir="auto"><b>' + esc(q.prompt) + '</b></td><td>' + chipQ(q) + '</td><td dir="auto">' + esc(q.decision || "—") + '</td><td dir="auto">' + esc(q.decision_owner || "—") + '</td></tr>').join("");
+  return '<div class="pagehead"><div><h1>Decision register</h1><div class="meta">' + resolvedCache.length + ' logged outcome(s), across all sessions</div></div>' +
+    '<button class="btn btn-ghost btn-sm" data-act="export">Export Markdown</button></div>' +
+    '<table class="log"><thead><tr><th>Session</th><th>Question</th><th>Outcome</th><th>Decision</th><th>Owner</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+function exportMarkdown() {
+  let md = "# XHB — Decision Register\n\n**Exported:** " + new Date().toISOString().slice(0, 10) + "\n\n";
+  resolvedCache.forEach((q, i) => {
+    md += "## " + (i + 1) + ". " + q.prompt + "\n\n- **Session:** " + (q.session_title || "—") + "\n- **Outcome:** " + (q.outcome || "resolved") + "\n- **Decision:** " + (q.decision || "—") + "\n- **Owner:** " + (q.decision_owner || "—") + "\n\n";
+  });
+  const blob = new Blob([md], { type: "text/markdown" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xhb-decision-register.md"; a.click();
+  toast("Register downloaded ✓");
+}
+
+/* ----- Updates view ----- */
+function viewUpdates() {
+  const posts = [...updatesFeed].sort((a, b) => (b.pinned === true) - (a.pinned === true));
+  return '<div class="pagehead"><div><h1>Updates</h1><div class="meta">The founder log — what moved, what is blocked, what you need from each other</div></div></div>' +
+    '<div class="compose"><textarea dir="auto" id="up-body" placeholder="What moved this week? What is blocked? What do you need from ' + esc(partnerOf(me.email).name) + '?"></textarea><div><button class="btn btn-gold btn-sm" data-act="up-post">Post update</button></div></div>' +
+    (posts.length ? posts.map(u =>
+      '<div class="post' + (u.pinned ? " pinned" : "") + '"><div class="ph"><span><b>' + esc(nameFor(u.author_email)) + '</b> · ' + fmtDate(u.created_at) + (u.pinned ? ' · 📌 pinned' : '') + '</span>' +
+      '<button class="link" data-act="up-pin" data-id="' + u.id + '">' + (u.pinned ? "Unpin" : "Pin") + '</button></div><div class="body" dir="auto">' + esc(u.body) + '</div></div>').join("") : '<div class="empty">No updates yet — post the first one.</div>');
+}
+
+/* ----- Documents view ----- */
+function viewDocs() {
+  const kindChip = (k) => '<span class="chip ' + k + '">' + (k === "source" ? "Source of truth" : k === "derived" ? "Derived" : k === "legal" ? "Legal draft" : "Other") + '</span>';
+  const row = (d) => {
+    const partner = partnerOf(me.email);
+    let ack = "";
+    if (d.kind === "legal") {
+      const appr = d.approvals || {};
+      const mineOk = appr[norm(me.email)], theirsOk = appr[partner.email];
+      ack = '<div class="ack">' + esc(me.name) + ': ' + (mineOk ? '<span class="yes">approved ' + esc(mineOk) + '</span>' : 'pending') + ' · ' + esc(partner.name) + ': ' + (theirsOk ? '<span class="yes">approved ' + esc(theirsOk) + '</span>' : 'pending') + '</div>' +
+        (!mineOk ? '<button class="btn btn-ghost btn-sm" data-act="doc-approve" data-id="' + d.id + '">Approve this draft</button>' : '');
+    }
+    return '<div class="doc-row">' + kindChip(d.kind) + '<div class="t"><b dir="auto">' + esc(d.title) + '</b><span class="st" dir="auto">' + esc(d.status || "") + '</span></div>' +
+      (d.url ? '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">open ↗</a>' : "") + ack + '</div>';
+  };
+  const groups = [["Venture documents", docsList.filter(d => d.kind !== "legal")], ["Legal collaboration drafts", docsList.filter(d => d.kind === "legal")]];
+  return '<div class="pagehead"><div><h1>Documents</h1><div class="meta">Canonical versions only — one source of truth, everything else derived</div></div></div>' +
+    groups.map(g => g[1].length ? '<div class="phase-block"><h2>' + g[0] + '</h2>' + g[1].map(row).join("") + '</div>' : "").join("") +
+    '<div class="hint" style="margin-top:4px;">Approving a legal draft here records in-app agreement between the two of you — it is a tracking step, not an electronic signature. Sign the reviewed document itself.</div>' +
+    '<div class="doc-add"><input dir="auto" id="doc-title" placeholder="Document title…" /><select id="doc-kind"><option value="legal">Legal draft</option><option value="source">Source of truth</option><option value="derived">Derived</option><option value="other">Other</option></select><input dir="auto" id="doc-status" placeholder="Status (e.g. Draft — with lawyer)" /><button class="btn btn-gold btn-sm" data-act="doc-add">Add</button></div>';
+}
+
+/* ----- Ask XHB view ----- */
+function viewAsk() {
+  const note = LIVE
+    ? '<div class="ask-note"><b>Setup:</b> deploy the <code>ask-xhb</code> edge function and set the ANTHROPIC_API_KEY secret (see DEPLOY_GUIDE §Ask-XHB). Until then this tab will return a configuration error. Answers are grounded in your decision register, plan, updates and document notes.</div>'
+    : '<div class="ask-note"><b>Demo mode.</b> Once live and configured, Ask-XHB answers questions from your own venture record — decisions, plan, updates, and any document text you store — with the same rule as XHB itself: if the evidence is not there, it says so instead of guessing.</div>';
+  return '<div class="pagehead"><div><h1>Ask XHB</h1><div class="meta">Citation-grounded answers over your own venture record</div></div></div>' +
+    '<div class="ask-box"><textarea dir="auto" id="ask-q" placeholder="e.g. What have we decided about equity so far, and what is still open?"></textarea>' +
+    '<div><button class="btn btn-gold btn-sm" data-act="ask" ' + (askBusy ? "disabled" : "") + '>' + (askBusy ? "Thinking…" : "Ask") + '</button></div></div>' +
+    (askAnswer ? '<div class="ask-ans" dir="auto">' + esc(askAnswer) + '</div>' : note);
+}
+
+/* ----- Podcast view & background player ----- */
+function viewPodcast() {
+  const rows = episodesList.map(ep =>
+    '<div class="ep-row"><button class="btn ' + (ep.url ? "btn-gold" : "btn-ghost") + ' btn-sm" data-act="ep-play" data-id="' + ep.id + '">' +
+    (currentEp && currentEp.id === ep.id && !audioEl.paused ? "⏸" : "▶") + '</button>' +
+    '<div class="t"><b dir="auto">' + esc(ep.title) + '</b>' + (ep.note || !ep.url ? '<span class="st" dir="auto">' + esc(ep.note || "") + (!ep.url ? " (no audio link yet)" : "") + '</span>' : "") + '</div></div>').join("");
+  return '<div class="pagehead"><div><h1>Podcast</h1><div class="meta">Episodes keep playing in the background while you work in any tab</div></div></div>' +
+    '<div class="hint">Tip: generate audio overviews of the deck and remaster (NotebookLM-style), upload the MP3s to Supabase Storage (public bucket), and paste the links here — instant founder podcast about your own venture.</div>' +
+    (rows || '<div class="empty">No episodes yet.</div>') +
+    '<div class="ep-add"><input dir="auto" id="ep-title" placeholder="Episode title…" /><input id="ep-url" placeholder="Direct audio URL (.mp3 / .m4a)" /><button class="btn btn-gold btn-sm" data-act="ep-add">Add episode</button></div>';
+}
+const audioEl = document.getElementById("bg-audio");
+function renderPlayer() {
+  const dock = document.getElementById("player-dock");
+  if (!currentEp) { dock.style.display = "none"; dock.innerHTML = ""; return; }
+  dock.style.display = "flex";
+  dock.innerHTML = '<span class="pl-ic">🎧</span><div class="pl-t" dir="auto">' + esc(currentEp.title) + '</div>' +
+    '<button class="btn btn-gold btn-sm" data-act="pl-toggle">' + (audioEl.paused ? "▶" : "⏸") + '</button>' +
+    '<button class="btn btn-ghost btn-sm" data-act="pl-close">✕</button>';
+}
+["play", "pause", "ended"].forEach(ev => audioEl.addEventListener(ev, () => { renderPlayer(); if (nav === "podcast") render(); }));
+
+/* ----- Shell ----- */
+function unseenNudges() { return nudges.filter(n => !n.seen && norm(n.to_email) === norm(me.email)); }
+function render() {
+  if (LIVE && !me) { renderAuth(); return; }
+  const counts = { sessions: sessions.length, decisions: resolvedCache.length, plan: planItems.filter(p => p.status !== "done").length };
+  const navBtn = (key, label, cnt) => '<button class="' + (nav === key ? "active" : "") + '" data-act="nav" data-nav="' + key + '">' + label + (cnt ? '<span class="cnt">' + cnt + '</span>' : "") + '</button>';
+  const nb = unseenNudges().map(n =>
+    '<div class="nudge-banner"><div class="txt"><b>' + esc(nameFor(n.from_email)) + '</b> nudged you: “' + esc(n.message) + '”</div>' +
+    '<button class="btn btn-gold btn-sm" data-act="nudge-open" data-id="' + n.id + '" data-s="' + (n.session_id || "") + '">Open session</button>' +
+    '<button class="btn btn-ghost btn-sm" data-act="nudge-seen" data-id="' + n.id + '">Done</button></div>').join("");
+  let view = "";
+  if (nav === "vision") view = viewVision();
+  else if (nav === "plan") view = viewPlan();
+  else if (nav === "sessions") view = viewSessions();
+  else if (nav === "decisions") view = viewDecisions();
+  else if (nav === "updates") view = viewUpdates();
+  else if (nav === "docs") view = viewDocs();
+  else if (nav === "podcast") view = viewPodcast();
+  else if (nav === "ask") view = viewAsk();
+  app.innerHTML =
+  '<div class="app"><aside class="side">' +
+    '<div class="brand"><div class="mark">XHB</div><div class="rule"></div><div class="sub">Founders’ HQ</div><div class="co">built by <b>MomenCrafts</b></div></div>' +
+    '<nav class="nav">' + navBtn("vision", "Vision") + navBtn("plan", "Plan", counts.plan) + navBtn("sessions", "Q&A sessions", counts.sessions) + navBtn("decisions", "Decisions", counts.decisions) + navBtn("updates", "Updates") + navBtn("docs", "Documents") + navBtn("podcast", "Podcast 🎧") + navBtn("ask", "Ask XHB") + '</nav>' +
+    '<div class="whoami"><b>' + esc(me.name) + '</b>' + esc(me.email) + '<div style="margin-top:5px;">Partner: ' + esc(partnerOf(me.email).name) + '</div>' +
+    (LIVE ? '<div style="margin-top:8px;"><button class="link" data-act="signout">Sign out</button></div>' : "") + '</div>' +
+  '</aside><main class="main">' +
+    (!LIVE ? '<div class="demo-banner">Demo mode — sample data, nothing is saved. Run supabase_setup_v2.sql and fill the CONFIG block to go live.</div>' : "") +
+    nb + view + '</main></div>';
+}
+function renderGate(msg) {
+  app.innerHTML =
+  '<div class="center-wrap"><div class="authcard">' +
+    '<div class="mark">XHB</div><div class="rule"></div>' +
+    '<h2 class="serif" style="margin-bottom:8px;">Founders’ HQ</h2>' +
+    '<p>This workspace is restricted.<br>Enter your access token to continue.</p>' +
+    '<div class="grid"><input type="text" id="gate-token" placeholder="Access token" autocomplete="off" style="font-family:monospace;letter-spacing:1px;" />' +
+    '<button class="btn btn-gold" data-act="gate-unlock">Unlock</button></div>' +
+    '<div class="msg">' + esc(msg || "") + '</div>' +
+    '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
+  const inp = document.getElementById("gate-token");
+  if (inp) inp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-unlock"]').click(); });
+}
+function renderAuth(msg) {
+  app.innerHTML =
+  '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div>' +
+    '<h2 class="serif" style="margin-bottom:8px;">Founders’ HQ</h2>' +
+    '<p>Private workspace for Mulham &amp; Momen.<br>Sign in with your allowlisted email.</p>' +
+    '<div class="grid"><input type="email" id="auth-email" placeholder="you@momencrafts.com" /><button class="btn btn-gold" data-act="magic">Send magic link</button></div>' +
+    '<div class="msg">' + esc(msg || "") + '</div>' +
+    '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
+}
+let toastTimer = null;
+function toast(text) {
+  document.querySelectorAll(".toast").forEach(t => t.remove());
+  const el = document.createElement("div"); el.className = "toast"; el.textContent = text;
+  document.body.appendChild(el);
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.remove(), 2600);
+}
+
+/* ----- Modals ----- */
+function openNewSessionModal() {
+  const ov = document.createElement("div"); ov.className = "overlay";
+  const opts = Object.entries(TEMPLATES).map(([k, t]) => '<option value="' + k + '">' + esc(t.name) + '</option>').join("");
+  ov.innerHTML = '<div class="modal"><h2 class="serif">New alignment session</h2><div class="grid">' +
+    '<div><label>Title</label><input dir="auto" id="ns-title" /></div>' +
+    '<div><label>Start from</label><select id="ns-tpl">' + opts + '</select><div class="tpl-desc" id="ns-desc" style="margin-top:6px;"></div></div></div>' +
+    '<div class="foot"><button class="btn btn-ghost btn-sm" data-close="1">Cancel</button><button class="btn btn-gold btn-sm" id="ns-create">Create session</button></div></div>';
+  document.body.appendChild(ov);
+  const tplSel = ov.querySelector("#ns-tpl"), desc = ov.querySelector("#ns-desc"), title = ov.querySelector("#ns-title");
+  const sync = () => { const t = TEMPLATES[tplSel.value]; desc.textContent = t.desc + (t.questions.length ? " (" + t.questions.length + " starter questions)" : ""); if (!title.value || Object.values(TEMPLATES).some(x => x.name === title.value)) title.value = t.name === "Blank session" ? "" : t.name; };
+  tplSel.value = "founding"; sync(); tplSel.addEventListener("change", sync);
+  ov.addEventListener("click", (e) => {
+    if (e.target === ov || e.target.dataset.close) { ov.remove(); return; }
+    if (e.target.id === "ns-create") { const t = title.value.trim() || TEMPLATES[tplSel.value].name; ov.remove(); createSession(t, tplSel.value); }
+  });
+}
+function openNudgeModal() {
+  const partner = partnerOf(me.email);
+  const open = questions.filter(q => q.status === "sealed").length;
+  const defMsg = "Salam " + partner.name + " — the session “" + (currentSession ? currentSession.title : "") + "” is ready: " + open + " question(s) awaiting your sealed answers. Please add yours so we can reveal, align and revise together.";
+  const link = window.location.href.split("#")[0];
+  const ov = document.createElement("div"); ov.className = "overlay";
+  ov.innerHTML = '<div class="modal"><h2 class="serif">Push to ' + esc(partner.name) + '</h2><div class="grid">' +
+    '<div><label>Message</label><textarea dir="auto" id="ng-msg">' + esc(defMsg) + '</textarea></div>' +
+    '<div class="tpl-desc">Sends an in-app nudge (banner on ' + esc(partner.name) + '’s next visit). Use the share buttons to also reach him on WhatsApp or email with the link.</div></div>' +
+    '<div class="foot"><button class="btn btn-ghost btn-sm" data-close="1">Cancel</button>' +
+    '<button class="btn btn-ghost btn-sm" id="ng-wa">WhatsApp</button>' +
+    '<button class="btn btn-ghost btn-sm" id="ng-mail">Email</button>' +
+    '<button class="btn btn-gold btn-sm" id="ng-send">Send nudge</button></div></div>';
+  document.body.appendChild(ov);
+  const getMsg = () => ov.querySelector("#ng-msg").value.trim();
+  ov.addEventListener("click", async (e) => {
+    if (e.target === ov || e.target.dataset.close) { ov.remove(); return; }
+    if (e.target.id === "ng-wa") { window.open("https://wa.me/?text=" + encodeURIComponent(getMsg() + "\n\n" + link), "_blank"); }
+    if (e.target.id === "ng-mail") { window.open("mailto:" + (partner.email || "") + "?subject=" + encodeURIComponent("XHB — alignment session ready") + "&body=" + encodeURIComponent(getMsg() + "\n\n" + link)); }
+    if (e.target.id === "ng-send") {
+      ov.remove();
+      await dbInsert("nudges", { session_id: currentSession ? currentSession.id : null, from_email: norm(me.email), to_email: partner.email, message: getMsg(), seen: false }, nudges);
+      toast("Nudge sent to " + partner.name + " ✓");
+    }
+  });
+}
+
+/* ----- Ask handler ----- */
+async function doAsk() {
+  const q = document.getElementById("ask-q").value.trim();
+  if (!q) { toast("Type a question first."); return; }
+  askBusy = true; render();
+  if (!LIVE) {
+    await new Promise(r => setTimeout(r, 600));
+    askAnswer = "Demo mode — no model connected.\n\nOnce live, Ask-XHB will answer from your venture record. For “" + q + "” it would draw on: " + resolvedCache.length + " logged decision(s), " + planItems.length + " plan item(s), " + updatesFeed.length + " update(s), and any document text you have stored — and it will say “not reliably answerable from the record” when the evidence is not there, instead of guessing.";
+    askBusy = false; render(); return;
+  }
+  try {
+    const { data, error } = await sb.functions.invoke("ask-xhb", { body: { question: q } });
+    askAnswer = error ? ("Ask-XHB is not configured yet (" + error.message + "). See DEPLOY_GUIDE §Ask-XHB.") : (data && data.answer ? data.answer : "No answer returned.");
+  } catch (e) { askAnswer = "Ask-XHB is not configured yet. See DEPLOY_GUIDE §Ask-XHB."; }
+  askBusy = false; render();
+}
+
+/* ------------------------------ Events ------------------------------------ */
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const act = btn.dataset.act;
+  const q = btn.dataset.q ? questions.find(x => x.id === btn.dataset.q) : null;
+
+  if (act === "gate-unlock") {
+    const tok = (document.getElementById("gate-token")?.value || "").trim();
+    if (!tok) { renderGate("Enter your access token."); return; }
+    const ok = await tryUnlockGate(tok);
+    if (ok) { boot(); } else { renderGate("Invalid token. Access denied."); }
+    return;
+  }
+
+  if (act === "magic") {
+    const email = norm(document.getElementById("auth-email").value);
+    if (!email) { renderAuth("Enter your email first."); return; }
+    const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href.split("#")[0] } });
+    renderAuth(error ? "Could not send link: " + error.message : "Magic link sent — check your inbox, then return here.");
+  }
+  if (act === "signout") { await sb.auth.signOut(); me = null; render(); }
+  if (act === "nav") { nav = btn.dataset.nav; if (nav === "decisions") resolvedCache = await loadAllResolved(); render(); }
+  if (act === "open") { currentSession = sessions.find(s => s.id === btn.dataset.s); await loadQuestions(); render(); }
+  if (act === "new-session") openNewSessionModal();
+  if (act === "refresh") { await refresh(); toast("Refreshed"); }
+  if (act === "addq") {
+    const p = document.getElementById("new-q").value.trim(), c = document.getElementById("new-ctx").value.trim();
+    if (!p) { toast("Write the question first."); return; }
+    await addQuestion(p, c);
+  }
+  if (act === "save" && q) { await saveAnswer(q, document.getElementById("ans-" + q.id).value); }
+  if (act === "force" && q) { confirmReveal[q.id] = true; render(); }
+  if (act === "reveal" && q) { confirmReveal[q.id] = false; await setQuestion(q, { status: "revealed" }); }
+  if (act === "reopen" && q) { await setQuestion(q, { status: "revealed" }); }
+  if (act === "resolve" && q) {
+    const outcome = document.getElementById("out-" + q.id).value;
+    const decision = document.getElementById("dec-" + q.id).value.trim();
+    const owner = document.getElementById("own-" + q.id).value.trim();
+    if (outcome !== "aligned" && !decision) { toast("Record what was agreed (or choose 'Aligned as-is')."); return; }
+    await setQuestion(q, { status: "resolved", outcome, decision, decision_owner: owner, resolved_at: now() });
+    toast("Outcome logged ✓");
+  }
+  if (act === "export") exportMarkdown();
+  if (act === "plan-cycle") {
+    const it = planItems.find(x => x.id === btn.dataset.id);
+    if (it) { const nx = PLAN_STATUS[(PLAN_STATUS.indexOf(it.status) + 1) % PLAN_STATUS.length]; await dbUpdate("plan_items", it.id, { status: nx }, planItems); }
+  }
+  if (act === "plan-add") {
+    const t = document.getElementById("plan-title").value.trim();
+    if (!t) { toast("Write the milestone first."); return; }
+    await dbInsert("plan_items", { title: t, detail: "", phase: document.getElementById("plan-phase").value, status: "next", owner: document.getElementById("plan-owner").value.trim(), due: document.getElementById("plan-due").value.trim(), position: planItems.length, created_by: norm(me.email) }, planItems);
+  }
+  if (act === "up-post") {
+    const b = document.getElementById("up-body").value.trim();
+    if (!b) { toast("Write the update first."); return; }
+    await dbInsert("updates", { author_email: norm(me.email), body: b, pinned: false }, updatesFeed);
+  }
+  if (act === "up-pin") {
+    const it = updatesFeed.find(x => x.id === btn.dataset.id);
+    if (it) await dbUpdate("updates", it.id, { pinned: !it.pinned }, updatesFeed);
+  }
+  if (act === "doc-add") {
+    const t = document.getElementById("doc-title").value.trim();
+    if (!t) { toast("Write the title first."); return; }
+    await dbInsert("documents", { title: t, kind: document.getElementById("doc-kind").value, status: document.getElementById("doc-status").value.trim(), url: "", approvals: {}, created_by: norm(me.email) }, docsList);
+  }
+  if (act === "doc-approve") {
+    const d = docsList.find(x => x.id === btn.dataset.id);
+    if (d) { const appr = { ...(d.approvals || {}) }; appr[norm(me.email)] = new Date().toISOString().slice(0, 10); await dbUpdate("documents", d.id, { approvals: appr }, docsList); toast("Approval recorded ✓"); }
+  }
+  if (act === "nudge") openNudgeModal();
+  if (act === "nudge-seen") { const n = nudges.find(x => x.id === btn.dataset.id); if (n) await dbUpdate("nudges", n.id, { seen: true }, nudges); }
+  if (act === "nudge-open") {
+    const n = nudges.find(x => x.id === btn.dataset.id);
+    if (n) { await dbUpdate("nudges", n.id, { seen: true }, nudges); if (n.session_id) { currentSession = sessions.find(s => s.id === n.session_id) || currentSession; } nav = "sessions"; await loadQuestions(); render(); }
+  }
+  if (act === "ep-add") {
+    const t = document.getElementById("ep-title").value.trim(), u = document.getElementById("ep-url").value.trim();
+    if (!t) { toast("Give the episode a title."); return; }
+    await dbInsert("episodes", { title: t, url: u, note: "", created_by: norm(me.email) }, episodesList);
+  }
+  if (act === "ep-play") {
+    const ep = episodesList.find(x => x.id === btn.dataset.id);
+    if (!ep) return;
+    if (!ep.url) { toast("No audio link on this episode yet — add a direct MP3 URL."); return; }
+    if (currentEp && currentEp.id === ep.id) {
+      if (audioEl.paused) audioEl.play().catch(() => toast("Could not play — check the audio URL."));
+      else audioEl.pause();
+    } else {
+      currentEp = ep; audioEl.src = ep.url;
+      audioEl.play().catch(() => toast("Could not play — check the audio URL."));
+    }
+    renderPlayer(); render();
+  }
+  if (act === "pl-toggle") { if (audioEl.paused) audioEl.play().catch(() => {}); else audioEl.pause(); renderPlayer(); }
+  if (act === "pl-close") { audioEl.pause(); currentEp = null; renderPlayer(); if (nav === "podcast") render(); }
+  if (act === "ask") doAsk();
+});
+
+/* ------------------------------- Gate + Boot ------------------------------ */
+async function sha256(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+let gateUnlocked = false;
+function checkGateFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("key") || "";
+}
+async function tryUnlockGate(token) {
+  if (!token) return false;
+  const hash = await sha256(token.trim());
+  if (hash === CONFIG.GATE_TOKEN_HASH) {
+    gateUnlocked = true;
+    sessionStorage.setItem("xhb_gate", token.trim());
+    return true;
+  }
+  return false;
+}
+async function gateBoot() {
+  if (!LIVE || !CONFIG.GATE_TOKEN_HASH) { boot(); return; }
+  // Check sessionStorage first (already unlocked this session)
+  const stored = sessionStorage.getItem("xhb_gate");
+  if (stored && await tryUnlockGate(stored)) { boot(); return; }
+  // Check URL ?key= parameter
+  const urlKey = checkGateFromURL();
+  if (urlKey && await tryUnlockGate(urlKey)) {
+    // Clean URL so token isn't visible in address bar
+    const clean = window.location.pathname + window.location.hash;
+    window.history.replaceState({}, "", clean);
+    boot(); return;
+  }
+  // Show gate
+  renderGate();
+}
+
+async function boot() {
+  if (!LIVE) { me = { ...DEMO_ME }; demoSeed(); resolvedCache = await loadAllResolved(); render(); return; }
+  if (!window.supabase) { app.innerHTML = '<div class="center-wrap"><div class="authcard"><h2>Supabase library failed to load</h2><p>Check your network or the CDN script tag.</p></div></div>'; return; }
+  sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+  sb.auth.onAuthStateChange(async (_evt, session) => {
+    if (session && session.user) {
+      me = { email: norm(session.user.email), name: "" };
+      await loadMembers();
+      const self = members.find(x => norm(x.email) === me.email);
+      if (!self) { renderAuth("This email is not on the allowlist. Add it to allowed_users in Supabase."); me = null; return; }
+      me.name = self.display_name || nameFor(me.email);
+      await refresh();
+      resolvedCache = await loadAllResolved();
+      subscribeRealtime();
+      render();
+    } else { me = null; render(); }
+  });
+  const { data } = await sb.auth.getSession();
+  if (!data || !data.session) render();
+}
+gateBoot();
+</script>
+</body>
+</html>
