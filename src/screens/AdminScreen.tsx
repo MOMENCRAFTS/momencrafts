@@ -730,7 +730,7 @@ export default function AdminScreen() {
 
   const logout = () => { sessionStorage.removeItem('mcr_admin_auth'); setAuthed(false) }
 
-  if (!authed) return <AdminLogin onLogin={() => setAuthed(true)} />
+  if (!authed) return <AdminLogin onLogin={() => { setAdminKey(getAdminKey()); setAuthed(true) }} />
 
   if (!adminKey) {
     return (
