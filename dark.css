@@ -422,3 +422,114 @@ body{background:#fff;color:var(--txt);background-image:none}
   .ra-phone-wrap select{width:100px}
   .ra-token-value{font-size:1.3rem}
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOMENCRAFTS & CO — Adopted Projects Section
+   ═══════════════════════════════════════════════════════════ */
+
+/* Section */
+.co-section{padding:5rem 0;background:#FAFAFA;border-top:1px solid rgba(181,0,15,.08)}
+.co-section .section-label::before{background:var(--gold,#C8A96E)}
+.co-section .section-title em{color:var(--gold,#C8A96E);font-style:italic}
+
+/* Grid */
+.co-grid{margin-top:2.5rem;display:flex;flex-direction:column;gap:1.25rem}
+
+/* Card */
+.co-card{
+  display:block;text-decoration:none;color:inherit;
+  background:#fff;
+  border:1px solid rgba(160,120,48,.15);
+  border-radius:12px;
+  padding:1.75rem 2rem;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  transition:all .3s ease;
+  position:relative;overflow:hidden;
+}
+.co-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold,#C8A96E),var(--cr,#B5000F));
+}
+.co-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(160,120,48,.12);
+  border-color:rgba(160,120,48,.3);
+}
+
+.co-card-inner{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;
+}
+
+.co-card-left{flex:1}
+
+/* Badge */
+.co-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--gold,#C8A96E);
+  margin-bottom:.75rem;
+  padding:.3rem .65rem;
+  background:rgba(160,120,48,.06);
+  border:1px solid rgba(160,120,48,.15);
+  border-radius:999px;
+}
+.co-badge svg{color:var(--gold,#C8A96E)}
+
+/* Title */
+.co-card-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.25rem;font-weight:700;
+  color:var(--txt,#1A0505);
+  margin-bottom:.25rem;
+}
+
+/* Tagline */
+.co-card-tagline{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;letter-spacing:.08em;
+  color:var(--cr,#B5000F);
+  font-weight:600;
+  margin-bottom:.5rem;
+}
+
+/* Description */
+.co-card-desc{
+  font-size:.88rem;color:var(--txt-2,#5A2525);
+  line-height:1.6;max-width:60ch;
+}
+
+/* Right side */
+.co-card-right{
+  display:flex;flex-direction:column;
+  align-items:flex-end;gap:.75rem;
+  flex-shrink:0;
+}
+
+.co-card-status{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--gr,#006C35);
+  padding:.25rem .6rem;
+  background:rgba(0,108,53,.08);
+  border:1px solid rgba(0,108,53,.2);
+  border-radius:999px;
+  font-weight:500;
+}
+
+.co-card-arrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;font-weight:600;
+  color:var(--cr,#B5000F);
+  transition:transform .25s ease;
+}
+.co-card:hover .co-card-arrow{transform:translateX(4px)}
+
+/* Responsive */
+@media(max-width:640px){
+  .co-card{padding:1.25rem}
+  .co-card-inner{flex-direction:column;gap:1rem}
+  .co-card-right{flex-direction:row;align-items:center;width:100%;justify-content:space-between}
+}

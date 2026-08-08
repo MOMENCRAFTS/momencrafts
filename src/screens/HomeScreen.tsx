@@ -1311,34 +1311,28 @@ export default function HomeScreen() {
       <div id="investor-layer">
 
         {/* 01 TRACTION */}
-        <section id="inv-traction" data-section="traction" style={{ background:'#0C0A09', padding:'5rem 1.5rem', borderTop:'2px solid #C8A96E33' }}>
-          <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
-            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>01 · OUR STORY</div>
-            <h2 style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:'clamp(1.8rem,4vw,3rem)', color:'#f0ebe3', margin:'0 0 2.5rem', fontWeight:700 }}>
-              ما نبنيه — مع الشركاء الصحيحين <span style={{ fontSize:'.55em', color:'#C8A96E', fontStyle:'italic' }}>· What We're Building — With the Right Co-Builders</span>
+        <section id="inv-traction" data-section="traction" className="inv-sec inv-sec--dark inv-sec--border">
+          <div className="inv-sec__inner">
+            <div className="inv-eyebrow">01 · OUR STORY</div>
+            <h2 className="inv-heading">
+              ما نبنيه — مع الشركاء الصحيحين <span className="inv-heading__ar-sub">· What We're Building — With the Right Co-Builders</span>
             </h2>
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))', gap:'1.5rem', marginBottom:'3rem' }}>
+            <div className="inv-stat-grid">
               {[{n:10,label:'منتجات مبنية · Products'},{n:2,label:'طلبات براءات · Patent Filings'},{n:5,label:'قطاعات · Industries'},{n:1,label:'مؤسس · Solo Founder'}].map((item,i) => (
-                <div key={item.n} style={{ background:'rgba(26,22,20,0.6)', backdropFilter:'blur(8px)', border:'1px solid rgba(200,169,110,0.15)', borderRadius:'14px', padding:'1.75rem', textAlign:'center', position:'relative', overflow:'hidden' }}>
-                  <div style={{ position:'absolute', bottom:0, left:'10%', right:'10%', height:'2px', background:'linear-gradient(to right, transparent, rgba(200,169,110,0.3), transparent)' }} />
-                  <div style={{ fontSize:'3rem', fontWeight:900, color: i===3 ? '#9B1B30' : '#C8A96E', fontFamily:'Georgia,serif', lineHeight:1 }}><CountUp end={item.n} duration={1200} /></div>
-                  <div style={{ color:'#a09070', fontSize:'.8rem', marginTop:'.5rem', lineHeight:1.4 }}>{item.label}</div>
+                <div key={item.n} className="inv-stat-card">
+                  <div className="inv-stat-card__glow" />
+                  <div className={`inv-stat-card__value${i===3 ? ' inv-stat-card__value--crimson' : ''}`}><CountUp end={item.n} duration={1200} /></div>
+                  <div className="inv-stat-card__label">{item.label}</div>
                 </div>
               ))}
             </div>
-            <div style={{ display:'flex', justifyContent:'space-between', gap:'1rem', flexWrap:'wrap', position:'relative', paddingTop:'1.5rem' }}>
-              <div style={{ position:'absolute', top:'2rem', left:'5%', right:'5%', height:'2px', background:'linear-gradient(to right,transparent 0%,rgba(200,169,110,0.25) 15%,rgba(200,169,110,0.4) 50%,rgba(155,27,48,0.3) 85%,transparent 100%)' }} />
+            <div className="inv-timeline">
+              <div className="inv-timeline__line" />
               {[['2024','First Concepts'],['2025 Q1','Cliniq.one Beta'],['2025 Q2','Patent Filings'],['2025 Q4','Ummi Wallet Beta'],['2026 →','Early Initiation']].map(([year,label],i) => (
-                <div key={year} style={{ textAlign:'center', flex:1, minWidth:'100px' }}>
-                  <div style={{
-                    width: i===4 ? '16px' : '12px', height: i===4 ? '16px' : '12px',
-                    borderRadius:'50%', background: i===4 ? '#9B1B30' : '#C8A96E',
-                    margin:'0 auto .6rem', position:'relative', zIndex:1,
-                    boxShadow: i===4 ? '0 0 12px rgba(155,27,48,0.6), 0 0 24px rgba(155,27,48,0.3)' : '0 0 6px rgba(200,169,110,0.3)',
-                    animation: i===4 ? 'pulse 2s ease-in-out infinite' : 'none'
-                  }} />
-                  <div style={{ fontSize:'.7rem', color: i===4 ? '#9B1B30' : '#C8A96E', fontFamily:'monospace', fontWeight:700, letterSpacing:'.05em' }}>{year}</div>
-                  <div style={{ fontSize:'.72rem', color:'#a09070', marginTop:'.25rem' }}>{label}</div>
+                <div key={year} className="inv-timeline__point">
+                  <div className={`inv-timeline__dot${i===4 ? ' inv-timeline__dot--active' : ''}`} />
+                  <div className={`inv-timeline__year${i===4 ? ' inv-timeline__year--active' : ''}`}>{year}</div>
+                  <div className="inv-timeline__label">{label}</div>
                 </div>
               ))}
             </div>
@@ -1407,22 +1401,22 @@ export default function HomeScreen() {
         )}
 
         {/* 03 VISION */}
-        <section id="inv-vision" data-section="vision" style={{ background:'#0C0A09', padding:'5rem 1.5rem' }}>
-          <div style={{ maxWidth:'1100px', margin:'0 auto', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'3rem', alignItems:'center' }}>
+        <section id="inv-vision" data-section="vision" className="inv-sec inv-sec--dark">
+          <div className="inv-sec__inner inv-vision-grid">
             <div>
-              <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>03 · SHARED VISION</div>
-              <blockquote style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:'clamp(1rem,2.2vw,1.5rem)', color:'#f0ebe3', lineHeight:1.7, borderLeft:'3px solid #9B1B30', paddingLeft:'1.5rem', margin:'1rem 0 2rem', fontStyle:'italic' }}>
+              <div className="inv-eyebrow">03 · SHARED VISION</div>
+              <blockquote className="inv-quote">
                 "The most powerful technology disappears — it becomes so natural the user forgets they are interacting with a machine."
               </blockquote>
-              <p style={{ color:'#a09070', lineHeight:1.7, fontSize:'.88rem' }}>MomenCrafts & Co builds the missing tech layer for the Arab world — starting with healthcare, fintech, and IoT. This vision isn’t ours alone. Every co-builder who shapes a product shares in this mission.</p>
+              <p className="inv-body">MomenCrafts & Co builds the missing tech layer for the Arab world — starting with healthcare, fintech, and IoT. This vision isn't ours alone. Every co-builder who shapes a product shares in this mission.</p>
             </div>
-            <div style={{ background:'#0C0A09', border:'1px solid #C8A96E22', borderRadius:'16px', padding:'2rem' }}>
-              <div style={{ fontFamily:'monospace', fontSize:'.68rem', color:'#C8A96E', marginBottom:'1rem', letterSpacing:'.15em' }}>MARKET SIGNALS</div>
-              <div style={{ display:'flex', flexDirection:'column', gap:'.9rem' }}>
-                {[['Digital Health','Arabic-first care workflows remain underserved','#C8A96E'],['Family Finance','Private dignity-first household finance — clear gap','#C8A96E'],['LegalTech','Arabic case intake needs better tools','#C8A96E'],['Smart Devices','Hardware bridges unlock restricted workflows','#9B1B30']].map(([label,val,color],i) => (
-                  <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', paddingBottom: i<3 ? '.75rem' : 0, borderBottom: i<3 ? '1px solid #ffffff11' : 'none' }}>
-                    <span style={{ color:'#a09070', fontSize:'.82rem' }}>{label}</span>
-                    <span style={{ color, fontFamily:'monospace', fontWeight:700 }}>{val}</span>
+            <div className="inv-signals">
+              <div className="inv-signals__heading">MARKET SIGNALS</div>
+              <div className="inv-signals__list">
+                {[['Digital Health','Arabic-first care workflows remain underserved','#C8A96E'],['Family Finance','Private dignity-first household finance — clear gap','#C8A96E'],['LegalTech','Arabic case intake needs better tools','#C8A96E'],['Smart Devices','Hardware bridges unlock restricted workflows','#9B1B30']].map(([label,val,color]) => (
+                  <div key={label} className="inv-signals__row">
+                    <span className="inv-signals__label">{label}</span>
+                    <span className="inv-signals__value" style={{ color }}>{val}</span>
                   </div>
                 ))}
               </div>
@@ -1431,20 +1425,20 @@ export default function HomeScreen() {
         </section>
 
         {/* 04 FOUNDER */}
-        <section id="inv-founder" data-section="founder" style={{ background:'#1A1614', padding:'5rem 1.5rem' }}>
-          <div style={{ maxWidth:'900px', margin:'0 auto', display:'grid', gridTemplateColumns:'auto 1fr', gap:'3rem', alignItems:'start' }}>
+        <section id="inv-founder" data-section="founder" className="inv-sec inv-sec--warm">
+          <div className="inv-sec__inner--narrow inv-founder-grid">
             <div style={{ textAlign:'center' }}>
-              <div style={{ width:'120px', height:'120px', borderRadius:'50%', background:'linear-gradient(135deg,#9B1B30,#1A1614)', border:'2px solid #C8A96E', margin:'0 auto 1rem', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'2.5rem', color:'#C8A96E' }}>م</div>
-              <div style={{ fontFamily:'monospace', fontSize:'.65rem', color:'#C8A96E', letterSpacing:'.15em' }}>FOUNDER</div>
+              <div className="inv-founder-avatar">م</div>
+              <div className="inv-founder-label">FOUNDER</div>
             </div>
             <div>
-              <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>04 · FOUNDER</div>
-              <h3 style={{ fontFamily:"'Playfair Display',serif", fontSize:'1.8rem', color:'#f0ebe3', margin:'0 0 .25rem' }}>Momen Pharaon</h3>
-              <div style={{ color:'#C8A96E', fontFamily:'monospace', fontSize:'.8rem', marginBottom:'1.5rem' }}>مومن فرعون · Founder &amp; Engineer · Riyadh, KSA</div>
-              <p style={{ color:'#a09070', lineHeight:1.8, fontSize:'.88rem', marginBottom:'1.5rem' }}>Built all 10 products — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Founder and engineer from concept to first usable experience.</p>
-              <div style={{ display:'flex', flexWrap:'wrap', gap:'.5rem' }}>
+              <div className="inv-eyebrow">04 · FOUNDER</div>
+              <h3 className="inv-founder-name">Momen Pharaon</h3>
+              <div className="inv-founder-subtitle">مومن فرعون · Founder &amp; Engineer · Riyadh, KSA</div>
+              <p className="inv-body inv-body--spaced">Built all 10 products — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Founder and engineer from concept to first usable experience.</p>
+              <div className="inv-tag-list">
                 {['USPTO Patent Filer','MOH Compliance','10 Products Built','Riyadh · KSA'].map(tag => (
-                  <span key={tag} style={{ background:'#1A1614', border:'1px solid #C8A96E33', color:'#C8A96E', padding:'.3rem .8rem', borderRadius:'20px', fontSize:'.7rem', fontFamily:'monospace' }}>{tag}</span>
+                  <span key={tag} className="inv-tag">{tag}</span>
                 ))}
               </div>
             </div>
@@ -1508,10 +1502,10 @@ export default function HomeScreen() {
           </div>
         </section>
 
-        {/* 08 TEST & SHAPE */}
+        {/* 07 TEST & SHAPE */}
         <section id="inv-downloads" data-section="downloads" className="co-section co-section-dark">
           <div className="co-container">
-            <div className="co-eyebrow">08 · TEST & SHAPE</div>
+            <div className="co-eyebrow">07 · TEST & SHAPE</div>
             <h2 className="co-title">جرّب وشكّل <span className="co-title-en">· Download. Test. Shape What Ships.</span></h2>
             <p className="co-sub">Every install is a vote. Every bug report earns credit. Download our apps and help shape the next release.</p>
             <div className="co-downloads-grid">
@@ -1558,10 +1552,10 @@ export default function HomeScreen() {
           </div>
         </section>
 
-        {/* 09 STUDIO JOURNAL */}
+        {/* 08 STUDIO JOURNAL */}
         <section id="inv-journal" data-section="journal" className="co-section co-section-warm">
           <div className="co-container">
-            <div className="co-eyebrow">09 · STUDIO JOURNAL</div>
+            <div className="co-eyebrow">08 · STUDIO JOURNAL</div>
             <h2 className="co-title">يوميات الاستوديو <span className="co-title-en">· What's Happening Inside</span></h2>
             <p className="co-sub">Real-time updates from the studio. Launches, patents, milestones, and co-builder credits.</p>
             <div className="co-journal-feed">
@@ -1591,10 +1585,10 @@ export default function HomeScreen() {
           </div>
         </section>
 
-        {/* 10 OUR PROGRESS */}
+        {/* 09 OUR PROGRESS */}
         <section id="inv-traction-live" data-section="traction-live" className="co-section co-section-dark">
           <div className="co-container">
-            <div className="co-eyebrow">10 · OUR PROGRESS</div>
+            <div className="co-eyebrow">09 · OUR PROGRESS</div>
             <h2 className="co-title">تقدمنا الآن <span className="co-title-en">· Live Traction Dashboard</span></h2>
             <p className="co-sub">Real numbers. No vanity metrics. Updated by the founder.</p>
 
@@ -1653,10 +1647,10 @@ export default function HomeScreen() {
           </div>
         </section>
 
-        {/* 12 CO-BUILDER BOARD + REGISTRY */}
+        {/* 10 CO-BUILDER BOARD + REGISTRY */}
         <section id="inv-cobuilder" data-section="cobuilder" className="co-section co-section-warm">
           <div className="co-container">
-            <div className="co-eyebrow">12 · CO-BUILDER BOARD</div>
+            <div className="co-eyebrow">10 · CO-BUILDER BOARD</div>
             <h2 className="co-title">لوحة اند كو <span className="co-title-en">· Ideas. Feedback. Your Name in the Registry.</span></h2>
             <p className="co-sub">Share ideas, report bugs, suggest features. If it ships — you're & Co.</p>
 
@@ -1728,7 +1722,7 @@ export default function HomeScreen() {
           </div>
         </section>
 
-        {/* 07 LET'S BUILD */}
+        {/* 11 LET'S BUILD (Final CTA) */}
         <section id="inv-letsbuild" data-section="letsbuild" className="letsb-section">
           {/* Background decoration */}
           <div className="letsb-bg-deco" aria-hidden="true" />
@@ -1738,7 +1732,7 @@ export default function HomeScreen() {
             {/* Eyebrow */}
             <div className="letsb-eyebrow">
               <span className="letsb-eyebrow-dot" />
-              <span>07 · BECOME & CO</span>
+              <span>11 · BECOME & CO</span>
             </div>
 
             {/* Main headline */}

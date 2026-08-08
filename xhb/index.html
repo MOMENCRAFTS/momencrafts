@@ -209,8 +209,7 @@
    Vision · Plan · Q&A sessions · Decisions · Updates · Documents · Ask XHB
    -------------------------------------------------------------------------
    SETUP (live mode):
-     1. Run supabase_setup_v2.sql in your Supabase SQL editor
-        (edit MULHAM_EMAIL_HERE first).
+     1. Run the xhb schema migration in your Supabase SQL editor.
      2. Fill SUPABASE_URL and SUPABASE_ANON_KEY below.
      3. Auth -> enable Email (magic link); add this page's URL to redirects.
      4. Optional, for the Ask-XHB tab: deploy the ask-xhb edge function and
@@ -220,84 +219,50 @@
 const CONFIG = {
   SUPABASE_URL: "https://isciigqmdfcozrtojqcm.supabase.co",
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzY2lpZ3FtZGZjb3pydG9qcWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMDk4ODYsImV4cCI6MjA5NjU4NTg4Nn0.OUV0dUWUt0UBU9bdJpwWiXI2PgclddNO0t1cA4ZLF_8",
-  VERIFY_TOKEN_URL: "https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/verify-token",
+  XHB_GATE_URL: "https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/xhb-gate-request",
 };
 
-/* --------------------------- Vision content ------------------------------ */
-const VISION = {
-  line: "Compass governs the promise. Anchor verifies the proof. Field Evidence captures reality at the source.",
-  definition: "XHB is a governed decision-assurance platform for capital projects. Its shared Core converts traceable evidence into methodologically appropriate research, independent market challenge, cautious forecasts, and execution-feasible options — before an authorized human decides. The promise is not that AI knows the future. The promise is that XHB makes uncertainty visible, detects failure earlier, shows what evidence supports a conclusion, and separates what is technically possible from what an organization can realistically execute.",
+/* ---- Demo content (offline / no-config mode only — no venture data) ---- */
+const DEMO_VISION = {
+  line: "Align independently, reveal together, decide once.",
+  definition: "This is a demonstration of the Founders' HQ workspace. When connected to a live database, this section displays the venture's vision, product definitions, and strategic non-goals. All content loads from the server after authentication — nothing sensitive is shipped in this file.",
   products: [
-    ["Compass 🧭", "For capital owners and investment committees. What should we fund, why, and can the organization realistically deliver it?"],
-    ["Anchor ⚓", "For delivery assurance. What was actually delivered, what does the evidence prove, and are the claims justified?"],
-    ["Field Evidence 📱", "Mobile capture at the source. What was observed on site, by whom, and is its chain of custody preserved?"]
+    ["Product A 🔧", "Description of the first product or service offering."],
+    ["Product B 📊", "Description of the second product or service offering."],
+    ["Product C 📱", "Description of the third product or service offering."]
   ],
   nongoals: [
-    "No autonomous critical actions — a named human decides at every gate.",
-    "No personnel honesty or reliability scores — we measure submission and evidence quality only.",
-    "No invented probabilities — risk flags and benchmarked ranges until models are validated.",
-    "No Field Evidence app before Phase 4.",
-    "No consultant marketplace — two contracted consultants and a protocol first.",
-    "No dispute adjudication — the system prepares, humans and law decide.",
-    "No cross-client data mixing, ever.",
-    "No dozens of agents before one closed loop proves value."
+    "Sample non-goal — items deliberately excluded from current scope.",
+    "Sample non-goal — boundaries that keep the project focused.",
+    "Sample non-goal — things to revisit in a later phase."
   ],
   phases: [
-    ["P0", "Governed foundation — entity, evidence snapshots, node registry, one defined decision."],
-    ["P1", "6–8 week historical feasibility pilot on 3–5 completed projects. Detection lead time is the headline number."],
-    ["P2", "Research assurance — method router, consultant dual-track, 20–50 project benchmark."],
-    ["P3", "Execution feasibility — workforce capacity, lead-times, constraint scheduling."],
-    ["P4", "Product connection — validated Compass + Anchor workflows, Field Evidence capture."],
-    ["P5", "Controlled expansion — disputes, validated forecasts, pricing research."]
+    ["P0", "Foundation — setup, governance, initial structure."],
+    ["P1", "Pilot — validation with real data on a small scale."],
+    ["P2", "Build — core product development and integration."],
+    ["P3", "Scale — expansion, partnerships, operational readiness."]
   ],
-  credit: "Concept & architecture: Mulham Al Zahabi · Technical build: Momen Pharaon — MomenCrafts · Source of truth: AI Forest Remastered Master Architecture v1.0"
+  credit: "Demo mode — connect to Supabase to load the live venture record."
 };
 
-/* ------------------------- Question templates ---------------------------- */
-const TEMPLATES = {
-  "founding": { name: "Founding & Equity", desc: "Entity, split, roles, triggers — the Part III §21 set.",
+const DEMO_TEMPLATES = {
+  "general": { name: "General Alignment", desc: "A general-purpose alignment session with sample questions.",
     questions: [
-      ["Do we form the XHB entity now, and in which jurisdiction?", "IP is already accumulating across two contributors and three documents. Formation before code starts keeps ownership clean."],
-      ["What is the equity split between Mulham and Momen/MomenCrafts, and what vesting ties it to milestones?", "Consider Phase 1 delivery, first paid client, and funding close as vesting gates."],
-      ["Is Momen engaged as co-founder & technical lead, or MomenCrafts as a contracted studio?", "The two answers produce very different investor diligence outcomes — choose deliberately, not by default."],
-      ["What triggers full-time commitment for each of us?", "Funding amount, pilot signed, or a calendar date — name it."],
-      ["If HUMAIN's answer is slow or no, what is the runway plan and who funds Phase 1?", "Tranche structure, NTDP, private lane — decide the fallback before it is needed."]
+      ["Sample question about project scope", "Context: define the boundaries and deliverables of the initiative."],
+      ["Sample question about team structure", "Context: clarify roles, responsibilities, and decision rights."],
+      ["Sample question about timeline", "Context: agree on key milestones and deadlines."]
     ]},
-  "ip": { name: "IP & Ownership", desc: "Assignment, patent, employment cleanliness.",
+  "operations": { name: "Operations", desc: "Operational decisions and processes.",
     questions: [
-      ["Do we assign the concept, all documents (deck, spec, remaster), and all code to the entity on formation?", "One owner for everything, from day one."],
-      ["Who files the provisional patent on evidence-quality / submission-reliability scoring, and by when?", "File before the mechanism is shown externally."],
-      ["Is Mulham's employment IP position reviewed and documented?", "One page, lawyer-reviewed, ready for diligence. Owner and date."],
-      ["What is our policy on open-sourcing any component?", "Default: nothing, until decided here."],
-      ["Who owns the XHB brand assets and domain strategy?", "xhb.momencrafts.com now — standalone domain when?"]
-    ]},
-  "phase1": { name: "Phase 1 Pilot (SOW)", desc: "The 6–8 week historical feasibility pilot from the remaster.",
-    questions: [
-      ["Which 3–5 completed projects do we use, and who controls access to their documents?", "At least one healthy control project. This is the single most important open item."],
-      ["What is the precise endpoint definition and organizational recognition date for each project?", "Remaster §31 step 2 — vague endpoints invalidate the backtest."],
-      ["Which five warning checks ship in the pilot?", "Suggested: milestone slippage, aging decisions, cost-progress divergence, unsupported VO/invoice evidence, expired critical assumption."],
-      ["Who is consultant #1 for the dual-track sealed review, and on what fee basis?", "Fixed or effort-based, never conclusion-dependent."],
-      ["What does pilot success mean commercially?", "Does the pilot organization convert to a paid Foundation Phase? Record the buyer's name."],
-      ["What is the pilot start date, counted from document access?", "The 6–8 week timebox begins only when documents are in hand."]
-    ]},
-  "product": { name: "Product & Architecture", desc: "Source of truth, ALLAM narrative, MVP exclusions.",
-    questions: [
-      ["What is our one ALLAM sentence for HUMAIN, used identically everywhere?", "Core + gateway narrative — decided once."],
-      ["Do we adopt the remaster as single source of truth v1.0 and freeze documents until Phase 1 produces data?", "Deck and spec become derived documents."],
-      ["Which MVP exclusions do we both commit not to build early?", "Per the remaster's own exclusion list."],
-      ["Who owns deck v2 reconciliation, and by when?", "Trust-score wording, 11-agents slide, ALLAM framing — one pass."],
-      ["What stack do we lock for the pilot?", "Hosting, data store, model access path — revisited after Phase 1."]
-    ]},
-  "wow": { name: "Ways of Working", desc: "Decision rights, cadence, deadlocks, confidentiality.",
-    questions: [
-      ["Decision rights: what does Mulham decide alone, what does Momen decide alone, what needs both?", "Domain truth vs. technical architecture vs. money."],
-      ["What is our meeting cadence, and is this HQ the official decision log?", "If a decision is not logged here, did it happen?"],
-      ["How do we resolve a deadlock?", "Defer to domain owner, third adjudicator, or park with expiry."],
-      ["What are our confidentiality rules for sharing XHB material?", "Who may see the remaster, the deck, the pilot data."],
-      ["When do we revisit equity and roles?", "A fixed date or a milestone — agreed now."]
+      ["Sample question about workflow", "Context: establish standard operating procedures."],
+      ["Sample question about tooling and platforms", "Context: agree on the tools the team will use."]
     ]},
   "custom": { name: "Blank session", desc: "Start empty and add your own questions.", questions: [] }
 };
+
+/* ---- Active content (overwritten from Supabase after auth in live mode) ---- */
+let VISION = DEMO_VISION;
+let TEMPLATES = { ...DEMO_TEMPLATES };
 
 const PHASES = ["P0","P1","P2","P3","P4","P5","General"];
 const PLAN_STATUS = ["later","next","now","done"];
@@ -317,55 +282,47 @@ let askAnswer = "", askBusy = false;
 const demoStore = {};
 
 /* ------------------------------ Demo data -------------------------------- */
-const DEMO_ME = { email: "momen@momencrafts.com", name: "Momen" };
-const DEMO_PARTNER = { email: "mulham@xhb.sa", name: "Mulham" };
+const DEMO_ME = { email: "founder-a@example.com", name: "Founder A" };
+const DEMO_PARTNER = { email: "founder-b@example.com", name: "Founder B" };
 const now = () => new Date().toISOString();
 
 function demoSeed() {
   members = [{ email: DEMO_ME.email, display_name: DEMO_ME.name }, { email: DEMO_PARTNER.email, display_name: DEMO_PARTNER.name }];
   const sid = "demo-1";
-  sessions = [{ id: sid, title: "Founding & Equity", template: "founding", created_at: now() }];
-  const t = TEMPLATES.founding.questions;
+  const tplKey = Object.keys(TEMPLATES).find(k => k !== "custom") || "custom";
+  sessions = [{ id: sid, title: TEMPLATES[tplKey] ? TEMPLATES[tplKey].name : "Alignment", template: tplKey, created_at: now() }];
+  const t = (TEMPLATES[tplKey] && TEMPLATES[tplKey].questions) ? TEMPLATES[tplKey].questions : [];
   questions = t.map((q, i) => ({ id: "dq" + i, session_id: sid, position: i, prompt: q[0], context: q[1], status: "sealed", outcome: null, decision: "", decision_owner: "", answers: {} }));
-  questions[0].status = "revealed";
-  questions[0].answers[DEMO_ME.email] = { body: "Form now — KSA LLC before any code is written, so IP flows to one owner from day one." };
-  questions[0].answers[DEMO_PARTNER.email] = { body: "Agree on forming now. One week to compare KSA mainland vs. holding structure with an advisor." };
-  questions[2].status = "resolved"; questions[2].outcome = "decided";
-  questions[2].decision = "Momen joins as co-founder & technical lead; MomenCrafts remains a brand, not the contracting party.";
-  questions[2].decision_owner = "Both — " + new Date().toLocaleDateString("en-GB");
-  questions[2].answers[DEMO_ME.email] = { body: "Co-founder & technical lead." };
-  questions[2].answers[DEMO_PARTNER.email] = { body: "Co-founder. Closes the deck's biggest team gap properly." };
+  if (questions.length > 0) {
+    questions[0].status = "revealed";
+    questions[0].answers[DEMO_ME.email] = { body: "Sample response from Founder A." };
+    questions[0].answers[DEMO_PARTNER.email] = { body: "Sample response from Founder B." };
+  }
+  if (questions.length > 2) {
+    questions[2].status = "resolved"; questions[2].outcome = "decided";
+    questions[2].decision = "Sample decision recorded during demo — connect to Supabase for live decisions.";
+    questions[2].decision_owner = "Both — " + new Date().toLocaleDateString("en-GB");
+    questions[2].answers[DEMO_ME.email] = { body: "Sample sealed answer from Founder A." };
+    questions[2].answers[DEMO_PARTNER.email] = { body: "Sample sealed answer from Founder B." };
+  }
   currentSession = sessions[0];
   demoStore[sid] = questions;
 
   planItems = [
-    { id: "p1", title: "Choose the 3–5 completed pilot projects (incl. one healthy control)", detail: "Identify who controls their documents", phase: "P0", status: "now", owner: "Mulham", due: "Week 1", position: 0 },
-    { id: "p2", title: "Entity decision + MomenCrafts / co-founder terms in writing", detail: "MOU signature after lawyer review", phase: "P0", status: "now", owner: "Both", due: "Week 1–2", position: 1 },
-    { id: "p3", title: "Draft Phase 1 Statement of Work", detail: "Scope = remaster Phase 0+1 exactly; MVP exclusions verbatim", phase: "P0", status: "next", owner: "Momen", due: "Week 2", position: 2 },
-    { id: "p4", title: "Sign consultant #1 for dual-track review", detail: "Fixed fee, sealed protocol", phase: "P1", status: "next", owner: "Mulham", due: "Week 2", position: 3 },
-    { id: "p5", title: "Freeze document set — remaster = source of truth v1.0", detail: "Deck & spec marked derived, reconciliation pass", phase: "P0", status: "later", owner: "Mulham", due: "Week 2", position: 4 },
-    { id: "p6", title: "Evidence snapshot store + ingestion of pilot documents", detail: "Immutable monthly snapshots, hindsight-leakage controls", phase: "P1", status: "later", owner: "Momen", due: "Week 3+", position: 5 }
+    { id: "p1", title: "Sample milestone — initial setup and governance", detail: "Placeholder task for demo mode", phase: "P0", status: "now", owner: "Founder A", due: "Week 1", position: 0 },
+    { id: "p2", title: "Sample milestone — alignment on scope", detail: "Placeholder task for demo mode", phase: "P0", status: "now", owner: "Both", due: "Week 1–2", position: 1 },
+    { id: "p3", title: "Sample milestone — first deliverable", detail: "Placeholder task for demo mode", phase: "P1", status: "next", owner: "Founder B", due: "Week 3", position: 2 }
   ];
   updatesFeed = [
-    { id: "u1", author_email: DEMO_ME.email, body: "HQ v2 is live: Vision, Plan, Decisions register, Documents vault and the nudge flow. Mulham — start with the Founding & Equity session, your sealed answers are awaited on 3 questions.", pinned: true, created_at: now() },
-    { id: "u2", author_email: DEMO_PARTNER.email, body: "Reviewed the MOU draft. Two edits coming on clause 5.3 wording, then it goes to the lawyer. Also shortlisting pilot projects — three candidates so far, one healthy control still needed.", pinned: false, created_at: now() }
+    { id: "u1", author_email: DEMO_ME.email, body: "Demo mode is active — sample data only, nothing is saved. Connect to Supabase to work with live venture data.", pinned: true, created_at: now() }
   ];
   docsList = [
-    { id: "d1", title: "AI Forest — Remastered Master Architecture", kind: "source", status: "v1.0 — SOURCE OF TRUTH (frozen until Phase 1 data)", url: "", approvals: {} },
-    { id: "d2", title: "XHB Investor Deck (34 slides)", kind: "derived", status: "Derived — awaiting v2 reconciliation pass", url: "", approvals: {} },
-    { id: "d3", title: "XHB Complete Specification (30 pages)", kind: "derived", status: "Derived — awaiting v2 reconciliation pass", url: "", approvals: {} },
-    { id: "d4", title: "Founders' MOU & Good-Faith Acknowledgment", kind: "legal", status: "Draft — awaiting lawyer review, then signature", url: "", approvals: { "momen@momencrafts.com": "2026-08-07" } },
-    { id: "d5", title: "Phase 1 Statement of Work", kind: "legal", status: "To be drafted from remaster Phase 0+1", url: "", approvals: {} },
-    { id: "d6", title: "Founders' / Shareholders' Agreement", kind: "legal", status: "Later — at incorporation, supersedes the MOU", url: "", approvals: {} }
+    { id: "d1", title: "Architecture Document", kind: "source", status: "v1.0 — source of truth", url: "", approvals: {} },
+    { id: "d2", title: "Project Specification", kind: "derived", status: "Derived — pending review", url: "", approvals: {} },
+    { id: "d3", title: "Legal Agreement Draft", kind: "legal", status: "Draft — pending review", url: "", approvals: {} }
   ];
-  nudges = [
-    { id: "n1", session_id: sid, from_email: DEMO_PARTNER.email, to_email: DEMO_ME.email, message: "Revised my answer plan for Q2 — please seal yours so we can reveal and close equity this week.", seen: false, created_at: now() }
-  ];
-  episodesList = [
-    { id: "e1", title: "Ep 1 — The XHB story, in 12 minutes", url: "", note: "Generate an audio overview from the Investor Deck (NotebookLM or similar), host the MP3 (Supabase storage works), and paste the link here.", created_at: now() },
-    { id: "e2", title: "Ep 2 — The AI Forest remaster, explained", url: "", note: "Audio walkthrough of the architecture — for listening on the go.", created_at: now() },
-    { id: "e3", title: "Ep 3 — Capex failure patterns (Flyvbjerg) — background listening", url: "", note: "Any podcast episode URL works: paste a direct MP3 link and press play.", created_at: now() }
-  ];
+  nudges = [];
+  episodesList = [];
 }
 
 /* --------------------------- Data layer ---------------------------------- */
@@ -382,7 +339,7 @@ function partnerOf(meEmail) {
 
 async function loadMembers() {
   if (!LIVE) return;
-  const { data } = await sb.from("allowed_users").select("email, display_name");
+  const { data } = await sb.from("allowed_users").select("email, display_name, phone");
   members = data || [];
 }
 async function loadSessions() {
@@ -489,6 +446,33 @@ function subscribeRealtime() {
   } catch (e) { /* optional */ }
 }
 
+/* ---- Content loading (live mode: fetch from xhb schema after auth) ---- */
+async function loadVisionContent() {
+  if (!LIVE) return;
+  try {
+    const { data } = await sb.schema('xhb').from("content").select("body").eq("key", "vision").eq("locale", "en").single();
+    if (data && data.body) VISION = data.body;
+  } catch(e) { /* xhb.content may not be migrated yet — demo vision is shown */ }
+}
+async function loadTemplateContent() {
+  if (!LIVE) return;
+  try {
+    const { data: meta } = await sb.schema('xhb').from("content").select("body").eq("key", "template_meta").eq("locale", "en").single();
+    const { data: rows } = await sb.schema('xhb').from("question_templates").select("*").eq("locale", "en").order("position");
+    if (rows && rows.length) {
+      const metaObj = (meta && meta.body) ? meta.body : {};
+      const groups = {};
+      rows.forEach(r => { if (!groups[r.template_key]) groups[r.template_key] = []; groups[r.template_key].push(r); });
+      TEMPLATES = {};
+      for (const [key, qs] of Object.entries(groups)) {
+        const m = metaObj[key] || {};
+        TEMPLATES[key] = { name: m.name || key, desc: m.desc || "", questions: qs.sort((a, b) => a.position - b.position).map(r => [r.prompt, r.context]) };
+      }
+      TEMPLATES.custom = { name: "Blank session", desc: "Start empty and add your own questions.", questions: [] };
+    }
+  } catch(e) { /* xhb.question_templates may not be migrated yet — demo templates are used */ }
+}
+
 /* ------------------------------ Render ------------------------------------ */
 const app = document.getElementById("app");
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -579,10 +563,10 @@ function viewSessions() {
   const partner = partnerOf(me.email);
   const chips = sessions.map(s => '<button class="sess-chip' + (currentSession && s.id === currentSession.id ? " active" : "") + '" data-act="open" data-s="' + s.id + '" dir="auto">' + esc(s.title) + '</button>').join("") +
     '<button class="sess-chip" data-act="new-session" style="border-style:dashed; color:var(--gold-soft);">+ New</button>';
-  if (!currentSession) return '<div class="pagehead"><div><h1>Alignment sessions</h1></div></div><div class="sess-chips">' + chips + '</div><div class="empty">Create your first session — start with <b>Founding & Equity</b>.</div>';
+  if (!currentSession) return '<div class="pagehead"><div><h1>Alignment sessions</h1></div></div><div class="sess-chips">' + chips + '</div><div class="empty">Create your first session — pick a template or start blank.</div>';
   const open = questions.filter(q => q.status !== "resolved").length;
   return '<div class="pagehead"><div><h1 dir="auto">' + esc(currentSession.title) + '</h1><div class="meta">' + open + ' open · sealed answers unlock only when both of you have written</div></div>' +
-    '<div style="display:flex; gap:9px;"><button class="btn btn-gold btn-sm" data-act="nudge">Push to ' + esc(partner.name) + ' →</button><button class="btn btn-ghost btn-sm" data-act="refresh">↻</button></div></div>' +
+    '<div style="display:flex; gap:9px;"><button class="btn btn-gold btn-sm" data-act="nudge">Push to ' + esc(partner.name || "Partner") + ' →</button><button class="btn btn-ghost btn-sm" data-act="refresh">↻</button></div></div>' +
     '<div class="sess-chips">' + chips + '</div>' +
     '<div class="hint"><b>The method:</b> answer independently → seal → reveal together → discuss → log the decision.</div>' +
     questions.map(qCard).join("") +
@@ -647,7 +631,7 @@ function viewAsk() {
     ? '<div class="ask-note"><b>Setup:</b> deploy the <code>ask-xhb</code> edge function and set the ANTHROPIC_API_KEY secret (see DEPLOY_GUIDE §Ask-XHB). Until then this tab will return a configuration error. Answers are grounded in your decision register, plan, updates and document notes.</div>'
     : '<div class="ask-note"><b>Demo mode.</b> Once live and configured, Ask-XHB answers questions from your own venture record — decisions, plan, updates, and any document text you store — with the same rule as XHB itself: if the evidence is not there, it says so instead of guessing.</div>';
   return '<div class="pagehead"><div><h1>Ask XHB</h1><div class="meta">Citation-grounded answers over your own venture record</div></div></div>' +
-    '<div class="ask-box"><textarea dir="auto" id="ask-q" placeholder="e.g. What have we decided about equity so far, and what is still open?"></textarea>' +
+    '<div class="ask-box"><textarea dir="auto" id="ask-q" placeholder="e.g. What have we decided so far, and what is still open?"></textarea>' +
     '<div><button class="btn btn-gold btn-sm" data-act="ask" ' + (askBusy ? "disabled" : "") + '>' + (askBusy ? "Thinking…" : "Ask") + '</button></div></div>' +
     (askAnswer ? '<div class="ask-ans" dir="auto">' + esc(askAnswer) + '</div>' : note);
 }
@@ -703,28 +687,88 @@ function render() {
     (!LIVE ? '<div class="demo-banner">Demo mode — sample data, nothing is saved. Run supabase_setup_v2.sql and fill the CONFIG block to go live.</div>' : "") +
     nb + view + '</main></div>';
 }
-function renderGate(msg) {
-  app.innerHTML =
-  '<div class="center-wrap"><div class="authcard">' +
-    '<div class="mark">XHB</div><div class="rule"></div>' +
-    '<h2 class="serif" style="margin-bottom:8px;">Founders’ HQ</h2>' +
-    '<p>This workspace is restricted.<br>Enter your access token to continue.</p>' +
-    '<div class="grid"><input type="text" id="gate-token" placeholder="Access token" autocomplete="off" style="font-family:monospace;letter-spacing:1px;" />' +
-    '<button class="btn btn-gold" data-act="gate-unlock">Unlock</button></div>' +
-    '<div class="msg">' + esc(msg || "") + '</div>' +
-    '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
-  const inp = document.getElementById("gate-token");
-  if (inp) inp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-unlock"]').click(); });
-}
-function renderAuth(msg) {
+/* ---- Gate UI: three-state phone-OTP flow ---- */
+let gatePhone = ""; // retained across states for verifyOtp
+let gateEmail = ""; // retained for resend
+let resendCooldown = 0; // seconds remaining
+let resendTimer = null;
+let gateAttempts = 0;
+
+function renderGateIdentify(msg) {
   app.innerHTML =
   '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div>' +
     '<h2 class="serif" style="margin-bottom:8px;">Founders’ HQ</h2>' +
-    '<p>Private workspace for Mulham &amp; Momen.<br>Sign in with your allowlisted email.</p>' +
-    '<div class="grid"><input type="email" id="auth-email" placeholder="you@momencrafts.com" /><button class="btn btn-gold" data-act="magic">Send magic link</button></div>' +
+    '<p dir="auto">Private workspace — restricted to registered founders.<br>' +
+    'مساحة خاصة — مقيدة للمؤسسين المسجلين.</p>' +
+    '<div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">' +
+    '<div><label for="gate-email" style="font-size:12px; color:var(--muted);">Email</label>' +
+    '<input type="email" id="gate-email" placeholder="you@example.com" autocomplete="email" dir="auto" style="width:100%; min-height:44px; box-sizing:border-box;" /></div>' +
+    '<div><label for="gate-phone" style="font-size:12px; color:var(--muted);">Mobile (E.164)</label>' +
+    '<input type="tel" id="gate-phone" placeholder="+966 5XX XXX XXXX" autocomplete="tel" inputmode="tel" dir="ltr" style="width:100%; min-height:44px; box-sizing:border-box;" /></div>' +
+    '<button class="btn btn-gold" data-act="gate-send" style="min-height:44px;">Send code</button></div>' +
     '<div class="msg">' + esc(msg || "") + '</div>' +
     '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
+  const emailInp = document.getElementById("gate-email");
+  const phoneInp = document.getElementById("gate-phone");
+  if (gateEmail && emailInp) emailInp.value = gateEmail;
+  if (gatePhone && phoneInp) phoneInp.value = gatePhone;
+  if (phoneInp) phoneInp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-send"]')?.click(); });
 }
+
+function renderGateVerify(msg) {
+  app.innerHTML =
+  '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div>' +
+    '<h2 class="serif" style="margin-bottom:8px;">Enter verification code</h2>' +
+    '<p dir="auto">A 6-digit code was sent to your mobile.<br>' +
+    'تم إرسال رمز التحقق إلى جوالك.</p>' +
+    '<div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">' +
+    '<div><label for="gate-otp" style="font-size:12px; color:var(--muted);">Code</label>' +
+    '<input type="text" id="gate-otp" placeholder="000000" autocomplete="one-time-code" inputmode="numeric" maxlength="6" pattern="[0-9]*" dir="ltr" style="width:100%; min-height:44px; box-sizing:border-box; font-family:monospace; font-size:20px; letter-spacing:0.3em; text-align:center;" /></div>' +
+    '<button class="btn btn-gold" data-act="gate-verify" style="min-height:44px;">Verify</button></div>' +
+    '<div class="msg">' + esc(msg || "") + '</div>' +
+    '<div style="margin-top:12px; display:flex; justify-content:space-between; font-size:12px;">' +
+    '<a href="#" data-act="gate-resend" style="color:var(--gold-soft); text-decoration:none;' + (resendCooldown > 0 ? ' opacity:0.4; pointer-events:none;' : '') + '">' +
+    (resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend code') + '</a>' +
+    '<a href="#" data-act="gate-restart" style="color:var(--muted); text-decoration:none;">Start over</a>' +
+    '</div>' +
+    '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
+  const otpInp = document.getElementById("gate-otp");
+  if (otpInp) {
+    otpInp.focus();
+    otpInp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-verify"]')?.click(); });
+  }
+}
+
+function renderGateDenied() {
+  app.innerHTML =
+  '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div>' +
+    '<h2 class="serif" style="margin-bottom:8px;">Access unavailable</h2>' +
+    '<p dir="auto">Too many attempts. Please try again later.<br>' +
+    'محاولات كثيرة. يرجى المحاولة لاحقًا.</p>' +
+    '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
+}
+
+function renderAuth(msg) {
+  // Fallback for auth errors post-gate (e.g., email not on allowlist)
+  renderGateIdentify(msg);
+}
+
+function startResendCooldown() {
+  resendCooldown = 60;
+  clearInterval(resendTimer);
+  resendTimer = setInterval(() => {
+    resendCooldown--;
+    if (resendCooldown <= 0) { clearInterval(resendTimer); resendTimer = null; }
+    // Re-render only the resend link if still on verify screen
+    const link = document.querySelector('[data-act="gate-resend"]');
+    if (link) {
+      link.textContent = resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend code';
+      link.style.opacity = resendCooldown > 0 ? '0.4' : '1';
+      link.style.pointerEvents = resendCooldown > 0 ? 'none' : 'auto';
+    }
+  }, 1000);
+}
+
 let toastTimer = null;
 function toast(text) {
   document.querySelectorAll(".toast").forEach(t => t.remove());
@@ -801,22 +845,55 @@ document.addEventListener("click", async (e) => {
   const act = btn.dataset.act;
   const q = btn.dataset.q ? questions.find(x => x.id === btn.dataset.q) : null;
 
-  if (act === "gate-unlock") {
-    const tok = (document.getElementById("gate-token")?.value || "").trim();
-    if (!tok) { renderGate("Enter your MomenCrafts access token."); return; }
-    const btn2 = document.querySelector('[data-act="gate-unlock"]');
-    if (btn2) { btn2.textContent = "Verifying…"; btn2.disabled = true; }
-    const result = await tryUnlockGate(tok);
-    if (result === true) { boot(); }
-    else { renderGate(result || "Invalid or unauthorized token."); }
+  if (act === "gate-send") {
+    const email = norm(document.getElementById("gate-email")?.value || "");
+    const phone = (document.getElementById("gate-phone")?.value || "").trim();
+    if (!email || !phone) { renderGateIdentify("Enter both email and mobile number."); return; }
+    gateEmail = email; gatePhone = phone;
+    const sendBtn = document.querySelector('[data-act="gate-send"]');
+    if (sendBtn) { sendBtn.textContent = "Sending…"; sendBtn.disabled = true; }
+    try {
+      await fetch(CONFIG.XHB_GATE_URL, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, phone }),
+      });
+    } catch(e) { /* uniform: always proceed to verify screen */ }
+    startResendCooldown();
+    renderGateVerify();
     return;
   }
-
-  if (act === "magic") {
-    const email = norm(document.getElementById("auth-email").value);
-    if (!email) { renderAuth("Enter your email first."); return; }
-    const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href.split("#")[0] } });
-    renderAuth(error ? "Could not send link: " + error.message : "Magic link sent — check your inbox, then return here.");
+  if (act === "gate-verify") {
+    const code = (document.getElementById("gate-otp")?.value || "").trim();
+    if (!code || code.length < 6) { renderGateVerify("Enter the 6-digit code."); return; }
+    const verifyBtn = document.querySelector('[data-act="gate-verify"]');
+    if (verifyBtn) { verifyBtn.textContent = "Verifying…"; verifyBtn.disabled = true; }
+    // Normalise phone for verifyOtp (must match what the edge function sent to GoTrue)
+    const normPhone = gatePhone.replace(/[^\d+]/g, ''); const phone = normPhone.startsWith('+') ? normPhone : '+' + normPhone;
+    const { error } = await sb.auth.verifyOtp({ phone, token: code, type: 'sms' });
+    if (error) {
+      gateAttempts++;
+      if (gateAttempts >= 5) { renderGateDenied(); return; }
+      renderGateVerify("Invalid code. " + (5 - gateAttempts) + " attempts remaining.");
+    }
+    // On success, onAuthStateChange fires and loads the app
+    return;
+  }
+  if (act === "gate-resend") {
+    if (resendCooldown > 0) return;
+    try {
+      await fetch(CONFIG.XHB_GATE_URL, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: gateEmail, phone: gatePhone }),
+      });
+    } catch(e) { /* uniform */ }
+    startResendCooldown();
+    renderGateVerify("Code resent.");
+    return;
+  }
+  if (act === "gate-restart") {
+    gateAttempts = 0; clearInterval(resendTimer); resendCooldown = 0;
+    renderGateIdentify();
+    return;
   }
   if (act === "signout") { await sb.auth.signOut(); me = null; render(); }
   if (act === "nav") { nav = btn.dataset.nav; if (nav === "decisions") resolvedCache = await loadAllResolved(); render(); }
@@ -897,69 +974,33 @@ document.addEventListener("click", async (e) => {
   if (act === "ask") doAsk();
 });
 
-/* ------------------------------- Gate + Boot ------------------------------ */
-const COFOUNDER_TIERS = new Set(["PERMANENT", "STRATEGIC", "COFOUNDER", "FOUNDER"]);
-let gateUnlocked = false;
-
-function checkGateFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("key") || "";
-}
-
-async function tryUnlockGate(token) {
-  if (!token) return "Token is required.";
-  try {
-    const res = await fetch(CONFIG.VERIFY_TOKEN_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: token.toUpperCase().trim() }),
-    });
-    const data = await res.json();
-    if (!res.ok || !data.valid) return data.error || "Invalid access key.";
-    if (!COFOUNDER_TIERS.has(data.tokenType)) return "This token does not have XHB access. Co-founder tier required.";
-    gateUnlocked = true;
-    sessionStorage.setItem("xhb_gate", token.trim());
-    sessionStorage.setItem("xhb_gate_name", data.investorLabel || "");
-    return true;
-  } catch {
-    return "Network error — check your connection.";
-  }
-}
-
-async function gateBoot() {
-  if (!LIVE || !CONFIG.VERIFY_TOKEN_URL) { boot(); return; }
-  // Check sessionStorage first (already unlocked this session)
-  const stored = sessionStorage.getItem("xhb_gate");
-  if (stored) {
-    const result = await tryUnlockGate(stored);
-    if (result === true) { boot(); return; }
-    sessionStorage.removeItem("xhb_gate");
-  }
-  // Check URL ?key= parameter
-  const urlKey = checkGateFromURL();
-  if (urlKey) {
-    const result = await tryUnlockGate(urlKey);
-    if (result === true) {
-      const clean = window.location.pathname + window.location.hash;
-      window.history.replaceState({}, "", clean);
-      boot(); return;
-    }
-  }
-  // Show gate
-  renderGate();
-}
+/* ------------------------------- Boot ------------------------------ */
+/* Decision: persistSession: false — every page refresh re-runs OTP.
+   This is deliberate: the gate is the only entry point, and no session
+   data should survive a browser close. Surface this in the changelog
+   as a decision for the founders to review. */
 
 async function boot() {
   if (!LIVE) { me = { ...DEMO_ME }; demoSeed(); resolvedCache = await loadAllResolved(); render(); return; }
   if (!window.supabase) { app.innerHTML = '<div class="center-wrap"><div class="authcard"><h2>Supabase library failed to load</h2><p>Check your network or the CDN script tag.</p></div></div>'; return; }
-  sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+  sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, { auth: { persistSession: false } });
   sb.auth.onAuthStateChange(async (_evt, session) => {
     if (session && session.user) {
-      me = { email: norm(session.user.email), name: "" };
+      // Resolve identity: phone-OTP sessions may lack email
+      const rawEmail = session.user.email || '';
+      const rawPhone = session.user.phone || '';
+      me = { email: norm(rawEmail), phone: rawPhone, name: "" };
       await loadMembers();
+      // For phone-only auth, resolve email from allowed_users
+      if (!me.email && rawPhone) {
+        const phoneMember = members.find(x => x.phone === rawPhone);
+        if (phoneMember) me.email = norm(phoneMember.email);
+      }
       const self = members.find(x => norm(x.email) === me.email);
-      if (!self) { renderAuth("This email is not on the allowlist. Add it to allowed_users in Supabase."); me = null; return; }
+      if (!self) { renderGateIdentify("This identity is not on the allowlist."); me = null; return; }
       me.name = self.display_name || nameFor(me.email);
+      await loadVisionContent();
+      await loadTemplateContent();
       await refresh();
       resolvedCache = await loadAllResolved();
       subscribeRealtime();
@@ -967,9 +1008,9 @@ async function boot() {
     } else { me = null; render(); }
   });
   const { data } = await sb.auth.getSession();
-  if (!data || !data.session) render();
+  if (!data || !data.session) renderGateIdentify();
 }
-gateBoot();
+boot();
 </script>
 </body>
 </html>

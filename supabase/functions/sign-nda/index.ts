@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
     // 1. Verify token exists and is valid
     const { data: token, error: tokenErr } = await supabase
       .from('investor_tokens')
-      .select('id, label, revoked_at, nda_signed_at')
+      .select('id, label, email, revoked_at, expires_at, nda_signed_at')
       .eq('id', tokenId)
       .maybeSingle()
 
@@ -63,6 +63,14 @@ Deno.serve(async (req) => {
     }
     if (token.revoked_at) {
       return json(403, { error: 'Token has been revoked' }, corsHeaders)
+    }
+    if (token.expires_at && new Date(token.expires_at) < new Date()) {
+      return json(403, { error: 'Token has expired' }, corsHeaders)
+    }
+
+    // SECURITY: Validate signerEmail matches token email (prevent IDOR)
+    if (signerEmail && token.email && signerEmail.toLowerCase().trim() !== token.email.toLowerCase().trim()) {
+      return json(403, { error: 'Email mismatch' }, corsHeaders)
     }
 
     // 2. Check if already signed

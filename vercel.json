@@ -28,6 +28,9 @@
     { "source": "/cliniq.one",          "destination": "/cliniq.one/index.html" },
     { "source": "/cliniq.one/",         "destination": "/cliniq.one/index.html" },
     { "source": "/cliniq.one/:path*",   "destination": "/cliniq.one/:path*" },
+    { "source": "/xhb",        "destination": "/xhb/index.html" },
+    { "source": "/xhb/",       "destination": "/xhb/index.html" },
+    { "source": "/xhb/:path*", "destination": "/xhb/:path*" },
     { "source": "/admin",    "destination": "/index.html" },
     { "source": "/admin/",   "destination": "/index.html" },
     { "source": "/(.*)",     "destination": "/index.html" }

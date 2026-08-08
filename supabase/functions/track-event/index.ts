@@ -1,21 +1,21 @@
 // ═══════════════════════════════════════════════════════════
 // MOMENCRAFTS — track-event Edge Function
 // Logs investor analytics events
-// Accepts both { sessionKey, event_type } and { sessionId, event } formats
+// SECURITY: NDA events require sessionKey (no raw token fallback)
 // Deploy: supabase functions deploy track-event --no-verify-jwt
 // ═══════════════════════════════════════════════════════════
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { getCorsHeaders, json } from '../_shared/cors.ts'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
+// Events that modify investor state — require sessionKey, reject raw token fallback
+const PRIVILEGED_EVENTS = new Set(['nda_accepted', 'room_exit', 'ballot_submit'])
 
 Deno.serve(async (req) => {
+  const cors = getCorsHeaders(req)
+
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders })
+    return new Response(null, { status: 204, headers: cors })
   }
 
   try {
@@ -28,7 +28,12 @@ Deno.serve(async (req) => {
     const metadata   = body.metadata ?? {}
 
     if (!event_type) {
-      return json(400, { error: 'event_type required' })
+      return json(400, { error: 'event_type required' }, cors)
+    }
+
+    // SECURITY: Privileged events require sessionKey — no raw token fallback
+    if (PRIVILEGED_EVENTS.has(event_type) && !sessionKey) {
+      return json(403, { error: 'Session required for this event' }, cors)
     }
 
     const supabase = createClient(
@@ -36,7 +41,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     )
 
-    // Resolve session by sessionKey OR by token (fallback)
+    // Resolve session by sessionKey OR by token (fallback for non-privileged events only)
     let session: { id: string; token_id: string } | null = null
 
     if (sessionKey) {
@@ -48,15 +53,16 @@ Deno.serve(async (req) => {
       session = data
     }
 
-    // Fallback: resolve by token (less precise — picks latest session)
-    if (!session && token) {
+    // Fallback: resolve by token (only for non-privileged analytics events)
+    if (!session && token && !PRIVILEGED_EVENTS.has(event_type)) {
       const { data: tok } = await supabase
         .from('investor_tokens')
-        .select('id')
+        .select('id, revoked_at, expires_at')
         .eq('token', token.toUpperCase().trim())
         .maybeSingle()
 
-      if (tok) {
+      // SECURITY: Validate token is still active before accepting the fallback
+      if (tok && !tok.revoked_at && (!tok.expires_at || new Date(tok.expires_at) > new Date())) {
         const { data } = await supabase
           .from('investor_sessions')
           .select('id, token_id')
@@ -70,8 +76,8 @@ Deno.serve(async (req) => {
 
     if (!session) {
       // Don't block — just log and return ok (analytics is fire-and-forget)
-      console.warn('track-event: session not found for', { sessionKey, token })
-      return json(200, { ok: true, warn: 'session not found' })
+      console.warn('track-event: session not found for', { sessionKey: sessionKey?.slice(0, 8), token: token?.slice(0, 8) })
+      return json(200, { ok: true, warn: 'session not found' }, cors)
     }
 
     // Handle NDA accepted — update session + write nda_signed_at to token
@@ -107,19 +113,12 @@ Deno.serve(async (req) => {
 
     if (error) {
       console.error('Event insert error:', error)
-      return json(500, { error: 'Failed to log event' })
+      return json(500, { error: 'Failed to log event' }, cors)
     }
 
-    return json(200, { ok: true })
+    return json(200, { ok: true }, cors)
   } catch (err) {
     console.error('track-event error:', err)
-    return json(500, { error: 'Internal error' })
+    return json(500, { error: 'Internal error' }, cors)
   }
 })
-
-function json(status: number, body: object) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
-}

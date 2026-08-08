@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import '@/styles/admin.css'
 
-const ADMIN_PASS   = 'Talal202'
+// Admin password removed — validation should be server-side
+// For the SPA admin screen, password is validated via edge function
 const SUPABASE_URL = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1'
 const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER'])
 
@@ -44,9 +45,17 @@ function tokenStatus(t: any): 'active' | 'revoked' | 'expired' {
 function AdminLogin({ onLogin }: { onLogin: () => void }) {
   const [pass, setPass] = useState('')
   const [err,  setErr]  = useState('')
-  const submit = () => {
-    if (pass === ADMIN_PASS) { sessionStorage.setItem('mcr_admin_auth', '1'); onLogin() }
-    else { setErr('Wrong password'); setTimeout(() => setErr(''), 2000) }
+  const submit = async () => {
+    if (!pass.trim()) { setErr('Enter a password'); setTimeout(() => setErr(''), 2000); return }
+    try {
+      const res = await fetch(`${SUPABASE_URL}/admin-manage-token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': pass },
+        body: JSON.stringify({ action: 'list' }),
+      })
+      if (res.ok) { sessionStorage.setItem('mcr_admin_auth', '1'); sessionStorage.setItem('mcr_admin_key', pass); onLogin() }
+      else { setErr('Invalid admin key'); setTimeout(() => setErr(''), 2000) }
+    } catch { setErr('Network error'); setTimeout(() => setErr(''), 2000) }
   }
   return (
     <div className="admin-login-wrap">

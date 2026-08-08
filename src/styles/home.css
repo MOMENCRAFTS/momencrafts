@@ -1,4 +1,4 @@
-﻿/* ════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════
    HOME.CSS — White + Billiard Red Theme
    ════════════════════════════════════════════════════════ */
 
@@ -1804,4 +1804,272 @@
   .fbk-reaction-emoji { font-size:1.2rem; }
   .fbk-reaction-label { font-size:.52rem; }
   .inv-cf-grid { grid-template-columns:1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INVESTOR SECTIONS — Reusable Classes
+   Extracted from inline styles in HomeScreen.tsx sections 01–06
+   ═══════════════════════════════════════════════════════════ */
+
+/* Section wrappers */
+.inv-sec          { padding: 5rem 1.5rem; }
+.inv-sec--dark    { background: #0C0A09; }
+.inv-sec--warm    { background: #1A1614; }
+.inv-sec--border  { border-top: 2px solid rgba(200,169,110,0.2); }
+.inv-sec__inner   { max-width: 1100px; margin: 0 auto; }
+.inv-sec__inner--narrow { max-width: 900px; margin: 0 auto; }
+
+/* Eyebrow label (01 · SECTION) */
+.inv-eyebrow {
+  font-family: monospace;
+  font-size: .7rem;
+  letter-spacing: .2em;
+  color: #C8A96E;
+  margin-bottom: .5rem;
+}
+
+/* Section heading */
+.inv-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: #f0ebe3;
+  margin: 0 0 2.5rem;
+  font-weight: 700;
+}
+.inv-heading--tight { margin-bottom: .75rem; }
+.inv-heading--md {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  margin-bottom: .75rem;
+}
+.inv-heading__ar-sub {
+  font-size: .55em;
+  color: #C8A96E;
+  font-style: italic;
+}
+
+/* Subtext beneath heading */
+.inv-subtext {
+  color: #a09070;
+  font-size: .85rem;
+  margin: 0 0 2.5rem;
+  line-height: 1.7;
+}
+
+/* Stat grid (traction counters) */
+.inv-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+.inv-stat-card {
+  background: rgba(26,22,20,0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(200,169,110,0.15);
+  border-radius: 14px;
+  padding: 1.75rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.inv-stat-card__glow {
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgba(200,169,110,0.3), transparent);
+}
+.inv-stat-card__value {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #C8A96E;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+.inv-stat-card__value--crimson { color: #9B1B30; }
+.inv-stat-card__label {
+  color: #a09070;
+  font-size: .8rem;
+  margin-top: .5rem;
+  line-height: 1.4;
+}
+
+/* Timeline row */
+.inv-timeline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  position: relative;
+  padding-top: 1.5rem;
+}
+.inv-timeline__line {
+  position: absolute;
+  top: 2rem;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(to right, transparent 0%, rgba(200,169,110,0.25) 15%, rgba(200,169,110,0.4) 50%, rgba(155,27,48,0.3) 85%, transparent 100%);
+}
+.inv-timeline__point {
+  text-align: center;
+  flex: 1;
+  min-width: 100px;
+}
+.inv-timeline__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #C8A96E;
+  margin: 0 auto .6rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 6px rgba(200,169,110,0.3);
+}
+.inv-timeline__dot--active {
+  width: 16px;
+  height: 16px;
+  background: #9B1B30;
+  box-shadow: 0 0 12px rgba(155,27,48,0.6), 0 0 24px rgba(155,27,48,0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+.inv-timeline__year {
+  font-size: .7rem;
+  color: #C8A96E;
+  font-family: monospace;
+  font-weight: 700;
+  letter-spacing: .05em;
+}
+.inv-timeline__year--active { color: #9B1B30; }
+.inv-timeline__label {
+  font-size: .72rem;
+  color: #a09070;
+  margin-top: .25rem;
+}
+
+/* Body text */
+.inv-body {
+  color: #a09070;
+  line-height: 1.7;
+  font-size: .88rem;
+}
+.inv-body--spaced { margin-bottom: 1.5rem; }
+
+/* Blockquote (vision) */
+.inv-quote {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  color: #f0ebe3;
+  line-height: 1.7;
+  border-left: 3px solid #9B1B30;
+  padding-left: 1.5rem;
+  margin: 1rem 0 2rem;
+  font-style: italic;
+}
+
+/* Market signals box */
+.inv-signals {
+  background: #0C0A09;
+  border: 1px solid rgba(200,169,110,0.13);
+  border-radius: 16px;
+  padding: 2rem;
+}
+.inv-signals__heading {
+  font-family: monospace;
+  font-size: .68rem;
+  color: #C8A96E;
+  margin-bottom: 1rem;
+  letter-spacing: .15em;
+}
+.inv-signals__list {
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+}
+.inv-signals__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.inv-signals__row:not(:last-child) {
+  padding-bottom: .75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.inv-signals__label { color: #a09070; font-size: .82rem; }
+.inv-signals__value { font-family: monospace; font-weight: 700; }
+
+/* Vision 2-col grid */
+.inv-vision-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+/* Founder section grid */
+.inv-founder-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.inv-founder-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #9B1B30, #1A1614);
+  border: 2px solid #C8A96E;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: #C8A96E;
+}
+.inv-founder-label {
+  font-family: monospace;
+  font-size: .65rem;
+  color: #C8A96E;
+  letter-spacing: .15em;
+  text-align: center;
+}
+.inv-founder-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #f0ebe3;
+  margin: 0 0 .25rem;
+}
+.inv-founder-subtitle {
+  color: #C8A96E;
+  font-family: monospace;
+  font-size: .8rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Tags/pills */
+.inv-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.inv-tag {
+  background: #1A1614;
+  border: 1px solid rgba(200,169,110,0.2);
+  color: #C8A96E;
+  padding: .3rem .8rem;
+  border-radius: 20px;
+  font-size: .7rem;
+  font-family: monospace;
+}
+
+/* Responsive — collapse grids on mobile */
+@media (max-width: 768px) {
+  .inv-vision-grid,
+  .inv-founder-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .inv-sec { padding: 3rem 1.25rem; }
+  .inv-heading { font-size: clamp(1.4rem, 5vw, 2rem); }
 }

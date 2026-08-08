@@ -82,13 +82,11 @@ Deno.serve(async (req) => {
           return json(400, { error: 'label and token_type are required' }, corsHeaders)
         }
 
-        // Generate MCR-XXXXXXXX
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        let suffix = ''
-        for (let i = 0; i < 8; i++) {
-          suffix += chars[Math.floor(Math.random() * chars.length)]
-        }
-        const token = 'MCR-' + suffix
+        // Generate MCR-XXXXXXXXXXXXXXXX (16 chars, ~82 bits, crypto-secure)
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // no I/O/0/1
+        const bytes = new Uint8Array(16)
+        crypto.getRandomValues(bytes)
+        const token = 'MCR-' + Array.from(bytes, b => chars[b % chars.length]).join('')
 
         const expiresAt = COFOUNDER_TYPES.has(tokenType)
           ? null

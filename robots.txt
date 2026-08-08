@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /xhb/
 
 Sitemap: https://momencrafts.com/sitemap.xml

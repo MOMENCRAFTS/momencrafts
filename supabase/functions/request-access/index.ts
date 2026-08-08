@@ -5,23 +5,13 @@
 // ═══════════════════════════════════════════════════════════
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
-
-function json(status: number, body: object) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
-}
+import { getCorsHeaders, json } from '../_shared/cors.ts'
 
 Deno.serve(async (req) => {
+  const cors = getCorsHeaders(req)
+
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders })
+    return new Response(null, { status: 204, headers: cors })
   }
 
   try {
@@ -29,13 +19,13 @@ Deno.serve(async (req) => {
 
     // ── Validate required fields ──
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
-      return json(400, { error: 'Name is required (min 2 characters)' })
+      return json(400, { error: 'Name is required (min 2 characters)' }, cors)
     }
     if (!email || typeof email !== 'string' || !email.includes('@')) {
-      return json(400, { error: 'Valid email is required' })
+      return json(400, { error: 'Valid email is required' }, cors)
     }
     if (!phone || typeof phone !== 'string' || phone.length < 8) {
-      return json(400, { error: 'Valid phone number is required (include country code)' })
+      return json(400, { error: 'Valid phone number is required (include country code)' }, cors)
     }
 
     // Normalize phone — ensure it starts with +
@@ -47,7 +37,10 @@ Deno.serve(async (req) => {
     )
 
     // ── Rate limiting: max 5 requests per hour per IP ──
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+    const ip = req.headers.get('cf-connecting-ip')
+      || req.headers.get('x-real-ip')
+      || req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || 'unknown'
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
 
     const { count: recentCount } = await supabase
@@ -57,7 +50,7 @@ Deno.serve(async (req) => {
       .gte('created_at', oneHourAgo)
 
     if ((recentCount ?? 0) >= 5) {
-      return json(429, { error: 'Too many requests. Please try again later.' })
+      return json(429, { error: 'Too many requests. Please try again later.' }, cors)
     }
 
     // ── Rate limiting: max 3 requests per phone per hour ──
@@ -68,7 +61,7 @@ Deno.serve(async (req) => {
       .gte('created_at', oneHourAgo)
 
     if ((phoneCount ?? 0) >= 3) {
-      return json(429, { error: 'Too many attempts for this phone number. Please try again later.' })
+      return json(429, { error: 'Too many attempts for this phone number. Please try again later.' }, cors)
     }
 
     // ── Create pending access request ──
@@ -93,7 +86,7 @@ Deno.serve(async (req) => {
 
     if (insertErr || !request) {
       console.error('Insert error:', insertErr)
-      return json(500, { error: 'Failed to create request' })
+      return json(500, { error: 'Failed to create request' }, cors)
     }
 
     // ── Send OTP via Twilio Verify ──
@@ -121,17 +114,17 @@ Deno.serve(async (req) => {
     if (!twilioRes.ok) {
       console.error('Twilio error:', twilioData)
       await supabase.from('access_requests').delete().eq('id', request.id)
-      return json(500, { error: 'Failed to send verification code. Please check your phone number.' })
+      return json(500, { error: 'Failed to send verification code. Please check your phone number.' }, cors)
     }
 
     return json(200, {
       request_id: request.id,
       status: 'otp_sent',
       phone_last4: normalizedPhone.slice(-4),
-    })
+    }, cors)
 
   } catch (err) {
     console.error('request-access error:', err)
-    return json(500, { error: 'Internal error' })
+    return json(500, { error: 'Internal error' }, cors)
   }
 })

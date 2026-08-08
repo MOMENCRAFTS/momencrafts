@@ -5,28 +5,21 @@
 // ═══════════════════════════════════════════════════════════
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
+import { getCorsHeaders, json as jsonResp, escapeHtml } from '../_shared/cors.ts'
 
 function json(status: number, body: object) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
+  // verify-phone uses a module-level CORS (set per-request in Deno.serve)
+  // We'll override this in the handler
+  return jsonResp(status, body, _currentCors)
 }
+let _currentCors: Record<string, string> = {}
 
-/** Generate MCR-XXXXXXXX token */
+/** Generate MCR-XXXXXXXXXXXXXXXX token (16 chars, ~82 bits entropy) */
 function generateToken(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // no I/O/0/1 for clarity
-  let code = ''
-  for (let i = 0; i < 8; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)]
-  }
-  return `MCR-${code}`
+  const bytes = new Uint8Array(16)
+  crypto.getRandomValues(bytes)
+  return 'MCR-' + Array.from(bytes, b => chars[b % chars.length]).join('')
 }
 
 /** Send notification email to admin via Resend */
@@ -42,7 +35,7 @@ async function sendNotificationEmail(
   })
 
   const row = (label: string, val: string, isLink = false) =>
-    `<tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15); width: 120px;">${label}</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15); font-weight: 500;">${isLink ? `<a href="${val}" style="color: #00A651;">${val}</a>` : val}</td></tr>`
+    `<tr><td style="padding: 10px 0; color: #9A9485; border-bottom: 1px solid rgba(200,169,110,0.15); width: 120px;">${label}</td><td style="padding: 10px 0; color: #EDE8DC; border-bottom: 1px solid rgba(200,169,110,0.15); font-weight: 500;">${isLink ? `<a href="${escapeHtml(val)}" style="color: #00A651;">${escapeHtml(val)}</a>` : escapeHtml(val)}</td></tr>`
 
   const html = `
     <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0C0A09; color: #EDE8DC; border-radius: 12px; overflow: hidden;">
@@ -66,7 +59,7 @@ async function sendNotificationEmail(
         ${request.message ? `
         <div style="margin: 20px 0 0; padding: 16px; background: rgba(200,169,110,0.06); border: 1px solid rgba(200,169,110,0.15); border-radius: 8px;">
           <p style="color: #C8A96E; font-family: monospace; font-size: 10px; letter-spacing: 0.2em; margin: 0 0 8px;">MESSAGE</p>
-          <p style="color: #EDE8DC; font-size: 14px; line-height: 1.6; margin: 0;">${request.message}</p>
+          <p style="color: #EDE8DC; font-size: 14px; line-height: 1.6; margin: 0;">${escapeHtml(request.message)}</p>
         </div>` : ''}
         <div style="margin: 28px 0; padding: 20px; background: rgba(0,108,53,0.15); border: 1px solid rgba(0,166,81,0.3); border-radius: 8px;">
           <p style="color: #C8A96E; font-family: monospace; font-size: 11px; letter-spacing: 0.2em; margin: 0 0 8px;">TOKEN ISSUED</p>
@@ -163,8 +156,10 @@ async function sendVisitorEmail(
 
 
 Deno.serve(async (req) => {
+  _currentCors = getCorsHeaders(req)
+
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders })
+    return new Response(null, { status: 204, headers: _currentCors })
   }
 
   try {
@@ -202,6 +197,29 @@ Deno.serve(async (req) => {
         .eq('id', request_id)
       return json(410, { error: 'Verification window expired. Please start over.' })
     }
+
+    // ── 2.5. Rate-limit OTP attempts: max 5 per request_id ──
+    const { count: otpAttempts } = await supabase
+      .from('access_requests')
+      .select('otp_attempts', { count: 'exact', head: false })
+      .eq('id', request_id)
+      .single()
+      .then(({ data }) => ({ count: data?.otp_attempts ?? 0 }))
+
+    if ((otpAttempts ?? 0) >= 5) {
+      await supabase.from('access_requests')
+        .update({ status: 'failed' })
+        .eq('id', request_id)
+      return json(403, { error: 'Too many OTP attempts. Please start over.' })
+    }
+
+    // Increment OTP attempt counter
+    await supabase.rpc('increment_otp_attempts', { req_id: request_id }).catch(() => {
+      // Fallback: if RPC doesn't exist, use raw update
+      supabase.from('access_requests')
+        .update({ otp_attempts: (otpAttempts ?? 0) + 1 })
+        .eq('id', request_id)
+    })
 
     // ── 3. Verify OTP with Twilio ──
     const TWILIO_SID = Deno.env.get('TWILIO_ACCOUNT_SID')!

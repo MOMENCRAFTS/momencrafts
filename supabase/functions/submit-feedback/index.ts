@@ -1,36 +1,27 @@
 // ═══════════════════════════════════════════════════════════
 // MOMENCRAFTS — submit-feedback Edge Function
 // Accepts tiered investor feedback per product
+// SECURITY: Locked CORS, validated token
 // Deploy: supabase functions deploy submit-feedback --no-verify-jwt
 // ═══════════════════════════════════════════════════════════
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
+import { getCorsHeaders, json } from '../_shared/cors.ts'
 
 const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER', 'FOUNDER'])
 
-function json(status: number, body: object) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
-}
-
 Deno.serve(async (req) => {
+  const cors = getCorsHeaders(req)
+
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders })
+    return new Response(null, { status: 204, headers: cors })
   }
 
   try {
     const { token, productId, feedbackType = 'composite', payload = {} } = await req.json()
 
     if (!token || !productId) {
-      return json(400, { error: 'token and productId required' })
+      return json(400, { error: 'token and productId required' }, cors)
     }
 
     const supabase = createClient(
@@ -46,15 +37,15 @@ Deno.serve(async (req) => {
       .maybeSingle()
 
     if (tokErr || !tok) {
-      return json(401, { error: 'Invalid token' })
+      return json(401, { error: 'Invalid token' }, cors)
     }
 
     if (tok.revoked_at) {
-      return json(403, { error: 'Token revoked' })
+      return json(403, { error: 'Token revoked' }, cors)
     }
 
     if (tok.expires_at && new Date(tok.expires_at) < new Date()) {
-      return json(403, { error: 'Token expired' })
+      return json(403, { error: 'Token expired' }, cors)
     }
 
     const tokenTier = COFOUNDER_TYPES.has(tok.token_type) ? 'cofounder' : 'visitor'
@@ -85,7 +76,7 @@ Deno.serve(async (req) => {
 
     if (insErr) {
       console.error('Feedback insert error:', insErr)
-      return json(500, { error: 'Failed to save feedback' })
+      return json(500, { error: 'Failed to save feedback' }, cors)
     }
 
     // If intro submitted — fire WhatsApp notification via edge (fire-and-forget)
@@ -106,9 +97,9 @@ Deno.serve(async (req) => {
       message: tokenTier === 'cofounder'
         ? 'Contribution logged to & Co Registry'
         : 'Feedback received — thank you',
-    })
+    }, cors)
   } catch (err) {
     console.error('submit-feedback error:', err)
-    return json(500, { error: 'Internal error' })
+    return json(500, { error: 'Internal error' }, cors)
   }
 })
