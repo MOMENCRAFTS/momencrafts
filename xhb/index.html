@@ -687,12 +687,10 @@ function render() {
     (!LIVE ? '<div class="demo-banner">Demo mode — sample data, nothing is saved. Run supabase_setup_v2.sql and fill the CONFIG block to go live.</div>' : "") +
     nb + view + '</main></div>';
 }
-/* ---- Gate UI: three-state phone-OTP flow ---- */
-let gatePhone = ""; // retained across states for verifyOtp
-let gateEmail = ""; // retained for resend
-let resendCooldown = 0; // seconds remaining
+/* ---- Gate UI: email magic-link flow ---- */
+let gateEmail = "";
+let resendCooldown = 0;
 let resendTimer = null;
-let gateAttempts = 0;
 
 function renderGateIdentify(msg) {
   app.innerHTML =
@@ -703,53 +701,30 @@ function renderGateIdentify(msg) {
     '<div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">' +
     '<div><label for="gate-email" style="font-size:12px; color:var(--muted);">Email</label>' +
     '<input type="email" id="gate-email" placeholder="you@example.com" autocomplete="email" dir="auto" style="width:100%; min-height:44px; box-sizing:border-box;" /></div>' +
-    '<div><label for="gate-phone" style="font-size:12px; color:var(--muted);">Mobile (E.164)</label>' +
-    '<input type="tel" id="gate-phone" placeholder="+966 5XX XXX XXXX" autocomplete="tel" inputmode="tel" dir="ltr" style="width:100%; min-height:44px; box-sizing:border-box;" /></div>' +
-    '<button class="btn btn-gold" data-act="gate-send" style="min-height:44px;">Send code</button></div>' +
+    '<button class="btn btn-gold" data-act="gate-send" style="min-height:44px;">Send magic link</button></div>' +
     '<div class="msg">' + esc(msg || "") + '</div>' +
     '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
   const emailInp = document.getElementById("gate-email");
-  const phoneInp = document.getElementById("gate-phone");
   if (gateEmail && emailInp) emailInp.value = gateEmail;
-  if (gatePhone && phoneInp) phoneInp.value = gatePhone;
-  if (phoneInp) phoneInp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-send"]')?.click(); });
+  if (emailInp) emailInp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-send"]')?.click(); });
 }
 
-function renderGateVerify(msg) {
+function renderGateCheckEmail(msg) {
   app.innerHTML =
   '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div>' +
-    '<h2 class="serif" style="margin-bottom:8px;">Enter verification code</h2>' +
-    '<p dir="auto">A 6-digit code was sent to your mobile.<br>' +
-    'تم إرسال رمز التحقق إلى جوالك.</p>' +
-    '<div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">' +
-    '<div><label for="gate-otp" style="font-size:12px; color:var(--muted);">Code</label>' +
-    '<input type="text" id="gate-otp" placeholder="000000" autocomplete="one-time-code" inputmode="numeric" maxlength="6" pattern="[0-9]*" dir="ltr" style="width:100%; min-height:44px; box-sizing:border-box; font-family:monospace; font-size:20px; letter-spacing:0.3em; text-align:center;" /></div>' +
-    '<button class="btn btn-gold" data-act="gate-verify" style="min-height:44px;">Verify</button></div>' +
-    '<div class="msg">' + esc(msg || "") + '</div>' +
-    '<div style="margin-top:12px; display:flex; justify-content:space-between; font-size:12px;">' +
+    '<h2 class="serif" style="margin-bottom:8px;">Check your email</h2>' +
+    '<p dir="auto">A magic link was sent to <b>' + esc(gateEmail) + '</b>.<br>Click the link in your email to sign in.<br><br>' +
+    'تم إرسال رابط تسجيل الدخول إلى بريدك الإلكتروني.</p>' +
+    '<div style="margin-top:16px; display:flex; justify-content:space-between; font-size:12px;">' +
     '<a href="#" data-act="gate-resend" style="color:var(--gold-soft); text-decoration:none;' + (resendCooldown > 0 ? ' opacity:0.4; pointer-events:none;' : '') + '">' +
-    (resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend code') + '</a>' +
-    '<a href="#" data-act="gate-restart" style="color:var(--muted); text-decoration:none;">Start over</a>' +
+    (resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend link') + '</a>' +
+    '<a href="#" data-act="gate-restart" style="color:var(--muted); text-decoration:none;">Use different email</a>' +
     '</div>' +
-    '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
-  const otpInp = document.getElementById("gate-otp");
-  if (otpInp) {
-    otpInp.focus();
-    otpInp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-verify"]')?.click(); });
-  }
-}
-
-function renderGateDenied() {
-  app.innerHTML =
-  '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div>' +
-    '<h2 class="serif" style="margin-bottom:8px;">Access unavailable</h2>' +
-    '<p dir="auto">Too many attempts. Please try again later.<br>' +
-    'محاولات كثيرة. يرجى المحاولة لاحقًا.</p>' +
+    '<div class="msg" style="margin-top:12px;">' + esc(msg || "") + '</div>' +
     '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
 }
 
 function renderAuth(msg) {
-  // Fallback for auth errors post-gate (e.g., email not on allowlist)
   renderGateIdentify(msg);
 }
 
@@ -759,10 +734,9 @@ function startResendCooldown() {
   resendTimer = setInterval(() => {
     resendCooldown--;
     if (resendCooldown <= 0) { clearInterval(resendTimer); resendTimer = null; }
-    // Re-render only the resend link if still on verify screen
     const link = document.querySelector('[data-act="gate-resend"]');
     if (link) {
-      link.textContent = resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend code';
+      link.textContent = resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend link';
       link.style.opacity = resendCooldown > 0 ? '0.4' : '1';
       link.style.pointerEvents = resendCooldown > 0 ? 'none' : 'auto';
     }
@@ -847,47 +821,30 @@ document.addEventListener("click", async (e) => {
 
   if (act === "gate-send") {
     const email = norm(document.getElementById("gate-email")?.value || "");
-    const phone = (document.getElementById("gate-phone")?.value || "").trim();
-    if (!email || !phone) { renderGateIdentify("Enter both email and mobile number."); return; }
-    gateEmail = email; gatePhone = phone;
+    if (!email) { renderGateIdentify("Enter your email address."); return; }
+    gateEmail = email;
     const sendBtn = document.querySelector('[data-act="gate-send"]');
     if (sendBtn) { sendBtn.textContent = "Sending…"; sendBtn.disabled = true; }
-    try {
-      await fetch(CONFIG.XHB_GATE_URL, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, phone }),
-      });
-    } catch(e) { /* uniform: always proceed to verify screen */ }
-    startResendCooldown();
-    renderGateVerify();
-    return;
-  }
-  if (act === "gate-verify") {
-    const code = (document.getElementById("gate-otp")?.value || "").trim();
-    if (!code || code.length < 6) { renderGateVerify("Enter the 6-digit code."); return; }
-    const verifyBtn = document.querySelector('[data-act="gate-verify"]');
-    if (verifyBtn) { verifyBtn.textContent = "Verifying…"; verifyBtn.disabled = true; }
-    // Normalise phone for verifyOtp (must match what the edge function sent to GoTrue)
-    const normPhone = gatePhone.replace(/[^\d+]/g, ''); const phone = normPhone.startsWith('+') ? normPhone : '+' + normPhone;
-    const { error } = await sb.auth.verifyOtp({ phone, token: code, type: 'sms' });
+    const { error } = await sb.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin + '/xhb/' }
+    });
     if (error) {
-      gateAttempts++;
-      if (gateAttempts >= 5) { renderGateDenied(); return; }
-      renderGateVerify("Invalid code. " + (5 - gateAttempts) + " attempts remaining.");
+      renderGateIdentify("Could not send link: " + error.message);
+      return;
     }
-    // On success, onAuthStateChange fires and loads the app
+    startResendCooldown();
+    renderGateCheckEmail();
     return;
   }
   if (act === "gate-resend") {
     if (resendCooldown > 0) return;
-    try {
-      await fetch(CONFIG.XHB_GATE_URL, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: gateEmail, phone: gatePhone }),
-      });
-    } catch(e) { /* uniform */ }
+    await sb.auth.signInWithOtp({
+      email: gateEmail,
+      options: { emailRedirectTo: window.location.origin + '/xhb/' }
+    });
     startResendCooldown();
-    renderGateVerify("Code resent.");
+    renderGateCheckEmail("Link resent.");
     return;
   }
   if (act === "gate-restart") {
