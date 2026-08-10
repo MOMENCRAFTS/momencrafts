@@ -204,18 +204,44 @@
 <audio id="bg-audio" preload="none"></audio>
 
 <script>
-/* =========================================================================
-   XHB × MomenCrafts — Founders' HQ  (v2)
-   Vision · Plan · Q&A sessions · Decisions · Updates · Documents · Ask XHB
-   -------------------------------------------------------------------------
-   SETUP (live mode):
-     1. Run the xhb schema migration in your Supabase SQL editor.
+/* ═══════════════════════════════════════════════════════════════════════════
+   XHB × MomenCrafts — Founders' HQ
+   ═══════════════════════════════════════════════════════════════════════════
+
+   SCHEMA BOUNDARY
+   ───────────────
+   public.*   — MomenCrafts investor portal (investor_tokens, investor_sessions,
+                investor_events, access_requests, co_*, etc.).
+                RLS: service-role only (edge functions).
+
+   xhb.*     — XHB Founders' HQ (allowed_users, sessions, questions, answers,
+                plan_items, updates, documents, nudges, episodes, content,
+                question_templates, gate_attempts, gate_log, artifacts,
+                artifact_versions, findings, enrolment_tokens, api_keys,
+                access_log, decision_revisions).
+                Read/write: xhb.is_allowed() — two-person allowlist only.
+
+   AUTH MODEL
+   ──────────
+   XHB auth = Supabase phone OTP (via xhb-gate-request edge function)
+            + xhb.is_allowed() row-level security.
+   Never MomenCrafts investor_tokens, access_requests, MCR- tokens, or any
+   portal tier. The two systems share a Supabase project but are isolated
+   by schema. No portal edge function queries any xhb.* table.
+
+   DASHBOARD ACCESS
+   ────────────────
+   momen@momencrafts.com — founder, superadmin (access management only;
+     never bypasses the seal, never verdicts own artifacts).
+
+   SETUP (live mode)
+   ─────────────────
+     1. Run the xhb schema migrations in your Supabase SQL editor.
      2. Fill SUPABASE_URL and SUPABASE_ANON_KEY below.
-     3. Auth -> enable Email (magic link); add this page's URL to redirects.
-     4. Optional, for the Ask-XHB tab: deploy the ask-xhb edge function and
-        set the ANTHROPIC_API_KEY secret (see DEPLOY_GUIDE).
-   Leave config empty for DEMO MODE (in-memory sample data).
-   ========================================================================= */
+     3. Auth → enable Phone provider (Twilio); add /xhb/ to redirect allowlist.
+     4. Optional: deploy the ask-xhb edge function + ANTHROPIC_API_KEY secret.
+   Leave CONFIG empty for DEMO MODE (in-memory sample data, zero network calls).
+   ═══════════════════════════════════════════════════════════════════════════ */
 const CONFIG = {
   SUPABASE_URL: "https://isciigqmdfcozrtojqcm.supabase.co",
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzY2lpZ3FtZGZjb3pydG9qcWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMDk4ODYsImV4cCI6MjA5NjU4NTg4Nn0.OUV0dUWUt0UBU9bdJpwWiXI2PgclddNO0t1cA4ZLF_8",
