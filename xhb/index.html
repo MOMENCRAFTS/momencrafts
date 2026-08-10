@@ -299,6 +299,7 @@ let sb = null;
 let me = null;
 let members = [];
 let contentLoaded = false; // True after xhb.content loaded (live) or immediately (demo)
+let dataLoading = false;  // True during initial data fetch (shows loading state)
 let nav = "vision";
 let sessions = [], currentSession = null, questions = [];
 let planItems = [], updatesFeed = [], docsList = [], nudges = [], episodesList = [];
@@ -306,6 +307,7 @@ let currentEp = null;
 let confirmReveal = {};
 let channel = null;
 let askAnswer = "", askBusy = false;
+let renderTimer = null; // debounce guard
 const demoStore = {};
 
 /* ------------------------------ Demo data -------------------------------- */
@@ -457,12 +459,20 @@ async function setQuestion(q, patch) {
 }
 async function refresh() {
   if (!LIVE) { render(); return; }
-  await loadSessions(); await loadQuestions();
-  await loadTable("plan_items", { col: "position", asc: true });
-  await loadTable("updates", { col: "created_at", asc: false });
-  await loadTable("documents", { col: "created_at", asc: true });
-  await loadTable("nudges", { col: "created_at", asc: false });
-  await loadTable("episodes", { col: "created_at", asc: true });
+  try {
+    await loadSessions(); await loadQuestions();
+    await loadTable("plan_items", { col: "position", asc: true });
+    await loadTable("updates", { col: "created_at", asc: false });
+    await loadTable("documents", { col: "created_at", asc: true });
+    await loadTable("nudges", { col: "created_at", asc: false });
+    await loadTable("episodes", { col: "created_at", asc: true });
+  } catch (err) {
+    if (err?.message?.includes('JWT') || err?.code === 'PGRST301') {
+      toast('Session expired — please sign in again.');
+      me = null; render(); return;
+    }
+    toast('Network error — some data may be stale.');
+  }
   render();
 }
 
@@ -471,7 +481,11 @@ function subscribeRealtime() {
   try {
     channel = sb.channel("hq");
     ["sessions", "questions", "answers", "plan_items", "updates", "documents", "nudges", "episodes"].forEach(t => {
-      channel.on("postgres_changes", { event: "*", schema: "xhb", table: t }, () => refresh());
+      channel.on("postgres_changes", { event: "*", schema: "xhb", table: t }, () => {
+        // Debounce: coalesce rapid-fire realtime events into one render
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(() => refresh(), 300);
+      });
     });
     channel.subscribe();
   } catch (e) { /* optional */ }
@@ -700,11 +714,21 @@ function renderPlayer() {
 /* ----- Shell ----- */
 function unseenNudges() { return nudges.filter(n => !n.seen && norm(n.to_email) === norm(me.email)); }
 function render() {
+  try { _render(); } catch (err) {
+    console.error('Render error:', err);
+    app.innerHTML = '<div class="center-wrap"><div class="authcard"><h2>Something went wrong</h2><p>' + esc(err.message) + '</p><button class="btn btn-gold" onclick="location.reload()">Reload</button></div></div>';
+  }
+}
+function _render() {
   if (LIVE && !me) { renderAuth(); return; }
+  if (LIVE && dataLoading) {
+    app.innerHTML = '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div><h2 class="serif">Loading workspace\u2026</h2><p style="color:var(--muted);">Fetching your venture data.</p></div></div>';
+    return;
+  }
   const counts = { sessions: sessions.length, decisions: resolvedCache.length, plan: planItems.filter(p => p.status !== "done").length };
-  const navBtn = (key, label, cnt) => '<button class="' + (nav === key ? "active" : "") + '" data-act="nav" data-nav="' + key + '">' + label + (cnt ? '<span class="cnt">' + cnt + '</span>' : "") + '</button>';
+  const navBtn = (key, label, cnt) => '<button class="' + (nav === key ? "active" : "") + '" data-act="nav" data-nav="' + key + '" aria-label="' + label + (cnt ? ' (' + cnt + ')' : '') + '" role="tab" aria-selected="' + (nav === key) + '">' + label + (cnt ? '<span class="cnt">' + cnt + '</span>' : "") + '</button>';
   const nb = unseenNudges().map(n =>
-    '<div class="nudge-banner"><div class="txt"><b>' + esc(nameFor(n.from_email)) + '</b> nudged you: “' + esc(n.message) + '”</div>' +
+    '<div class="nudge-banner" role="alert"><div class="txt"><b>' + esc(nameFor(n.from_email)) + '</b> nudged you: \u201c' + esc(n.message) + '\u201d</div>' +
     '<button class="btn btn-gold btn-sm" data-act="nudge-open" data-id="' + n.id + '" data-s="' + (n.session_id || "") + '">Open session</button>' +
     '<button class="btn btn-ghost btn-sm" data-act="nudge-seen" data-id="' + n.id + '">Done</button></div>').join("");
   let view = "";
@@ -717,13 +741,13 @@ function render() {
   else if (nav === "podcast") view = viewPodcast();
   else if (nav === "ask") view = viewAsk();
   app.innerHTML =
-  '<div class="app"><aside class="side">' +
-    '<div class="brand"><div class="mark">XHB</div><div class="rule"></div><div class="sub">Founders’ HQ</div><div class="co">built by <b>MomenCrafts</b></div></div>' +
-    '<nav class="nav">' + navBtn("vision", "Vision") + navBtn("plan", "Plan", counts.plan) + navBtn("sessions", "Q&A sessions", counts.sessions) + navBtn("decisions", "Decisions", counts.decisions) + navBtn("updates", "Updates") + navBtn("docs", "Documents") + navBtn("podcast", "Podcast 🎧") + navBtn("ask", "Ask XHB") + '</nav>' +
+  '<div class="app"><aside class="side" role="navigation" aria-label="Main navigation">' +
+    '<div class="brand"><div class="mark">XHB</div><div class="rule"></div><div class="sub">Founders\u2019 HQ</div><div class="co">built by <b>MomenCrafts</b></div></div>' +
+    '<nav class="nav" role="tablist" aria-label="Workspace sections">' + navBtn("vision", "Vision") + navBtn("plan", "Plan", counts.plan) + navBtn("sessions", "Q&A sessions", counts.sessions) + navBtn("decisions", "Decisions", counts.decisions) + navBtn("updates", "Updates") + navBtn("docs", "Documents") + navBtn("podcast", "Podcast \ud83c\udfa7") + navBtn("ask", "Ask XHB") + '</nav>' +
     '<div class="whoami"><b>' + esc(me.name) + '</b>' + esc(me.email) + '<div style="margin-top:5px;">Partner: ' + esc(partnerOf(me.email).name) + '</div>' +
-    (LIVE ? '<div style="margin-top:8px;"><button class="link" data-act="signout">Sign out</button></div>' : "") + '</div>' +
-  '</aside><main class="main">' +
-    (!LIVE ? '<div class="demo-banner">Demo mode — sample data, nothing is saved. Run supabase_setup_v2.sql and fill the CONFIG block to go live.</div>' : "") +
+    (LIVE ? '<div style="margin-top:8px;"><button class="link" data-act="signout" aria-label="Sign out of XHB">Sign out</button></div>' : "") + '</div>' +
+  '</aside><main class="main" role="main" aria-label="Workspace content">' +
+    (!LIVE ? '<div class="demo-banner" role="status">Demo mode \u2014 sample data, nothing is saved. Run supabase_setup_v2.sql and fill the CONFIG block to go live.</div>' : "") +
     nb + view + '</main></div>';
 }
 /* ---- Gate UI — phone OTP via xhb-gate-request ---- */
@@ -1040,10 +1064,12 @@ async function boot() {
       const self = members.find(x => norm(x.email) === me.email);
       if (!self) { renderGateIdentify("This identity is not on the allowlist."); me = null; return; }
       me.name = self.display_name || nameFor(me.email);
+      dataLoading = true; render(); // Show loading screen while fetching
       await loadVisionContent();
       await loadTemplateContent();
       await refresh();
       resolvedCache = await loadAllResolved();
+      dataLoading = false;
       subscribeRealtime();
       render();
     } else { me = null; render(); }
