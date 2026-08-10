@@ -356,6 +356,8 @@ function demoSeed() {
 
 /* --------------------------- Data layer ---------------------------------- */
 const norm = (e) => (e || "").trim().toLowerCase();
+/* db() — every query goes through the xhb schema. Never call sb.from() directly. */
+function db() { return sb.schema('xhb'); }
 function nameFor(email) {
   const m = members.find(x => norm(x.email) === norm(email));
   if (m && m.display_name) return m.display_name;
@@ -368,12 +370,12 @@ function partnerOf(meEmail) {
 
 async function loadMembers() {
   if (!LIVE) return;
-  const { data } = await sb.from("allowed_users").select("email, display_name, phone");
+  const { data } = await db().from("allowed_users").select("email, display_name, phone");
   members = data || [];
 }
 async function loadSessions() {
   if (!LIVE) return;
-  const { data } = await sb.from("sessions").select("*").order("created_at", { ascending: false });
+  const { data } = await db().from("sessions").select("*").is("deleted_at", null).order("created_at", { ascending: false });
   sessions = data || [];
   if (currentSession) currentSession = sessions.find(s => s.id === currentSession.id) || sessions[0] || null;
   else currentSession = sessions[0] || null;
@@ -381,10 +383,10 @@ async function loadSessions() {
 async function loadQuestions() {
   if (!LIVE) { questions = currentSession ? (demoStore[currentSession.id] || []) : []; return; }
   if (!currentSession) { questions = []; return; }
-  const { data: qs } = await sb.from("questions").select("*").eq("session_id", currentSession.id).order("position").order("created_at");
+  const { data: qs } = await db().from("questions").select("*").eq("session_id", currentSession.id).is("deleted_at", null).order("position").order("created_at");
   const ids = (qs || []).map(q => q.id);
   let ansRows = [];
-  if (ids.length) { const { data: ans } = await sb.from("answers").select("*").in("question_id", ids); ansRows = ans || []; }
+  if (ids.length) { const { data: ans } = await db().from("answers").select("*").in("question_id", ids); ansRows = ans || []; }
   questions = (qs || []).map(q => {
     const a = {};
     ansRows.filter(r => r.question_id === q.id).forEach(r => { a[norm(r.author_email)] = { body: r.body, updated_at: r.updated_at }; });
@@ -397,12 +399,12 @@ async function loadAllResolved() {
     sessions.forEach(s => (demoStore[s.id] || []).forEach(q => { if (q.status === "resolved") out.push({ ...q, session_title: s.title }); }));
     return out;
   }
-  const { data } = await sb.from("questions").select("*, sessions(title)").eq("status", "resolved").order("resolved_at", { ascending: false });
+  const { data } = await db().from("questions").select("*, sessions(title)").eq("status", "resolved").is("deleted_at", null).order("resolved_at", { ascending: false });
   return (data || []).map(q => ({ ...q, session_title: q.sessions ? q.sessions.title : "" }));
 }
 async function loadTable(table, order) {
   if (!LIVE) return;
-  const { data } = await sb.from(table).select("*").order(order.col, { ascending: order.asc });
+  const { data } = await db().from(table).select("*").order(order.col, { ascending: order.asc });
   if (table === "plan_items") planItems = data || [];
   if (table === "updates") updatesFeed = data || [];
   if (table === "documents") docsList = data || [];
@@ -411,13 +413,13 @@ async function loadTable(table, order) {
 }
 async function dbInsert(table, row, demoArr) {
   if (!LIVE) { row.id = "x" + Math.random().toString(36).slice(2, 9); row.created_at = now(); demoArr.unshift(row); render(); return row; }
-  const { data, error } = await sb.from(table).insert(row).select().single();
+  const { data, error } = await db().from(table).insert(row).select().single();
   if (error) { toast("Save failed: " + error.message); return null; }
   await refresh(); return data;
 }
 async function dbUpdate(table, id, patch, demoArr) {
   if (!LIVE) { const it = demoArr.find(x => x.id === id); if (it) Object.assign(it, patch); render(); return; }
-  const { error } = await sb.from(table).update(patch).eq("id", id);
+  const { error } = await db().from(table).update(patch).eq("id", id);
   if (error) toast("Update failed: " + error.message); else await refresh();
 }
 
@@ -429,28 +431,28 @@ async function createSession(title, templateKey) {
     demoStore[sid] = tpl.questions.map((q, i) => ({ id: sid + "-q" + i, session_id: sid, position: i, prompt: q[0], context: q[1], status: "sealed", outcome: null, decision: "", decision_owner: "", answers: {} }));
     currentSession = sessions[0]; questions = demoStore[sid]; render(); return;
   }
-  const { data, error } = await sb.from("sessions").insert({ title, template: templateKey, created_by: me.email }).select().single();
+  const { data, error } = await db().from("sessions").insert({ title, template: templateKey, created_by: me.email }).select().single();
   if (error) { toast("Could not create session: " + error.message); return; }
   if (tpl.questions.length) {
     const rows = tpl.questions.map((q, i) => ({ session_id: data.id, position: i, prompt: q[0], context: q[1], created_by: me.email }));
-    await sb.from("questions").insert(rows);
+    await db().from("questions").insert(rows);
   }
   currentSession = data; await refresh();
 }
 async function addQuestion(prompt, context) {
   if (!LIVE) { questions.push({ id: "dq" + Math.random().toString(36).slice(2, 8), session_id: currentSession.id, position: questions.length, prompt, context, status: "sealed", outcome: null, decision: "", decision_owner: "", answers: {} }); render(); return; }
-  const { error } = await sb.from("questions").insert({ session_id: currentSession.id, position: questions.length, prompt, context, created_by: me.email });
+  const { error } = await db().from("questions").insert({ session_id: currentSession.id, position: questions.length, prompt, context, created_by: me.email });
   if (error) toast("Could not add: " + error.message); else await refresh();
 }
 async function saveAnswer(q, body) {
   if (!body.trim()) { toast("Write an answer first."); return; }
   if (!LIVE) { q.answers[norm(me.email)] = { body, updated_at: now() }; render(); toast("Answer sealed ✓"); return; }
-  const { error } = await sb.from("answers").upsert({ question_id: q.id, author_email: norm(me.email), body, updated_at: now() }, { onConflict: "question_id,author_email" });
+  const { error } = await db().from("answers").upsert({ question_id: q.id, author_email: norm(me.email), body, updated_at: now() }, { onConflict: "question_id,author_email" });
   if (error) toast("Save failed: " + error.message); else { await refresh(); toast("Answer sealed ✓"); }
 }
 async function setQuestion(q, patch) {
   if (!LIVE) { Object.assign(q, patch); render(); return; }
-  const { error } = await sb.from("questions").update(patch).eq("id", q.id);
+  const { error } = await db().from("questions").update(patch).eq("id", q.id);
   if (error) toast("Update failed: " + error.message); else await refresh();
 }
 async function refresh() {
@@ -469,7 +471,7 @@ function subscribeRealtime() {
   try {
     channel = sb.channel("hq");
     ["sessions", "questions", "answers", "plan_items", "updates", "documents", "nudges", "episodes"].forEach(t => {
-      channel.on("postgres_changes", { event: "*", schema: "public", table: t }, () => refresh());
+      channel.on("postgres_changes", { event: "*", schema: "xhb", table: t }, () => refresh());
     });
     channel.subscribe();
   } catch (e) { /* optional */ }
@@ -724,8 +726,10 @@ function render() {
     (!LIVE ? '<div class="demo-banner">Demo mode — sample data, nothing is saved. Run supabase_setup_v2.sql and fill the CONFIG block to go live.</div>' : "") +
     nb + view + '</main></div>';
 }
-/* ---- Gate UI: email magic-link flow ---- */
+/* ---- Gate UI — phone OTP via xhb-gate-request ---- */
 let gateEmail = "";
+let gatePhone = "";
+let gateAttempts = 0;
 let resendCooldown = 0;
 let resendTimer = null;
 
@@ -738,27 +742,41 @@ function renderGateIdentify(msg) {
     '<div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">' +
     '<div><label for="gate-email" style="font-size:12px; color:var(--muted);">Email</label>' +
     '<input type="email" id="gate-email" placeholder="you@example.com" autocomplete="email" dir="auto" style="width:100%; min-height:44px; box-sizing:border-box;" /></div>' +
-    '<button class="btn btn-gold" data-act="gate-send" style="min-height:44px;">Send magic link</button></div>' +
+    '<div><label for="gate-phone" style="font-size:12px; color:var(--muted);">Phone (with country code)</label>' +
+    '<input type="tel" id="gate-phone" placeholder="+966XXXXXXXXX" autocomplete="tel" inputmode="tel" dir="ltr" style="width:100%; min-height:44px; box-sizing:border-box;" /></div>' +
+    '<button class="btn btn-gold" data-act="gate-send" style="min-height:44px;">Send verification code</button></div>' +
     '<div class="msg">' + esc(msg || "") + '</div>' +
     '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
   const emailInp = document.getElementById("gate-email");
+  const phoneInp = document.getElementById("gate-phone");
   if (gateEmail && emailInp) emailInp.value = gateEmail;
-  if (emailInp) emailInp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-send"]')?.click(); });
+  if (gatePhone && phoneInp) phoneInp.value = gatePhone;
+  if (phoneInp) phoneInp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-send"]')?.click(); });
+  if (emailInp) emailInp.addEventListener("keydown", (e) => { if (e.key === "Enter") phoneInp?.focus(); });
 }
 
-function renderGateCheckEmail(msg) {
+function renderGateVerify(msg) {
   app.innerHTML =
   '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div>' +
-    '<h2 class="serif" style="margin-bottom:8px;">Check your email</h2>' +
-    '<p dir="auto">A magic link was sent to <b>' + esc(gateEmail) + '</b>.<br>Click the link in your email to sign in.<br><br>' +
-    'تم إرسال رابط تسجيل الدخول إلى بريدك الإلكتروني.</p>' +
-    '<div style="margin-top:16px; display:flex; justify-content:space-between; font-size:12px;">' +
+    '<h2 class="serif" style="margin-bottom:8px;">Enter verification code</h2>' +
+    '<p dir="auto">A 6-digit code was sent to <b>' + esc(gatePhone) + '</b>.<br>' +
+    'تم إرسال رمز التحقق إلى هاتفك.</p>' +
+    '<div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">' +
+    '<div><label for="gate-otp" style="font-size:12px; color:var(--muted);">Code</label>' +
+    '<input type="text" id="gate-otp" placeholder="123456" autocomplete="one-time-code" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" dir="ltr" style="width:100%; min-height:44px; box-sizing:border-box; font-size:24px; letter-spacing:8px; text-align:center;" /></div>' +
+    '<button class="btn btn-gold" data-act="gate-verify" style="min-height:44px;">Verify</button></div>' +
+    '<div style="margin-top:12px; display:flex; justify-content:space-between; font-size:12px;">' +
     '<a href="#" data-act="gate-resend" style="color:var(--gold-soft); text-decoration:none;' + (resendCooldown > 0 ? ' opacity:0.4; pointer-events:none;' : '') + '">' +
-    (resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend link') + '</a>' +
-    '<a href="#" data-act="gate-restart" style="color:var(--muted); text-decoration:none;">Use different email</a>' +
+    (resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend code') + '</a>' +
+    '<a href="#" data-act="gate-restart" style="color:var(--muted); text-decoration:none;">Start over</a>' +
     '</div>' +
     '<div class="msg" style="margin-top:12px;">' + esc(msg || "") + '</div>' +
     '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts · momencrafts.com</p></div></div>';
+  const otpInp = document.getElementById("gate-otp");
+  if (otpInp) {
+    otpInp.focus();
+    otpInp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-verify"]')?.click(); });
+  }
 }
 
 function renderAuth(msg) {
@@ -773,7 +791,7 @@ function startResendCooldown() {
     if (resendCooldown <= 0) { clearInterval(resendTimer); resendTimer = null; }
     const link = document.querySelector('[data-act="gate-resend"]');
     if (link) {
-      link.textContent = resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend link';
+      link.textContent = resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend code';
       link.style.opacity = resendCooldown > 0 ? '0.4' : '1';
       link.style.pointerEvents = resendCooldown > 0 ? 'none' : 'auto';
     }
@@ -858,30 +876,59 @@ document.addEventListener("click", async (e) => {
 
   if (act === "gate-send") {
     const email = norm(document.getElementById("gate-email")?.value || "");
-    if (!email) { renderGateIdentify("Enter your email address."); return; }
+    const phone = (document.getElementById("gate-phone")?.value || "").replace(/[^\d+]/g, "");
+    if (!email || !phone) { renderGateIdentify("Enter both your email and phone number."); return; }
+    if (!phone.startsWith("+")) { renderGateIdentify("Phone must start with country code (e.g. +966)."); return; }
     gateEmail = email;
+    gatePhone = phone;
     const sendBtn = document.querySelector('[data-act="gate-send"]');
     if (sendBtn) { sendBtn.textContent = "Sending…"; sendBtn.disabled = true; }
-    const { error } = await sb.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: window.location.origin + '/xhb/' }
-    });
-    if (error) {
-      renderGateIdentify("Could not send link: " + error.message);
+    try {
+      const res = await fetch(CONFIG.XHB_GATE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, phone })
+      });
+      const data = await res.json();
+      if (!data.sent) { renderGateIdentify("Could not send code. Try again."); return; }
+    } catch (err) {
+      renderGateIdentify("Network error — check your connection.");
       return;
     }
     startResendCooldown();
-    renderGateCheckEmail();
+    renderGateVerify();
+    return;
+  }
+  if (act === "gate-verify") {
+    const token = (document.getElementById("gate-otp")?.value || "").trim();
+    if (!token || token.length !== 6) { renderGateVerify("Enter the 6-digit code."); return; }
+    const verifyBtn = document.querySelector('[data-act="gate-verify"]');
+    if (verifyBtn) { verifyBtn.textContent = "Verifying…"; verifyBtn.disabled = true; }
+    const { error } = await sb.auth.verifyOtp({ phone: gatePhone, token, type: "sms" });
+    if (error) {
+      gateAttempts++;
+      if (gateAttempts >= 5) {
+        renderGateIdentify("Too many attempts. Please start over.");
+        gateAttempts = 0;
+        return;
+      }
+      renderGateVerify("Invalid code. " + (5 - gateAttempts) + " attempt(s) remaining.");
+      return;
+    }
+    // Auth state change handler will take over from here
     return;
   }
   if (act === "gate-resend") {
     if (resendCooldown > 0) return;
-    await sb.auth.signInWithOtp({
-      email: gateEmail,
-      options: { emailRedirectTo: window.location.origin + '/xhb/' }
-    });
+    try {
+      await fetch(CONFIG.XHB_GATE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: gateEmail, phone: gatePhone })
+      });
+    } catch (err) { /* uniform -- don't reveal failure */ }
     startResendCooldown();
-    renderGateCheckEmail("Link resent.");
+    renderGateVerify("Code resent.");
     return;
   }
   if (act === "gate-restart") {

@@ -132,17 +132,22 @@ Deno.serve(async (req) => {
     }
 
     // ── Allowlist check: BOTH email AND phone must match the same row ──
+    //    AND the user must not be disabled.
     const { data: match } = await sb
-      .from('allowed_users')  // public schema
+      .schema('xhb')
+      .from('allowed_users')
       .select('email')
       .eq('email', normEmail)
       .eq('phone', normPhone)
+      .is('disabled_at', null)
       .maybeSingle()
 
     if (!match) {
       // No match — log and return uniform response (no OTP sent)
       await sb.schema('xhb').from('gate_log')
         .insert({ phone_hash: phoneHash, outcome: 'denied', ip, user_agent: ua })
+      await sb.schema('xhb').from('access_log')
+        .insert({ actor: 'system', subject: normEmail, action: 'gate_denied', detail: { ip, reason: 'no_match' } })
       await padToConstantTime(startMs)
       return json(200, UNIFORM_RESPONSE, cors)
     }
@@ -170,6 +175,8 @@ Deno.serve(async (req) => {
 
     await sb.schema('xhb').from('gate_log')
       .insert({ phone_hash: phoneHash, outcome, ip, user_agent: ua })
+    await sb.schema('xhb').from('access_log')
+      .insert({ actor: normEmail, subject: normEmail, action: outcome === 'otp_sent' ? 'gate_otp_sent' : 'gate_otp_error', detail: { ip } })
 
     await padToConstantTime(startMs)
     return json(200, UNIFORM_RESPONSE, cors)
