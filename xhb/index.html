@@ -298,6 +298,7 @@ const LIVE = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY);
 let sb = null;
 let me = null;
 let members = [];
+let contentLoaded = false; // True after xhb.content loaded (live) or immediately (demo)
 let nav = "vision";
 let sessions = [], currentSession = null, questions = [];
 let planItems = [], updatesFeed = [], docsList = [], nudges = [], episodesList = [];
@@ -349,6 +350,8 @@ function demoSeed() {
   ];
   nudges = [];
   episodesList = [];
+  // TODO (Phase 5): seed two generic demo artifacts (one with mermaid + callouts)
+  // and one sample finding, once the artifacts panel is built.
 }
 
 /* --------------------------- Data layer ---------------------------------- */
@@ -474,11 +477,15 @@ function subscribeRealtime() {
 
 /* ---- Content loading (live mode: fetch from xhb schema after auth) ---- */
 async function loadVisionContent() {
-  if (!LIVE) return;
+  if (!LIVE) { contentLoaded = true; return; }
   try {
     const { data } = await sb.schema('xhb').from("content").select("body").eq("key", "vision").eq("locale", "en").single();
     if (data && data.body) VISION = data.body;
-  } catch(e) { /* xhb.content may not be migrated yet — demo vision is shown */ }
+    contentLoaded = true;
+  } catch(e) {
+    /* xhb.content may not be migrated yet — demo vision is shown */
+    contentLoaded = true;
+  }
 }
 async function loadTemplateContent() {
   if (!LIVE) return;
@@ -514,6 +521,10 @@ function chipQ(q) {
 
 /* ----- Vision view ----- */
 function viewVision() {
+  if (LIVE && !contentLoaded) {
+    return '<div class="pagehead"><div><h1>Vision</h1><div class="meta">Loading venture content...</div></div></div>' +
+      '<div class="empty">Fetching vision from the server...</div>';
+  }
   return '<div class="pagehead"><div><h1>Vision</h1><div class="meta">The north star — and what we are deliberately not building yet</div></div></div>' +
     '<div class="v-quote">“' + esc(VISION.line) + '”</div>' +
     '<div class="v-sec"><h2>What XHB is</h2><p>' + esc(VISION.definition) + '</p></div>' +
