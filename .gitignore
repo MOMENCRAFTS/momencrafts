@@ -11,3 +11,4 @@ tsconfig.tsbuildinfo
 .vercel
 
 xhb_seed_tailored.sql
+public/podcast/*.m4a
