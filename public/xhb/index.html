@@ -1,0 +1,2747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="icon" type="image/svg+xml" href="/xhb/favicon.svg" />
+<meta name="apple-mobile-web-app-title" content="XHB" />
+<meta name="theme-color" content="#1a1625" />
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a1625'/><text x='50' y='62' text-anchor='middle' font-size='36' font-weight='700' fill='%23d4a855'>XHB</text></svg>" />
+<title>XHB Founders' HQ · MomenCrafts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@14/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+
+<style>
+  :root{
+    --plum:#EDE8E0; --night:#F8F5F0; --lavender:#8C7B6B;
+    --gold:#B8863A; --gold-soft:#C9964A; --cream:#2C2418;
+    --cream-dim:#6B5D4F; --line:rgba(44,36,24,.10);
+    --card:#FFFFFF; --card-deep:#F5F1EB; --ok:#4A8C3F; --warn:#C97A3A; --blue:#4A76A8;
+    --bg:#F8F5F0; --border:rgba(44,36,24,.10);
+    --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(1200px 800px at 85% -10%, #EDE8E0 0%, var(--night) 55%) fixed, var(--night);
+    color:var(--cream);
+    font:15px/1.55 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  h1,h2,h3,.serif{font-family:'Playfair Display', Georgia, serif; letter-spacing:.2px;}
+  button{font:inherit; cursor:pointer; border:none; border-radius:9px;}
+  input,textarea,select{font:inherit; color:var(--cream); background:#FFFFFF; border:1px solid rgba(44,36,24,.15); border-radius:9px; padding:9px 11px; width:100%;}
+  input:focus,textarea:focus,select:focus{outline:1.5px solid var(--gold); border-color:transparent;}
+  textarea{min-height:88px; resize:vertical;}
+  ::placeholder{color:rgba(44,36,24,.35);}
+  a{color:var(--gold);}
+
+  .app{display:grid; grid-template-columns:270px 1fr; min-height:100vh;}
+  /* ---------- Sidebar ---------- */
+  .side{background:linear-gradient(180deg, #F5F1EB 0%, #EDE8E0 100%); border-right:1px solid rgba(44,36,24,.12); padding:24px 18px; display:flex; flex-direction:column; gap:18px;}
+  .brand .mark{font-family:Georgia, serif; font-size:28px; font-weight:700; letter-spacing:4px; color:#2C2418;}
+  .brand .rule{width:44px; height:3px; background:var(--gold); margin:7px 0 7px;}
+  .brand .sub{color:var(--lavender); font-size:12px; letter-spacing:.6px;}
+  .brand .co{margin-top:4px; font-size:11px; color:var(--cream-dim);}
+  .co b{color:var(--gold); font-weight:600;}
+  .nav{display:flex; flex-direction:column; gap:5px; flex:1;}
+  .nav button{background:transparent; text-align:left; color:var(--cream-dim); border:1px solid transparent; padding:9px 12px; border-radius:10px; font-weight:600; font-size:14px; display:flex; justify-content:space-between; align-items:center;}
+  .nav button:hover{color:var(--cream); border-color:rgba(44,36,24,.12);}
+  .nav button.active{background:#FFFFFF; color:var(--cream); border-color:var(--gold); box-shadow:0 2px 8px rgba(184,134,58,0.12);}
+  .nav .cnt{font-size:11px; background:var(--night); border:1px solid var(--line); color:var(--lavender); padding:1px 8px; border-radius:999px;}
+  .whoami{border-top:1px solid var(--line); padding-top:12px; font-size:12px; color:var(--cream-dim);}
+  .whoami b{color:var(--cream); display:block; font-size:13px;}
+  .link{background:none; color:var(--lavender); text-decoration:underline; padding:0; font-size:12px;}
+
+  .btn{padding:10px 14px; font-weight:600;}
+  .btn-gold{background:var(--gold); color:#F8F5F0;}
+  .btn-gold:hover{background:var(--gold-soft);}
+  .btn-ghost{background:transparent; color:var(--cream); border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--lavender);}
+  .btn-sm{padding:7px 11px; font-size:13px; font-weight:600;}
+
+  /* ---------- Main ---------- */
+  .main{padding:26px 32px 70px; max-width:1080px; width:100%;}
+  .demo-banner{background:linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 100%); color:#F8F5F0; border-radius:10px; padding:10px 16px; font-size:13px; margin-bottom:16px; font-weight:600;}
+  .nudge-banner{background:var(--plum); border:1px solid var(--gold); border-radius:12px; padding:13px 16px; margin-bottom:16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+  .nudge-banner .txt{flex:1; min-width:220px; font-size:13.5px;}
+  .nudge-banner .txt b{color:var(--gold-soft);}
+  .pagehead{display:flex; align-items:flex-end; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+  .pagehead h1{font-size:26px;}
+  .pagehead .meta{color:var(--lavender); font-size:13px; margin-top:3px;}
+  .hint{color:var(--cream-dim); font-size:13px; margin-bottom:16px; max-width:780px;}
+  .hint b{color:var(--gold-soft);}
+
+  .chip{font-size:11px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase; padding:5px 11px; border-radius:999px; white-space:nowrap; display:inline-block;}
+  .chip.sealed{background:#F8F5F0; color:var(--lavender); border:1px solid var(--lavender);}
+  .chip.revealed{background:var(--gold); color:#F8F5F0;}
+  .chip.aligned{background:var(--ok); color:#1E2A18;}
+  .chip.divergent{background:var(--warn); color:#2A1708;}
+  .chip.decided{background:var(--cream); color:var(--plum);}
+  .chip.later{background:#F8F5F0; color:var(--cream-dim); border:1px solid var(--line);}
+  .chip.next{background:var(--lavender); color:#F8F5F0;}
+  .chip.now{background:var(--gold); color:#F8F5F0;}
+  .chip.done{background:var(--ok); color:#1E2A18;}
+  .chip.source{background:var(--gold); color:#F8F5F0;}
+  .chip.derived{background:#F8F5F0; color:var(--lavender); border:1px solid var(--lavender);}
+  .chip.legal{background:var(--cream); color:var(--plum);}
+  .chip.other{background:#F8F5F0; color:var(--cream-dim); border:1px solid var(--line);}
+
+  /* ---------- Vision ---------- */
+  .v-quote{background:var(--plum); border-left:4px solid var(--gold); border-radius:0 var(--radius) var(--radius) 0; padding:20px 24px; font-family:Georgia, serif; font-size:19px; font-style:italic; margin-bottom:18px; line-height:1.6;}
+  .v-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:13px; margin:16px 0;}
+  .v-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px;}
+  .v-card h3{color:var(--gold-soft); font-size:16px; margin-bottom:7px;}
+  .v-card p{font-size:13.5px; color:var(--cream-dim);}
+  .v-sec{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px 22px; margin-bottom:14px;}
+  .v-sec h2{font-size:17px; color:var(--gold-soft); margin-bottom:10px;}
+  .v-sec p{font-size:14px; margin-bottom:8px;}
+  .v-sec ul{margin:4px 0 4px 20px; font-size:13.5px; color:var(--cream-dim);}
+  .v-sec li{margin-bottom:5px;}
+  .v-foot{font-size:12.5px; color:var(--cream-dim); margin-top:14px;}
+
+  /* ---------- Plan ---------- */
+  .phase-block{margin-bottom:20px;}
+  .phase-block h2{font-size:15px; color:var(--gold-soft); letter-spacing:.8px; margin-bottom:9px;}
+  .plan-item{background:var(--card); border:1px solid var(--line); border-radius:11px; padding:11px 14px; margin-bottom:8px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+  .plan-item .t{flex:1; min-width:220px; font-size:14px;}
+  .plan-item .sub{display:block; font-size:12px; color:var(--cream-dim); margin-top:2px;}
+  .plan-item .chipbtn{background:none; padding:0;}
+  .addbar{background:var(--card); border:1px dashed var(--lavender); border-radius:var(--radius); padding:14px 16px; margin-top:10px; display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; gap:9px; align-items:center;}
+
+  /* ---------- Q&A (sessions) ---------- */
+  .sess-chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;}
+  .sess-chip{background:transparent; border:1px solid var(--line); color:var(--cream); padding:8px 14px; border-radius:999px; font-size:13px; font-weight:600;}
+  .sess-chip.active{background:var(--plum); border-color:var(--gold);}
+  .qcard{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:19px 21px; margin-bottom:16px;}
+  .qhead{display:flex; justify-content:space-between; gap:12px; align-items:flex-start;}
+  .qhead h3{font-size:17px; line-height:1.4; max-width:78%;}
+  .qctx{color:var(--cream-dim); font-size:13px; margin-top:6px; max-width:80%;}
+  .answers{display:grid; grid-template-columns:1fr 1fr; gap:13px; margin-top:15px;}
+  .apanel{background:var(--card-deep); border:1px solid var(--line); border-radius:11px; padding:12px 14px; min-height:110px; display:flex; flex-direction:column; gap:8px;}
+  .apanel .who{font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--gold-soft);}
+  .apanel .who.partner{color:var(--lavender);}
+  .apanel .body{white-space:pre-wrap; font-size:14px;}
+  .locked{display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; color:var(--cream-dim); gap:6px; text-align:center; font-size:13px;}
+  .locked .ic{font-size:20px;}
+  .saved-note{font-size:12px; color:var(--ok);}
+  .qactions{display:flex; gap:10px; margin-top:13px; flex-wrap:wrap; align-items:center;}
+  .qactions .note{font-size:12.5px; color:var(--cream-dim);}
+  .resolve{margin-top:15px; border-top:1px dashed var(--line); padding-top:13px; display:grid; gap:10px;}
+  .resolve .row{display:grid; grid-template-columns:170px 1fr 180px; gap:10px;}
+  .decision-view{margin-top:13px; background:#221732; border-left:3px solid var(--gold); border-radius:0 10px 10px 0; padding:10px 14px; font-size:14px;}
+  .decision-view .lbl{font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:var(--gold-soft); font-weight:700;}
+  .decision-view .own{color:var(--cream-dim); font-size:12.5px; margin-top:4px;}
+  .addq{background:var(--card); border:1px dashed var(--lavender); border-radius:var(--radius); padding:16px 20px; margin-top:6px;}
+  .addq h3{font-size:14px; color:var(--lavender); margin-bottom:9px;}
+  .addq .grid{display:grid; gap:9px;}
+
+  /* ---------- Decisions / tables ---------- */
+  table.log{width:100%; border-collapse:collapse; background:var(--card); border-radius:var(--radius); overflow:hidden;}
+  .log th{background:var(--plum); text-align:left; font-size:11.5px; letter-spacing:1.2px; text-transform:uppercase; padding:10px 13px; color:var(--cream);}
+  .log td{padding:11px 13px; border-top:1px solid var(--line); font-size:13.5px; vertical-align:top;}
+  .log td.q{max-width:320px;}
+
+  /* ---------- Updates ---------- */
+  .compose{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:15px 17px; margin-bottom:18px; display:grid; gap:10px;}
+  .post{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:15px 18px; margin-bottom:12px;}
+  .post.pinned{border-color:var(--gold);}
+  .post .ph{display:flex; justify-content:space-between; gap:10px; font-size:12.5px; color:var(--cream-dim); margin-bottom:7px; flex-wrap:wrap;}
+  .post .ph b{color:var(--gold-soft);}
+  .post .body{white-space:pre-wrap; font-size:14px;}
+
+  /* ---------- Documents ---------- */
+  .doc-row{background:var(--card); border:1px solid var(--line); border-radius:11px; padding:13px 16px; margin-bottom:9px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+  .doc-row .t{flex:1; min-width:230px;}
+  .doc-row .t b{font-size:14.5px;}
+  .doc-row .st{display:block; font-size:12.5px; color:var(--cream-dim); margin-top:2px;}
+  .ack{font-size:12px; color:var(--cream-dim);}
+  .ack .yes{color:var(--ok); font-weight:700;}
+  .doc-add{background:var(--card); border:1px dashed var(--lavender); border-radius:var(--radius); padding:14px 16px; margin-top:12px; display:grid; grid-template-columns:2fr 1fr 2fr auto; gap:9px;}
+
+  /* ---------- Ask ---------- */
+  .ask-box{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; display:grid; gap:11px; margin-bottom:16px;}
+  .ask-ans{background:var(--card-deep); border-left:3px solid var(--gold); border-radius:0 12px 12px 0; padding:15px 18px; white-space:pre-wrap; font-size:14px;}
+  .ask-note{background:var(--plum); border-radius:12px; padding:15px 18px; font-size:13.5px;}
+  .ask-note b{color:var(--gold-soft);}
+
+  /* ---------- Podcast ---------- */
+  .ep-row{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:10px; display:flex; gap:14px; align-items:center; flex-wrap:wrap; transition:border-color 0.2s;}
+  .ep-row:hover{border-color:var(--gold-soft);}
+  .ep-row.ep-active{border-color:var(--gold); background:rgba(212,168,85,0.06);}
+  .ep-row .t{flex:1; min-width:200px;}
+  .ep-row .t b{font-size:14.5px; line-height:1.4;}
+  .ep-row .st{display:block; font-size:12.5px; color:var(--cream-dim); margin-top:3px;}
+  .ep-play-btn{width:44px; height:44px; border-radius:50%; border:2px solid var(--gold); background:transparent; color:var(--gold); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; transition:all 0.2s; flex-shrink:0;}
+  .ep-play-btn:hover{background:var(--gold); color:var(--bg);}
+  .ep-play-btn.playing{background:var(--gold); color:var(--bg); animation:ep-pulse 2s ease-in-out infinite;}
+  @keyframes ep-pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,168,85,0.3);}50%{box-shadow:0 0 0 8px rgba(212,168,85,0);}}
+  .ep-badges{display:flex; gap:6px; align-items:center; flex-wrap:wrap;}
+  .ep-badge{font-size:10px; padding:3px 8px; border-radius:6px; background:var(--bg); color:var(--cream-dim); border:1px solid var(--line); text-transform:uppercase; letter-spacing:.5px;}
+  .ep-add{background:var(--card); border:1px dashed var(--lavender); border-radius:var(--radius); padding:14px 16px; margin-top:12px; display:grid; grid-template-columns:2fr 2fr auto; gap:9px;}
+
+  /* ── Player dock (premium) ── */
+  #player-dock{display:none; position:fixed; left:18px; bottom:18px; z-index:70; background:var(--plum); border:1px solid var(--gold); border-radius:16px; padding:0; box-shadow:0 12px 40px rgba(0,0,0,.6); max-width:440px; min-width:340px; overflow:hidden; backdrop-filter:blur(20px);}
+  .pl-header{display:flex; align-items:center; gap:10px; padding:12px 16px 0;}
+  .pl-header .pl-ic{font-size:16px;}
+  .pl-header .pl-t{font-size:13px; font-weight:600; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .pl-header .pl-close{background:none; border:none; color:var(--cream-dim); cursor:pointer; font-size:14px; padding:4px; opacity:0.6; transition:opacity 0.2s;}
+  .pl-header .pl-close:hover{opacity:1;}
+  .pl-progress{padding:6px 16px; cursor:pointer;}
+  .pl-bar-bg{height:4px; background:rgba(255,255,255,0.1); border-radius:2px; position:relative; overflow:visible;}
+  .pl-bar-fill{height:100%; background:linear-gradient(90deg, var(--gold-soft), var(--gold)); border-radius:2px; transition:width 0.3s linear; position:relative;}
+  .pl-bar-fill::after{content:''; position:absolute; right:-5px; top:-3px; width:10px; height:10px; border-radius:50%; background:var(--gold); opacity:0; transition:opacity 0.2s;}
+  .pl-progress:hover .pl-bar-fill::after{opacity:1;}
+  .pl-times{display:flex; justify-content:space-between; padding:0 16px; font-size:10px; color:var(--cream-dim); letter-spacing:.3px;}
+  .pl-controls{display:flex; align-items:center; justify-content:center; gap:6px; padding:8px 16px 10px;}
+  .pl-ctrl{background:none; border:none; color:var(--cream); cursor:pointer; font-size:14px; padding:6px 8px; border-radius:8px; opacity:0.7; transition:all 0.2s; min-width:36px; text-align:center;}
+  .pl-ctrl:hover{opacity:1; background:rgba(255,255,255,0.06);}
+  .pl-ctrl.active{color:var(--gold); opacity:1;}
+  .pl-ctrl.pl-main{font-size:20px; opacity:1; background:var(--gold); color:var(--bg); border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center; padding:0;}
+  .pl-ctrl.pl-main:hover{transform:scale(1.05);}
+  .pl-speed{font-size:11px; font-weight:700; font-family:var(--mono, monospace);}
+
+  .empty{border:1px dashed var(--line); border-radius:var(--radius); padding:34px; text-align:center; color:var(--cream-dim);}
+  .toast{position:fixed; bottom:22px; right:22px; background:#2C2418; color:#F8F5F0; font-weight:600; padding:11px 17px; border-radius:10px; box-shadow:0 8px 30px rgba(0,0,0,.15); z-index:80; font-size:13.5px;}
+
+  /* ---------- Auth & modal ---------- */
+  .center-wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:30px; position:relative;}
+  .center-wrap::before{content:''; position:absolute; top:30%; left:50%; transform:translate(-50%,-50%); width:500px; height:500px; background:radial-gradient(circle, rgba(212,168,85,0.08) 0%, transparent 70%); pointer-events:none; animation:glow-pulse 4s ease-in-out infinite;}
+  @keyframes glow-pulse{0%,100%{opacity:0.5; transform:translate(-50%,-50%) scale(1);}50%{opacity:1; transform:translate(-50%,-50%) scale(1.1);}}
+  .authcard{background:linear-gradient(145deg, var(--card) 0%, var(--card-deep) 100%); border:1px solid rgba(212,168,85,0.2); border-radius:20px; padding:44px 46px; max-width:430px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.4), 0 0 80px rgba(212,168,85,0.05); animation:card-float 0.6s ease-out;}
+  @keyframes card-float{from{opacity:0; transform:translateY(20px);}to{opacity:1; transform:translateY(0);}}
+  .authcard .mark{font-family:'Playfair Display', Georgia, serif; font-size:42px; letter-spacing:6px; font-weight:700; background:linear-gradient(135deg, var(--gold-soft) 0%, var(--gold) 50%, var(--gold-soft) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;}
+  .authcard .rule{width:52px; height:3px; background:linear-gradient(90deg, transparent, var(--gold), transparent); margin:14px auto;}
+  .authcard p{color:var(--cream-dim); font-size:13.5px; margin-bottom:18px; line-height:1.6;}
+  .authcard .grid{display:grid; gap:11px; text-align:left;}
+  .msg{font-size:13px; color:var(--gold-soft); margin-top:12px; min-height:18px;}
+  .overlay{position:fixed; inset:0; background:rgba(20,12,30,.72); display:flex; align-items:center; justify-content:center; z-index:50; padding:24px;}
+  .modal{background:var(--card); border:1px solid var(--lavender); border-radius:16px; padding:25px 27px; width:100%; max-width:500px;}
+  .modal h2{font-size:19px; margin-bottom:13px;}
+  .modal .grid{display:grid; gap:11px;}
+  .modal label{font-size:11.5px; letter-spacing:1px; text-transform:uppercase; color:var(--gold-soft); font-weight:700;}
+  .modal .foot{display:flex; justify-content:flex-end; gap:10px; margin-top:15px; flex-wrap:wrap;}
+  .tpl-desc{font-size:12.5px; color:var(--cream-dim);}
+
+  @media (max-width: 940px){
+    .app{grid-template-columns:1fr;}
+    .side{border-right:none; border-bottom:1px solid var(--line); padding:env(safe-area-inset-top, 0) 20px 14px;}
+    .nav{flex-direction:row; flex-wrap:wrap; gap:4px;}
+    .nav button{font-size:13px; padding:8px 12px; min-height:44px;}
+    .answers,.v-grid{grid-template-columns:1fr;}
+    .resolve .row,.addbar,.doc-add{grid-template-columns:1fr;}
+    .main{padding:18px 15px calc(70px + env(safe-area-inset-bottom, 0));}
+    .qhead h3,.qctx{max-width:100%;}
+    .brand{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+    .brand .mark{font-size:22px;}
+    .brand .rule{display:none;}
+    .brand .sub,.brand .co{font-size:11px;}
+    .whoami{font-size:12px; padding:8px 0;}
+  }
+  @media (max-width: 600px){
+    .side{padding:env(safe-area-inset-top, 12px) 12px 10px;}
+    .nav button{font-size:12px; padding:6px 10px;}
+    .nav .cnt{font-size:10px; padding:1px 5px;}
+    .main{padding:14px 12px calc(70px + env(safe-area-inset-bottom, 0));}
+    .pagehead h1{font-size:22px;}
+    .authcard{padding:28px 20px;}
+    .v-quote{font-size:17px; padding:18px 20px;}
+    .v-grid{grid-template-columns:1fr;}
+    .v-card{padding:16px;}
+    .ob-panels{grid-template-columns:1fr;}
+    .onboarding-wrap{padding:20px 12px;}
+    .onboarding-header h1{font-size:22px;}
+    .art-grid{grid-template-columns:1fr;}
+    .ep-add{grid-template-columns:1fr;}
+    .doc-add{grid-template-columns:1fr;}
+    .addbar{grid-template-columns:1fr;}
+    .modal{padding:20px 16px; margin:12px;}
+    #player-dock{left:8px; right:8px; bottom:calc(8px + env(safe-area-inset-bottom, 0)); max-width:none;}
+    .btn, .btn-gold, .btn-ghost{min-height:44px; font-size:14px;}
+    input, textarea, select{font-size:16px !important; min-height:44px;}
+    .btn-mic{width:40px; height:40px; font-size:20px;}
+  }
+  /* ── Artifacts panel ─────────────────────────────── */
+  .art-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin-top:14px;}
+  .art-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; cursor:pointer; transition:border-color .2s;}
+  .art-card:hover{border-color:var(--gold-soft);}
+  .art-card h3{font-size:15px; margin-bottom:6px;}
+  .art-card .art-meta{font-size:12px; color:var(--cream-dim); display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .art-kind{background:var(--plum); border-radius:6px; padding:2px 8px; font-size:11px; text-transform:uppercase; letter-spacing:.5px;}
+  .art-status{border-radius:6px; padding:2px 8px; font-size:11px; font-weight:600;}
+  .art-status.draft{background:#4a3a2a; color:#d4a855;}
+  .art-status.published{background:#2a4a3a; color:#7fb069;}
+  .art-status.under_audit{background:#3a2a4a; color:#b08fd4;}
+  .art-status.verdict_given{background:#2a3a4a; color:#6e8fbf;}
+  .art-status.closed{background:#3a3a3a; color:#999;}
+  .art-status.locked{background:#3a1a1a; color:#e06060; font-weight:700;}
+  .art-status.awaiting_approval{background:#4a3a1a; color:#d4a855;}
+  .art-kind.concept{background:var(--gold); color:#F8F5F0; font-weight:700;}
+  .concept-link{background:var(--card-deep); border:1px solid var(--gold); border-radius:10px; padding:13px 16px; margin:16px 0; cursor:pointer; transition:border-color .2s;}
+  .concept-link:hover{border-color:var(--gold-soft); background:var(--card);}
+  .concept-link .cl-label{font-size:12px; color:var(--gold-soft); letter-spacing:.6px; text-transform:uppercase; margin-bottom:4px;}
+  .concept-link .cl-title{font-size:16px; font-family:Georgia,serif;}
+  .locked-banner{background:linear-gradient(90deg, #3a1a1a, #2a1a1a); border:1px solid #c94a4a; border-radius:10px; padding:12px 16px; margin:10px 0; display:flex; align-items:center; gap:8px; font-size:13px; color:#e06060;}
+  .locked-banner .lock-icon{font-size:18px;}
+  .verdict-badge{display:inline-block; border-radius:6px; padding:3px 10px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;}
+  .verdict-badge.proceed{background:#1a3a1a; color:#7fb069; border:1px solid #7fb069;}
+  .verdict-badge.hold{background:#3a3a1a; color:#d4a855; border:1px solid #d4a855;}
+  .verdict-badge.redirect{background:#3a2a1a; color:#c9743a; border:1px solid #c9743a;}
+  .verdict-badge.kill{background:#3a1a1a; color:#c94a4a; border:1px solid #c94a4a;}
+  .art-detail{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px; margin-top:14px;}
+  .art-detail .md-body{font-size:14px; line-height:1.7; color:var(--cream);}
+  .md-body h1,.md-body h2,.md-body h3{margin:18px 0 8px; color:var(--gold-soft);}
+  .md-body h1{font-size:22px; border-bottom:1px solid var(--line); padding-bottom:6px;}
+  .md-body h2{font-size:18px;}
+  .md-body h3{font-size:15px;}
+  .md-body p{margin:8px 0;}
+  .md-body ul,.md-body ol{margin:8px 0 8px 24px;}
+  .md-body li{margin:4px 0;}
+  .md-body code{background:var(--night); padding:2px 6px; border-radius:4px; font-size:13px; font-family:'JetBrains Mono', 'Consolas', monospace;}
+  .md-body pre{background:var(--night); padding:14px; border-radius:8px; overflow-x:auto; margin:12px 0;}
+  .md-body pre code{background:none; padding:0;}
+  .md-body blockquote{border-left:3px solid var(--gold-soft); padding:8px 16px; margin:12px 0; background:rgba(184,134,58,.08); border-radius:0 8px 8px 0;}
+  .md-body table{width:100%; border-collapse:collapse; margin:12px 0;}
+  .md-body th,.md-body td{border:1px solid var(--line); padding:8px 12px; text-align:left;}
+  .md-body th{background:var(--night); font-size:13px; color:var(--gold-soft);}
+  .finding-card{background:var(--card-deep); border:1px solid var(--line); border-radius:10px; padding:14px; margin-top:10px;}
+  .finding-card .f-header{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:8px;}
+  .f-sev{border-radius:5px; padding:2px 7px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;}
+  .f-sev.blocker{background:#4a1a1a; color:#e06060;}
+  .f-sev.major{background:#4a3a1a; color:#d4a855;}
+  .f-sev.minor{background:#2a3a4a; color:#6e8fbf;}
+  .f-sev.question{background:#3a2a4a; color:#b08fd4;}
+  .f-status{font-size:11px; color:var(--cream-dim);}
+  .art-editor textarea{min-height:200px; font-family:'JetBrains Mono', 'Consolas', monospace; font-size:13px; line-height:1.6;}
+  .art-toolbar{display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; align-items:center;}
+
+  /* ── Onboarding Wizard ─────────────────────────────────────────── */
+  .onboarding-wrap{max-width:800px; margin:0 auto; padding:40px 20px;}
+  .onboarding-header{text-align:center; margin-bottom:32px;}
+  .onboarding-header .mark{font-size:28px;}
+  .onboarding-header h1{margin:12px 0 6px;}
+  .onboarding-header .meta{color:var(--cream-dim); font-size:13px; max-width:520px; margin:0 auto 16px;}
+  .ob-progress{margin:16px 0 20px;}
+  .ob-count{font-size:14px; font-weight:600; color:var(--gold-soft);}
+  .ob-bar{height:8px; background:var(--card); border-radius:4px; margin-top:6px; overflow:hidden; position:relative;}
+  .ob-fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--gold-soft), #e8c97a); border-radius:4px; transition:width 0.4s ease; position:relative;}
+  .ob-fill::after{content:''; position:absolute; inset:0; background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%); animation:shimmer 2s ease-in-out infinite;}
+  @keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+  .ob-item{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:20px; transition:all 0.3s ease; animation:ob-fadein 0.4s ease backwards;}
+  .ob-item:hover{border-color:rgba(212,168,85,0.3); transform:translateY(-1px); box-shadow:0 6px 20px rgba(0,0,0,0.2);}
+  @keyframes ob-fadein{from{opacity:0; transform:translateY(10px);}to{opacity:1; transform:translateY(0);}}
+  .ob-item:nth-child(1){animation-delay:0s;}.ob-item:nth-child(2){animation-delay:0.05s;}.ob-item:nth-child(3){animation-delay:0.1s;}.ob-item:nth-child(4){animation-delay:0.15s;}.ob-item:nth-child(5){animation-delay:0.2s;}.ob-item:nth-child(6){animation-delay:0.25s;}.ob-item:nth-child(7){animation-delay:0.3s;}.ob-item:nth-child(8){animation-delay:0.35s;}
+  .ob-item.ob-aligned{border-color:var(--ok); background:linear-gradient(135deg, var(--card) 0%, rgba(127,176,105,0.06) 100%);}
+  .ob-item-head{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;}
+  .ob-num{width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, var(--gold-soft), var(--gold)); color:var(--night); font-weight:700; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; box-shadow:0 2px 8px rgba(212,168,85,0.3);}
+  .ob-item-head h2{margin:0; font-size:16px; flex:1;}
+  .ob-cat{font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--cream-dim); background:var(--card-deep, var(--bg)); padding:2px 8px; border-radius:4px;}
+  .ob-body{margin-bottom:16px; padding:12px; background:var(--bg); border-radius:6px; border:1px solid var(--border); font-size:14px; line-height:1.6;}
+  .ob-panels{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:600px){.ob-panels{grid-template-columns:1fr;}}
+  .ob-panel{background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:14px;}
+  .ob-panel h3{margin:0 0 8px; font-size:13px; color:var(--cream-dim); text-transform:uppercase; letter-spacing:0.4px;}
+  .ob-disp{font-size:13px; font-weight:600; margin-bottom:8px;}
+  .ob-disp.approve{color:#4ade80;}
+  .ob-disp.annotate{color:#f59e0b;}
+  .ob-disp.pending{color:var(--cream-dim); font-style:italic; font-weight:400;}
+  .ob-note{font-size:13px; color:var(--muted); background:var(--card); padding:8px; border-radius:6px; margin-bottom:8px; white-space:pre-wrap;}
+  .ob-actions{display:flex; gap:6px; margin-top:8px;}
+  .ob-annotate-form{margin-top:10px;}
+  .ob-annotate-form textarea{width:100%; min-height:60px; margin-bottom:6px;}
+
+  /* ---------- Voice / Whisper ---------- */
+  .voice-wrap{position:relative;}
+  .voice-wrap textarea{padding-right:48px;}
+  .btn-mic{position:absolute; right:6px; top:6px; width:36px; height:36px; border-radius:50%; border:2px solid var(--gold-soft); background:var(--card-deep, var(--bg)); color:var(--cream); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; transition:all 0.2s; z-index:2;}
+  .btn-mic:hover{background:var(--gold-soft); color:var(--bg);}
+  .btn-mic.recording{border-color:#ef4444; background:rgba(239,68,68,0.15); animation:mic-pulse 1s ease-in-out infinite;}
+  .btn-mic.transcribing{border-color:var(--gold); opacity:0.6; cursor:wait;}
+  @keyframes mic-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4);}50%{box-shadow:0 0 0 10px rgba(239,68,68,0);}}
+  .voice-lang{position:absolute; right:46px; top:10px; font-size:10px; color:var(--cream-dim); text-transform:uppercase; letter-spacing:0.5px;}
+
+  /* ---------- Voice Review Panel ---------- */
+  .voice-review-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:90; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); animation:vr-fadein 0.2s ease;}
+  @keyframes vr-fadein{from{opacity:0;}to{opacity:1;}}
+  .voice-review{background:var(--card); border:1px solid var(--gold); border-radius:16px; padding:24px; max-width:540px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,.5); animation:vr-slidein 0.25s ease;}
+  @keyframes vr-slidein{from{transform:translateY(20px); opacity:0;}to{transform:translateY(0); opacity:1;}}
+  .voice-review h3{font-size:16px; margin-bottom:16px; display:flex; align-items:center; gap:8px;}
+  .vr-label{font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--cream-dim); margin-bottom:6px; display:flex; align-items:center; gap:6px;}
+  .vr-text{background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:14px; line-height:1.6; margin-bottom:14px; max-height:180px; overflow-y:auto; white-space:pre-wrap; word-wrap:break-word;}
+  .vr-text.improved{border-color:var(--gold-soft); background:rgba(212,168,85,0.04);}
+  .vr-text textarea{width:100%; min-height:80px; background:transparent; border:none; color:inherit; font:inherit; resize:vertical; outline:none;}
+  .vr-actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+  .vr-actions .btn{min-height:40px;}
+  .vr-diff{display:flex; gap:6px; align-items:center; font-size:12px; color:var(--cream-dim); margin-bottom:12px;}
+  .vr-diff .saved{color:#10b981; font-weight:600;}
+  .vr-spinner{display:inline-block; width:14px; height:14px; border:2px solid var(--cream-dim); border-top-color:var(--gold); border-radius:50%; animation:vr-spin 0.6s linear infinite; vertical-align:middle;}
+  @keyframes vr-spin{to{transform:rotate(360deg);}}
+
+  /* ---------- Side Music Pill ---------- */
+  #music-pill{position:fixed; left:0; top:50%; transform:translateY(-50%); z-index:71; background:var(--plum); border:1px solid rgba(44,36,24,.12); border-left:none; border-radius:0 12px 12px 0; padding:10px 8px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; transition:all 0.25s; box-shadow:2px 4px 16px rgba(0,0,0,.08);}
+  #music-pill:hover{background:var(--card); border-color:var(--gold-soft); padding-right:12px;}
+  #music-pill .pill-icon{font-size:16px; line-height:1;}
+  #music-pill .pill-label{font-size:9px; writing-mode:vertical-rl; text-orientation:mixed; color:var(--cream-dim); letter-spacing:.5px; text-transform:uppercase;}
+  #music-pill.playing{border-color:var(--gold); animation:pill-glow 2s ease-in-out infinite;}
+  @keyframes pill-glow{0%,100%{box-shadow:2px 4px 16px rgba(0,0,0,.08);}50%{box-shadow:2px 4px 20px rgba(184,134,58,0.25);}}
+  #music-pill.dock-open{opacity:0.3;}
+
+  /* ---------- Side Library Pill ---------- */
+  #library-pill{position:fixed; right:0; top:50%; transform:translateY(-50%); z-index:71; background:var(--plum); border:1px solid rgba(44,36,24,.12); border-right:none; border-radius:12px 0 0 12px; padding:10px 8px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; transition:all 0.25s; box-shadow:-2px 4px 16px rgba(0,0,0,.08);}
+  #library-pill:hover{background:var(--card); border-color:var(--gold-soft); padding-left:12px;}
+  #library-pill .pill-icon{font-size:16px; line-height:1;}
+  #library-pill .pill-label{font-size:9px; writing-mode:vertical-rl; text-orientation:mixed; color:var(--cream-dim); letter-spacing:.5px; text-transform:uppercase;}
+  #library-pill .pill-count{font-size:10px; background:var(--gold); color:var(--night); border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-weight:700;}
+  #library-pill.drawer-open{display:none;}
+
+  /* ---------- Library Drawer ---------- */
+  #library-drawer{position:fixed; right:-420px; top:0; bottom:0; width:400px; max-width:90vw; background:linear-gradient(180deg, #FFFFFF 0%, #F5F1EB 100%); border-left:1px solid rgba(44,36,24,.12); z-index:72; transition:right 0.35s cubic-bezier(.4,0,.2,1); display:flex; flex-direction:column; box-shadow:-8px 0 40px rgba(0,0,0,0.08);}
+  #library-drawer.open{right:0;}
+
+  /* Hide pills on login gate */
+  body.gate-active #music-pill,
+  body.gate-active #library-pill,
+  body.gate-active #library-drawer{display:none !important;}
+  .lib-header{padding:20px 20px 16px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:12px;}
+  .lib-header h2{margin:0; font-size:20px; flex:1;}
+  .lib-close{background:none; color:var(--cream-dim); font-size:22px; padding:4px 8px; border-radius:8px; transition:all 0.2s;}
+  .lib-close:hover{color:var(--cream); background:rgba(255,255,255,0.08);}
+  .lib-upload-zone{margin:16px; padding:24px 16px; border:2px dashed var(--line); border-radius:14px; text-align:center; cursor:pointer; transition:all 0.3s; position:relative;}
+  .lib-upload-zone:hover,.lib-upload-zone.dragover{border-color:var(--gold); background:rgba(212,168,85,0.04);}
+  .lib-upload-zone .uz-icon{font-size:28px; margin-bottom:6px;}
+  .lib-upload-zone .uz-text{font-size:13px; color:var(--cream-dim);}
+  .lib-upload-zone .uz-text b{color:var(--gold-soft);}
+  .lib-upload-zone input{position:absolute; inset:0; opacity:0; cursor:pointer;}
+  .lib-list{flex:1; overflow-y:auto; padding:0 16px 16px;}
+  .lib-card{background:#FFFFFF; border:1px solid rgba(44,36,24,.08); border-radius:12px; padding:16px; margin-bottom:12px; transition:all 0.3s; animation:ob-fadein 0.3s ease backwards;}
+  .lib-card:hover{border-color:rgba(184,134,58,0.3); transform:translateY(-1px); box-shadow:0 6px 20px rgba(0,0,0,0.06);}
+  .lib-card h3{font-family:'Playfair Display', Georgia, serif; font-size:15px; margin:0 0 6px; line-height:1.35; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .lib-card .lib-summary{font-size:13px; color:var(--cream-dim); line-height:1.5; margin-bottom:10px; max-height:120px; overflow-y:auto;}
+  .lib-card .lib-meta{font-size:11px; color:var(--lavender); display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; overflow:hidden;}
+  .lib-card .lib-meta span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;}
+  .lib-card .lib-actions{display:flex; gap:8px;}
+  .lib-card .lib-actions button{font-size:12px; padding:5px 10px;}
+  .lib-shimmer{background:linear-gradient(90deg, var(--night) 25%, var(--card) 50%, var(--night) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:8px; height:80px; margin-bottom:12px;}
+  .lib-empty{text-align:center; padding:40px 20px; color:var(--cream-dim);}
+  .lib-empty .emp-icon{font-size:48px; margin-bottom:12px; opacity:0.5;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="music-pill" title="Music controller"><span class="pill-icon">🎧</span><span class="pill-label">Music</span></div>
+<div id="library-pill" title="Document Library"><span class="pill-icon">📚</span><span class="pill-label">Library</span></div>
+<div id="library-drawer">
+  <div class="lib-header"><h2>📚 Library</h2><button class="lib-close" id="lib-close">✕</button></div>
+  <div class="lib-upload-zone" id="lib-drop-zone">
+    <div class="uz-icon">📄</div>
+    <div class="uz-text">Drop a <b>PDF</b> here or <b>tap to browse</b></div>
+    <input type="file" accept=".pdf,application/pdf" id="lib-file-input" />
+  </div>
+  <div class="lib-list" id="lib-list"></div>
+</div>
+<div id="player-dock"></div>
+<audio id="bg-audio" preload="none"></audio>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   XHB × MomenCrafts — Founders' HQ
+   ═══════════════════════════════════════════════════════════════════════════
+
+   SCHEMA BOUNDARY
+   ───────────────
+   public.*   — MomenCrafts investor portal (investor_tokens, investor_sessions,
+                investor_events, access_requests, co_*, etc.).
+                RLS: service-role only (edge functions).
+
+   xhb.*     — XHB Founders' HQ (allowed_users, sessions, questions, answers,
+                plan_items, updates, documents, nudges, episodes, content,
+                question_templates, gate_attempts, gate_log, artifacts,
+                artifact_versions, findings, enrolment_tokens, api_keys,
+                access_log, decision_revisions).
+                Read/write: xhb.is_allowed() — two-person allowlist only.
+
+   AUTH MODEL
+   ──────────
+   XHB auth = Supabase phone OTP (via xhb-gate-request edge function)
+            + xhb.is_allowed() row-level security.
+   Never MomenCrafts investor_tokens, access_requests, MCR- tokens, or any
+   portal tier. The two systems share a Supabase project but are isolated
+   by schema. No portal edge function queries any xhb.* table.
+
+   DASHBOARD ACCESS
+   ────────────────
+   momen@momencrafts.com — founder, superadmin (access management only;
+     never bypasses the seal, never verdicts own artifacts).
+
+   SETUP (live mode)
+   ─────────────────
+     1. Run the xhb schema migrations in your Supabase SQL editor.
+     2. Fill SUPABASE_URL and SUPABASE_ANON_KEY below.
+     3. Auth → enable Phone provider (Twilio); add /xhb/ to redirect allowlist.
+     4. Optional: deploy the ask-xhb edge function + ANTHROPIC_API_KEY secret.
+   Leave CONFIG empty for DEMO MODE (in-memory sample data, zero network calls).
+   ═══════════════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  SUPABASE_URL: "https://isciigqmdfcozrtojqcm.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzY2lpZ3FtZGZjb3pydG9qcWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMDk4ODYsImV4cCI6MjA5NjU4NTg4Nn0.OUV0dUWUt0UBU9bdJpwWiXI2PgclddNO0t1cA4ZLF_8",
+  XHB_GATE_URL: "https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/xhb-gate-request",
+};
+
+/* ---- Demo content (offline / no-config mode only — no venture data) ---- */
+const DEMO_VISION = {
+  line: "Align independently, reveal together, decide once.",
+  definition: "This is a demonstration of the Founders' HQ workspace. When connected to a live database, this section displays the venture's vision, product definitions, and strategic non-goals. All content loads from the server after authentication — nothing sensitive is shipped in this file.",
+  products: [
+    ["Product A 🔧", "Description of the first product or service offering."],
+    ["Product B 📊", "Description of the second product or service offering."],
+    ["Product C 📱", "Description of the third product or service offering."]
+  ],
+  nongoals: [
+    "Sample non-goal — items deliberately excluded from current scope.",
+    "Sample non-goal — boundaries that keep the project focused.",
+    "Sample non-goal — things to revisit in a later phase."
+  ],
+  phases: [
+    ["P0", "Foundation — setup, governance, initial structure."],
+    ["P1", "Pilot — validation with real data on a small scale."],
+    ["P2", "Build — core product development and integration."],
+    ["P3", "Scale — expansion, partnerships, operational readiness."]
+  ],
+  credit: "Demo mode — connect to Supabase to load the live venture record."
+};
+
+const DEMO_TEMPLATES = {
+  "general": { name: "General Alignment", desc: "A general-purpose alignment session with sample questions.",
+    questions: [
+      ["Sample question about project scope", "Context: define the boundaries and deliverables of the initiative."],
+      ["Sample question about team structure", "Context: clarify roles, responsibilities, and decision rights."],
+      ["Sample question about timeline", "Context: agree on key milestones and deadlines."]
+    ]},
+  "operations": { name: "Operations", desc: "Operational decisions and processes.",
+    questions: [
+      ["Sample question about workflow", "Context: establish standard operating procedures."],
+      ["Sample question about tooling and platforms", "Context: agree on the tools the team will use."]
+    ]},
+  "custom": { name: "Blank session", desc: "Start empty and add your own questions.", questions: [] }
+};
+
+/* ---- Active content (overwritten from Supabase after auth in live mode) ---- */
+let VISION = DEMO_VISION;
+let TEMPLATES = { ...DEMO_TEMPLATES };
+
+const PHASES = ["P0","P1","P2","P3","P4","P5","General"];
+const PLAN_STATUS = ["later","next","now","done"];
+
+/* ------------------------------ State ------------------------------------ */
+const LIVE = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY);
+let sb = null;
+let me = null;
+let members = [];
+let contentLoaded = false; // True after xhb.content loaded (live) or immediately (demo)
+let dataLoading = false;  // True during initial data fetch (shows loading state)
+let nav = "vision";
+let sessions = [], currentSession = null, questions = [];
+let planItems = [], updatesFeed = [], docsList = [], nudges = [], episodesList = [];
+let currentEp = null;
+let confirmReveal = {};
+let channel = null;
+let askAnswer = "", askBusy = false;
+let renderTimer = null; // debounce guard
+let artifactsList = [], currentArtifact = null, artifactVersions = [], artifactFindings = [];
+let artEditing = false, artEditorBody = "";
+let onboardingComplete = false;
+let alignmentItems = [], alignmentDispositions = [];
+const demoStore = {};
+
+/* ------------------------------ Demo data -------------------------------- */
+const DEMO_ME = { email: "founder-a@example.com", name: "Founder A" };
+const DEMO_PARTNER = { email: "founder-b@example.com", name: "Founder B" };
+const now = () => new Date().toISOString();
+
+function demoSeed() {
+  members = [{ email: DEMO_ME.email, display_name: DEMO_ME.name }, { email: DEMO_PARTNER.email, display_name: DEMO_PARTNER.name }];
+  const sid = "demo-1";
+  const tplKey = Object.keys(TEMPLATES).find(k => k !== "custom") || "custom";
+  sessions = [{ id: sid, title: TEMPLATES[tplKey] ? TEMPLATES[tplKey].name : "Alignment", template: tplKey, created_at: now() }];
+  const t = (TEMPLATES[tplKey] && TEMPLATES[tplKey].questions) ? TEMPLATES[tplKey].questions : [];
+  questions = t.map((q, i) => ({ id: "dq" + i, session_id: sid, position: i, prompt: q[0], context: q[1], status: "sealed", outcome: null, decision: "", decision_owner: "", answers: {} }));
+  if (questions.length > 0) {
+    questions[0].status = "revealed";
+    questions[0].answers[DEMO_ME.email] = { body: "Sample response from Founder A." };
+    questions[0].answers[DEMO_PARTNER.email] = { body: "Sample response from Founder B." };
+  }
+  if (questions.length > 2) {
+    questions[2].status = "resolved"; questions[2].outcome = "decided";
+    questions[2].decision = "Sample decision recorded during demo — connect to Supabase for live decisions.";
+    questions[2].decision_owner = "Both — " + new Date().toLocaleDateString("en-GB");
+    questions[2].answers[DEMO_ME.email] = { body: "Sample sealed answer from Founder A." };
+    questions[2].answers[DEMO_PARTNER.email] = { body: "Sample sealed answer from Founder B." };
+  }
+  currentSession = sessions[0];
+  demoStore[sid] = questions;
+
+  planItems = [
+    { id: "p1", title: "Sample milestone — initial setup and governance", detail: "Placeholder task for demo mode", phase: "P0", status: "now", owner: "Founder A", due: "Week 1", position: 0 },
+    { id: "p2", title: "Sample milestone — alignment on scope", detail: "Placeholder task for demo mode", phase: "P0", status: "now", owner: "Both", due: "Week 1–2", position: 1 },
+    { id: "p3", title: "Sample milestone — first deliverable", detail: "Placeholder task for demo mode", phase: "P1", status: "next", owner: "Founder B", due: "Week 3", position: 2 }
+  ];
+  updatesFeed = [
+    { id: "u1", author_email: DEMO_ME.email, body: "Demo mode is active — sample data only, nothing is saved. Connect to Supabase to work with live venture data.", pinned: true, created_at: now() }
+  ];
+  docsList = [
+    { id: "d1", title: "Architecture Document", kind: "source", status: "v1.0 — source of truth", url: "", approvals: {} },
+    { id: "d2", title: "Project Specification", kind: "derived", status: "Derived — pending review", url: "", approvals: {} },
+    { id: "d3", title: "Legal Agreement Draft", kind: "legal", status: "Draft — pending review", url: "", approvals: {} }
+  ];
+  nudges = [];
+  episodesList = [];
+  // TODO (Phase 5): seed two generic demo artifacts (one with mermaid + callouts)
+  // and one sample finding, once the artifacts panel is built.
+}
+
+/* --------------------------- Data layer ---------------------------------- */
+const norm = (e) => (e || "").trim().toLowerCase();
+/* db() — every query goes through the xhb schema. Never call sb.from() directly. */
+function db() { return sb.schema('xhb'); }
+function nameFor(email) {
+  const m = members.find(x => norm(x.email) === norm(email));
+  if (m && m.display_name) return m.display_name;
+  return (email || "").split("@")[0] || "Partner";
+}
+function partnerOf(meEmail) {
+  const other = members.find(x => norm(x.email) !== norm(meEmail));
+  return other ? { email: norm(other.email), name: nameFor(other.email) } : { email: null, name: "Partner" };
+}
+
+async function loadMembers() {
+  if (!LIVE) return;
+  const { data } = await db().from("allowed_users").select("email, display_name, phone, is_approver");
+  members = data || [];
+}
+async function loadSessions() {
+  if (!LIVE) return;
+  const { data } = await db().from("sessions").select("*").is("deleted_at", null).order("created_at", { ascending: false });
+  sessions = data || [];
+  if (currentSession) currentSession = sessions.find(s => s.id === currentSession.id) || sessions[0] || null;
+  else currentSession = sessions[0] || null;
+}
+async function loadQuestions() {
+  if (!LIVE) { questions = currentSession ? (demoStore[currentSession.id] || []) : []; return; }
+  if (!currentSession) { questions = []; return; }
+  const { data: qs } = await db().from("questions").select("*").eq("session_id", currentSession.id).is("deleted_at", null).order("position").order("created_at");
+  const ids = (qs || []).map(q => q.id);
+  let ansRows = [];
+  if (ids.length) { const { data: ans } = await db().from("answers").select("*").in("question_id", ids); ansRows = ans || []; }
+  questions = (qs || []).map(q => {
+    const a = {};
+    ansRows.filter(r => r.question_id === q.id).forEach(r => { a[norm(r.author_email)] = { body: r.body, updated_at: r.updated_at }; });
+    return { ...q, answers: a };
+  });
+}
+async function loadAllResolved() {
+  if (!LIVE) {
+    const out = [];
+    sessions.forEach(s => (demoStore[s.id] || []).forEach(q => { if (q.status === "resolved") out.push({ ...q, session_title: s.title, revisions: [] }); }));
+    return out;
+  }
+  const { data } = await db().from("questions").select("*, sessions(title)").eq("status", "resolved").is("deleted_at", null).order("resolved_at", { ascending: false });
+  const resolved = (data || []).map(q => ({ ...q, session_title: q.sessions ? q.sessions.title : "", revisions: [] }));
+  // Load revision trail
+  if (resolved.length) {
+    const qIds = resolved.map(q => q.id);
+    const { data: revs } = await db().from("decision_revisions").select("*").in("question_id", qIds).order("revision", { ascending: false });
+    (revs || []).forEach(r => {
+      const q = resolved.find(x => x.id === r.question_id);
+      if (q) q.revisions.push(r);
+    });
+  }
+  return resolved;
+}
+async function loadTable(table, order) {
+  if (!LIVE) return;
+  const { data } = await db().from(table).select("*").order(order.col, { ascending: order.asc });
+  if (table === "plan_items") planItems = data || [];
+  if (table === "updates") updatesFeed = data || [];
+  if (table === "documents") docsList = data || [];
+  if (table === "nudges") nudges = data || [];
+  if (table === "episodes") episodesList = data || [];
+}
+async function dbInsert(table, row, demoArr) {
+  if (!LIVE) { row.id = "x" + Math.random().toString(36).slice(2, 9); row.created_at = now(); demoArr.unshift(row); render(); return row; }
+  const { data, error } = await db().from(table).insert(row).select().single();
+  if (error) { toast("Save failed: " + error.message); return null; }
+  await refresh(); return data;
+}
+async function dbUpdate(table, id, patch, demoArr) {
+  if (!LIVE) { const it = demoArr.find(x => x.id === id); if (it) Object.assign(it, patch); render(); return; }
+  const { error } = await db().from(table).update(patch).eq("id", id);
+  if (error) toast("Update failed: " + error.message); else await refresh();
+}
+
+async function createSession(title, templateKey) {
+  const tpl = TEMPLATES[templateKey] || TEMPLATES.custom;
+  if (!LIVE) {
+    const sid = "demo-" + Math.random().toString(36).slice(2, 8);
+    sessions.unshift({ id: sid, title, template: templateKey, created_at: now() });
+    demoStore[sid] = tpl.questions.map((q, i) => ({ id: sid + "-q" + i, session_id: sid, position: i, prompt: q[0], context: q[1], status: "sealed", outcome: null, decision: "", decision_owner: "", answers: {} }));
+    currentSession = sessions[0]; questions = demoStore[sid]; render(); return;
+  }
+  const { data, error } = await db().from("sessions").insert({ title, template: templateKey, created_by: me.email }).select().single();
+  if (error) { toast("Could not create session: " + error.message); return; }
+  if (tpl.questions.length) {
+    const rows = tpl.questions.map((q, i) => ({ session_id: data.id, position: i, prompt: q[0], context: q[1], created_by: me.email }));
+    await db().from("questions").insert(rows);
+  }
+  currentSession = data; await refresh();
+}
+async function addQuestion(prompt, context) {
+  if (!LIVE) { questions.push({ id: "dq" + Math.random().toString(36).slice(2, 8), session_id: currentSession.id, position: questions.length, prompt, context, status: "sealed", outcome: null, decision: "", decision_owner: "", answers: {} }); render(); return; }
+  const { error } = await db().from("questions").insert({ session_id: currentSession.id, position: questions.length, prompt, context, created_by: me.email });
+  if (error) toast("Could not add: " + error.message); else await refresh();
+}
+async function saveAnswer(q, body) {
+  if (!body.trim()) { toast("Write an answer first."); return; }
+  if (!LIVE) { q.answers[norm(me.email)] = { body, updated_at: now() }; render(); toast("Answer sealed ✓"); return; }
+  const { error } = await db().from("answers").upsert({ question_id: q.id, author_email: norm(me.email), body, updated_at: now() }, { onConflict: "question_id,author_email" });
+  if (error) toast("Save failed: " + error.message); else { await refresh(); toast("Answer sealed ✓"); }
+}
+async function setQuestion(q, patch) {
+  if (!LIVE) { Object.assign(q, patch); render(); return; }
+  const { error } = await db().from("questions").update(patch).eq("id", q.id);
+  if (error) toast("Update failed: " + error.message); else await refresh();
+}
+async function refresh() {
+  if (!LIVE) { render(); return; }
+  try {
+    await loadArtifacts();
+    await loadSessions(); await loadQuestions();
+    await loadTable("plan_items", { col: "position", asc: true });
+    await loadTable("updates", { col: "created_at", asc: false });
+    await loadTable("documents", { col: "created_at", asc: true });
+    await loadTable("nudges", { col: "created_at", asc: false });
+    await loadTable("episodes", { col: "created_at", asc: true });
+  } catch (err) {
+    if (err?.message?.includes('JWT') || err?.code === 'PGRST301') {
+      toast('Session expired — please sign in again.');
+      me = null; render(); return;
+    }
+    toast('Network error — some data may be stale.');
+  }
+  render();
+}
+
+function subscribeRealtime() {
+  if (!LIVE || channel) return;
+  try {
+    channel = sb.channel("hq");
+    ["sessions", "questions", "answers", "plan_items", "updates", "documents", "nudges", "episodes", "artifacts", "artifact_versions", "findings"].forEach(t => {
+      channel.on("postgres_changes", { event: "*", schema: "xhb", table: t }, () => {
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(() => { _renderFromRealtime = true; refresh(); }, 300);
+      });
+    });
+    // Alignment tables: separate handler to reload dispositions only
+    ["alignment_items", "alignment_dispositions"].forEach(t => {
+      channel.on("postgres_changes", { event: "*", schema: "xhb", table: t }, () => {
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(async () => {
+          _renderFromRealtime = true;
+          await loadAlignmentItems();
+          await loadAlignmentDispositions();
+          render();
+        }, 300);
+      });
+    });
+    channel.subscribe();
+  } catch (e) { /* optional */ }
+}
+
+/* ---- Content loading (live mode: fetch from xhb schema after auth) ---- */
+async function loadVisionContent() {
+  if (!LIVE) { contentLoaded = true; return; }
+  try {
+    const { data } = await sb.schema('xhb').from("content").select("body").eq("key", "vision").eq("locale", "en").single();
+    if (data && data.body) VISION = data.body;
+    contentLoaded = true;
+  } catch(e) {
+    /* xhb.content may not be migrated yet — demo vision is shown */
+    contentLoaded = true;
+  }
+}
+async function loadTemplateContent() {
+  if (!LIVE) return;
+  try {
+    const { data: meta } = await sb.schema('xhb').from("content").select("body").eq("key", "template_meta").eq("locale", "en").single();
+    const { data: rows } = await sb.schema('xhb').from("question_templates").select("*").eq("locale", "en").order("position");
+    if (rows && rows.length) {
+      const metaObj = (meta && meta.body) ? meta.body : {};
+      const groups = {};
+      rows.forEach(r => { if (!groups[r.template_key]) groups[r.template_key] = []; groups[r.template_key].push(r); });
+      TEMPLATES = {};
+      for (const [key, qs] of Object.entries(groups)) {
+        const m = metaObj[key] || {};
+        TEMPLATES[key] = { name: m.name || key, desc: m.desc || "", questions: qs.sort((a, b) => a.position - b.position).map(r => [r.prompt, r.context]) };
+      }
+      TEMPLATES.custom = { name: "Blank session", desc: "Start empty and add your own questions.", questions: [] };
+    }
+  } catch(e) { /* xhb.question_templates may not be migrated yet — demo templates are used */ }
+}
+
+/* ---- Alignment / Onboarding data layer ---- */
+async function loadOnboardingStatus() {
+  if (!LIVE) { onboardingComplete = true; return; }
+  try {
+    const { data } = await sb.schema('xhb').from("content").select("body").eq("key", "onboarding").eq("locale", "en").single();
+    onboardingComplete = !!(data && data.body && data.body.complete);
+  } catch(e) { onboardingComplete = true; /* if no row, treat as complete (legacy) */ }
+}
+async function loadAlignmentItems() {
+  if (!LIVE) { alignmentItems = []; return; }
+  const { data } = await db().from("alignment_items").select("*").order("position");
+  alignmentItems = data || [];
+}
+async function loadAlignmentDispositions() {
+  if (!LIVE) { alignmentDispositions = []; return; }
+  const { data } = await db().from("alignment_dispositions").select("*");
+  alignmentDispositions = data || [];
+}
+async function setDisposition(itemId, disposition, note) {
+  const email = norm(me.email);
+  // Upsert: unique(item_id, email)
+  const { error } = await db().from("alignment_dispositions").upsert({
+    item_id: itemId, email, disposition, note: note || ""
+  }, { onConflict: "item_id,email" });
+  if (error) { toast("Could not save: " + error.message); return; }
+  await loadAlignmentDispositions();
+  render();
+}
+async function completeOnboarding() {
+  const { data, error } = await db().rpc("complete_onboarding");
+  if (error) { toast("Cannot complete: " + error.message); return; }
+  onboardingComplete = true;
+  // Sign-off-only: route approver to Artifacts (to fill & lock the Baseline),
+  // route non-approver to Vision
+  if (meIsApprover()) {
+    nav = "artifacts";
+    toast("Alignment complete \u2713 \u2014 fill the agreed decisions into the Baseline, then lock it.");
+  } else {
+    nav = "vision";
+    toast("Alignment complete \u2713 \u2014 Welcome to XHB!");
+  }
+  render();
+}
+
+/* ---- Artifacts data layer ---- */
+async function loadArtifacts() {
+  if (!LIVE) return;
+  const { data } = await db().from("artifacts").select("*").is("deleted_at", null).order("pinned", { ascending: false }).order("updated_at", { ascending: false });
+  artifactsList = data || [];
+}
+async function loadArtifactDetail(id) {
+  if (!LIVE) return;
+  const { data: art } = await db().from("artifacts").select("*").eq("id", id).single();
+  if (!art) { currentArtifact = null; return; }
+  currentArtifact = art;
+  const { data: vers } = await db().from("artifact_versions").select("*").eq("artifact_id", id).order("version", { ascending: false });
+  artifactVersions = vers || [];
+  const { data: finds } = await db().from("findings").select("*").eq("artifact_id", id).is("deleted_at", null).order("raised_at", { ascending: false });
+  artifactFindings = finds || [];
+}
+async function createArtifact(title, kind) {
+  const { data, error } = await db().from("artifacts").insert({ title, kind, status: "draft", created_by: norm(me.email) }).select().single();
+  if (error) { toast("Could not create: " + error.message); return; }
+  await loadArtifacts(); await loadArtifactDetail(data.id); render();
+}
+async function publishArtifactVersion(body, changeNote) {
+  if (!currentArtifact) return;
+  const nextVer = (artifactVersions.length ? Math.max(...artifactVersions.map(v => v.version)) : 0) + 1;
+  const { error } = await db().from("artifact_versions").insert({
+    artifact_id: currentArtifact.id, version: nextVer, body_md: body,
+    change_note: changeNote || "v" + nextVer, published_by: norm(me.email)
+  });
+  if (error) { toast("Publish failed: " + error.message); return; }
+  // Reset approval on new version: clear verdict, set awaiting_approval
+  await db().from("artifacts").update({
+    status: "awaiting_approval", updated_at: new Date().toISOString(),
+    verdict: null, verdict_by: null, verdict_at: null
+  }).eq("id", currentArtifact.id);
+  artEditing = false;
+  // Nudge partner about new version
+  const partner = partnerOf(me.email);
+  if (partner.email) {
+    await db().from("nudges").insert({
+      from_email: norm(me.email), to_email: partner.email,
+      message: nameFor(me.email) + " published v" + nextVer + " of \u201C" + currentArtifact.title + "\u201D",
+      seen: false
+    }).catch(() => {});
+  }
+  await loadArtifactDetail(currentArtifact.id); await loadArtifacts(); render();
+  toast("Published v" + nextVer + " \u2713");
+}
+async function setArtifactVerdict(verdict) {
+  if (!currentArtifact) return;
+  await db().from("artifacts").update({ verdict, verdict_by: norm(me.email), verdict_at: new Date().toISOString(), status: "verdict_given" }).eq("id", currentArtifact.id);
+  await db().from("access_log").insert({ actor: norm(me.email), subject: currentArtifact.id, action: "verdict_" + verdict, detail: { title: currentArtifact.title } });
+  await loadArtifactDetail(currentArtifact.id); await loadArtifacts(); render();
+  toast("Verdict: " + verdict.toUpperCase() + " \u2713");
+}
+async function raiseFinding(severity, body, anchorSlug) {
+  if (!currentArtifact || !body.trim()) { toast("Write the finding first."); return; }
+  const latestVer = artifactVersions.length ? artifactVersions[0].version : 1;
+  const row = {
+    artifact_id: currentArtifact.id, version: latestVer, severity, body,
+    raised_by: norm(me.email), status: "open"
+  };
+  if (anchorSlug) row.anchor_slug = anchorSlug;
+  const { error } = await db().from("findings").insert(row);
+  if (error) { toast("Could not raise finding: " + error.message); return; }
+  if (currentArtifact.status === "published") {
+    await db().from("artifacts").update({ status: "under_audit" }).eq("id", currentArtifact.id);
+  }
+  await loadArtifactDetail(currentArtifact.id); await loadArtifacts(); render();
+  toast("Finding raised \u2713");
+}
+async function respondToFinding(findingId, response) {
+  if (!response.trim()) { toast("Write a response."); return; }
+  await db().from("findings").update({ response, responded_by: norm(me.email), responded_at: new Date().toISOString() }).eq("id", findingId);
+  await loadArtifactDetail(currentArtifact.id); render();
+  toast("Response saved \u2713");
+}
+async function resolveFinding(findingId, newStatus) {
+  await db().from("findings").update({ status: newStatus, resolved_at: new Date().toISOString() }).eq("id", findingId);
+  await loadArtifactDetail(currentArtifact.id); render();
+  toast("Finding " + newStatus + " \u2713");
+}
+function meIsApprover() {
+  const m = members.find(x => norm(x.email) === norm(me.email));
+  return m ? !!m.is_approver : false;
+}
+async function lockArtifact() {
+  if (!currentArtifact) return;
+  const latestVer = artifactVersions.length ? artifactVersions[0].version : null;
+  await db().from("artifacts").update({
+    status: "locked", locked_by: norm(me.email), locked_at: new Date().toISOString(),
+    locked_version: latestVer
+  }).eq("id", currentArtifact.id);
+  // Nudge partner
+  const partner = partnerOf(me.email);
+  if (partner.email) {
+    await db().from("nudges").insert({
+      from_email: norm(me.email), to_email: partner.email,
+      message: nameFor(me.email) + " locked \u201C" + currentArtifact.title + "\u201D",
+      seen: false
+    }).catch(() => {});
+  }
+  await loadArtifactDetail(currentArtifact.id); await loadArtifacts(); render();
+  toast("Artifact locked \u{1F512}");
+}
+async function unlockArtifact() {
+  if (!currentArtifact) return;
+  await db().from("artifacts").update({
+    status: "under_audit", locked_by: null, locked_at: null, locked_version: null
+  }).eq("id", currentArtifact.id);
+  await loadArtifactDetail(currentArtifact.id); await loadArtifacts(); render();
+  toast("Artifact unlocked \u2014 now under audit");
+}
+
+/* ---- Safe markdown renderer ---- */
+function renderMd(md) {
+  try {
+    const raw = (typeof marked !== "undefined" && marked.parse) ? marked.parse(md || "") : esc(md || "").replace(/\n/g, "<br>");
+    return (typeof DOMPurify !== "undefined") ? DOMPurify.sanitize(raw) : raw;
+  } catch (e) { return esc(md || ""); }
+}
+
+/* ------------------------------ Render ------------------------------------ */
+const app = document.getElementById("app");
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : "";
+
+function chipQ(q) {
+  if (q.status === "sealed") return '<span class="chip sealed">Sealed</span>';
+  if (q.status === "revealed") return '<span class="chip revealed">Revealed</span>';
+  const map = { aligned: ["aligned", "Aligned"], divergent: ["divergent", "Divergent \u2014 parked"], decided: ["decided", "Decided"] };
+  const m = map[q.outcome] || ["decided", "Resolved"];
+  return '<span class="chip ' + m[0] + '">' + m[1] + '</span>';
+}
+
+/* ----- Onboarding Alignment Wizard ----- */
+function viewOnboarding() {
+  const partner = partnerOf(me.email);
+  const total = alignmentItems.length;
+  const allAligned = total > 0 && alignmentItems.every(item => {
+    const disps = alignmentDispositions.filter(d => d.item_id === item.id);
+    const myD = disps.find(d => norm(d.email) === norm(me.email));
+    const theirD = disps.find(d => norm(d.email) === partner.email);
+    return myD && myD.disposition === 'approve' && theirD && theirD.disposition === 'approve';
+  });
+  const aligned = alignmentItems.filter(item => {
+    const disps = alignmentDispositions.filter(d => d.item_id === item.id);
+    const myD = disps.find(d => norm(d.email) === norm(me.email));
+    const theirD = disps.find(d => norm(d.email) === partner.email);
+    return myD && myD.disposition === 'approve' && theirD && theirD.disposition === 'approve';
+  }).length;
+
+  let html = '<div class="onboarding-wrap">' +
+    '<div class="onboarding-header">' +
+    '<div class="mark">XHB</div><div class="rule"></div>' +
+    '<h1 class="serif">Founding Alignment</h1>' +
+    '<p class="meta">Both founders must approve every item before the HQ opens. ' +
+    'Annotating resets both approvals on that item. Nothing is skippable.</p>' +
+    '<div class="ob-progress"><span class="ob-count">' + aligned + ' / ' + total + ' aligned</span>' +
+    '<div class="ob-bar"><div class="ob-fill" style="width:' + (total ? Math.round(aligned / total * 100) : 0) + '%;"></div></div></div>' +
+    (allAligned ? '<button class="btn btn-gold" data-act="ob-complete">Complete alignment & open the HQ \u2192</button>' : '') +
+    '</div>';
+
+  const pct = total ? Math.round(aligned / total * 100) : 0;
+  // Introduction and How to Use (show only when < 30% complete)
+  if (pct < 30) {
+    html += '<div style="background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin-bottom:20px;">' +
+      '<h2 style="font-size:17px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">\uD83D\uDC4B Welcome to Founding Alignment</h2>' +
+      '<p style="font-size:14px; line-height:1.7; color:var(--cream); margin-bottom:14px;">' +
+      'This is where you and your co-founder align on the critical decisions that shape XHB before any code is written. ' +
+      'Each card below represents a decision extracted from the <strong style="color:var(--gold-soft);">Combined Progress \u0026 Alignment Brief</strong>. ' +
+      'The HQ workspace unlocks only after both founders approve every single decision \u2014 no shortcuts.</p>' +
+
+      '<h3 style="font-size:14px; color:var(--gold-soft); margin-bottom:10px;">How it works</h3>' +
+      '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px; margin-bottom:12px;">' +
+
+      '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
+      '<div style="font-size:18px; margin-bottom:4px;">\u2705</div>' +
+      '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Approve</div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">You agree with this decision as written. Both founders must approve for it to be aligned.</div></div>' +
+
+      '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
+      '<div style="font-size:18px; margin-bottom:4px;">\u270E</div>' +
+      '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Annotate</div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Something needs to change. Write what\u2019s wrong or what you\u2019d prefer. This resets both approvals so you can realign.</div></div>' +
+
+      '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
+      '<div style="font-size:18px; margin-bottom:4px;">\uD83C\uDFA4</div>' +
+      '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Voice + AI</div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Tap \uD83C\uDFA4 to speak in Arabic or English. AI transcribes and can refine your text before submitting.</div></div>' +
+
+      '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
+      '<div style="font-size:18px; margin-bottom:4px;">\uD83C\uDFA7</div>' +
+      '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Radio</div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Tap the \uD83C\uDFA7 pill on the left to play background music and podcast episodes while you work.</div></div>' +
+
+      '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
+      '<div style="font-size:18px; margin-bottom:4px;">\uD83D\uDCDA</div>' +
+      '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Library</div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Tap the \uD83D\uDCDA pill on the right to upload PDFs. AI auto-names and summarizes every document you share.</div></div>' +
+
+      '</div>' +
+      '<p style="font-size:12px; color:var(--cream-dim); border-top:1px solid var(--line); padding-top:8px; margin:0;">' +
+      '\uD83D\uDD12 Your partner sees your decisions in real time. The workspace opens only when every card shows <strong style="color:#10b981;">\u2714 Aligned</strong>.</p>' +
+      '</div>';
+  }
+
+  /* ─── Contextual insight panel ─── */
+  const myPending = [];
+  const theirPending = [];
+  const annotatedItems = [];
+  const categoryProgress = {};
+
+  alignmentItems.forEach(item => {
+    const disps = alignmentDispositions.filter(d => d.item_id === item.id);
+    const myD = disps.find(d => norm(d.email) === norm(me.email));
+    const theirD = disps.find(d => norm(d.email) === partner.email);
+    const myOk = myD && myD.disposition === 'approve';
+    const theirOk = theirD && theirD.disposition === 'approve';
+
+    if (!myOk) myPending.push(item);
+    if (!theirOk) theirPending.push(item);
+    if ((myD && myD.disposition === 'annotate') || (theirD && theirD.disposition === 'annotate')) annotatedItems.push(item);
+
+    if (!categoryProgress[item.category]) categoryProgress[item.category] = { done: 0, total: 0 };
+    categoryProgress[item.category].total++;
+    if (myOk && theirOk) categoryProgress[item.category].done++;
+  });
+
+  const nextForMe = myPending[0];
+  // pct already declared above
+
+  // Phase detection
+  let phase, phaseIcon, phaseColor;
+  if (pct < 30) { phase = 'Early alignment'; phaseIcon = '\uD83C\uDF31'; phaseColor = '#8b5cf6'; }
+  else if (pct < 60) { phase = 'Building momentum'; phaseIcon = '\u26A1'; phaseColor = '#f59e0b'; }
+  else if (pct < 100) { phase = 'Almost there'; phaseIcon = '\uD83D\uDD25'; phaseColor = '#ef4444'; }
+  else { phase = 'Fully aligned'; phaseIcon = '\u2728'; phaseColor = '#10b981'; }
+
+  const tips = [
+    'Start with Decision 01 \u2014 the baseline problem defines everything downstream. Take your time.',
+    'Great start! Decisions 1\u20133 form the product foundation: problem, user, and buyer. Nail these first.',
+    'Building momentum. Decisions 4\u20136 shape what XHB actually produces. Be specific.',
+    'Final stretch! Evidence boundaries, success measures, and stop conditions protect the pilot.',
+    'Both founders are fully aligned. The workspace is ready to open. \uD83C\uDF89'
+  ];
+  const tipKey = pct === 100 ? 4 : pct >= 60 ? 3 : pct >= 30 ? 2 : pct > 0 ? 1 : 0;
+
+  html += '<div style="background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:24px;">';
+
+  // Phase badge
+  html += '<div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">' +
+    '<span style="font-size:22px;">' + phaseIcon + '</span>' +
+    '<span style="font-size:15px; font-weight:600; color:' + phaseColor + ';">' + phase + '</span>' +
+    '<span style="font-size:12px; color:var(--cream-dim); margin-left:auto;">' + pct + '% complete</span></div>';
+
+  // Category breakdown
+  html += '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">';
+  Object.entries(categoryProgress).forEach(function([cat, prog]) {
+    const catPct = prog.total ? Math.round(prog.done / prog.total * 100) : 0;
+    const catColor = catPct === 100 ? '#10b981' : catPct > 0 ? '#f59e0b' : 'var(--cream-dim)';
+    html += '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 12px; flex:1; min-width:140px;">' +
+      '<div style="font-size:11px; color:var(--cream-dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">' + esc(cat) + '</div>' +
+      '<div style="font-size:14px; font-weight:600; color:' + catColor + ';">' + prog.done + ' / ' + prog.total + '</div>' +
+      '<div style="height:3px; background:var(--line); border-radius:2px; margin-top:4px;"><div style="height:100%; width:' + catPct + '%; background:' + catColor + '; border-radius:2px; transition:width 0.3s;"></div></div></div>';
+  });
+  html += '</div>';
+
+  // Next action
+  if (nextForMe && !allAligned) {
+    html += '<div style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; background:rgba(212,168,85,0.08); border:1px solid rgba(212,168,85,0.2); border-radius:8px; margin-bottom:10px;">' +
+      '<span style="font-size:16px;">\u27A1\uFE0F</span>' +
+      '<div><div style="font-size:13px; font-weight:600; color:var(--gold-soft);">Your next decision</div>' +
+      '<div style="font-size:13px; color:var(--cream); margin-top:2px;">' + esc(nextForMe.title) + ' <span style="color:var(--cream-dim);">\u2014 ' + esc(nextForMe.category) + '</span></div></div></div>';
+  }
+
+  // Annotations needing attention
+  if (annotatedItems.length > 0) {
+    html += '<div style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.2); border-radius:8px; margin-bottom:10px;">' +
+      '<span style="font-size:16px;">\u270E</span>' +
+      '<div><div style="font-size:13px; font-weight:600; color:var(--lavender);">' + annotatedItems.length + ' decision' + (annotatedItems.length > 1 ? 's' : '') + ' annotated</div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); margin-top:2px;">These need discussion or revision before both founders can approve.</div></div></div>';
+  }
+
+  // Waiting on partner
+  const waitingOnThem = alignmentItems.filter(function(item) {
+    const disps = alignmentDispositions.filter(d => d.item_id === item.id);
+    const myD = disps.find(d => norm(d.email) === norm(me.email));
+    const theirD = disps.find(d => norm(d.email) === partner.email);
+    return myD && myD.disposition === 'approve' && (!theirD || theirD.disposition !== 'approve');
+  });
+  if (waitingOnThem.length > 0 && !allAligned) {
+    html += '<div style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.2); border-radius:8px; margin-bottom:10px;">' +
+      '<span style="font-size:16px;">\u23F3</span>' +
+      '<div><div style="font-size:13px; font-weight:600; color:var(--cream-dim);">Waiting on ' + esc(partner.name) + '</div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); margin-top:2px;">' + waitingOnThem.length + ' decision' + (waitingOnThem.length > 1 ? 's' : '') + ' you approved are awaiting their review.</div></div></div>';
+  }
+
+  // Motivational tip
+  html += '<div style="font-size:13px; color:var(--cream-dim); padding-top:8px; border-top:1px solid var(--line); margin-top:4px;">' +
+    '<strong style="color:var(--gold-soft);">\uD83D\uDCA1 Tip:</strong> ' + tips[tipKey] + '</div>';
+
+  html += '</div>';
+
+  // Simple music toggle — auto-plays, user can mute
+  const isMuted = audioEl.paused || audioEl.volume === 0;
+  html += '<div style="display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 16px; margin-bottom:20px;">' +
+    '<button class="ep-play-btn' + (!isMuted ? ' playing' : '') + '" data-act="ob-music-toggle" style="width:34px; height:34px; font-size:14px;">' +
+    (isMuted ? '\uD83D\uDD07' : '\uD83D\uDD0A') + '</button>' +
+    '<div style="flex:1; font-size:13px; color:var(--cream-dim);">\uD83C\uDFA7 Background music \u00b7 loops while you align</div>' +
+    '</div>';
+
+  alignmentItems.forEach((item, idx) => {
+    const disps = alignmentDispositions.filter(d => d.item_id === item.id);
+    const myD = disps.find(d => norm(d.email) === norm(me.email));
+    const theirD = disps.find(d => norm(d.email) === partner.email);
+    const myStatus = myD ? myD.disposition : 'pending';
+    const theirStatus = theirD ? theirD.disposition : 'pending';
+    const bothApproved = myStatus === 'approve' && theirStatus === 'approve';
+
+    html += '<div class="ob-item' + (bothApproved ? ' ob-aligned' : '') + '">' +
+      '<div class="ob-item-head">' +
+      '<span class="ob-num">' + (idx + 1) + '</span>' +
+      '<h2 class="serif" dir="auto">' + esc(item.title) + '</h2>' +
+      '<span class="ob-cat">' + esc(item.category) + '</span>' +
+      (bothApproved ? '<span class="chip aligned">\u2714 Aligned</span>' : '') +
+      '</div>';
+
+    // Item body (the content to align on)
+    if (item.body_md) {
+      html += '<div class="ob-body md-body" dir="auto">' + renderMd(item.body_md) + '</div>';
+    }
+
+    // Side-by-side panels: You | Partner
+    html += '<div class="ob-panels">';
+
+    // My panel
+    html += '<div class="ob-panel">' +
+      '<h3>You (' + esc(nameFor(me.email)) + ')</h3>';
+    if (myStatus === 'approve') {
+      html += '<div class="ob-disp approve">\u2714 Approved</div>';
+    } else if (myStatus === 'annotate') {
+      html += '<div class="ob-disp annotate">\u270E Annotated</div>' +
+        '<div class="ob-note" dir="auto">' + esc(myD.note || '') + '</div>';
+    } else {
+      html += '<div class="ob-disp pending">Pending</div>';
+    }
+    // Action buttons (always available to change your mind)
+    html += '<div class="ob-actions">' +
+      '<button class="btn btn-gold btn-sm" data-act="ob-approve" data-item="' + item.id + '">Approve</button>' +
+      '<button class="btn btn-ghost btn-sm" data-act="ob-annotate-start" data-item="' + item.id + '">Annotate</button>' +
+      (myStatus === 'annotate' ? '<button class="btn btn-ghost btn-sm" data-act="ob-delete-annotation" data-item="' + item.id + '" style="color:#ef4444;">\uD83D\uDDD1 Delete</button>' : '') +
+      '</div>';
+    // Annotation input (hidden by default, shown by JS)
+    const draftKey = 'xhb-draft-' + item.id;
+    const draftVal = localStorage.getItem(draftKey) || '';
+    const prefill = draftVal || (myD && myD.disposition === 'annotate' ? myD.note || '' : '');
+    html += '<div class="ob-annotate-form" id="ob-ann-' + item.id + '" style="display:none;">' +
+      '<div class="voice-wrap">' +
+      '<textarea dir="auto" id="ob-note-' + item.id + '" placeholder="What needs to change? Type or tap 🎤 to speak\u2026" oninput="localStorage.setItem(\'' + draftKey + '\', this.value)">' + esc(prefill) + '</textarea>' +
+      '<button class="btn-mic" data-act="voice" data-target="ob-note-' + item.id + '" title="Hold to record voice note">\uD83C\uDFA4</button>' +
+      '</div>' +
+      '<button class="btn btn-gold btn-sm" data-act="ob-annotate-submit" data-item="' + item.id + '">Submit annotation</button>' +
+      '</div>';
+    html += '</div>';
+
+    // Partner panel
+    html += '<div class="ob-panel">' +
+      '<h3>' + esc(partner.name) + '</h3>';
+    if (theirStatus === 'approve') {
+      html += '<div class="ob-disp approve">\u2714 Approved</div>';
+    } else if (theirStatus === 'annotate') {
+      html += '<div class="ob-disp annotate">\u270E Annotated</div>' +
+        '<div class="ob-note" dir="auto">' + esc(theirD.note || '') + '</div>';
+    } else {
+      html += '<div class="ob-disp pending">Waiting\u2026</div>';
+    }
+    html += '</div>';
+
+    html += '</div></div>'; // close panels + item
+  });
+
+  if (!total) {
+    html += '<div class="empty">No alignment items found. Run the onboarding seed SQL to populate them.</div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+/* ----- Vision view ----- */
+function viewVision() {
+  if (LIVE && !contentLoaded) {
+    return '<div class="pagehead"><div><h1>Vision</h1><div class="meta">Loading venture content...</div></div></div>' +
+      '<div class="empty">Fetching vision from the server...</div>';
+  }
+  const conceptArt = artifactsList.find(a => a.kind === 'concept');
+  const conceptLinkHtml = conceptArt
+    ? '<div class="concept-link" data-act="art-open-from-vision" data-id="' + conceptArt.id + '">' +
+      '<div class="cl-label">Mulham’s concept, in his own words →</div>' +
+      '<div class="cl-title" dir="auto">' + esc(conceptArt.title) + '</div></div>'
+    : '';
+
+  return '<div class="pagehead"><div><h1>Vision</h1><div class="meta">The north star — and what we are deliberately not building yet</div></div></div>' +
+    '<div class="v-quote">“' + esc(VISION.line) + '”</div>' +
+    conceptLinkHtml +
+    '<div class="v-sec"><h2>What XHB is</h2><p>' + esc(VISION.definition) + '</p></div>' +
+    '<div class="v-grid">' + VISION.products.map(p => '<div class="v-card"><h3>' + esc(p[0]) + '</h3><p>' + esc(p[1]) + '</p></div>').join("") + '</div>' +
+    '<div class="v-sec"><h2>Non-goals right now</h2><ul>' + VISION.nongoals.map(n => '<li>' + esc(n) + '</li>').join("") + '</ul></div>' +
+    '<div class="v-sec"><h2>Phase horizons</h2><ul>' + VISION.phases.map(p => '<li><b style="color:var(--gold-soft);">' + p[0] + '</b> — ' + esc(p[1]) + '</li>').join("") + '</ul></div>' +
+    '<div class="v-foot">' + esc(VISION.credit) + '</div>';
+}
+
+/* ----- Plan view ----- */
+function viewPlan() {
+  const groups = PHASES.map(ph => {
+    const items = planItems.filter(i => (i.phase || "General") === ph);
+    if (!items.length) return "";
+    return '<div class="phase-block"><h2>' + ph + (ph === "P0" ? " — Governed foundation" : ph === "P1" ? " — Feasibility pilot" : "") + '</h2>' +
+      items.map(i =>
+        '<div class="plan-item"><button class="chipbtn" data-act="plan-cycle" data-id="' + i.id + '"><span class="chip ' + esc(i.status) + '">' + esc(i.status) + '</span></button>' +
+        '<div class="t" dir="auto">' + esc(i.title) + (i.detail || i.owner || i.due ? '<span class="sub">' + esc(i.detail || "") + (i.owner ? " · Owner: " + esc(i.owner) : "") + (i.due ? " · " + esc(i.due) : "") + '</span>' : "") + '</div></div>').join("") + '</div>';
+  }).join("");
+  return '<div class="pagehead"><div><h1>Plan</h1><div class="meta">Click a status chip to cycle it: later → next → now → done</div></div></div>' +
+    (groups || '<div class="empty">No plan items yet.</div>') +
+    '<div class="addbar"><input dir="auto" id="plan-title" placeholder="New milestone…" /><select id="plan-phase">' + PHASES.map(p => '<option>' + p + '</option>').join("") + '</select><input id="plan-owner" placeholder="Owner" /><input id="plan-due" placeholder="Due (e.g. Week 3)" /><button class="btn btn-gold btn-sm" data-act="plan-add">Add</button></div>';
+}
+
+/* ----- Sessions (Q&A) view ----- */
+function qCard(q) {
+  const meKey = norm(me.email);
+  const partner = partnerOf(me.email);
+  const mine = q.answers[meKey];
+  const theirsKey = Object.keys(q.answers).find(k => k !== meKey);
+  const theirs = theirsKey ? q.answers[theirsKey] : null;
+  const bothIn = !!mine && !!theirs;
+  const sealed = q.status === "sealed";
+  let mePanel;
+  if (sealed) {
+    mePanel = '<div class="apanel"><span class="who">You · ' + esc(me.name) + '</span>' +
+      '<div class="voice-wrap">' +
+      '<textarea dir="auto" id="ans-' + q.id + '" placeholder="Write your independent answer… or tap 🎤 to speak">' + esc(mine ? mine.body : "") + '</textarea>' +
+      '<button class="btn-mic" data-act="voice" data-target="ans-' + q.id + '" title="Hold to record voice note">\uD83C\uDFA4</button>' +
+      '</div>' +
+      '<div style="display:flex; gap:8px; align-items:center;"><button class="btn btn-gold btn-sm" data-act="save" data-q="' + q.id + '">' + (mine ? "Update sealed answer" : "Seal my answer") + '</button>' +
+      (mine ? '<span class="saved-note">Sealed ✓</span>' : "") + '</div></div>';
+  } else {
+    mePanel = '<div class="apanel"><span class="who">You · ' + esc(me.name) + '</span><div class="body" dir="auto">' + esc(mine ? mine.body : "— no answer recorded —") + '</div></div>';
+  }
+  let themPanel;
+  if (sealed) {
+    themPanel = '<div class="apanel"><span class="who partner">' + esc(partner.name) + '</span><div class="locked"><span class="ic">🔒</span><span>' + (theirs ? esc(partner.name) + " has sealed an answer.<br>Reveal to compare." : "Waiting for " + esc(partner.name) + "'s sealed answer…") + '</span></div></div>';
+  } else {
+    themPanel = '<div class="apanel"><span class="who partner">' + esc(partner.name) + '</span><div class="body" dir="auto">' + esc(theirs ? theirs.body : "— no answer recorded —") + '</div></div>';
+  }
+  let actions = "";
+  if (sealed) {
+    if (bothIn) actions = '<button class="btn btn-gold btn-sm" data-act="reveal" data-q="' + q.id + '">Reveal both answers</button><span class="note">Both answers are in.</span>';
+    else if (mine && !theirs) actions = confirmReveal[q.id]
+      ? '<button class="btn btn-gold btn-sm" data-act="reveal" data-q="' + q.id + '">Confirm reveal with one answer missing</button><span class="note">This breaks the sealed protocol for this question.</span>'
+      : '<button class="btn btn-ghost btn-sm" data-act="force" data-q="' + q.id + '">Force reveal…</button><span class="note">Best practice: wait for both sealed answers.</span>';
+    else actions = '<span class="note">Answers stay hidden from each other until both are sealed.</span>';
+  } else if (q.status === "revealed") actions = '<span class="note">Discuss, then record the outcome below.</span>';
+  else actions = '<button class="btn btn-ghost btn-sm" data-act="reopen" data-q="' + q.id + '">Reopen</button>';
+  let resolveBlock = "";
+  if (q.status === "revealed") {
+    resolveBlock = '<div class="resolve"><div class="row">' +
+      '<select id="out-' + q.id + '"><option value="decided">Decided</option><option value="aligned">Aligned as-is</option><option value="divergent">Divergent — park it</option></select>' +
+      '<input dir="auto" id="dec-' + q.id + '" placeholder="What did we agree? (one or two sentences)" />' +
+      '<input dir="auto" id="own-' + q.id + '" placeholder="Owner / follow-up" /></div>' +
+      '<div><button class="btn btn-gold btn-sm" data-act="resolve" data-q="' + q.id + '">Log the outcome</button></div></div>';
+  }
+  if (q.status === "resolved" && (q.decision || q.outcome)) {
+    resolveBlock = '<div class="decision-view"><span class="lbl">' + (q.outcome === "divergent" ? "Parked divergence" : "Decision") + '</span><div dir="auto">' + esc(q.decision || "(recorded without text)") + '</div>' + (q.decision_owner ? '<div class="own">Owner: ' + esc(q.decision_owner) + '</div>' : "") + '</div>';
+  }
+  return '<div class="qcard"><div class="qhead"><div><h3 dir="auto">' + esc(q.prompt) + '</h3>' + (q.context ? '<div class="qctx" dir="auto">' + esc(q.context) + '</div>' : "") + '</div>' + chipQ(q) + '</div>' +
+    '<div class="answers">' + mePanel + themPanel + '</div><div class="qactions">' + actions + '</div>' + resolveBlock + '</div>';
+}
+function viewSessions() {
+  const partner = partnerOf(me.email);
+  const chips = sessions.map(s => '<button class="sess-chip' + (currentSession && s.id === currentSession.id ? " active" : "") + '" data-act="open" data-s="' + s.id + '" dir="auto">' + esc(s.title) + '</button>').join("") +
+    '<button class="sess-chip" data-act="new-session" style="border-style:dashed; color:var(--gold-soft);">+ New</button>';
+  if (!currentSession) return '<div class="pagehead"><div><h1>Alignment sessions</h1></div></div><div class="sess-chips">' + chips + '</div><div class="empty">Create your first session — pick a template or start blank.</div>';
+  const open = questions.filter(q => q.status !== "resolved").length;
+  return '<div class="pagehead"><div><h1 dir="auto">' + esc(currentSession.title) + '</h1><div class="meta">' + open + ' open · sealed answers unlock only when both of you have written</div></div>' +
+    '<div style="display:flex; gap:9px;"><button class="btn btn-gold btn-sm" data-act="nudge">Push to ' + esc(partner.name || "Partner") + ' →</button><button class="btn btn-ghost btn-sm" data-act="refresh">↻</button></div></div>' +
+    '<div class="sess-chips">' + chips + '</div>' +
+    '<div class="hint"><b>The method:</b> answer independently → seal → reveal together → discuss → log the decision.</div>' +
+    questions.map(qCard).join("") +
+    '<div class="addq"><h3>Add a question</h3><div class="grid"><input dir="auto" id="new-q" placeholder="The question you both need to answer…" /><input dir="auto" id="new-ctx" placeholder="Context (optional)" /><div><button class="btn btn-gold btn-sm" data-act="addq">Add to session</button></div></div></div>';
+}
+
+/* ----- Decisions view ----- */
+let resolvedCache = [];
+function viewDecisions() {
+  if (!resolvedCache.length) return '<div class="pagehead"><div><h1>Decision register</h1><div class="meta">Every logged outcome, across all sessions \u2014 the record your MOU points to</div></div></div><div class="empty">Nothing logged yet. Reveal a question in a session and record the outcome.</div>';
+  let rowsHtml = '';
+  resolvedCache.forEach(q => {
+    rowsHtml += '<tr><td>' + esc(q.session_title || "") + '</td><td class="q" dir="auto"><b>' + esc(q.prompt) + '</b></td><td>' + chipQ(q) + '</td><td dir="auto">' + esc(q.decision || "\u2014") + '</td><td dir="auto">' + esc(q.decision_owner || "\u2014") + '</td></tr>';
+    // Revision trail
+    if (q.revisions && q.revisions.length) {
+      q.revisions.forEach(r => {
+        rowsHtml += '<tr style="font-size:12px; color:var(--cream-dim); background:var(--card-deep);">' +
+          '<td colspan="2" style="padding-left:24px;">\u21B3 Revised' + (r.reopened_by ? ' by ' + esc(nameFor(r.reopened_by)) : '') + (r.reopened_at ? ' on ' + fmtDate(r.reopened_at) : '') + (r.reason ? ': ' + esc(r.reason) : '') + '</td>' +
+          '<td>' + esc(r.prior_outcome || "") + '</td>' +
+          '<td dir="auto">' + esc(r.prior_decision || "\u2014") + '</td>' +
+          '<td dir="auto">' + esc(r.prior_owner || "\u2014") + '</td></tr>';
+      });
+    }
+  });
+  return '<div class="pagehead"><div><h1>Decision register</h1><div class="meta">' + resolvedCache.length + ' logged outcome(s), across all sessions</div></div>' +
+    '<button class="btn btn-ghost btn-sm" data-act="export">Export Markdown</button></div>' +
+    '<table class="log"><thead><tr><th>Session</th><th>Question</th><th>Outcome</th><th>Decision</th><th>Owner</th></tr></thead><tbody>' + rowsHtml + '</tbody></table>';
+}
+function exportMarkdown() {
+  let md = "# XHB — Decision Register\n\n**Exported:** " + new Date().toISOString().slice(0, 10) + "\n\n";
+  resolvedCache.forEach((q, i) => {
+    md += "## " + (i + 1) + ". " + q.prompt + "\n\n- **Session:** " + (q.session_title || "—") + "\n- **Outcome:** " + (q.outcome || "resolved") + "\n- **Decision:** " + (q.decision || "—") + "\n- **Owner:** " + (q.decision_owner || "—") + "\n\n";
+  });
+  const blob = new Blob([md], { type: "text/markdown" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xhb-decision-register.md"; a.click();
+  toast("Register downloaded ✓");
+}
+
+/* ----- Updates view ----- */
+function viewUpdates() {
+  const posts = [...updatesFeed].sort((a, b) => (b.pinned === true) - (a.pinned === true));
+  return '<div class="pagehead"><div><h1>Updates</h1><div class="meta">The founder log — what moved, what is blocked, what you need from each other</div></div></div>' +
+    '<div class="compose"><textarea dir="auto" id="up-body" placeholder="What moved this week? What is blocked? What do you need from ' + esc(partnerOf(me.email).name) + '?"></textarea><div><button class="btn btn-gold btn-sm" data-act="up-post">Post update</button></div></div>' +
+    (posts.length ? posts.map(u =>
+      '<div class="post' + (u.pinned ? " pinned" : "") + '"><div class="ph"><span><b>' + esc(nameFor(u.author_email)) + '</b> · ' + fmtDate(u.created_at) + (u.pinned ? ' · 📌 pinned' : '') + '</span>' +
+      '<button class="link" data-act="up-pin" data-id="' + u.id + '">' + (u.pinned ? "Unpin" : "Pin") + '</button></div><div class="body" dir="auto">' + esc(u.body) + '</div></div>').join("") : '<div class="empty">No updates yet — post the first one.</div>');
+}
+
+/* ----- Documents view ----- */
+function viewDocs() {
+  const kindChip = (k) => '<span class="chip ' + k + '">' + (k === "source" ? "Source of truth" : k === "derived" ? "Derived" : k === "legal" ? "Legal draft" : "Other") + '</span>';
+  const row = (d) => {
+    const partner = partnerOf(me.email);
+    let ack = "";
+    if (d.kind === "legal") {
+      const appr = d.approvals || {};
+      const mineOk = appr[norm(me.email)], theirsOk = appr[partner.email];
+      ack = '<div class="ack">' + esc(me.name) + ': ' + (mineOk ? '<span class="yes">approved ' + esc(mineOk) + '</span>' : 'pending') + ' · ' + esc(partner.name) + ': ' + (theirsOk ? '<span class="yes">approved ' + esc(theirsOk) + '</span>' : 'pending') + '</div>' +
+        (!mineOk ? '<button class="btn btn-ghost btn-sm" data-act="doc-approve" data-id="' + d.id + '">Approve this draft</button>' : '');
+    }
+    return '<div class="doc-row">' + kindChip(d.kind) + '<div class="t"><b dir="auto">' + esc(d.title) + '</b><span class="st" dir="auto">' + esc(d.status || "") + '</span></div>' +
+      (d.url ? '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">open ↗</a>' : "") + ack + '</div>';
+  };
+  const groups = [["Venture documents", docsList.filter(d => d.kind !== "legal")], ["Legal collaboration drafts", docsList.filter(d => d.kind === "legal")]];
+  return '<div class="pagehead"><div><h1>Documents</h1><div class="meta">Canonical versions only — one source of truth, everything else derived</div></div></div>' +
+    groups.map(g => g[1].length ? '<div class="phase-block"><h2>' + g[0] + '</h2>' + g[1].map(row).join("") + '</div>' : "").join("") +
+    '<div class="hint" style="margin-top:4px;">Approving a legal draft here records in-app agreement between the two of you — it is a tracking step, not an electronic signature. Sign the reviewed document itself.</div>' +
+    '<div class="doc-add"><input dir="auto" id="doc-title" placeholder="Document title…" /><select id="doc-kind"><option value="legal">Legal draft</option><option value="source">Source of truth</option><option value="derived">Derived</option><option value="other">Other</option></select><input dir="auto" id="doc-status" placeholder="Status (e.g. Draft — with lawyer)" /><button class="btn btn-gold btn-sm" data-act="doc-add">Add</button></div>';
+}
+
+/* ----- Ask XHB view ----- */
+function viewAsk() {
+  const note = LIVE
+    ? '<div class="ask-note"><b>Setup:</b> deploy the <code>ask-xhb</code> edge function and set the ANTHROPIC_API_KEY secret (see DEPLOY_GUIDE §Ask-XHB). Until then this tab will return a configuration error. Answers are grounded in your decision register, plan, updates and document notes.</div>'
+    : '<div class="ask-note"><b>Demo mode.</b> Once live and configured, Ask-XHB answers questions from your own venture record — decisions, plan, updates, and any document text you store — with the same rule as XHB itself: if the evidence is not there, it says so instead of guessing.</div>';
+  return '<div class="pagehead"><div><h1>Ask XHB</h1><div class="meta">Citation-grounded answers over your own venture record</div></div></div>' +
+    '<div class="ask-box"><div class="voice-wrap">' +
+    '<textarea dir="auto" id="ask-q" placeholder="e.g. What have we decided so far, and what is still open? — or tap 🎤"></textarea>' +
+    '<button class="btn-mic" data-act="voice" data-target="ask-q" title="Hold to record voice note">\uD83C\uDFA4</button>' +
+    '</div>' +
+    '<div><button class="btn btn-gold btn-sm" data-act="ask" ' + (askBusy ? "disabled" : "") + '>' + (askBusy ? "Thinking…" : "Ask") + '</button></div></div>' +
+    (askAnswer ? '<div class="ask-ans" dir="auto">' + esc(askAnswer) + '</div>' : note);
+}
+
+/* ----- Podcast view & background player ----- */
+function viewPodcast() {
+  const rows = episodesList.map(ep => {
+    const isPlaying = currentEp && currentEp.id === ep.id && !audioEl.paused;
+    const isCurrent = currentEp && currentEp.id === ep.id;
+    const isMusic = ep.title.toLowerCase().includes('music') || ep.title.toLowerCase().includes('ambient');
+    return '<div class="ep-row' + (isCurrent ? ' ep-active' : '') + '">' +
+      '<button class="ep-play-btn' + (isPlaying ? ' playing' : '') + '" data-act="ep-play" data-id="' + ep.id + '">' +
+      (isPlaying ? '\u23F8' : '\u25B6') + '</button>' +
+      '<div class="t"><b dir="auto">' + esc(ep.title) + '</b>' +
+      (ep.note ? '<span class="st" dir="auto">' + esc(ep.note) + '</span>' : '') +
+      (!ep.url ? '<span class="st">\u26A0 No audio link yet</span>' : '') +
+      '</div>' +
+      '<div class="ep-badges">' +
+      (isMusic ? '<span class="ep-badge">\uD83C\uDFB5 Music</span>' : '<span class="ep-badge">\uD83C\uDFA7 Episode</span>') +
+      (isCurrent && audioEl.duration ? '<span class="ep-badge">' + fmtTime(audioEl.duration) + '</span>' : '') +
+      '</div></div>';
+  }).join('');
+
+  // Now playing section
+  let nowPlaying = '';
+  if (currentEp) {
+    const dur = audioEl.duration || 0;
+    const cur = audioEl.currentTime || 0;
+    const pct = dur > 0 ? (cur / dur * 100) : 0;
+    nowPlaying = '<div style="background:var(--card); border:1px solid var(--gold); border-radius:16px; padding:20px; margin-bottom:20px;">' +
+      '<div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">' +
+      '<span style="font-size:22px;">\uD83C\uDFA7</span>' +
+      '<div style="flex:1;"><div style="font-size:15px; font-weight:600;" dir="auto">' + esc(currentEp.title) + '</div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); margin-top:2px;">' + (!audioEl.paused ? '\u25CF Playing' : '\u23F8 Paused') + '</div></div>' +
+      '<button class="ep-play-btn' + (!audioEl.paused ? ' playing' : '') + '" data-act="ep-play" data-id="' + currentEp.id + '" style="width:50px;height:50px;font-size:22px;">' +
+      (!audioEl.paused ? '\u23F8' : '\u25B6') + '</button></div>' +
+      '<div class="pl-progress" data-act="pl-seek" style="padding:0; margin-bottom:6px; cursor:pointer;">' +
+      '<div class="pl-bar-bg" style="height:6px;"><div class="pl-bar-fill" style="width:' + pct.toFixed(1) + '%;height:100%;"></div></div></div>' +
+      '<div style="display:flex; justify-content:space-between; font-size:11px; color:var(--cream-dim); margin-bottom:10px;">' +
+      '<span>' + fmtTime(cur) + '</span><span>' + fmtTime(dur) + '</span></div>' +
+      '<div style="display:flex; align-items:center; justify-content:center; gap:12px;">' +
+      '<button class="pl-ctrl pl-speed" data-act="pl-speed">' + SPEEDS[_speedIdx] + 'x</button>' +
+      '<button class="pl-ctrl" data-act="pl-skip" data-dir="-15">\u23EA 15s</button>' +
+      '<button class="pl-ctrl" data-act="pl-skip" data-dir="15">15s \u23E9</button>' +
+      '<button class="pl-ctrl' + (_loopEnabled ? ' active' : '') + '" data-act="pl-loop">\uD83D\uDD01</button>' +
+      '</div></div>';
+  }
+
+  return '<div class="pagehead"><div><h1>Podcast</h1><div class="meta">Episodes keep playing in the background while you work in any tab</div></div></div>' +
+    nowPlaying +
+    '<h2 class="serif" style="font-size:16px; margin-bottom:12px;">All Episodes</h2>' +
+    (rows || '<div class="empty">No episodes yet.</div>') +
+    '<div class="ep-add"><input dir="auto" id="ep-title" placeholder="Episode title\u2026" /><input dir="auto" id="ep-url" placeholder="Direct audio URL (.mp3 / .m4a)" /><button class="btn btn-gold btn-sm" data-act="ep-add">Add episode</button></div>';
+}
+
+/* ----- Artifacts panel ----- */
+function viewArtifacts() {
+  if (currentArtifact) return viewArtifactDetail();
+  const KINDS = ["concept","plan","report","walkthrough","decision-brief","reference","note"];
+  // Sort: pinned first, then concept, then by updated_at desc
+  const sorted = [...artifactsList].sort((a, b) => {
+    if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+    if ((a.kind === 'concept') !== (b.kind === 'concept')) return a.kind === 'concept' ? -1 : 1;
+    return new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at);
+  });
+  const cards = sorted.map(a => {
+    const verdictHtml = a.verdict ? ' <span class="verdict-badge ' + a.verdict + '">' + a.verdict + '</span>' : '';
+    const lockIcon = a.status === 'locked' ? ' \u{1F512}' : '';
+    return '<div class="art-card" data-act="art-open" data-id="' + a.id + '">' +
+      '<h3 dir="auto">' + esc(a.title) + lockIcon + verdictHtml + '</h3>' +
+      '<div class="art-meta"><span class="art-kind' + (a.kind === 'concept' ? ' concept' : '') + '">' + esc(a.kind) + '</span>' +
+      '<span class="art-status ' + a.status + '">' + esc(a.status.replace(/_/g, ' ')) + '</span>' +
+      (a.pinned ? '<span>\u{1F4CC}</span>' : '') +
+      '<span>' + fmtDate(a.updated_at || a.created_at) + '</span></div></div>';
+  }).join("");
+  return '<div class="pagehead"><div><h1>Artifacts</h1><div class="meta">Structured documents \u2014 publish, audit, verdict</div></div></div>' +
+    '<div class="art-toolbar">' +
+    '<input dir="auto" id="art-title" placeholder="New artifact title\u2026" style="max-width:280px;" />' +
+    '<select id="art-kind">' + KINDS.map(k => '<option value="' + k + '">' + k + '</option>').join("") + '</select>' +
+    '<button class="btn btn-gold btn-sm" data-act="art-create">Create</button></div>' +
+    (cards || '<div class="empty">No artifacts yet. Create one above, or publish from your agent workspace.</div>') +
+    '<div class="art-grid">' + cards + '</div>';
+}
+
+function viewArtifactDetail() {
+  const a = currentArtifact;
+  const latestBody = artifactVersions.length ? artifactVersions[0].body_md : "";
+  const verdictHtml = a.verdict ? '<span class="verdict-badge ' + a.verdict + '" style="margin-left:8px;">' + a.verdict.toUpperCase() + '</span>' : '';
+  const lockIcon = a.status === 'locked' ? ' \u{1F512}' : '';
+  const isConcept = a.kind === 'concept';
+  const isAuthor = norm(me.email) === norm(a.created_by);
+  const isApprover = meIsApprover();
+  const canEdit = isConcept ? isAuthor : true;
+  const LOCKABLE_KINDS = ["reference", "concept", "baseline"];
+  const isLockable = LOCKABLE_KINDS.includes(a.kind);
+  const openBlockers = artifactFindings.filter(f => f.status === "open" && f.severity === "blocker").length;
+
+  // Header
+  let html = '<div class="pagehead"><div><h1 dir="auto">' + esc(a.title) + lockIcon + verdictHtml + '</h1>' +
+    '<div class="meta"><span class="art-kind' + (isConcept ? ' concept' : '') + '">' + esc(a.kind) + '</span> <span class="art-status ' + a.status + '">' + esc(a.status.replace(/_/g, " ")) + '</span> \u00B7 by ' + esc(nameFor(a.created_by)) + ' \u00B7 ' + fmtDate(a.created_at) + '</div>' +
+    '</div><button class="btn btn-ghost btn-sm" data-act="art-back">\u2190 All artifacts</button></div>';
+
+  // Locked banner
+  if (a.status === 'locked') {
+    html += '<div class="locked-banner"><span class="lock-icon">\u{1F512}</span> This artifact is locked' +
+      (a.locked_by ? ' by ' + esc(nameFor(a.locked_by)) + ' on ' + fmtDate(a.locked_at) : '') +
+      '. Only the approver may unlock it.</div>';
+    if (isApprover) {
+      html += '<div class="art-toolbar"><button class="btn btn-ghost btn-sm" data-act="art-unlock">Propose revision (unlock)</button></div>';
+    }
+  }
+
+  // Approval bar: approver-only, not on own artifacts, not on concepts, not when locked
+  if (!isConcept && a.status !== 'locked' && isApprover && !isAuthor &&
+      (a.status === "published" || a.status === "under_audit" || a.status === "awaiting_approval")) {
+    const openFindings = artifactFindings.filter(f => f.status === "open").length;
+    html += '<div class="art-toolbar">' +
+      (openFindings > 0 ? '<span style="color:var(--warn);">' + openFindings + ' open finding(s)</span> ' : '<span style="color:var(--ok);">No open findings</span> ') +
+      '<button class="btn btn-gold btn-sm" data-act="art-verdict" data-v="proceed">Approve</button>' +
+      '<button class="btn btn-ghost btn-sm" data-act="art-verdict" data-v="hold">Request changes</button>' +
+      '<button class="btn btn-ghost btn-sm" data-act="art-verdict" data-v="redirect">Redirect</button>' +
+      '<button class="btn btn-ghost btn-sm" style="color:#c94a4a;" data-act="art-verdict" data-v="kill">Kill</button></div>';
+  }
+  if (a.verdict_by) {
+    html += '<div style="margin:8px 0; font-size:13px; color:var(--cream-dim);">Verdict by ' + esc(nameFor(a.verdict_by)) + ' on ' + fmtDate(a.verdict_at) + '</div>';
+  }
+
+  // Lock button: approver, lockable kind, not locked, zero open blocker findings
+  if (isLockable && a.status !== 'locked' && isApprover && openBlockers === 0 &&
+      (a.status === "published" || a.status === "verdict_given" || a.status === "under_audit" || a.status === "awaiting_approval")) {
+    html += '<div class="art-toolbar"><button class="btn btn-gold btn-sm" data-act="art-lock">\u{1F512} Lock ' + (isConcept ? 'the idea' : 'baseline') + '</button></div>';
+  }
+
+  // Editor toggle / body
+  if (artEditing) {
+    html += '<div class="art-detail art-editor">' +
+      '<textarea dir="auto" id="art-editor-body">' + esc(artEditorBody || latestBody) + '</textarea>' +
+      '<div style="display:flex; gap:8px; margin-top:8px; align-items:center;">' +
+      '<input dir="auto" id="art-change-note" placeholder="Change note (e.g. v2 \u2014 addressed findings)" style="max-width:300px;" />' +
+      '<button class="btn btn-gold btn-sm" data-act="art-publish">Publish version</button>' +
+      '<button class="btn btn-ghost btn-sm" data-act="art-edit-cancel">Cancel</button></div></div>';
+  } else {
+    const editBtnHtml = canEdit && a.status !== 'locked'
+      ? '<button class="btn btn-gold btn-sm" data-act="art-edit">Edit \u270E</button>'
+      : (isConcept && !isAuthor
+        ? '<span style="font-size:12px; color:var(--cream-dim); font-style:italic;">Author-only editing \u2014 respond via findings</span>'
+        : (a.status === 'locked' ? '' : ''));
+    html += '<div class="art-detail">' +
+      '<div class="art-toolbar">' + editBtnHtml +
+      (artifactVersions.length ? '<span style="font-size:12px; color:var(--cream-dim);">v' + artifactVersions[0].version + ' \u00B7 ' + fmtDate(artifactVersions[0].published_at) + ' by ' + esc(nameFor(artifactVersions[0].published_by)) + '</span>' : '') +
+      '</div>' +
+      (latestBody ? '<div class="md-body">' + renderMd(latestBody) + '</div>' : '<div class="empty">No content yet' + (canEdit ? ' \u2014 click Edit to write the first version.' : '.') + '</div>') +
+      '</div>';
+  }
+
+  // ── Findings section with anchor_slug grouping ──
+  html += '<div style="margin-top:20px;"><h2 class="serif" style="font-size:16px;">Findings</h2>';
+  // Build anchor slugs from rendered markdown headings
+  const headingSlugs = [];
+  if (latestBody) {
+    const headingRx = /^(#{1,6})\s+(.+)$/gm;
+    let hm;
+    while ((hm = headingRx.exec(latestBody)) !== null) {
+      const slug = hm[2].trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      headingSlugs.push({ slug, text: hm[2].trim() });
+    }
+  }
+
+  // Raise-finding form with optional anchor
+  html += '<div style="display:flex; gap:8px; margin:10px 0; align-items:flex-end; flex-wrap:wrap;">' +
+    '<textarea dir="auto" id="finding-body" placeholder="Raise a finding\u2026" style="min-height:60px;"></textarea>' +
+    '<select id="finding-sev"><option value="question">Question</option><option value="minor">Minor</option><option value="major">Major</option><option value="blocker">Blocker</option></select>';
+  if (headingSlugs.length) {
+    html += '<select id="finding-anchor"><option value="">Unanchored</option>' +
+      headingSlugs.map(h => '<option value="' + esc(h.slug) + '">\u{1F3F3}\uFE0F ' + esc(h.text) + '</option>').join('') + '</select>';
+  }
+  html += '<button class="btn btn-gold btn-sm" data-act="art-raise-finding">Raise</button></div>';
+
+  // Group findings by anchor_slug
+  const anchored = {};
+  const unanchored = [];
+  artifactFindings.forEach(f => {
+    if (f.anchor_slug && headingSlugs.some(h => h.slug === f.anchor_slug)) {
+      if (!anchored[f.anchor_slug]) anchored[f.anchor_slug] = [];
+      anchored[f.anchor_slug].push(f);
+    } else {
+      unanchored.push(f);
+    }
+  });
+
+  function renderFinding(f) {
+    let fHtml = '<div class="finding-card"><div class="f-header">' +
+      '<span class="f-sev ' + f.severity + '">' + f.severity + '</span>' +
+      '<span class="f-status">' + f.status + '</span>' +
+      '<span class="f-status">v' + f.version + ' \u00B7 ' + esc(nameFor(f.raised_by)) + ' \u00B7 ' + fmtDate(f.raised_at) + '</span></div>' +
+      '<div dir="auto" style="margin-bottom:8px;">' + esc(f.body) + '</div>';
+    if (f.response) {
+      fHtml += '<div style="border-left:2px solid var(--gold-soft); padding-left:10px; margin:8px 0; font-size:13px;">' +
+        '<b>' + esc(nameFor(f.responded_by)) + ':</b> ' + esc(f.response) + '</div>';
+    }
+    if (f.status === "open") {
+      fHtml += '<div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">' +
+        '<textarea dir="auto" id="resp-' + f.id + '" placeholder="Respond\u2026" style="width:100%; min-height:60px;"></textarea>' +
+        '<button class="btn btn-ghost btn-sm" data-act="art-respond" data-fid="' + f.id + '">Reply</button>' +
+        '<button class="btn btn-ghost btn-sm" data-act="art-resolve-finding" data-fid="' + f.id + '" data-fs="fixed">Fixed</button>' +
+        '<button class="btn btn-ghost btn-sm" data-act="art-resolve-finding" data-fid="' + f.id + '" data-fs="resolved">Resolved</button></div>';
+    }
+    fHtml += '</div>';
+    return fHtml;
+  }
+
+  // Render anchored groups
+  headingSlugs.forEach(h => {
+    if (anchored[h.slug] && anchored[h.slug].length) {
+      html += '<div style="margin-top:12px;"><h3 style="font-size:13px; color:var(--gold-soft); margin-bottom:6px;">\u{1F3F3}\uFE0F ' + esc(h.text) + '</h3>';
+      anchored[h.slug].forEach(f => { html += renderFinding(f); });
+      html += '</div>';
+    }
+  });
+  // Render unanchored
+  if (unanchored.length) {
+    if (Object.keys(anchored).length) {
+      html += '<div style="margin-top:12px;"><h3 style="font-size:13px; color:var(--cream-dim); margin-bottom:6px;">Unanchored</h3>';
+    }
+    unanchored.forEach(f => { html += renderFinding(f); });
+    if (Object.keys(anchored).length) html += '</div>';
+  }
+  if (!artifactFindings.length) html += '<div class="empty" style="margin-top:8px;">No findings yet.</div>';
+  html += '</div>';
+
+  // Version history
+  if (artifactVersions.length > 1) {
+    html += '<div style="margin-top:20px;"><h2 class="serif" style="font-size:16px;">Version history</h2>';
+    artifactVersions.forEach(v => {
+      html += '<div style="font-size:13px; color:var(--cream-dim); margin:6px 0;">' +
+        '<b>v' + v.version + '</b> · ' + fmtDate(v.published_at) + ' by ' + esc(nameFor(v.published_by)) +
+        (v.change_note ? ' — ' + esc(v.change_note) : '') + '</div>';
+    });
+    html += '</div>';
+  }
+
+  return html;
+}
+
+const audioEl = document.getElementById("bg-audio");
+let _fadeInterval = null;
+let _loopEnabled = false;
+
+function fadeAudio(targetVol, durationMs, onDone) {
+  clearInterval(_fadeInterval);
+  const step = 0.05;
+  const intervalMs = durationMs * step / Math.abs(targetVol - audioEl.volume || 0.01);
+  _fadeInterval = setInterval(() => {
+    if (targetVol > audioEl.volume) {
+      audioEl.volume = Math.min(audioEl.volume + step, targetVol);
+    } else {
+      audioEl.volume = Math.max(audioEl.volume - step, targetVol);
+    }
+    if (Math.abs(audioEl.volume - targetVol) < step) {
+      audioEl.volume = targetVol;
+      clearInterval(_fadeInterval);
+      if (onDone) onDone();
+    }
+  }, intervalMs);
+}
+
+function playWithFade(url) {
+  if (audioEl.src && !audioEl.paused) {
+    // Fade out current, then switch
+    fadeAudio(0, 800, () => {
+      audioEl.src = url;
+      audioEl.volume = 0;
+      audioEl.loop = _loopEnabled;
+      audioEl.play().then(() => fadeAudio(1, 800)).catch(() => toast("Could not play \u2014 check the audio URL."));
+    });
+  } else {
+    audioEl.src = url;
+    audioEl.volume = 0;
+    audioEl.loop = _loopEnabled;
+    audioEl.play().then(() => fadeAudio(1, 800)).catch(() => toast("Could not play \u2014 check the audio URL."));
+  }
+}
+
+function pauseWithFade() {
+  fadeAudio(0, 600, () => audioEl.pause());
+}
+
+function fmtTime(s) {
+  if (!s || !isFinite(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+let _progressTimer = null;
+const SPEEDS = [0.75, 1, 1.25, 1.5, 2];
+let _speedIdx = 1;
+
+let _dockVisible = false;
+
+function updatePill() {
+  const pill = document.getElementById('music-pill');
+  if (!pill) return;
+  const icon = pill.querySelector('.pill-icon');
+  if (!audioEl.paused) {
+    pill.classList.add('playing');
+    icon.textContent = '\uD83D\uDD0A';
+  } else {
+    pill.classList.remove('playing');
+    icon.textContent = '\uD83C\uDFA7';
+  }
+  pill.classList.toggle('dock-open', _dockVisible);
+}
+
+function renderPlayer() {
+  const dock = document.getElementById("player-dock");
+  updatePill();
+  if (!currentEp || !_dockVisible) { dock.style.display = "none"; dock.innerHTML = ""; clearInterval(_progressTimer); return; }
+  dock.style.display = "block";
+
+  const dur = audioEl.duration || 0;
+  const cur = audioEl.currentTime || 0;
+  const pct = dur > 0 ? (cur / dur * 100) : 0;
+
+  dock.innerHTML =
+    '<div class="pl-header">' +
+      '<span class="pl-ic">\uD83C\uDFA7</span>' +
+      '<div class="pl-t" dir="auto">' + esc(currentEp.title) + '</div>' +
+      '<button class="pl-close" data-act="pl-close" title="Close">\u2715</button>' +
+    '</div>' +
+    '<div class="pl-progress" data-act="pl-seek">' +
+      '<div class="pl-bar-bg"><div class="pl-bar-fill" style="width:' + pct.toFixed(1) + '%;"></div></div>' +
+    '</div>' +
+    '<div class="pl-times"><span>' + fmtTime(cur) + '</span><span>-' + fmtTime(Math.max(0, dur - cur)) + '</span></div>' +
+    '<div class="pl-controls">' +
+      '<button class="pl-ctrl pl-speed" data-act="pl-speed" title="Playback speed">' + SPEEDS[_speedIdx] + 'x</button>' +
+      '<button class="pl-ctrl" data-act="pl-skip" data-dir="-15" title="Back 15s">\u23EA 15</button>' +
+      '<button class="pl-ctrl pl-main" data-act="pl-toggle">' + (audioEl.paused ? '\u25B6' : '\u23F8') + '</button>' +
+      '<button class="pl-ctrl" data-act="pl-skip" data-dir="15" title="Forward 15s">15 \u23E9</button>' +
+      '<button class="pl-ctrl' + (_loopEnabled ? ' active' : '') + '" data-act="pl-loop" title="Loop">\uD83D\uDD01</button>' +
+    '</div>';
+
+  // Start progress timer for smooth updates
+  clearInterval(_progressTimer);
+  if (!audioEl.paused) {
+    _progressTimer = setInterval(() => {
+      const fill = dock.querySelector('.pl-bar-fill');
+      const timeL = dock.querySelector('.pl-times span:first-child');
+      const timeR = dock.querySelector('.pl-times span:last-child');
+      if (fill && audioEl.duration) {
+        fill.style.width = (audioEl.currentTime / audioEl.duration * 100).toFixed(1) + '%';
+      }
+      if (timeL) timeL.textContent = fmtTime(audioEl.currentTime);
+      if (timeR) timeR.textContent = '-' + fmtTime(Math.max(0, (audioEl.duration || 0) - audioEl.currentTime));
+    }, 500);
+  }
+}
+audioEl.addEventListener("ended", () => {
+  // Auto-advance through all tracks, loop the whole list at the end
+  const playable = episodesList.filter(ep => ep.url);
+  if (playable.length === 0) { clearInterval(_progressTimer); renderPlayer(); return; }
+
+  const currentIdx = currentEp ? playable.findIndex(ep => ep.id === currentEp.id) : -1;
+  const nextIdx = (currentIdx + 1) % playable.length; // wraps to 0 after last track
+
+  currentEp = playable[nextIdx];
+  playWithFade(currentEp.url);
+  if (nextIdx === 0 && currentIdx > 0) {
+    toast('\uD83D\uDD01 Playlist restarted');
+  } else {
+    toast('\u25B6 Now playing: ' + currentEp.title);
+  }
+});
+["play", "pause"].forEach(ev => audioEl.addEventListener(ev, () => { updatePill(); renderPlayer(); if (nav === "podcast") render(); }));
+
+// Pill click — toggle dock
+document.getElementById('music-pill').addEventListener('click', () => {
+  if (!currentEp && audioEl.paused) {
+    // Start music if nothing playing
+    const musicEp = episodesList.find(ep => ep.title.toLowerCase().includes('music') || ep.title.toLowerCase().includes('ambient'));
+    if (musicEp && musicEp.url) {
+      currentEp = musicEp;
+      _loopEnabled = false;
+      _dockVisible = true;
+      playWithFade(musicEp.url);
+    } else {
+      toast('No music track available.');
+    }
+  } else {
+    _dockVisible = !_dockVisible;
+  }
+  renderPlayer();
+});
+
+/* ----- Shell ----- */
+function unseenNudges() { return nudges.filter(n => !n.seen && norm(n.to_email) === norm(me.email)); }
+let _renderFromRealtime = false; // set true when render is triggered by realtime
+function render() {
+  // ── Invariant 11: never clobber a note being typed ──
+  // If a realtime event triggers render while the user is typing in an input,
+  // skip the re-render to avoid destroying their work.
+  const active = document.activeElement;
+  const isTyping = active && (active.tagName === 'TEXTAREA' || (active.tagName === 'INPUT' && active.type !== 'button' && active.type !== 'submit'));
+  if (_renderFromRealtime && isTyping && active.value) {
+    // Defer: the next user action will trigger a clean render
+    return;
+  }
+
+  // Save focus state for non-realtime renders (e.g. after a button click that also triggers render)
+  let savedFocus = null;
+  if (isTyping && active.id) {
+    savedFocus = { id: active.id, value: active.value, start: active.selectionStart, end: active.selectionEnd };
+  }
+
+  try { _render(); } catch (err) {
+    console.error('Render error:', err);
+    app.innerHTML = '<div class="center-wrap"><div class="authcard"><h2>Something went wrong</h2><p>' + esc(err.message) + '</p><button class="btn btn-gold" onclick="location.reload()">Reload</button></div></div>';
+  }
+
+  // Restore focus after render
+  if (savedFocus) {
+    const el = document.getElementById(savedFocus.id);
+    if (el) {
+      el.value = savedFocus.value;
+      el.focus();
+      try { el.setSelectionRange(savedFocus.start, savedFocus.end); } catch(e) {}
+    }
+  }
+  _renderFromRealtime = false;
+}
+function _render() {
+  if (LIVE && !me) { renderAuth(); return; }
+  if (LIVE && dataLoading) {
+    app.innerHTML = '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div><h2 class="serif">Loading workspace\u2026</h2><p style="color:var(--muted);">Fetching your venture data.</p></div></div>';
+    return;
+  }
+  // ── Onboarding gate: while incomplete, route to the wizard ──
+  if (LIVE && !onboardingComplete && alignmentItems.length > 0) {
+    app.innerHTML = viewOnboarding();
+    return;
+  }
+  const counts = { sessions: sessions.length, decisions: resolvedCache.length, plan: planItems.filter(p => p.status !== "done").length };
+  const navBtn = (key, label, cnt) => '<button class="' + (nav === key ? "active" : "") + '" data-act="nav" data-nav="' + key + '" aria-label="' + label + (cnt ? ' (' + cnt + ')' : '') + '" role="tab" aria-selected="' + (nav === key) + '">' + label + (cnt ? '<span class="cnt">' + cnt + '</span>' : "") + '</button>';
+  const nb = unseenNudges().map(n =>
+    '<div class="nudge-banner" role="alert"><div class="txt"><b>' + esc(nameFor(n.from_email)) + '</b> nudged you: \u201c' + esc(n.message) + '\u201d</div>' +
+    '<button class="btn btn-gold btn-sm" data-act="nudge-open" data-id="' + n.id + '" data-s="' + (n.session_id || "") + '">Open session</button>' +
+    '<button class="btn btn-ghost btn-sm" data-act="nudge-seen" data-id="' + n.id + '">Done</button></div>').join("");
+  let view = "";
+  if (nav === "vision") view = viewVision();
+  else if (nav === "plan") view = viewPlan();
+  else if (nav === "sessions") view = viewSessions();
+  else if (nav === "decisions") view = viewDecisions();
+  else if (nav === "updates") view = viewUpdates();
+  else if (nav === "docs") view = viewDocs();
+  else if (nav === "podcast") view = viewPodcast();
+  else if (nav === "artifacts") view = viewArtifacts();
+  else if (nav === "ask") view = viewAsk();
+  app.innerHTML =
+  '<div class="app"><aside class="side" role="navigation" aria-label="Main navigation">' +
+    '<div class="brand"><div class="mark">XHB</div><div class="rule"></div><div class="sub">Founders\u2019 HQ</div><div class="co">built by <b>MomenCrafts</b></div></div>' +
+    '<nav class="nav" role="tablist" aria-label="Workspace sections">' + navBtn("vision", "Vision") + navBtn("plan", "Plan", counts.plan) + navBtn("sessions", "Q&A sessions", counts.sessions) + navBtn("artifacts", "Audit & Artifacts", artifactsList.length) + navBtn("decisions", "Decisions", counts.decisions) + navBtn("updates", "Updates") + navBtn("docs", "Documents") + navBtn("podcast", "Podcast \ud83c\udfa7") + navBtn("ask", "Ask XHB") + '</nav>' +
+    '<div class="whoami"><b>' + esc(me.name) + '</b>' + esc(me.email) + '<div style="margin-top:5px;">Partner: ' + esc(partnerOf(me.email).name) + '</div>' +
+    (LIVE ? '<div style="margin-top:8px;"><button class="link" data-act="signout" aria-label="Sign out of XHB">Sign out</button></div>' : "") + '</div>' +
+  '</aside><main class="main" role="main" aria-label="Workspace content">' +
+    (!LIVE ? '<div class="demo-banner" role="status">Demo mode \u2014 sample data, nothing is saved. Run supabase_setup_v2.sql and fill the CONFIG block to go live.</div>' : "") +
+    nb + view + '</main></div>';
+}
+
+/* ---- Gate UI — Email Magic Link ---- */
+let gateEmail = "";
+
+function renderGateIdentify(msg) {
+  document.body.classList.add('gate-active');
+  app.innerHTML =
+  '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div>' +
+    '<h2 class="serif" style="margin-bottom:8px;">Founders\' HQ</h2>' +
+    '<p dir="auto">Private workspace — restricted to registered founders.<br>' +
+    '\u0645\u0633\u0627\u062d\u0629 \u062e\u0627\u0635\u0629 \u2014 \u0645\u0642\u064a\u062f\u0629 \u0644\u0644\u0645\u0624\u0633\u0633\u064a\u0646 \u0627\u0644\u0645\u0633\u062c\u0644\u064a\u0646.</p>' +
+    '<div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">' +
+    '<div><label for="gate-email" style="font-size:12px; color:var(--muted);">Email</label>' +
+    '<input type="email" id="gate-email" placeholder="you@example.com" autocomplete="email" dir="auto" style="width:100%; min-height:44px; box-sizing:border-box;" /></div>' +
+    '<button class="btn btn-gold" data-act="gate-send" style="min-height:44px;">Send magic link</button></div>' +
+    '<div class="msg">' + esc(msg || "") + '</div>' +
+    '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts \xb7 momencrafts.com</p></div></div>';
+  const emailInp = document.getElementById("gate-email");
+  if (gateEmail && emailInp) emailInp.value = gateEmail;
+  if (emailInp) emailInp.addEventListener("keydown", (e) => { if (e.key === "Enter") document.querySelector('[data-act="gate-send"]')?.click(); });
+}
+
+function renderGateLinkSent(msg) {
+  app.innerHTML =
+  '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div>' +
+    '<h2 class="serif" style="margin-bottom:8px;">Check your email</h2>' +
+    '<p dir="auto">A magic link was sent to <b>' + esc(gateEmail) + '</b>.<br>' +
+    'Click the link in the email to sign in.</p>' +
+    '<div style="display:flex; justify-content:center; gap:16px; margin-top:20px; font-size:12px;">' +
+    '<a href="#" data-act="gate-restart" style="color:var(--gold-soft); text-decoration:none;">\u2190 Use different email</a>' +
+    '</div>' +
+    '<div class="msg" style="margin-top:12px;">' + esc(msg || "") + '</div>' +
+    '<p style="margin-top:16px; font-size:11.5px;">built by MomenCrafts \xb7 momencrafts.com</p></div></div>';
+}
+
+function renderAuth(msg) {
+  renderGateIdentify(msg);
+}
+
+let toastTimer = null;
+function toast(text) {
+  document.querySelectorAll(".toast").forEach(t => t.remove());
+  const el = document.createElement("div"); el.className = "toast"; el.textContent = text;
+  document.body.appendChild(el);
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.remove(), 2600);
+}
+
+/* ----- Modals ----- */
+function openNewSessionModal() {
+  const ov = document.createElement("div"); ov.className = "overlay";
+  const opts = Object.entries(TEMPLATES).map(([k, t]) => '<option value="' + k + '">' + esc(t.name) + '</option>').join("");
+  ov.innerHTML = '<div class="modal"><h2 class="serif">New alignment session</h2><div class="grid">' +
+    '<div><label>Title</label><input dir="auto" id="ns-title" /></div>' +
+    '<div><label>Start from</label><select id="ns-tpl">' + opts + '</select><div class="tpl-desc" id="ns-desc" style="margin-top:6px;"></div></div></div>' +
+    '<div class="foot"><button class="btn btn-ghost btn-sm" data-close="1">Cancel</button><button class="btn btn-gold btn-sm" id="ns-create">Create session</button></div></div>';
+  document.body.appendChild(ov);
+  const tplSel = ov.querySelector("#ns-tpl"), desc = ov.querySelector("#ns-desc"), title = ov.querySelector("#ns-title");
+  const sync = () => { const t = TEMPLATES[tplSel.value]; desc.textContent = t.desc + (t.questions.length ? " (" + t.questions.length + " starter questions)" : ""); if (!title.value || Object.values(TEMPLATES).some(x => x.name === title.value)) title.value = t.name === "Blank session" ? "" : t.name; };
+  tplSel.value = "founding"; sync(); tplSel.addEventListener("change", sync);
+  ov.addEventListener("click", (e) => {
+    if (e.target === ov || e.target.dataset.close) { ov.remove(); return; }
+    if (e.target.id === "ns-create") { const t = title.value.trim() || TEMPLATES[tplSel.value].name; ov.remove(); createSession(t, tplSel.value); }
+  });
+}
+function openNudgeModal() {
+  const partner = partnerOf(me.email);
+  const open = questions.filter(q => q.status === "sealed").length;
+  const defMsg = "Salam " + partner.name + " — the session “" + (currentSession ? currentSession.title : "") + "” is ready: " + open + " question(s) awaiting your sealed answers. Please add yours so we can reveal, align and revise together.";
+  const link = window.location.href.split("#")[0];
+  const ov = document.createElement("div"); ov.className = "overlay";
+  ov.innerHTML = '<div class="modal"><h2 class="serif">Push to ' + esc(partner.name) + '</h2><div class="grid">' +
+    '<div><label>Message</label><textarea dir="auto" id="ng-msg">' + esc(defMsg) + '</textarea></div>' +
+    '<div class="tpl-desc">Sends an in-app nudge (banner on ' + esc(partner.name) + '’s next visit). Use the share buttons to also reach him on WhatsApp or email with the link.</div></div>' +
+    '<div class="foot"><button class="btn btn-ghost btn-sm" data-close="1">Cancel</button>' +
+    '<button class="btn btn-ghost btn-sm" id="ng-wa">WhatsApp</button>' +
+    '<button class="btn btn-ghost btn-sm" id="ng-mail">Email</button>' +
+    '<button class="btn btn-gold btn-sm" id="ng-send">Send nudge</button></div></div>';
+  document.body.appendChild(ov);
+  const getMsg = () => ov.querySelector("#ng-msg").value.trim();
+  ov.addEventListener("click", async (e) => {
+    if (e.target === ov || e.target.dataset.close) { ov.remove(); return; }
+    if (e.target.id === "ng-wa") { window.open("https://wa.me/?text=" + encodeURIComponent(getMsg() + "\n\n" + link), "_blank"); }
+    if (e.target.id === "ng-mail") { window.open("mailto:" + (partner.email || "") + "?subject=" + encodeURIComponent("XHB — alignment session ready") + "&body=" + encodeURIComponent(getMsg() + "\n\n" + link)); }
+    if (e.target.id === "ng-send") {
+      ov.remove();
+      await dbInsert("nudges", { session_id: currentSession ? currentSession.id : null, from_email: norm(me.email), to_email: partner.email, message: getMsg(), seen: false }, nudges);
+      toast("Nudge sent to " + partner.name + " ✓");
+    }
+  });
+}
+
+/* ----- Ask handler ----- */
+async function doAsk() {
+  const q = document.getElementById("ask-q").value.trim();
+  if (!q) { toast("Type a question first."); return; }
+  askBusy = true; render();
+  if (!LIVE) {
+    await new Promise(r => setTimeout(r, 600));
+    askAnswer = "Demo mode — no model connected.\n\nOnce live, Ask-XHB will answer from your venture record. For “" + q + "” it would draw on: " + resolvedCache.length + " logged decision(s), " + planItems.length + " plan item(s), " + updatesFeed.length + " update(s), and any document text you have stored — and it will say “not reliably answerable from the record” when the evidence is not there, instead of guessing.";
+    askBusy = false; render(); return;
+  }
+  try {
+    const { data, error } = await sb.functions.invoke("ask-xhb", { body: { question: q } });
+    askAnswer = error ? ("Ask-XHB is not configured yet (" + error.message + "). See DEPLOY_GUIDE §Ask-XHB.") : (data && data.answer ? data.answer : "No answer returned.");
+  } catch (e) { askAnswer = "Ask-XHB is not configured yet. See DEPLOY_GUIDE §Ask-XHB."; }
+  askBusy = false; render();
+}
+
+/* ------------------------------ Events ------------------------------------ */
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const act = btn.dataset.act;
+  const q = btn.dataset.q ? questions.find(x => x.id === btn.dataset.q) : null;
+
+  if (act === "gate-send") {
+    const email = norm(document.getElementById("gate-email")?.value || "");
+    if (!email) { renderGateIdentify("Enter your email address."); return; }
+    gateEmail = email;
+    const sendBtn = document.querySelector('[data-act="gate-send"]');
+    if (sendBtn) { sendBtn.textContent = "Sending…"; sendBtn.disabled = true; }
+    try {
+      const { error } = await sb.auth.signInWithOtp({
+        email: email,
+        options: { emailRedirectTo: window.location.origin + "/xhb/" }
+      });
+      if (error) { renderGateIdentify("Could not send link: " + error.message); return; }
+      renderGateLinkSent();
+    } catch (err) {
+      renderGateIdentify("Network error — check your connection.");
+    }
+    return;
+  }
+  if (act === "gate-restart") {
+    renderGateIdentify();
+    return;
+  }
+  if (act === "signout") { await sb.auth.signOut(); me = null; render(); window.location.href = "/"; }
+  if (act === "nav") { nav = btn.dataset.nav; if (nav === "decisions") resolvedCache = await loadAllResolved(); render(); }
+  if (act === "open") { currentSession = sessions.find(s => s.id === btn.dataset.s); await loadQuestions(); render(); }
+  if (act === "new-session") openNewSessionModal();
+  if (act === "refresh") { await refresh(); toast("Refreshed"); }
+  if (act === "addq") {
+    const p = document.getElementById("new-q").value.trim(), c = document.getElementById("new-ctx").value.trim();
+    if (!p) { toast("Write the question first."); return; }
+    await addQuestion(p, c);
+  }
+  if (act === "save" && q) { await saveAnswer(q, document.getElementById("ans-" + q.id).value); }
+  if (act === "force" && q) { confirmReveal[q.id] = true; render(); }
+  if (act === "reveal" && q) { confirmReveal[q.id] = false; await setQuestion(q, { status: "revealed" }); }
+  if (act === "reopen" && q) { await setQuestion(q, { status: "revealed" }); }
+  if (act === "resolve" && q) {
+    const outcome = document.getElementById("out-" + q.id).value;
+    const decision = document.getElementById("dec-" + q.id).value.trim();
+    const owner = document.getElementById("own-" + q.id).value.trim();
+    if (outcome !== "aligned" && !decision) { toast("Record what was agreed (or choose 'Aligned as-is')."); return; }
+    await setQuestion(q, { status: "resolved", outcome, decision, decision_owner: owner, resolved_at: now() });
+    toast("Outcome logged ✓");
+  }
+  if (act === "export") exportMarkdown();
+  if (act === "plan-cycle") {
+    const it = planItems.find(x => x.id === btn.dataset.id);
+    if (it) { const nx = PLAN_STATUS[(PLAN_STATUS.indexOf(it.status) + 1) % PLAN_STATUS.length]; await dbUpdate("plan_items", it.id, { status: nx }, planItems); }
+  }
+  if (act === "plan-add") {
+    const t = document.getElementById("plan-title").value.trim();
+    if (!t) { toast("Write the milestone first."); return; }
+    await dbInsert("plan_items", { title: t, detail: "", phase: document.getElementById("plan-phase").value, status: "next", owner: document.getElementById("plan-owner").value.trim(), due: document.getElementById("plan-due").value.trim(), position: planItems.length, created_by: norm(me.email) }, planItems);
+  }
+  if (act === "up-post") {
+    const b = document.getElementById("up-body").value.trim();
+    if (!b) { toast("Write the update first."); return; }
+    await dbInsert("updates", { author_email: norm(me.email), body: b, pinned: false }, updatesFeed);
+  }
+  if (act === "up-pin") {
+    const it = updatesFeed.find(x => x.id === btn.dataset.id);
+    if (it) await dbUpdate("updates", it.id, { pinned: !it.pinned }, updatesFeed);
+  }
+  if (act === "doc-add") {
+    const t = document.getElementById("doc-title").value.trim();
+    if (!t) { toast("Write the title first."); return; }
+    await dbInsert("documents", { title: t, kind: document.getElementById("doc-kind").value, status: document.getElementById("doc-status").value.trim(), url: "", approvals: {}, created_by: norm(me.email) }, docsList);
+  }
+  if (act === "doc-approve") {
+    const d = docsList.find(x => x.id === btn.dataset.id);
+    if (d) { const appr = { ...(d.approvals || {}) }; appr[norm(me.email)] = new Date().toISOString().slice(0, 10); await dbUpdate("documents", d.id, { approvals: appr }, docsList); toast("Approval recorded ✓"); }
+  }
+  if (act === "nudge") openNudgeModal();
+  if (act === "nudge-seen") { const n = nudges.find(x => x.id === btn.dataset.id); if (n) await dbUpdate("nudges", n.id, { seen: true }, nudges); }
+  if (act === "nudge-open") {
+    const n = nudges.find(x => x.id === btn.dataset.id);
+    if (n) { await dbUpdate("nudges", n.id, { seen: true }, nudges); if (n.session_id) { currentSession = sessions.find(s => s.id === n.session_id) || currentSession; } nav = "sessions"; await loadQuestions(); render(); }
+  }
+  if (act === "ep-add") {
+    const t = document.getElementById("ep-title").value.trim(), u = document.getElementById("ep-url").value.trim();
+    if (!t) { toast("Give the episode a title."); return; }
+    await dbInsert("episodes", { title: t, url: u, note: "", created_by: norm(me.email) }, episodesList);
+  }
+  if (act === "ep-play") {
+    const ep = episodesList.find(x => x.id === btn.dataset.id);
+    if (!ep) return;
+    if (!ep.url) { toast("No audio link on this episode yet \u2014 add a direct MP3 URL."); return; }
+    // Auto-loop music tracks
+    if (ep.title.toLowerCase().includes('music') || ep.title.toLowerCase().includes('ambient')) _loopEnabled = false;
+    if (currentEp && currentEp.id === ep.id) {
+      if (audioEl.paused) { audioEl.volume = 0; audioEl.play().then(() => fadeAudio(1, 800)).catch(() => toast("Could not play.")); }
+      else pauseWithFade();
+    } else {
+      currentEp = ep;
+      playWithFade(ep.url);
+    }
+    renderPlayer(); render();
+  }
+  if (act === "pl-toggle") {
+    if (audioEl.paused) { audioEl.volume = 0; audioEl.play().then(() => fadeAudio(1, 800)).catch(() => {}); }
+    else pauseWithFade();
+    renderPlayer();
+  }
+  if (act === "pl-loop") { _loopEnabled = !_loopEnabled; audioEl.loop = _loopEnabled; renderPlayer(); if (nav === "podcast") render(); toast(_loopEnabled ? "\uD83D\uDD01 Loop on" : "Loop off"); }
+  if (act === "pl-close") { _dockVisible = false; renderPlayer(); }
+  if (act === "pl-seek") {
+    const bar = btn.querySelector('.pl-bar-bg') || btn.closest('.pl-progress')?.querySelector('.pl-bar-bg');
+    if (bar && audioEl.duration) {
+      const rect = bar.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, x / rect.width));
+      audioEl.currentTime = pct * audioEl.duration;
+      renderPlayer();
+    }
+  }
+  if (act === "pl-skip") {
+    const dir = parseInt(btn.dataset.dir || "15");
+    audioEl.currentTime = Math.max(0, Math.min(audioEl.duration || 0, audioEl.currentTime + dir));
+    renderPlayer();
+  }
+  if (act === "pl-speed") {
+    _speedIdx = (_speedIdx + 1) % SPEEDS.length;
+    audioEl.playbackRate = SPEEDS[_speedIdx];
+    renderPlayer();
+    if (nav === "podcast") render();
+    toast("Speed: " + SPEEDS[_speedIdx] + "x");
+  }
+  if (act === "ask") doAsk();
+
+  /* ---- Artifacts ---- */
+  if (act === "art-open" || act === "art-open-from-vision") {
+    if (act === "art-open-from-vision") nav = "artifacts";
+    await loadArtifactDetail(btn.dataset.id); render();
+  }
+  if (act === "art-back") { currentArtifact = null; artEditing = false; artEditorBody = ""; render(); }
+  if (act === "art-create") {
+    const t = document.getElementById("art-title")?.value.trim();
+    const k = document.getElementById("art-kind")?.value;
+    if (!t) { toast("Give the artifact a title."); return; }
+    await createArtifact(t, k);
+  }
+  if (act === "art-edit") { artEditing = true; artEditorBody = ""; render(); }
+  if (act === "art-edit-cancel") { artEditing = false; artEditorBody = ""; render(); }
+  if (act === "art-publish") {
+    const body = document.getElementById("art-editor-body")?.value || "";
+    const note = document.getElementById("art-change-note")?.value || "";
+    if (!body.trim()) { toast("Write some content first."); return; }
+    await publishArtifactVersion(body, note);
+  }
+  if (act === "art-verdict") {
+    const v = btn.dataset.v;
+    if (v) await setArtifactVerdict(v);
+  }
+  if (act === "art-raise-finding") {
+    const body = document.getElementById("finding-body")?.value || "";
+    const sev = document.getElementById("finding-sev")?.value || "question";
+    const anchorEl = document.getElementById("finding-anchor");
+    const anchor = anchorEl ? anchorEl.value : "";
+    await raiseFinding(sev, body, anchor || null);
+  }
+  if (act === "art-respond") {
+    const fid = btn.dataset.fid;
+    const respEl = document.getElementById("resp-" + fid);
+    const response = respEl ? respEl.value : "";
+    await respondToFinding(fid, response);
+  }
+  if (act === "art-resolve-finding") {
+    await resolveFinding(btn.dataset.fid, btn.dataset.fs);
+  }
+  if (act === "art-lock") { await lockArtifact(); }
+  if (act === "art-unlock") { await unlockArtifact(); }
+
+  /* ---- Onboarding music toggle ---- */
+  if (act === "ob-music-toggle") {
+    if (!audioEl.paused) {
+      pauseWithFade();
+    } else {
+      const musicEp = episodesList.find(ep => ep.title.toLowerCase().includes('music') || ep.title.toLowerCase().includes('ambient'));
+      if (musicEp && musicEp.url) {
+        currentEp = musicEp;
+        _loopEnabled = false;
+        playWithFade(musicEp.url);
+      } else {
+        toast("No music track uploaded yet.");
+      }
+    }
+    setTimeout(render, 300);
+    return;
+  }
+
+  /* ---- Onboarding alignment ---- */
+  if (act === "ob-approve") {
+    await setDisposition(btn.dataset.item, "approve", "");
+  }
+  if (act === "ob-annotate-start") {
+    const form = document.getElementById("ob-ann-" + btn.dataset.item);
+    if (form) form.style.display = form.style.display === "none" ? "block" : "none";
+    return; // don't re-render — just toggle visibility
+  }
+  if (act === "ob-annotate-submit") {
+    const note = document.getElementById("ob-note-" + btn.dataset.item)?.value || "";
+    if (!note.trim()) { toast("Write what needs to change."); return; }
+    await setDisposition(btn.dataset.item, "annotate", note);
+    localStorage.removeItem('xhb-draft-' + btn.dataset.item); // Clear draft on save
+  }
+  if (act === "ob-delete-annotation") {
+    const itemId = btn.dataset.item;
+    const email = norm(me.email);
+    const { error } = await db().from("alignment_dispositions").delete().eq("item_id", itemId).eq("email", email);
+    if (error) { toast("Could not delete: " + error.message); return; }
+    await loadAlignmentDispositions();
+    toast("\uD83D\uDDD1 Annotation deleted \u2014 reset to pending");
+    render();
+    return;
+  }
+  if (act === "ob-complete") {
+    await completeOnboarding();
+  }
+
+  /* ---- Voice recording (Whisper) ---- */
+  if (act === "voice") {
+    const targetId = btn.dataset.target;
+    if (!targetId) return;
+    handleVoiceToggle(btn, targetId);
+    return; // don't re-render
+  }
+});
+
+/* ---- Voice Review Panel (AI Refine) ---- */
+function showVoiceReview(rawText, targetId, lang) {
+  // Remove existing overlay if any
+  const existing = document.querySelector('.voice-review-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'voice-review-overlay';
+  overlay.innerHTML =
+    '<div class="voice-review">' +
+      '<h3>\uD83C\uDFA4 Voice Transcription Review</h3>' +
+      '<div class="vr-label">\uD83D\uDCDD Raw transcription (' + esc(lang) + ')</div>' +
+      '<div class="vr-text" id="vr-raw">' + esc(rawText) + '</div>' +
+      '<div id="vr-improved-wrap" style="display:none;">' +
+        '<div class="vr-label">\u2728 AI-improved version</div>' +
+        '<div class="vr-text improved" id="vr-improved"></div>' +
+        '<div class="vr-diff" id="vr-diff"></div>' +
+      '</div>' +
+      '<div class="vr-label">\u270E Edit before submitting</div>' +
+      '<div class="vr-text"><textarea id="vr-edit" dir="auto">' + esc(rawText) + '</textarea></div>' +
+      '<div class="vr-actions">' +
+        '<button class="btn btn-ghost btn-sm" id="vr-discard">\u2715 Discard</button>' +
+        '<button class="btn btn-ghost btn-sm" id="vr-improve">\u2728 Improve with AI</button>' +
+        '<button class="btn btn-gold btn-sm" id="vr-approve">\u2714 Approve & Insert</button>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(overlay);
+
+  // Discard
+  document.getElementById('vr-discard').addEventListener('click', () => {
+    overlay.remove();
+    toast('Transcription discarded.');
+  });
+
+  // Approve — insert into target textarea
+  document.getElementById('vr-approve').addEventListener('click', () => {
+    const finalText = document.getElementById('vr-edit').value.trim();
+    if (!finalText) { toast('Nothing to insert.'); return; }
+    const textarea = document.getElementById(targetId);
+    if (textarea) {
+      const ex = textarea.value.trim();
+      textarea.value = ex ? ex + '\n' + finalText : finalText;
+      textarea.focus();
+    }
+    overlay.remove();
+    toast('\u2714 Transcription inserted!');
+  });
+
+  // Improve with AI
+  document.getElementById('vr-improve').addEventListener('click', async () => {
+    const improveBtn = document.getElementById('vr-improve');
+    const origLabel = improveBtn.innerHTML;
+    improveBtn.disabled = true;
+    improveBtn.innerHTML = '<span class="vr-spinner"></span> Improving\u2026';
+
+    try {
+      const editArea = document.getElementById('vr-edit');
+      const textToImprove = editArea.value.trim() || rawText;
+
+      const res = await fetch(CONFIG.SUPABASE_URL + '/functions/v1/xhb-refine', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + CONFIG.SUPABASE_ANON_KEY
+        },
+        body: JSON.stringify({ text: textToImprove, lang: lang })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        toast('AI refine error: ' + (err.error || res.statusText));
+        return;
+      }
+
+      const data = await res.json();
+      const improved = (data.refined || data.text || '').trim();
+      if (!improved) { toast('AI returned empty — keeping original.'); return; }
+
+      // Show improved version
+      document.getElementById('vr-improved').textContent = improved;
+      document.getElementById('vr-improved-wrap').style.display = 'block';
+
+      // Calculate word diff
+      const origWords = textToImprove.split(/\s+/).length;
+      const newWords = improved.split(/\s+/).length;
+      const diff = newWords - origWords;
+      document.getElementById('vr-diff').innerHTML =
+        '<span class="saved">\u2714 AI refined</span> \u00b7 ' +
+        origWords + ' \u2192 ' + newWords + ' words' +
+        (diff !== 0 ? ' (' + (diff > 0 ? '+' : '') + diff + ')' : '');
+
+      // Update edit area with improved version
+      editArea.value = improved;
+
+    } catch (err) {
+      console.error('AI refine error:', err);
+      toast('AI refine failed: ' + err.message);
+    } finally {
+      improveBtn.disabled = false;
+      improveBtn.innerHTML = origLabel;
+    }
+  });
+}
+
+/* ---- Voice / Whisper transcription engine ---- */
+let _voiceRecorder = null;
+let _voiceChunks = [];
+let _voiceBtn = null;
+let _musicWasPlaying = false;
+let _musicVolBefore = 1;
+
+async function handleVoiceToggle(btn, targetId) {
+  // If already recording, stop
+  if (_voiceRecorder && _voiceRecorder.state === "recording" && _voiceBtn === btn) {
+    _voiceRecorder.stop();
+    return;
+  }
+  // If another recording is active, stop it first
+  if (_voiceRecorder && _voiceRecorder.state === "recording") {
+    _voiceRecorder.stop();
+    await new Promise(r => setTimeout(r, 200));
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    _voiceChunks = [];
+    _voiceBtn = btn;
+    btn.classList.add("recording");
+    btn.textContent = "\u23F9"; // ⏹ stop icon
+
+    // Duck background music
+    _musicWasPlaying = !audioEl.paused;
+    _musicVolBefore = audioEl.volume;
+    if (_musicWasPlaying) {
+      fadeAudio(0, 500);
+    }
+
+    _voiceRecorder = new MediaRecorder(stream, {
+      mimeType: MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : MediaRecorder.isTypeSupported("audio/webm")
+          ? "audio/webm"
+          : MediaRecorder.isTypeSupported("audio/mp4")
+            ? "audio/mp4"
+            : "" // let browser choose default
+    });
+
+    _voiceRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) _voiceChunks.push(e.data);
+    };
+
+    _voiceRecorder.onstop = async () => {
+      // Stop all tracks to release mic
+      stream.getTracks().forEach(t => t.stop());
+      btn.classList.remove("recording");
+      btn.classList.add("transcribing");
+      btn.textContent = "\u23F3"; // ⏳ hourglass
+
+      try {
+        const actualMime = _voiceRecorder.mimeType || "audio/webm";
+        const ext = actualMime.includes("mp4") ? "m4a" : actualMime.includes("ogg") ? "ogg" : "webm";
+        const blob = new Blob(_voiceChunks, { type: actualMime });
+        if (blob.size < 1000) {
+          toast("Recording too short \u2014 hold longer.");
+          btn.classList.remove("transcribing");
+          btn.textContent = "\uD83C\uDFA4";
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("audio", blob, "recording." + ext);
+        // Auto-detect language (Whisper handles Arabic + English)
+
+        const res = await fetch(CONFIG.SUPABASE_URL + "/functions/v1/xhb-whisper", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + CONFIG.SUPABASE_ANON_KEY
+          },
+          body: formData
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          toast("Whisper error: " + (err.error || res.statusText));
+          btn.classList.remove("transcribing");
+          btn.textContent = "\uD83C\uDFA4";
+          return;
+        }
+
+        const result = await res.json();
+        const text = (result.text || "").trim();
+        if (!text) {
+          toast("No speech detected — try again.");
+          btn.classList.remove("transcribing");
+          btn.textContent = "\uD83C\uDFA4";
+          return;
+        }
+
+        // Show voice review panel instead of direct insert
+        const langLabel = result.language || "auto";
+        showVoiceReview(text, targetId, langLabel);
+      } catch (err) {
+        console.error("Whisper transcription error:", err);
+        toast("Voice transcription failed: " + err.message);
+      } finally {
+        btn.classList.remove("transcribing");
+        btn.textContent = "\uD83C\uDFA4";
+        _voiceRecorder = null;
+        _voiceBtn = null;
+        // Restore music
+        if (_musicWasPlaying && !audioEl.paused) {
+          fadeAudio(_musicVolBefore, 800);
+        } else if (_musicWasPlaying && audioEl.paused) {
+          audioEl.volume = 0;
+          audioEl.play().then(() => fadeAudio(_musicVolBefore, 800)).catch(() => {});
+        }
+      }
+    };
+
+    _voiceRecorder.start();
+    toast("\uD83C\uDFA4 Recording\u2026 tap again to stop");
+
+  } catch (err) {
+    console.error("Mic access error:", err);
+    if (err.name === "NotAllowedError") {
+      toast("Microphone access denied — check browser permissions.");
+    } else {
+      toast("Could not access microphone: " + err.message);
+    }
+    btn.classList.remove("recording");
+    btn.textContent = "\uD83C\uDFA4";
+  }
+}
+
+/* ------------------------------- Boot ------------------------------ */
+/* Access is decided by a REAL Supabase auth session + xhb.is_allowed() RLS.
+   The MomenCrafts portal mints the session via the xhb-gate-request SSO
+   function and persists it to localStorage (same origin, same project).
+   /xhb/ simply calls getSession() — no tokens, no service keys in the browser. */
+
+async function boot() {
+  if (!LIVE) { me = { ...DEMO_ME }; demoSeed(); resolvedCache = await loadAllResolved(); render(); return; }
+  if (!window.supabase) { app.innerHTML = '<div class="center-wrap"><div class="authcard"><h2>Supabase library failed to load</h2><p>Check your network or the CDN script tag.</p></div></div>'; return; }
+
+  // ── Client: anon key only, same project ref as the portal ──
+  sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true },
+    db: { schema: 'xhb' }
+  });
+
+  // Helper: load app data and render
+  async function enterApp(email) {
+    document.body.classList.remove('gate-active');
+    me = { email: norm(email), phone: '', name: '' };
+    await loadMembers();
+    const self = members.find(x => norm(x.email) === me.email) || members[0];
+    if (self) { me.email = norm(self.email); me.name = self.display_name || nameFor(self.email); }
+    else { me.name = email.split('@')[0] || 'Founder'; }
+    dataLoading = true; render();
+    await loadOnboardingStatus();
+    await loadAlignmentItems();
+    await loadAlignmentDispositions();
+    await loadVisionContent();
+    await loadTemplateContent();
+    await refresh();
+    resolvedCache = await loadAllResolved();
+    dataLoading = false;
+    subscribeRealtime();
+    render();
+
+    // Auto-start background music on first user interaction (browser requires gesture)
+    if (!onboardingComplete) {
+      const _autoPlayOnce = () => {
+        document.removeEventListener('click', _autoPlayOnce);
+        document.removeEventListener('touchstart', _autoPlayOnce);
+        if (!audioEl.paused) return; // already playing
+        const musicEp = episodesList.find(ep => ep.title.toLowerCase().includes('music') || ep.title.toLowerCase().includes('ambient'));
+        if (musicEp && musicEp.url) {
+          currentEp = musicEp;
+          _loopEnabled = false;
+          playWithFade(musicEp.url);
+          setTimeout(render, 400);
+        }
+      };
+      document.addEventListener('click', _autoPlayOnce, { once: true });
+      document.addEventListener('touchstart', _autoPlayOnce, { once: true });
+    }
+  }
+
+  // ── Register auth listener FIRST so magic-link hash tokens are captured ──
+  sb.auth.onAuthStateChange(async (_evt, session) => {
+    if (session && session.user) {
+      await enterApp(session.user.email || '');
+    } else if (_evt === 'SIGNED_OUT') { me = null; render(); }
+  });
+
+  // ── Check for magic-link hash tokens in URL ──
+  const hash = window.location.hash;
+  if (hash && (hash.includes('access_token') || hash.includes('type=magiclink') || hash.includes('type=signup'))) {
+    // Supabase JS auto-detects hash tokens on init, but we need to wait for it
+    // Show loading state while token is being processed
+    app.innerHTML = '<div class="center-wrap"><div class="authcard"><div class="mark">XHB</div><div class="rule"></div><h2 class="serif">Signing you in\u2026</h2><p style="color:var(--muted);">Processing magic link.</p></div></div>';
+    // Clean the hash from URL
+    setTimeout(() => {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }, 500);
+    // onAuthStateChange above will fire with the session
+    return;
+  }
+
+  // ── Check for existing session (set by portal or prior visit) ──
+  const { data: sessionData } = await sb.auth.getSession();
+  if (sessionData && sessionData.session && sessionData.session.user) {
+    await enterApp(sessionData.session.user.email || '');
+    return;
+  }
+
+  // ── No session: show magic-link gate ──
+  renderGateIdentify();
+}
+boot();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Library Module — PDF upload, AI naming & summary, shared document drawer
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+let libraryDocs = [];
+let _libDrawerOpen = false;
+
+// Load pdf.js (legacy UMD build — works as global)
+const pdfJsScript = document.createElement('script');
+pdfJsScript.src = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+pdfJsScript.onload = () => {
+  if (window.pdfjsLib) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    console.log('pdf.js loaded OK');
+  }
+};
+document.head.appendChild(pdfJsScript);
+
+// Toggle drawer
+document.getElementById('library-pill').addEventListener('click', () => {
+  _libDrawerOpen = !_libDrawerOpen;
+  document.getElementById('library-drawer').classList.toggle('open', _libDrawerOpen);
+  document.getElementById('library-pill').classList.toggle('drawer-open', _libDrawerOpen);
+  if (_libDrawerOpen && libraryDocs.length === 0 && LIVE) loadLibrary();
+});
+document.getElementById('lib-close').addEventListener('click', () => {
+  _libDrawerOpen = false;
+  document.getElementById('library-drawer').classList.remove('open');
+  document.getElementById('library-pill').classList.remove('drawer-open');
+});
+
+// Drag-and-drop
+const dropZone = document.getElementById('lib-drop-zone');
+['dragenter', 'dragover'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add('dragover'); }));
+['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, () => dropZone.classList.remove('dragover')));
+dropZone.addEventListener('drop', e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) handleLibUpload(f); });
+document.getElementById('lib-file-input').addEventListener('change', e => { const f = e.target.files[0]; if (f) handleLibUpload(f); e.target.value = ''; });
+
+async function loadLibrary() {
+  if (!LIVE || !sb) return;
+  const { data, error } = await db().from('library').select('*').is('deleted_at', null).order('created_at', { ascending: false });
+  if (error) { console.error('Library load error:', error); return; }
+  libraryDocs = data || [];
+  renderLibrary();
+  updateLibPillCount();
+}
+
+function updateLibPillCount() {
+  const pill = document.getElementById('library-pill');
+  let countEl = pill.querySelector('.pill-count');
+  if (libraryDocs.length > 0) {
+    if (!countEl) { countEl = document.createElement('span'); countEl.className = 'pill-count'; pill.appendChild(countEl); }
+    countEl.textContent = libraryDocs.length;
+  } else if (countEl) {
+    countEl.remove();
+  }
+}
+
+function renderLibrary() {
+  const list = document.getElementById('lib-list');
+  if (libraryDocs.length === 0) {
+    list.innerHTML = '<div class="lib-empty"><div class="emp-icon">\uD83D\uDCDA</div><div>No documents yet.<br>Upload a PDF to get started.</div></div>';
+    return;
+  }
+  list.innerHTML = libraryDocs.map((doc, i) =>
+    '<div class="lib-card" style="animation-delay:' + (i * 0.05) + 's">' +
+      '<h3 dir="auto">' + esc(doc.title) + '</h3>' +
+      '<div class="lib-summary" dir="auto" style="border-left:2px solid var(--gold-soft); padding-left:10px; margin-left:2px;">' +
+      (doc.summary ? esc(doc.summary) : '<em style="opacity:0.5;">AI summary will appear on next upload with pdf.js loaded.</em>') + '</div>' +
+      '<div class="lib-meta">' +
+        '<span>\uD83D\uDCCE ' + esc(doc.file_name) + '</span>' +
+        '<span>\u00b7 ' + fmtFileSize(doc.file_size) + '</span>' +
+        '<span>\u00b7 ' + nameFor(doc.uploaded_by) + '</span>' +
+        '<span>\u00b7 ' + timeAgo(doc.created_at) + '</span>' +
+      '</div>' +
+      '<div class="lib-actions">' +
+        '<button class="btn btn-gold btn-sm" onclick="window.open(\'' + esc(doc.file_url) + '\', \'_blank\')">\uD83D\uDD17 Open PDF</button>' +
+        '<button class="btn btn-ghost btn-sm" onclick="deleteLibDoc(\'' + doc.id + '\')" style="color:#ef4444;">\uD83D\uDDD1 Delete</button>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+
+function fmtFileSize(bytes) {
+  if (!bytes) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let i = 0;
+  let size = bytes;
+  while (size >= 1024 && i < units.length - 1) { size /= 1024; i++; }
+  return size.toFixed(i > 0 ? 1 : 0) + ' ' + units[i];
+}
+
+function timeAgo(ts) {
+  if (!ts) return '';
+  const diff = (Date.now() - new Date(ts).getTime()) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+async function handleLibUpload(file) {
+  if (file.type !== 'application/pdf') { toast('Only PDF files are supported.'); return; }
+  if (file.size > 50 * 1024 * 1024) { toast('File too large — max 50 MB.'); return; }
+  if (!LIVE || !sb) { toast('Not connected to database.'); return; }
+
+  toast('\uD83D\uDCC4 Uploading ' + file.name + '\u2026');
+
+  // Show shimmer placeholder
+  const list = document.getElementById('lib-list');
+  const shimmer = document.createElement('div');
+  shimmer.className = 'lib-shimmer';
+  list.prepend(shimmer);
+
+  try {
+    // 1. Upload file to storage
+    const fileId = crypto.randomUUID();
+    const filePath = fileId + '.pdf';
+    const { error: uploadErr } = await sb.storage.from('xhb-library').upload(filePath, file, { contentType: 'application/pdf' });
+    if (uploadErr) { toast('Upload failed: ' + uploadErr.message); shimmer.remove(); return; }
+
+    const fileUrl = CONFIG.SUPABASE_URL + '/storage/v1/object/public/xhb-library/' + filePath;
+
+    // 2. Extract text from PDF (client-side)
+    let extractedText = '';
+    try {
+      const arrayBuf = await file.arrayBuffer();
+      if (window.pdfjsLib) {
+        const pdf = await window.pdfjsLib.getDocument({ data: arrayBuf }).promise;
+        const pages = [];
+        for (let i = 1; i <= Math.min(pdf.numPages, 10); i++) {
+          const page = await pdf.getPage(i);
+          const tc = await page.getTextContent();
+          pages.push(tc.items.map(item => item.str).join(' '));
+        }
+        extractedText = pages.join('\n\n');
+      }
+    } catch (pdfErr) {
+      console.warn('PDF text extraction failed:', pdfErr);
+    }
+
+    // 3. AI summarize
+    let title = file.name.replace(/\.pdf$/i, '');
+    let summary = '';
+
+    if (extractedText.length > 20) {
+      try {
+        const aiRes = await fetch(CONFIG.SUPABASE_URL + '/functions/v1/xhb-library-summarize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + CONFIG.SUPABASE_ANON_KEY },
+          body: JSON.stringify({ text: extractedText, filename: file.name })
+        });
+        if (aiRes.ok) {
+          const aiData = await aiRes.json();
+          title = aiData.title || title;
+          summary = aiData.summary || '';
+        }
+      } catch (aiErr) {
+        console.warn('AI summarize failed:', aiErr);
+      }
+    }
+
+    // 4. Save to database
+    const { error: dbErr } = await db().from('library').insert({
+      title, summary, file_url: fileUrl, file_name: file.name,
+      file_size: file.size, uploaded_by: norm(me.email)
+    });
+    if (dbErr) { toast('Save failed: ' + dbErr.message); shimmer.remove(); return; }
+
+    toast('\u2714 ' + title + ' uploaded!');
+    await loadLibrary();
+
+  } catch (err) {
+    console.error('Upload error:', err);
+    toast('Upload failed: ' + err.message);
+  } finally {
+    shimmer.remove();
+  }
+}
+
+async function deleteLibDoc(id) {
+  if (!LIVE || !sb) return;
+  const { error } = await db().from('library').update({ deleted_at: new Date().toISOString() }).eq('id', id);
+  if (error) { toast('Delete failed: ' + error.message); return; }
+  toast('\uD83D\uDDD1 Document removed');
+  await loadLibrary();
+}
+
+// Realtime subscription for library
+function subscribeLibraryRealtime() {
+  if (!LIVE || !sb) return;
+  sb.channel('xhb-library-changes')
+    .on('postgres_changes', { event: '*', schema: 'xhb', table: 'library' }, () => {
+      loadLibrary();
+    })
+    .subscribe();
+}
+
+// Hook into boot — load library after auth
+const _origEnterApp = window._origEnterApp;
+// We'll call loadLibrary and subscribeLibraryRealtime after boot completes
+setTimeout(() => {
+  if (LIVE && sb && me) {
+    loadLibrary();
+    subscribeLibraryRealtime();
+  }
+}, 2000);
+
+</script>
+</body>
+</html>
