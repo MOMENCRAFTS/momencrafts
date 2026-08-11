@@ -9,6 +9,7 @@ export interface TokenResult {
   expires?: string | null
   session?: string
   error?: string
+  projectAccess?: string[]
 }
 
 export async function verifyToken(token: string): Promise<TokenResult> {
@@ -32,6 +33,7 @@ export async function verifyToken(token: string): Promise<TokenResult> {
       label:   raw.investorLabel?.replace(/[^\x00-\x7F]/g, '').trim() ?? raw.label,
       expires: raw.expiresAt   ?? raw.expires ?? null,
       session: raw.sessionKey  ?? raw.session,
+      projectAccess: raw.projectAccess ?? [],
     }
   } catch {
     return { valid: false, error: 'Network error — check your connection.' }

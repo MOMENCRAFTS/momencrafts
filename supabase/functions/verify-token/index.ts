@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
     // 1. Look up token
     const { data: row, error } = await supabase
       .from('investor_tokens')
-      .select('id, label, email, token_type, expires_at, revoked_at, nda_signed_at')
+      .select('id, label, email, token_type, expires_at, revoked_at, nda_signed_at, project_access')
       .eq('token', normalizedToken)
       .maybeSingle()
 
@@ -107,6 +107,7 @@ Deno.serve(async (req) => {
       investorEmail: row.email,
       ndaSignedAt: row.nda_signed_at,
       ndaRequired: !row.nda_signed_at,
+      projectAccess: row.project_access || [],
     }, cors)
   } catch (err) {
     console.error('verify-token error:', err)

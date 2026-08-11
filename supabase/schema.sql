@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS investor_tokens (
   expires_at     TIMESTAMPTZ,                        -- NULL for PERMANENT
   revoked_at     TIMESTAMPTZ,
   revoke_reason  TEXT,
-  created_by     TEXT DEFAULT 'admin'                -- future: Google OAuth email
+  created_by     TEXT DEFAULT 'admin',               -- future: Google OAuth email
+  project_access TEXT[] DEFAULT '{}'                  -- which projects this token can access
 );
 
 -- Index for fast token lookup

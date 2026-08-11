@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
       }
 
       case 'create': {
-        const { label, email, notes, token_type: tt } = body
+        const { label, email, notes, token_type: tt, project_access } = body
         const tokenType = tt || body.tokenType
         if (!label || !tokenType) {
           return json(400, { error: 'label and token_type are required' }, corsHeaders)
@@ -99,6 +99,7 @@ Deno.serve(async (req) => {
           notes: notes || null,
           token_type: tokenType,
           expires_at: expiresAt,
+          project_access: Array.isArray(project_access) ? project_access : (project_access ? [project_access] : []),
         }).select('id, token, expires_at').single()
 
         if (error) {

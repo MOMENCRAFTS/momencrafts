@@ -9,3 +9,5 @@ tsconfig.tsbuildinfo
 .env.*.local
 
 .vercel
+
+xhb_seed_tailored.sql

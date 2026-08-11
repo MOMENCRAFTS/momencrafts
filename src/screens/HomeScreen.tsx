@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
+import { mintXhbSession, mintAdminXhbSession } from '@/services/xhbSession'
 import { FeedbackPanel } from '@/components/FeedbackPanel'
 import '@/styles/home.css'
 
@@ -99,6 +100,7 @@ const BALLOT_PRODUCTS = [
   { id: 'sabha',    label: 'SABHA · سبحة' },
   { id: 'tdc',      label: 'TURBO DRONE CIRCUIT' },
   { id: 'edgetack', label: 'EDGE TACK' },
+  { id: 'xhb',      label: 'XHB · مشروع مُتبنّى' },
 ]
 const SUPABASE_FN = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1'
 
@@ -1222,6 +1224,81 @@ export default function HomeScreen() {
               <p className="card-desc">ملحق ألعاب جوال يجمع واقي الشاشة مع أزرار هوائية قابلة للطي لتجربة لعب أدق.</p>
               <div className="card-tags"><span className="tag">ألعاب الجوال</span><span className="tag">براءة اختراع</span></div>
               <a href="/edgetack" className="card-link">اعرف أكثر ←</a>
+            </article>
+
+            {/* ─── XHB — ADOPTED PROJECT ─── */}
+            <article className="product-card reveal delay-500" id="card-xhb-ar" data-accent="forest"
+              style={{ border: '1px solid rgba(34,197,94,0.2)', background: 'linear-gradient(145deg, #0a120a 0%, #111116 50%)' }}>
+              <div className="card-accent-bar" style={{ background: 'linear-gradient(90deg, #22c55e, #15803d)' }} />
+
+              {/* Adopted badge */}
+              <div style={{
+                position: 'absolute', top: '.65rem', left: '.75rem',
+                background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.25)',
+                borderRadius: '6px', padding: '.2rem .55rem',
+                fontSize: '.58rem', fontWeight: 700, letterSpacing: '.06em',
+                color: '#22c55e', textTransform: 'uppercase',
+              }}>🤝 مشروع مُتبنّى · ADOPTED</div>
+
+              <div className="card-header" style={{ marginTop: '1.6rem' }}>
+                <div className="card-icon" style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e' }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                  </svg>
+                </div>
+                <span className="card-status prototype">◈ تأسيس مبكر</span>
+              </div>
+              <h3 className="card-title">XHB</h3>
+              <p className="card-tagline">مقر المؤسسين · Founders' HQ</p>
+              <p className="card-desc">منصة تأسيس مشتركة تجمع الرؤية والخطط والقرارات بين المؤسسين في بيئة محمية ومنظمة.</p>
+
+              {/* Founder credit */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: '.5rem',
+                margin: '.6rem 0', padding: '.45rem .65rem',
+                background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.12)',
+                borderRadius: '8px', fontSize: '.68rem', color: 'rgba(240,235,227,0.65)',
+              }}>
+                <span style={{ fontSize: '.85rem' }}>✦</span>
+                <span>مؤسس المشروع: <strong style={{ color: '#22c55e' }}>ملحم الذهبي · Mulham Al Zahabi</strong></span>
+              </div>
+
+              <div className="card-tags">
+                <span className="tag" style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e' }}>تأسيس شراكة</span>
+                <span className="tag" style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e' }}>وصول محدود</span>
+              </div>
+              <button
+                className="card-link"
+                style={{ color: '#22c55e', background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit', textAlign: 'inherit' }}
+                onClick={async (e) => {
+                  e.preventDefault()
+                  const btn = e.currentTarget
+                  const origText = btn.textContent
+                  btn.textContent = 'جاري الدخول…'
+                  btn.setAttribute('disabled', 'true')
+                  try {
+                    const token = sessionStorage.getItem('mcr_token') || ''
+                    if (token) {
+                      await mintXhbSession(token)
+                    } else {
+                      // Admin fallback: portal session exists but mcr_token
+                      // was cleared. Use the portal email to mint an XHB
+                      // session via the admin_sso endpoint (superadmin only).
+                      const email = sessionStorage.getItem('mcr_email') || ''
+                      if (email) {
+                        await mintAdminXhbSession(email)
+                      }
+                    }
+                    window.location.href = '/xhb/'
+                  } catch (err) {
+                    console.error('XHB SSO failed:', err)
+                    window.location.href = '/xhb/'
+                  } finally {
+                    btn.textContent = origText
+                    btn.removeAttribute('disabled')
+                  }
+                }}
+              >دخول مقر XHB ←</button>
             </article>
 
           </div>

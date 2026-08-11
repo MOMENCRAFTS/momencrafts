@@ -264,6 +264,8 @@ export default function GateScreen() {
       sessionStorage.setItem('mcr_name',    investorName)
       sessionStorage.setItem('mcr_type',    tokenType)
       sessionStorage.setItem('mcr_expires', data.expires ?? '')
+      sessionStorage.setItem('mcr_projects', JSON.stringify(data.projectAccess ?? []))
+      sessionStorage.setItem('mcr_email',   data.email ?? '')
 
       setPendingData({ token: tokenVal, name: investorName, type: tokenType, expires: data.expires ?? null, session })
       setInputState('success')
@@ -330,7 +332,7 @@ export default function GateScreen() {
     setInputState('default')
     setTokenVal('')
     setPendingData(null)
-    ;['mcr_session','mcr_token','mcr_name','mcr_type','mcr_expires'].forEach(k => sessionStorage.removeItem(k))
+    ;['mcr_session','mcr_token','mcr_name','mcr_type','mcr_expires','mcr_email','mcr_projects'].forEach(k => sessionStorage.removeItem(k))
   }
 
   const inputClass = `token-input${inputState === 'error' ? ' error' : inputState === 'success' ? ' success' : ''}`

@@ -40,17 +40,14 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_allowed_users_phone
 
 
 -- ═════════════════════════════════════════════════════════════════════════
--- B.2  Seed both founders
---      ⚠ REPLACE the +966XXXXXXXXX / +966YYYYYYYYY placeholders with
---        real E.164 phone numbers BEFORE running this migration.
+-- B.2  Seed sole founder — only momen@momencrafts.com has XHB access
+--      ⚠ REPLACE the +966YYYYYYYYY placeholder with the real E.164
+--        phone number BEFORE running this migration.
 -- ═════════════════════════════════════════════════════════════════════════
 
--- Mulham — was never seeded; only Momen existed in setup_v2.sql
-INSERT INTO public.allowed_users (email, display_name, phone)
-VALUES ('mulham@xhb.sa', 'Mulham', '+966XXXXXXXXX')
-ON CONFLICT (email) DO UPDATE
-  SET display_name = EXCLUDED.display_name,
-      phone = COALESCE(public.allowed_users.phone, EXCLUDED.phone);
+-- Remove any other users from allowlist — XHB is single-founder access only
+DELETE FROM public.allowed_users
+WHERE email <> 'momen@momencrafts.com';
 
 -- Momen — add phone to existing row
 UPDATE public.allowed_users
