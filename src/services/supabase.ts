@@ -10,6 +10,7 @@ export interface TokenResult {
   session?: string
   error?: string
   projectAccess?: string[]
+  email?: string
 }
 
 export async function verifyToken(token: string): Promise<TokenResult> {
@@ -29,8 +30,8 @@ export async function verifyToken(token: string): Promise<TokenResult> {
     return {
       valid: true,
       type:    raw.tokenType   ?? raw.type,
-      name:    raw.investorLabel?.replace(/[^\x00-\x7F]/g, '').trim() ?? raw.name ?? raw.label,
-      label:   raw.investorLabel?.replace(/[^\x00-\x7F]/g, '').trim() ?? raw.label,
+      name:    (raw.investorLabel ?? raw.name ?? raw.label ?? '').trim(),
+      label:   (raw.investorLabel ?? raw.label ?? '').trim(),
       expires: raw.expiresAt   ?? raw.expires ?? null,
       session: raw.sessionKey  ?? raw.session,
       projectAccess: raw.projectAccess ?? [],
