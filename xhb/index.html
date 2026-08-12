@@ -337,6 +337,8 @@
   @keyframes ob-fadein{from{opacity:0; transform:translateY(10px);}to{opacity:1; transform:translateY(0);}}
   .ob-item:nth-child(1){animation-delay:0s;}.ob-item:nth-child(2){animation-delay:0.05s;}.ob-item:nth-child(3){animation-delay:0.1s;}.ob-item:nth-child(4){animation-delay:0.15s;}.ob-item:nth-child(5){animation-delay:0.2s;}.ob-item:nth-child(6){animation-delay:0.25s;}.ob-item:nth-child(7){animation-delay:0.3s;}.ob-item:nth-child(8){animation-delay:0.35s;}
   .ob-item.ob-aligned{border-color:var(--ok); background:linear-gradient(135deg, var(--card) 0%, rgba(127,176,105,0.06) 100%);}
+  .ob-item.ob-contested{border-color:#f59e0b; background:linear-gradient(135deg, var(--card) 0%, rgba(245,158,11,0.04) 100%);}
+  .chip.contested{background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3);}
   .ob-item-head{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;}
   .ob-num{width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, var(--gold-soft), var(--gold)); color:var(--night); font-weight:700; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; box-shadow:0 2px 8px rgba(212,168,85,0.3);}
   .ob-item-head h2{margin:0; font-size:16px; flex:1;}
@@ -620,7 +622,7 @@ function partnerOf(meEmail) {
 
 async function loadMembers() {
   if (!LIVE) return;
-  const { data } = await db().from("allowed_users").select("email, display_name, phone, is_approver");
+  const { data } = await db().from("allowed_users").select("email, display_name, phone, is_approver, is_builder");
   members = data || [];
 }
 async function loadSessions() {
@@ -921,6 +923,10 @@ function meIsApprover() {
   const m = members.find(x => norm(x.email) === norm(me.email));
   return m ? !!m.is_approver : false;
 }
+function meIsBuilder() {
+  const m = members.find(x => norm(x.email) === norm(me.email));
+  return m ? !!m.is_builder : false;
+}
 async function lockArtifact() {
   if (!currentArtifact) return;
   const latestVer = artifactVersions.length ? artifactVersions[0].version : null;
@@ -973,72 +979,168 @@ function chipQ(q) {
 /* ----- Onboarding Alignment Wizard ----- */
 function viewOnboarding() {
   const partner = partnerOf(me.email);
-  const total = alignmentItems.length;
-  const allAligned = total > 0 && alignmentItems.every(item => {
-    const disps = alignmentDispositions.filter(d => d.item_id === item.id);
-    const myD = disps.find(d => norm(d.email) === norm(me.email));
-    const theirD = disps.find(d => norm(d.email) === partner.email);
-    return myD && myD.disposition === 'approve' && theirD && theirD.disposition === 'approve';
-  });
-  const aligned = alignmentItems.filter(item => {
-    const disps = alignmentDispositions.filter(d => d.item_id === item.id);
-    const myD = disps.find(d => norm(d.email) === norm(me.email));
-    const theirD = disps.find(d => norm(d.email) === partner.email);
-    return myD && myD.disposition === 'approve' && theirD && theirD.disposition === 'approve';
-  }).length;
+  const iAmBuilder = meIsBuilder();
 
+  // ── Compute rounds ──
+  const rounds = [];
+  alignmentItems.forEach(item => {
+    const r = item.round || 1;
+    if (!rounds[r]) rounds[r] = [];
+    rounds[r].push(item);
+  });
+  const roundNums = Object.keys(rounds).map(Number).sort((a, b) => a - b);
+  // activeRound = highest published round, or 1
+  const publishedRounds = roundNums.filter(r => rounds[r].some(i => i.round_status === 'published'));
+  if (!window._obRound) window._obRound = publishedRounds.length ? publishedRounds[publishedRounds.length - 1] : 1;
+  const currentRound = window._obRound;
+  const currentItems = (rounds[currentRound] || []).filter(i => i.round_status === 'published');
+  const total = currentItems.length;
+
+  const isItemAligned = (item) => {
+    const disps = alignmentDispositions.filter(d => d.item_id === item.id);
+    const myD = disps.find(d => norm(d.email) === norm(me.email));
+    const theirD = disps.find(d => norm(d.email) === partner.email);
+    return myD && myD.disposition === 'approve' && theirD && theirD.disposition === 'approve';
+  };
+
+  const aligned = currentItems.filter(isItemAligned).length;
+  const allAligned = total > 0 && aligned === total;
+  const pct = total ? Math.round(aligned / total * 100) : 0;
+
+  // ── Header ──
   let html = '<div class="onboarding-wrap">' +
     '<div class="onboarding-header">' +
     '<div class="mark">XHB</div><div class="rule"></div>' +
     '<h1 class="serif">Founding Alignment</h1>' +
     '<p class="meta">Both founders must approve every item before the HQ opens. ' +
-    'Annotating resets both approvals on that item. Nothing is skippable.</p>' +
-    '<div class="ob-progress"><span class="ob-count">' + aligned + ' / ' + total + ' aligned</span>' +
-    '<div class="ob-bar"><div class="ob-fill" style="width:' + (total ? Math.round(aligned / total * 100) : 0) + '%;"></div></div></div>' +
-    (allAligned ? '<button class="btn btn-gold" data-act="ob-complete">Complete alignment & open the HQ \u2192</button>' : '') +
-    '</div>';
+    'Annotating resets both approvals on that item. Nothing is skippable.</p>';
 
-  const pct = total ? Math.round(aligned / total * 100) : 0;
-  // Introduction and How to Use (show only when < 30% complete)
-  if (pct < 30) {
+  // ── Round tabs ──
+  if (roundNums.length > 1 || allAligned) {
+    html += '<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;">';
+    roundNums.forEach(r => {
+      const rItems = (rounds[r] || []).filter(i => i.round_status === 'published');
+      const rAligned = rItems.filter(isItemAligned).length;
+      const rDone = rItems.length > 0 && rAligned === rItems.length;
+      const isActive = r === currentRound;
+      html += '<button class="btn ' + (isActive ? 'btn-gold' : 'btn-ghost') + ' btn-sm" ' +
+        'data-act="ob-round" data-round="' + r + '" style="' + (rDone ? 'border-color:#10b981;' : '') + '">' +
+        'Round ' + r + (rDone ? ' ✔' : ' (' + rAligned + '/' + rItems.length + ')') + '</button>';
+    });
+    html += '</div>';
+  }
+
+  // ── Progress bar ──
+  html += '<div class="ob-progress"><span class="ob-count">Round ' + currentRound + ': ' + aligned + ' / ' + total + ' aligned</span>' +
+    '<div class="ob-bar"><div class="ob-fill" style="width:' + pct + '%;"></div></div></div>';
+
+  // ── Round complete panel ──
+  if (allAligned && total > 0) {
+    if (iAmBuilder) {
+      // ═══ MOMEN'S DECISION PANEL ═══
+      html += '<div style="background:linear-gradient(135deg, rgba(184,134,58,0.08) 0%, rgba(184,134,58,0.02) 100%); border:2px solid rgba(184,134,58,0.3); border-radius:14px; padding:22px 24px; margin-bottom:20px;">' +
+        '<h2 style="font-size:18px; margin:0 0 6px; display:flex; align-items:center; gap:8px;">🎯 Round ' + currentRound + ' — Decision Panel</h2>' +
+        '<p style="font-size:13px; color:var(--cream-dim); margin-bottom:16px;">All ' + total + ' items are aligned. Review the summary below, then choose your next step.</p>';
+
+      // Summary table
+      html += '<div style="max-height:320px; overflow-y:auto; margin-bottom:16px;">';
+      currentItems.forEach((item, idx) => {
+        const disps = alignmentDispositions.filter(d => d.item_id === item.id);
+        const notes = disps.filter(d => d.note && d.note.trim());
+        html += '<div style="background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin-bottom:8px;">' +
+          '<div style="font-size:13px; font-weight:600; margin-bottom:4px;">' + (idx + 1) + '. ' + esc(item.title) + '</div>';
+        if (notes.length) {
+          notes.forEach(n => {
+            html += '<div style="font-size:12px; color:var(--cream-dim); background:var(--bg); padding:6px 8px; border-radius:4px; margin-top:4px;">' +
+              '<strong>' + esc(nameFor(n.email)) + ':</strong> ' + esc(n.note) + '</div>';
+          });
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+
+      // Action buttons
+      html += '<div style="display:flex; gap:10px; flex-wrap:wrap;">' +
+        '<button class="btn btn-ghost btn-sm" data-act="ob-add-round" style="border-color:var(--gold-soft); color:var(--gold-soft);">➕ Add Round ' + (currentRound + 1) + ' items</button>' +
+        '<button class="btn btn-gold" data-act="ob-complete">🔓 Unlock XHB</button>' +
+        '</div>';
+
+      html += '</div>';
+
+    } else {
+      // ═══ MULHAM'S ROUND-COMPLETE VIEW ═══
+      html += '<div style="background:linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0.02) 100%); border:2px solid rgba(16,185,129,0.3); border-radius:14px; padding:22px 24px; margin-bottom:20px;">' +
+        '<h2 style="font-size:18px; margin:0 0 6px; display:flex; align-items:center; gap:8px;">✅ Round ' + currentRound + ' Complete</h2>' +
+        '<p style="font-size:13px; color:var(--cream-dim); margin-bottom:14px;">All ' + total + ' items are aligned. Momen is reviewing the decisions and will either add a new round or unlock the workspace.</p>';
+
+      // Advisory signals
+      const annotatedCount = currentItems.filter(item => {
+        const disps = alignmentDispositions.filter(d => d.item_id === item.id);
+        return disps.some(d => d.note && d.note.trim());
+      }).length;
+
+      html += '<div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">' +
+        '<div style="background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; flex:1; min-width:120px; text-align:center;">' +
+        '<div style="font-size:22px; font-weight:700; color:#10b981;">' + aligned + '</div>' +
+        '<div style="font-size:11px; color:var(--cream-dim);">Aligned</div></div>' +
+        '<div style="background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; flex:1; min-width:120px; text-align:center;">' +
+        '<div style="font-size:22px; font-weight:700; color:#f59e0b;">' + annotatedCount + '</div>' +
+        '<div style="font-size:11px; color:var(--cream-dim);">Had annotations</div></div>' +
+        '<div style="background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; flex:1; min-width:120px; text-align:center;">' +
+        '<div style="font-size:22px; font-weight:700; color:var(--lavender);">' + currentRound + '</div>' +
+        '<div style="font-size:11px; color:var(--cream-dim);">Current round</div></div>' +
+        '</div>';
+
+      html += '<p style="font-size:12px; color:var(--cream-dim); margin:0;">⏳ Waiting for Momen to decide next steps…</p>' +
+        '</div>';
+    }
+  } else {
+    // Not all aligned yet — show the complete button only for builder
+    if (false) { /* disabled — handled by decision panel */ }
+  }
+
+  html += '</div>';
+
+  // ── How it works (show only when < 30% on Round 1) ──
+  if (pct < 30 && currentRound === 1) {
     html += '<div style="background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin-bottom:20px;">' +
-      '<h2 style="font-size:17px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">\uD83D\uDC4B Welcome to Founding Alignment</h2>' +
+      '<h2 style="font-size:17px; margin-bottom:10px; display:flex; align-items:center; gap:8px;">👋 Welcome to Founding Alignment</h2>' +
       '<p style="font-size:14px; line-height:1.7; color:var(--cream); margin-bottom:14px;">' +
       'This is where you and your co-founder align on the critical decisions that shape XHB before any code is written. ' +
-      'Each card below represents a decision extracted from the <strong style="color:var(--gold-soft);">Combined Progress \u0026 Alignment Brief</strong>. ' +
-      'The HQ workspace unlocks only after both founders approve every single decision \u2014 no shortcuts.</p>' +
+      'Each card below represents a decision extracted from the <strong style="color:var(--gold-soft);">Combined Progress & Alignment Brief</strong>. ' +
+      'The HQ workspace unlocks only after both founders approve every single decision — no shortcuts.</p>' +
 
       '<h3 style="font-size:14px; color:var(--gold-soft); margin-bottom:10px;">How it works</h3>' +
       '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px; margin-bottom:12px;">' +
 
       '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
-      '<div style="font-size:18px; margin-bottom:4px;">\u2705</div>' +
+      '<div style="font-size:18px; margin-bottom:4px;">✅</div>' +
       '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Approve</div>' +
       '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">You agree with this decision as written. Both founders must approve for it to be aligned.</div></div>' +
 
       '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
-      '<div style="font-size:18px; margin-bottom:4px;">\u270E</div>' +
+      '<div style="font-size:18px; margin-bottom:4px;">✎</div>' +
       '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Annotate</div>' +
       '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Something needs to change. Write what\u2019s wrong or what you\u2019d prefer. This resets both approvals so you can realign.</div></div>' +
 
       '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
-      '<div style="font-size:18px; margin-bottom:4px;">\uD83C\uDFA4</div>' +
+      '<div style="font-size:18px; margin-bottom:4px;">🎤</div>' +
       '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Voice + AI</div>' +
-      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Tap \uD83C\uDFA4 to speak in Arabic or English. AI transcribes and can refine your text before submitting.</div></div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Tap 🎤 to speak in Arabic or English. AI transcribes and can refine your text before submitting.</div></div>' +
 
       '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
-      '<div style="font-size:18px; margin-bottom:4px;">\uD83C\uDFA7</div>' +
+      '<div style="font-size:18px; margin-bottom:4px;">🎧</div>' +
       '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Radio</div>' +
-      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Tap the \uD83C\uDFA7 pill on the left to play background music and podcast episodes while you work.</div></div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Tap the 🎧 pill on the left to play background music and podcast episodes while you work.</div></div>' +
 
       '<div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px;">' +
-      '<div style="font-size:18px; margin-bottom:4px;">\uD83D\uDCDA</div>' +
+      '<div style="font-size:18px; margin-bottom:4px;">📚</div>' +
       '<div style="font-size:13px; font-weight:600; margin-bottom:3px;">Library</div>' +
-      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Tap the \uD83D\uDCDA pill on the right to upload PDFs. AI auto-names and summarizes every document you share.</div></div>' +
+      '<div style="font-size:12px; color:var(--cream-dim); line-height:1.5;">Tap the 📚 pill on the right to upload PDFs. AI auto-names and summarizes every document you share.</div></div>' +
 
       '</div>' +
       '<p style="font-size:12px; color:var(--cream-dim); border-top:1px solid var(--line); padding-top:8px; margin:0;">' +
-      '\uD83D\uDD12 Your partner sees your decisions in real time. The workspace opens only when every card shows <strong style="color:#10b981;">\u2714 Aligned</strong>.</p>' +
+      '🔒 Your partner sees your decisions in real time. The workspace opens only when every card shows <strong style="color:#10b981;">✔ Aligned</strong>.</p>' +
       '</div>';
   }
 
@@ -1048,7 +1150,7 @@ function viewOnboarding() {
   const annotatedItems = [];
   const categoryProgress = {};
 
-  alignmentItems.forEach(item => {
+  currentItems.forEach(item => {
     const disps = alignmentDispositions.filter(d => d.item_id === item.id);
     const myD = disps.find(d => norm(d.email) === norm(me.email));
     const theirD = disps.find(d => norm(d.email) === partner.email);
@@ -1065,7 +1167,6 @@ function viewOnboarding() {
   });
 
   const nextForMe = myPending[0];
-  // pct already declared above
 
   // Phase detection
   let phase, phaseIcon, phaseColor;
@@ -1106,7 +1207,7 @@ function viewOnboarding() {
   // Next action
   if (nextForMe && !allAligned) {
     html += '<div style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; background:rgba(212,168,85,0.08); border:1px solid rgba(212,168,85,0.2); border-radius:8px; margin-bottom:10px;">' +
-      '<span style="font-size:16px;">\u27A1\uFE0F</span>' +
+      '<span style="font-size:16px;">➡️</span>' +
       '<div><div style="font-size:13px; font-weight:600; color:var(--gold-soft);">Your next decision</div>' +
       '<div style="font-size:13px; color:var(--cream); margin-top:2px;">' + esc(nextForMe.title) + ' <span style="color:var(--cream-dim);">\u2014 ' + esc(nextForMe.category) + '</span></div></div></div>';
   }
@@ -1114,13 +1215,13 @@ function viewOnboarding() {
   // Annotations needing attention
   if (annotatedItems.length > 0) {
     html += '<div style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.2); border-radius:8px; margin-bottom:10px;">' +
-      '<span style="font-size:16px;">\u270E</span>' +
+      '<span style="font-size:16px;">✎</span>' +
       '<div><div style="font-size:13px; font-weight:600; color:var(--lavender);">' + annotatedItems.length + ' decision' + (annotatedItems.length > 1 ? 's' : '') + ' annotated</div>' +
       '<div style="font-size:12px; color:var(--cream-dim); margin-top:2px;">These need discussion or revision before both founders can approve.</div></div></div>';
   }
 
   // Waiting on partner
-  const waitingOnThem = alignmentItems.filter(function(item) {
+  const waitingOnThem = currentItems.filter(function(item) {
     const disps = alignmentDispositions.filter(d => d.item_id === item.id);
     const myD = disps.find(d => norm(d.email) === norm(me.email));
     const theirD = disps.find(d => norm(d.email) === partner.email);
@@ -1128,14 +1229,14 @@ function viewOnboarding() {
   });
   if (waitingOnThem.length > 0 && !allAligned) {
     html += '<div style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.2); border-radius:8px; margin-bottom:10px;">' +
-      '<span style="font-size:16px;">\u23F3</span>' +
+      '<span style="font-size:16px;">⏳</span>' +
       '<div><div style="font-size:13px; font-weight:600; color:var(--cream-dim);">Waiting on ' + esc(partner.name) + '</div>' +
       '<div style="font-size:12px; color:var(--cream-dim); margin-top:2px;">' + waitingOnThem.length + ' decision' + (waitingOnThem.length > 1 ? 's' : '') + ' you approved are awaiting their review.</div></div></div>';
   }
 
   // Motivational tip
   html += '<div style="font-size:13px; color:var(--cream-dim); padding-top:8px; border-top:1px solid var(--line); margin-top:4px;">' +
-    '<strong style="color:var(--gold-soft);">\uD83D\uDCA1 Tip:</strong> ' + tips[tipKey] + '</div>';
+    '<strong style="color:var(--gold-soft);">💡 Tip:</strong> ' + tips[tipKey] + '</div>';
 
   html += '</div>';
 
@@ -1143,11 +1244,14 @@ function viewOnboarding() {
   const isMuted = audioEl.paused || audioEl.volume === 0;
   html += '<div style="display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 16px; margin-bottom:20px;">' +
     '<button class="ep-play-btn' + (!isMuted ? ' playing' : '') + '" data-act="ob-music-toggle" style="width:34px; height:34px; font-size:14px;">' +
-    (isMuted ? '\uD83D\uDD07' : '\uD83D\uDD0A') + '</button>' +
-    '<div style="flex:1; font-size:13px; color:var(--cream-dim);">\uD83C\uDFA7 Background music \u00b7 loops while you align</div>' +
+    (isMuted ? '🔇' : '🔊') + '</button>' +
+    '<div style="flex:1; font-size:13px; color:var(--cream-dim);">🎧 Background music · loops while you align</div>' +
     '</div>';
 
-  alignmentItems.forEach((item, idx) => {
+  // ── Check if viewing a past (read-only) round ──
+  const isPastRound = currentRound < (publishedRounds.length ? publishedRounds[publishedRounds.length - 1] : 1) && allAligned;
+
+  currentItems.forEach((item, idx) => {
     const disps = alignmentDispositions.filter(d => d.item_id === item.id);
     const myD = disps.find(d => norm(d.email) === norm(me.email));
     const theirD = disps.find(d => norm(d.email) === partner.email);
@@ -1155,13 +1259,25 @@ function viewOnboarding() {
     const theirStatus = theirD ? theirD.disposition : 'pending';
     const bothApproved = myStatus === 'approve' && theirStatus === 'approve';
 
-    html += '<div class="ob-item' + (bothApproved ? ' ob-aligned' : '') + '">' +
+    // Three gate states
+    let gateState = 'in-progress'; // default
+    if (bothApproved) gateState = 'aligned';
+    else if (myStatus !== 'pending' && theirStatus !== 'pending') gateState = 'answered-not-aligned';
+
+    const gateClass = gateState === 'aligned' ? 'ob-aligned' : gateState === 'answered-not-aligned' ? 'ob-contested' : '';
+
+    html += '<div class="ob-item ' + gateClass + '">' +
       '<div class="ob-item-head">' +
       '<span class="ob-num">' + (idx + 1) + '</span>' +
       '<h2 class="serif" dir="auto">' + esc(item.title) + '</h2>' +
-      '<span class="ob-cat">' + esc(item.category) + '</span>' +
-      (bothApproved ? '<span class="chip aligned">\u2714 Aligned</span>' : '') +
-      '</div>';
+      '<span class="ob-cat">' + esc(item.category) + '</span>';
+
+    if (gateState === 'aligned') {
+      html += '<span class="chip aligned">✔ Aligned</span>';
+    } else if (gateState === 'answered-not-aligned') {
+      html += '<span class="chip contested">⚡ Needs discussion</span>';
+    }
+    html += '</div>';
 
     // Item body (the content to align on)
     if (item.body_md) {
@@ -1175,39 +1291,44 @@ function viewOnboarding() {
     html += '<div class="ob-panel">' +
       '<h3>You (' + esc(nameFor(me.email)) + ')</h3>';
     if (myStatus === 'approve') {
-      html += '<div class="ob-disp approve">\u2714 Approved</div>';
+      html += '<div class="ob-disp approve">✔ Approved</div>';
     } else if (myStatus === 'annotate') {
-      html += '<div class="ob-disp annotate">\u270E Annotated</div>' +
+      html += '<div class="ob-disp annotate">✎ Annotated</div>' +
         '<div class="ob-note" dir="auto">' + esc(myD.note || '') + '</div>';
     } else {
       html += '<div class="ob-disp pending">Pending</div>';
     }
-    // Action buttons (always available to change your mind)
-    html += '<div class="ob-actions">' +
-      '<button class="btn btn-gold btn-sm" data-act="ob-approve" data-item="' + item.id + '">Approve</button>' +
-      '<button class="btn btn-ghost btn-sm" data-act="ob-annotate-start" data-item="' + item.id + '">Annotate</button>' +
-      (myStatus === 'annotate' ? '<button class="btn btn-ghost btn-sm" data-act="ob-delete-annotation" data-item="' + item.id + '" style="color:#ef4444;">\uD83D\uDDD1 Delete</button>' : '') +
-      '</div>';
-    // Annotation input (hidden by default, shown by JS)
-    const draftKey = 'xhb-draft-' + item.id;
-    const draftVal = localStorage.getItem(draftKey) || '';
-    const prefill = draftVal || (myD && myD.disposition === 'annotate' ? myD.note || '' : '');
-    html += '<div class="ob-annotate-form" id="ob-ann-' + item.id + '" style="display:none;">' +
-      '<div class="voice-wrap">' +
-      '<textarea dir="auto" id="ob-note-' + item.id + '" placeholder="What needs to change? Type or tap 🎤 to speak\u2026" oninput="localStorage.setItem(\'' + draftKey + '\', this.value)">' + esc(prefill) + '</textarea>' +
-      '<button class="btn-mic" data-act="voice" data-target="ob-note-' + item.id + '" title="Hold to record voice note">\uD83C\uDFA4</button>' +
-      '</div>' +
-      '<button class="btn btn-gold btn-sm" data-act="ob-annotate-submit" data-item="' + item.id + '">Submit annotation</button>' +
-      '</div>';
+
+    // Action buttons (always available unless past round)
+    if (!isPastRound) {
+      html += '<div class="ob-actions">' +
+        '<button class="btn btn-gold btn-sm" data-act="ob-approve" data-item="' + item.id + '">Approve</button>' +
+        '<button class="btn btn-ghost btn-sm" data-act="ob-annotate-start" data-item="' + item.id + '">Annotate</button>' +
+        (myStatus === 'annotate' ? '<button class="btn btn-ghost btn-sm" data-act="ob-delete-annotation" data-item="' + item.id + '" style="color:#ef4444;">🗑 Delete</button>' : '') +
+        '</div>';
+      // Annotation input (hidden by default, shown by JS)
+      const draftKey = 'xhb-draft-' + item.id;
+      const draftVal = localStorage.getItem(draftKey) || '';
+      const prefill = draftVal || (myD && myD.disposition === 'annotate' ? myD.note || '' : '');
+      html += '<div class="ob-annotate-form" id="ob-ann-' + item.id + '" style="display:none;">' +
+        '<div class="voice-wrap">' +
+        '<textarea dir="auto" id="ob-note-' + item.id + '" placeholder="What needs to change? Type or tap 🎤 to speak\u2026" oninput="localStorage.setItem(\'' + draftKey + '\', this.value)">' + esc(prefill) + '</textarea>' +
+        '<button class="btn-mic" data-act="voice" data-target="ob-note-' + item.id + '" title="Hold to record voice note">🎤</button>' +
+        '</div>' +
+        '<button class="btn btn-gold btn-sm" data-act="ob-annotate-submit" data-item="' + item.id + '">Submit annotation</button>' +
+        '</div>';
+    } else {
+      html += '<div style="font-size:11px; color:var(--cream-dim); margin-top:6px;">📋 Read-only — past round</div>';
+    }
     html += '</div>';
 
     // Partner panel
     html += '<div class="ob-panel">' +
       '<h3>' + esc(partner.name) + '</h3>';
     if (theirStatus === 'approve') {
-      html += '<div class="ob-disp approve">\u2714 Approved</div>';
+      html += '<div class="ob-disp approve">✔ Approved</div>';
     } else if (theirStatus === 'annotate') {
-      html += '<div class="ob-disp annotate">\u270E Annotated</div>' +
+      html += '<div class="ob-disp annotate">✎ Annotated</div>' +
         '<div class="ob-note" dir="auto">' + esc(theirD.note || '') + '</div>';
     } else {
       html += '<div class="ob-disp pending">Waiting\u2026</div>';
@@ -1216,6 +1337,21 @@ function viewOnboarding() {
 
     html += '</div></div>'; // close panels + item
   });
+
+  // ── Add items form (Momen only, for new round) ──
+  if (window._showAddItems && iAmBuilder) {
+    html += '<div style="background:var(--card); border:2px dashed var(--gold-soft); border-radius:12px; padding:22px 24px; margin-bottom:20px;">' +
+      '<h3 style="font-size:15px; margin:0 0 12px;">➕ Add Alignment Items for Round ' + (currentRound + 1) + '</h3>' +
+      '<div style="margin-bottom:10px;">' +
+      '<input type="text" id="new-item-title" placeholder="Decision title" style="width:100%; margin-bottom:8px; min-height:38px; box-sizing:border-box;" />' +
+      '<textarea id="new-item-body" placeholder="Decision body (markdown supported)" style="width:100%; min-height:80px; margin-bottom:8px;"></textarea>' +
+      '<input type="text" id="new-item-category" placeholder="Category (e.g. Product, Evidence)" style="width:100%; min-height:38px; box-sizing:border-box;" />' +
+      '</div>' +
+      '<div style="display:flex; gap:8px;">' +
+      '<button class="btn btn-gold btn-sm" data-act="ob-add-item-submit">Add item</button>' +
+      '<button class="btn btn-ghost btn-sm" data-act="ob-add-items-close">Done adding</button>' +
+      '</div></div>';
+  }
 
   if (!total) {
     html += '<div class="empty">No alignment items found. Run the onboarding seed SQL to populate them.</div>';
@@ -2200,6 +2336,41 @@ document.addEventListener("click", async (e) => {
   }
   if (act === "ob-complete") {
     await completeOnboarding();
+  }
+  if (act === "ob-round") {
+    window._obRound = parseInt(btn.dataset.round);
+    render();
+    return;
+  }
+  if (act === "ob-add-round") {
+    window._showAddItems = true;
+    render();
+    return;
+  }
+  if (act === "ob-add-items-close") {
+    window._showAddItems = false;
+    render();
+    return;
+  }
+  if (act === "ob-add-item-submit") {
+    const title = document.getElementById("new-item-title")?.value?.trim();
+    const body = document.getElementById("new-item-body")?.value?.trim();
+    const category = document.getElementById("new-item-category")?.value?.trim() || "General";
+    if (!title) { toast("Give the decision a title."); return; }
+    if (!body) { toast("Give the decision a body."); return; }
+    const nextRound = (window._obRound || 1) + 1;
+    // Count existing items in that round for positioning
+    const existingInRound = alignmentItems.filter(i => i.round === nextRound).length;
+    const { error } = await db().from("alignment_items").insert({
+      title, body_md: body, category, position: existingInRound + 1,
+      round: nextRound, round_status: "published"
+    });
+    if (error) { toast("Could not add: " + error.message); return; }
+    await loadAlignmentItems();
+    window._obRound = nextRound;
+    toast("✅ Item added to Round " + nextRound);
+    render();
+    return;
   }
 
   /* ---- Voice recording (Whisper) ---- */
