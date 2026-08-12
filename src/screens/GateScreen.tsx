@@ -189,7 +189,7 @@ export default function GateScreen() {
   const [showNDA,        setShowNDA]        = useState(false)
   const [vaultOpen,      setVaultOpen]      = useState(false)
   const [showCoFounder,  setShowCoFounder]  = useState(false)
-  const [pendingData, setPendingData] = useState<{ token: string; name?: string; type: string; expires?: string | null; session: string } | null>(null)
+  const [pendingData, setPendingData] = useState<{ token: string; name?: string; type: string; expires?: string | null; session: string; projectAccess?: string[] } | null>(null)
 
   const insights = lang === 'ar' ? INSIGHTS_AR : INSIGHTS_EN
 
@@ -267,7 +267,7 @@ export default function GateScreen() {
       sessionStorage.setItem('mcr_projects', JSON.stringify(data.projectAccess ?? []))
       sessionStorage.setItem('mcr_email',   data.email ?? '')
 
-      setPendingData({ token: tokenVal, name: investorName, type: tokenType, expires: data.expires ?? null, session })
+      setPendingData({ token: tokenVal, name: investorName, type: tokenType, expires: data.expires ?? null, session, projectAccess: data.projectAccess ?? [] })
       setInputState('success')
       setShowNDA(true)
     } catch (e: unknown) {
@@ -507,6 +507,8 @@ export default function GateScreen() {
           name={pendingData.name}
           lang={lang}
           onEnter={handleCoFounderEnter}
+          projectAccess={pendingData.projectAccess}
+          tokenType={pendingData.type}
         />
       )}
 

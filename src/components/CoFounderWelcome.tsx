@@ -10,6 +10,8 @@ interface CoFounderWelcomeProps {
   name?: string
   lang: 'ar' | 'en'
   onEnter: () => void
+  projectAccess?: string[]
+  tokenType?: string
 }
 
 /* ── Confetti canvas ────────────────────────────────── */
@@ -74,7 +76,8 @@ function useConfettiCanvas(ref: React.RefObject<HTMLCanvasElement | null>, activ
 }
 
 /* ── Main component ─────────────────────────────────── */
-export function CoFounderWelcome({ name, lang, onEnter }: CoFounderWelcomeProps) {
+export function CoFounderWelcome({ name, lang, onEnter, projectAccess = [], tokenType = '' }: CoFounderWelcomeProps) {
+  const isXhbFounder = tokenType === 'COFOUNDER' && projectAccess.includes('xhb')
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [visible,   setVisible]   = useState(false)
   const [sealIn,    setSealIn]    = useState(false)
@@ -134,7 +137,7 @@ export function CoFounderWelcome({ name, lang, onEnter }: CoFounderWelcomeProps)
 
         {/* ── Registry label ── */}
         <div className={`cofound-registry-label${contentIn ? ' cofound-content--in' : ''}`}>
-          MOMENCRAFTS & CO · REGISTRY
+          {isXhbFounder ? 'XHB · CO-FOUNDER REGISTRY' : 'MOMENCRAFTS & CO · REGISTRY'}
         </div>
 
         {/* ── Name plate ── */}
@@ -149,7 +152,19 @@ export function CoFounderWelcome({ name, lang, onEnter }: CoFounderWelcomeProps)
 
         {/* ── Headline ── */}
         <h1 className={`cofound-headline${contentIn ? ' cofound-content--in cofound-content--delay-2' : ''}`}>
-          {isAr ? (
+          {isXhbFounder ? (
+            isAr ? (
+              <>
+                <span className="cofound-headline-line">مرحباً بك</span>
+                <em className="cofound-headline-gold">يا شريك التأسيس</em>
+              </>
+            ) : (
+              <>
+                <span className="cofound-headline-line">Welcome,</span>
+                <em className="cofound-headline-gold">Co‑Founder</em>
+              </>
+            )
+          ) : isAr ? (
             <>
               <span className="cofound-headline-line">مرحباً بك</span>
               <em className="cofound-headline-gold">شريكاً مؤسساً</em>
@@ -164,7 +179,21 @@ export function CoFounderWelcome({ name, lang, onEnter }: CoFounderWelcomeProps)
 
         {/* ── Win-Win body ── */}
         <div className={`cofound-body-wrap${contentIn ? ' cofound-content--in cofound-content--delay-3' : ''}`}>
-          {isAr ? (
+          {isXhbFounder ? (
+            isAr ? (
+              <p className="cofound-body cofound-body--ar">
+                أنت شريك تأسيس في <strong>XHB</strong> — المقرّ الأول لمومن كرافتس.
+                مساحتك في المقرّ جاهزة، وقرارات التأسيس تنتظر موافقتك.
+                المشاريع الأخرى في الاستوديو متاحة للاطلاع بموجب اتفاقية السرية.
+              </p>
+            ) : (
+              <p className="cofound-body">
+                You are a founding partner of <strong>XHB</strong> — the MomenCrafts Founders' HQ.
+                Your seat at the table is set, and founding decisions await your alignment.
+                Other studio projects are available for review under NDA terms.
+              </p>
+            )
+          ) : isAr ? (
             <p className="cofound-body cofound-body--ar">
               كلمة <strong>«كو»</strong> تُكتسب — وكسبتَها اليوم.
               كل رؤية تشاركها، وكل تعريف تتيحه، وكل فكرة تثبت قيمتها
