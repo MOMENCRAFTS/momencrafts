@@ -2675,8 +2675,8 @@ async function boot() {
     return;
   }
 
-  // ── No session: show magic-link gate ──
-  renderGateIdentify();
+  // No session: redirect to MomenCrafts gate
+  window.location.href = '/';
 }
 boot();
 
