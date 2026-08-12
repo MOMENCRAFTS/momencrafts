@@ -96,7 +96,62 @@ Deno.serve(async (req) => {
       return json(500, { valid: false, error: 'Internal error' }, cors)
     }
 
-    // 5. Return success
+    // 5. Notify founder via email (fire-and-forget)
+    const resendKey = Deno.env.get('RESEND_API_KEY')
+    if (resendKey) {
+      const ua = req.headers.get('user-agent') || 'unknown'
+      const device = ua.includes('iPhone') ? '📱 iPhone' 
+        : ua.includes('Android') ? '📱 Android'
+        : ua.includes('Mac') ? '💻 Mac' 
+        : ua.includes('Windows') ? '💻 Windows' : '🌐 Browser'
+      const now = new Date().toLocaleString('en-GB', { 
+        timeZone: 'Asia/Riyadh', 
+        dateStyle: 'medium', 
+        timeStyle: 'short' 
+      })
+      const typeLabel = ({
+        PERMANENT: 'Superadmin', STRATEGIC: 'Strategic Partner',
+        COFOUNDER: 'Co-Founder', FOUNDER: 'Founder',
+        HALF_HOUR: '30-Min Access', HOUR: '1-Hour Access',
+        WEEK: '7-Day Access', MONTH: '30-Day Access',
+      } as Record<string, string>)[row.token_type] ?? row.token_type
+
+      const projects = (row.project_access || []).join(', ') || 'All'
+
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'MomenCrafts <onboarding@resend.dev>',
+          to: ['momen@momencrafts.com'],
+          subject: `✦ ${row.label || normalizedToken} just entered MomenCrafts`,
+          html: `
+            <div style="font-family:-apple-system,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#0d0d0d;color:#f0ebe3;border-radius:12px;">
+              <div style="text-align:center;color:#c8a96e;font-size:24px;margin-bottom:8px;">✦</div>
+              <div style="text-align:center;font-size:11px;letter-spacing:3px;color:#c8a96e;margin-bottom:16px;">MOMENCRAFTS ACCESS REPORT</div>
+              <hr style="border:none;border-top:1px solid #2a2520;margin:16px 0;">
+              <table style="width:100%;font-size:14px;color:#f0ebe3;">
+                <tr><td style="padding:6px 0;color:#c8a96e;">Visitor</td><td style="padding:6px 0;text-align:right;">${row.label || 'Unknown'}</td></tr>
+                <tr><td style="padding:6px 0;color:#c8a96e;">Email</td><td style="padding:6px 0;text-align:right;">${row.email || '—'}</td></tr>
+                <tr><td style="padding:6px 0;color:#c8a96e;">Token</td><td style="padding:6px 0;text-align:right;font-family:monospace;">${normalizedToken}</td></tr>
+                <tr><td style="padding:6px 0;color:#c8a96e;">Type</td><td style="padding:6px 0;text-align:right;">${typeLabel}</td></tr>
+                <tr><td style="padding:6px 0;color:#c8a96e;">Projects</td><td style="padding:6px 0;text-align:right;">${projects}</td></tr>
+                <tr><td style="padding:6px 0;color:#c8a96e;">Device</td><td style="padding:6px 0;text-align:right;">${device}</td></tr>
+                <tr><td style="padding:6px 0;color:#c8a96e;">IP</td><td style="padding:6px 0;text-align:right;font-family:monospace;font-size:12px;">${ip}</td></tr>
+                <tr><td style="padding:6px 0;color:#c8a96e;">Time (KSA)</td><td style="padding:6px 0;text-align:right;">${now}</td></tr>
+              </table>
+              <hr style="border:none;border-top:1px solid #2a2520;margin:16px 0;">
+              <div style="text-align:center;font-size:10px;color:#666;">Session: ${sessionKey}</div>
+            </div>
+          `,
+        }),
+      }).catch((e) => console.error('Resend notification error:', e))
+    }
+
+    // 6. Return success
     return json(200, {
       valid: true,
       sessionKey,
