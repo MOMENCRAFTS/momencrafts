@@ -88,6 +88,20 @@
 .bp-root a{color:var(--gold);text-decoration:none}
 .bp-root a:hover{color:var(--gold-lt)}
 
+/* Override home.css opaque background so atelier/PCB SVGs show through */
+.bp-root .home-root{background:transparent!important;position:relative;z-index:2}
+.bp-root .home-root *{font-family:var(--sans)!important}
+.bp-root .hero,
+.bp-root .products,
+.bp-root .about,
+.bp-root .contact,
+.bp-root .footer,
+.bp-root .capabilities,
+.bp-root .stack,
+.bp-root section{background:transparent!important}
+.bp-root .hero::before,
+.bp-root .hero::after{display:none!important}
+
 /* Arabic never in monospace. Latin technical data only. */
 .mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate}
 .serif{font-family:var(--serif)}
