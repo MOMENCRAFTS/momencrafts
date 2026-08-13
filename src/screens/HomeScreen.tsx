@@ -657,7 +657,9 @@ export default function HomeScreen() {
   })() : ''
 
   return (
-    <div className="home-root" dir="rtl" lang="ar" id="home-root">
+    <div className="bp-root" dir="rtl" lang="ar">
+      <SheetLayers />
+      <div className="home-root" id="home-root">
       {/* ── Particle canvas ── */}
       <canvas ref={canvasRef} id="hero-canvas" aria-hidden="true"
         style={{ position:'fixed', inset:0, width:'100%', height:'100%', pointerEvents:'none', opacity:.35, zIndex:0 }} />
@@ -711,722 +713,249 @@ export default function HomeScreen() {
         <div id="inv-scroll-fill" style={{ width: `${scrollPct}%` }} />
       </div>
 
-      {/* ── NAV ── */}
-      <nav id="nav" className={navOpen ? 'nav-open' : ''} style={{ top: barVisible ? '52px' : '0', transition: 'top .38s cubic-bezier(.4,0,.2,1)' }}>
-        <div className="nav-inner">
-          <a href="#hero" className="nav-logo" id="nav-logo-ar">
-            <img src="/logo.png" alt="مؤمن كرافتس" className="nav-logo-img" />
-            <span className="logo-text">مومن كرافتس</span>
-          </a>
-          <ul className="nav-links" id="nav-links" role="list">
-            <li><a href="#contact" className="nav-cta">تواصل معنا</a></li>
-            <li><a href="#about">عن الاستوديو</a></li>
-            <li><a href="#products">المنتجات</a></li>
-          </ul>
-          <button className="nav-hamburger" id="nav-hamburger" aria-label="القائمة"
-            aria-expanded={navOpen}
-            onClick={() => setNavOpen(o => !o)}>
-            <span /><span /><span />
-          </button>
+      {/* ── BLUEPRINT NAV (Step 4.2) ── */}
+      <nav className="nav" id="bp-nav">
+        <span className="nav__mark">MOMENCRAFTS</span>
+        <div className="nav__links">
+          <a href="#products">المنتجات</a>
+          <a href="#about">عن الاستوديو</a>
+          <a href="#contact">تواصل</a>
         </div>
+        <span className="nav__chip mono">{masked}</span>
       </nav>
 
       {/* ══════════════════════════
-          HERO
+          BLUEPRINT HERO (Step 4.2)
       ══════════════════════════ */}
-      <section id="hero" className="hero" style={{ paddingTop: barVisible ? '104px' : '52px', transition: 'padding-top .38s cubic-bezier(.4,0,.2,1)' }}>
-        <div className="hero-ember" aria-hidden="true" />
-        <div className="container hero-inner">
-          <div className="hero-eyebrow reveal">
-            <span className="eyebrow-dot" />
-            مومن كرافتس اند كو · الرياض، السعودية
+      <section id="hero" className="hero page">
+        <span className="kicker reveal">IDEA STUDIO · RIYADH, KSA</span>
+        <h1 className="hero__title reveal">
+          <em>بعناية</em><br />مصممة معكم
+        </h1>
+        <div className="dim reveal">
+          <div className="dim__bar" />
+          <span className="dim__val mono">SHEET 01 — INDEX</span>
+          <div className="dim__bar" />
+        </div>
+        <p className="hero__statement reveal">
+          ١٢ منتج. ٥ مجالات. استوديو واحد يحوّل الأفكار إلى أنظمة ومنتجات قابلة للتجربة.
+        </p>
+        <p className="hero__sub reveal">MomenCrafts &amp; Co</p>
+        <a href="#products" className="btn btn--gold reveal">
+          تصفح أعمالنا <span style={{ display:'inline-block', transform:'scaleX(-1)' }}>→</span>
+        </a>
+
+        {/* stage legend */}
+        <div className="stages reveal">
+          <div className="stage">
+            <StageGlyph stage="dev" size={28} />
+            <span className="stage__label mono">DRAWN</span>
+            <span className="stage__ar">مرسوم</span>
           </div>
-          <h1 className="hero-heading reveal delay-100">
-            بعناية<br/><em>مصممة معكم</em>
-          </h1>
-          <p className="hero-byline reveal delay-200">MomenCrafts & Co</p>
-          <p className="hero-sub reveal delay-300">
-            ١٠ منتجات. ٥ مجالات.<br/>استوديو واحد يحوّل الأفكار إلى أنظمة ومنتجات قابلة للتجربة.
-          </p>
-          <div className="hero-actions reveal delay-400">
-            <a href="#products" className="btn btn-primary">تصفح أعمالنا <span className="btn-arrow">←</span></a>
-            <a href="#about" className="btn btn-ghost">عن الاستوديو</a>
+          <span className="stages__arrow">→</span>
+          <div className="stage">
+            <StageGlyph stage="beta" size={28} />
+            <span className="stage__label mono">ASSEMBLED</span>
+            <span className="stage__ar">مُجمّع</span>
           </div>
-          <div className="hero-stats reveal delay-500">
-            <div className="stat"><span className="stat-num">١٠</span><span className="stat-label">منتجات</span></div>
-            <div className="stat-divider">·</div>
-            <div className="stat"><span className="stat-num">٥</span><span className="stat-label">مجالات</span></div>
-            <div className="stat-divider">·</div>
-            <div className="stat"><span className="stat-num">١</span><span className="stat-label">رؤية واحدة</span></div>
+          <span className="stages__arrow">→</span>
+          <div className="stage">
+            <StageGlyph stage="live" size={28} />
+            <span className="stage__label mono">DELIVERED</span>
+            <span className="stage__ar">مُسلّم</span>
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════
-          PRODUCTS (10 cards)
-      ══════════════════════════ */}
-      <section id="products" className="products">
-        <div className="container">
-          <div className="section-label reveal">أعمالنا</div>
-          <h2 className="section-title reveal delay-100">المحفظة</h2>
-          <p className="section-sub reveal delay-200">١٠ منتجات صُممت بعناية — من الفكرة إلى النموذج، ومن النموذج إلى منتج قابل للتجربة.</p>
-          <div className="products-grid">
-
-            {/* ROGER·AI — Neo-retro military NASA Mission Control card */}
-            <article className="product-card product-card--roger featured reveal delay-100" id="card-roger-ar" data-accent="roger">
-
-              {/* ── Gunmetal splash bg texture ── */}
-              <div className="roger-bg" aria-hidden="true" />
-
-              {/* ── CRT scanlines + sci-fi corner brackets ── */}
-              <svg className="roger-hud-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                {/* Scanlines */}
-                {[0,4,8,12,16,20,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80,84,88,92,96,100,104,108,112,116,120,124,128,132,136,140,144,148,152,156,160,164,168,172,176,180,184,188,192,196,200,204,208,212,216,220].map(y => (
-                  <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="rgba(0,0,0,0.06)" strokeWidth="1"/>
-                ))}
-                {/* Top-left corner bracket */}
-                <path d="M8 24 L8 8 L28 8" stroke="#d4a044" strokeWidth="1.2" opacity="0.5"/>
-                {/* Top-right corner bracket */}
-                <path d="M252 8 L272 8 L272 24" stroke="#d4a044" strokeWidth="1.2" opacity="0.5"/>
-                {/* Bottom-left corner bracket */}
-                <path d="M8 196 L8 212 L28 212" stroke="#d4a044" strokeWidth="1.2" opacity="0.5"/>
-                {/* Bottom-right corner bracket */}
-                <path d="M252 212 L272 212 L272 196" stroke="#d4a044" strokeWidth="1.2" opacity="0.5"/>
-                {/* Amber ember sparks */}
-                <circle cx="12"  cy="180" r="1.2" fill="#d4a044" opacity="0.6"/>
-                <circle cx="18"  cy="195" r="0.8" fill="#a84832" opacity="0.5"/>
-                <circle cx="268" cy="185" r="1"   fill="#d4a044" opacity="0.4"/>
-                <circle cx="8"   cy="60"  r="0.9" fill="#d4a044" opacity="0.35"/>
-                {/* LED strip hints — mascot colors */}
-                <rect x="80" y="215" width="50" height="2" rx="1" fill="#00cfff" opacity="0.25"/>
-                <rect x="135" y="215" width="50" height="2" rx="1" fill="#a855f7" opacity="0.2"/>
-              </svg>
-
-              {/* ── Amber command accent bar ── */}
-              <div className="roger-card-accent-bar" />
-
-              {/* ── Testing badge ── */}
-              <div className="roger-card-test-badge">🧪 TESTING</div>
-
-              {/* ── Featured badge ── */}
-              <div className="roger-card-featured">★ رائد</div>
-
-              <div className="card-header">
-                {/* Walkie-talkie/mic icon with LED dot — gunmetal box */}
-                <div className="roger-card-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4a044" strokeWidth="1.8" strokeLinecap="round">
-                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                    <line x1="12" y1="19" x2="12" y2="22"/>
-                    <circle cx="19" cy="5" r="1.5" fill="#5a9c69" stroke="none"/>
-                  </svg>
-                </div>
-                <span className="roger-card-status">◉ قيد الاختبار</span>
-              </div>
-
-              <h3 className="roger-card-title">ROGER·AI</h3>
-              <p className="roger-card-tagline">مساعد تنفيذي ذكي</p>
-              <p className="roger-card-desc">مساعد تنفيذي صوتي للمدراء — ذاكرة مستمرة، تقارير استباقية، وتجربة عمل بالعربية والإنجليزية.</p>
-
-              <div className="roger-card-tags">
-                <span className="roger-tag roger-tag--amber">صوتية أولاً</span>
-                <span className="roger-tag roger-tag--green">iOS · Android</span>
-                <span className="roger-tag roger-tag--olive">ثنائي اللغة</span>
-              </div>
-
-              <a href="/rogerai" target="_blank" rel="noopener" className="roger-card-link">
-                اعرف أكثر <span className="roger-card-link-arrow">←</span>
-              </a>
-            </article>
-
-            {/* CLINIQ.ONE — Medical dark space themed card */}
-            <article className="product-card product-card--cliniq featured reveal delay-200" id="card-cliniq-ar" data-accent="cliniq">
-
-              {/* ── Deep space bg + teal nebula glow ── */}
-              <svg className="cliniq-bg-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                {/* Teal nebula orbs */}
-                <circle cx="240" cy="25"  r="55" fill="url(#cq1)" fillOpacity="0.18"/>
-                <circle cx="20"  cy="190" r="40" fill="url(#cq2)" fillOpacity="0.12"/>
-                <circle cx="130" cy="110" r="30" fill="url(#cq1)" fillOpacity="0.07"/>
-                {/* EKG / heartbeat trace across card */}
-                <path d="M0 110 L40 110 L55 75 L68 145 L82 90 L94 110 L280 110"
-                      stroke="#1A8A9E" strokeWidth="0.9" opacity="0.22" strokeLinecap="round" strokeLinejoin="round"/>
-                {/* Star field */}
-                <circle cx="60"  cy="30"  r="0.7" fill="white" opacity="0.35"/>
-                <circle cx="180" cy="55"  r="0.5" fill="white" opacity="0.25"/>
-                <circle cx="100" cy="180" r="0.6" fill="white" opacity="0.3"/>
-                <circle cx="250" cy="140" r="0.8" fill="white" opacity="0.2"/>
-                <circle cx="30"  cy="90"  r="0.5" fill="white" opacity="0.3"/>
-                <circle cx="210" cy="200" r="0.6" fill="#0ECFCF" opacity="0.4"/>
-                <defs>
-                  <radialGradient id="cq1" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#0ECFCF"/>
-                    <stop offset="100%" stopColor="#0ECFCF" stopOpacity="0"/>
-                  </radialGradient>
-                  <radialGradient id="cq2" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#1A8A9E"/>
-                    <stop offset="100%" stopColor="#1A8A9E" stopOpacity="0"/>
-                  </radialGradient>
-                </defs>
-              </svg>
-
-              {/* ── Medical teal shimmer accent bar ── */}
-              <div className="cliniq-card-accent-bar" />
-
-              {/* ── LIVE badge (amber, matching app's beta banner) ── */}
-              <div className="cliniq-card-live-badge">🟢 LIVE</div>
-
-              {/* ── Featured star badge ── */}
-              <div className="cliniq-card-featured">★ رائد</div>
-
-              <div className="card-header">
-                {/* Medical EKG icon — the exact Cliniq.one identity */}
-                <div className="cliniq-card-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 12 L6 12 L8.5 5 L11.5 19 L14 10 L16 12 L22 12"
-                          stroke="#0ECFCF" strokeWidth="1.8"/>
-                  </svg>
-                </div>
-                <span className="cliniq-card-status">● مرحلة تجريبية</span>
-              </div>
-
-              <h3 className="cliniq-card-title">CLINIQ.ONE</h3>
-              <p className="cliniq-card-tagline">طب عن بُعد مصمم للمنطقة</p>
-              <p className="cliniq-card-desc">منصة طب عن بُعد متكاملة تضم ٥ تطبيقات لربط المرضى والأطباء ضمن تجربة صحية عربية وسلسة.</p>
-
-              <div className="cliniq-card-tags">
-                <span className="cliniq-tag cliniq-tag--teal">رعاية صحية</span>
-                <span className="cliniq-tag cliniq-tag--cyan">MENA</span>
-                <span className="cliniq-tag cliniq-tag--amber">٥ تطبيقات</span>
-              </div>
-
-              <a href="/cliniq.one" className="cliniq-card-link">
-                زيارة cliniq.one <span className="cliniq-card-link-arrow">←</span>
-              </a>
-            </article>
-
-            {/* QADAA — Legal Prestige Dark card */}
-            <article className="product-card product-card--qadaa reveal delay-300" id="card-qadaa-ar" data-accent="qadaa">
-
-              {/* ── Midnight navy base + golden halo behind scales ── */}
-              <svg className="qadaa-bg-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <defs>
-                  <radialGradient id="qg1" cx="50%" cy="45%" r="50%">
-                    <stop offset="0%" stopColor="#C8A24A" stopOpacity="0.18"/>
-                    <stop offset="100%" stopColor="#C8A24A" stopOpacity="0"/>
-                  </radialGradient>
-                  <radialGradient id="qg2" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#9E7A20" stopOpacity="0.12"/>
-                    <stop offset="100%" stopColor="#9E7A20" stopOpacity="0"/>
-                  </radialGradient>
-                </defs>
-                {/* Gold halo behind the scales icon area */}
-                <ellipse cx="140" cy="70" rx="90" ry="60" fill="url(#qg1)"/>
-                <ellipse cx="140" cy="80" rx="60" ry="40" fill="url(#qg2)"/>
-                {/* Scales of justice SVG — the actual Qadaa icon */}
-                <g transform="translate(105, 20) scale(0.5)" opacity="0.55">
-                  <line x1="70" y1="10" x2="70" y2="110" stroke="#C8A24A" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="20" y1="35" x2="120" y2="35" stroke="#C8A24A" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="25" y1="35" x2="25" y2="70" stroke="#C8A24A" strokeWidth="2" strokeLinecap="round" strokeDasharray="3,3"/>
-                  <line x1="115" y1="35" x2="115" y2="70" stroke="#C8A24A" strokeWidth="2" strokeLinecap="round" strokeDasharray="3,3"/>
-                  <path d="M8 70 Q25 80 42 70" stroke="#C8A24A" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-                  <path d="M98 70 Q115 80 132 70" stroke="#C8A24A" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-                  <line x1="55" y1="110" x2="85" y2="110" stroke="#C8A24A" strokeWidth="3" strokeLinecap="round"/>
-                  <circle cx="20" cy="35" r="4" fill="#C8A24A"/>
-                  <circle cx="120" cy="35" r="4" fill="#C8A24A"/>
-                  <circle cx="70" cy="12" r="5" fill="#C8A24A"/>
-                </g>
-                {/* Ambient dust particles */}
-                <circle cx="45"  cy="160" r="0.9" fill="#C8A24A" opacity="0.35"/>
-                <circle cx="235" cy="40"  r="0.7" fill="#C8A24A" opacity="0.3"/>
-                <circle cx="260" cy="170" r="0.8" fill="#D4B76E" opacity="0.25"/>
-                <circle cx="20"  cy="50"  r="0.6" fill="#C8A24A" opacity="0.2"/>
-                {/* Horizontal divider line with gold fade */}
-                <line x1="30" y1="140" x2="250" y2="140" stroke="url(#qg2)" strokeWidth="0.5"/>
-              </svg>
-
-              {/* ── Gold shimmer accent bar ── */}
-              <div className="qadaa-card-accent-bar"/>
-
-              {/* ── Dev badge ── */}
-              <div className="qadaa-card-dev-badge">◌ قيد التطوير</div>
-
-              <div className="card-header">
-                {/* Scales of justice icon — gold on dark glass */}
-                <div className="qadaa-card-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C8A24A" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 3v18M5 7h14M8 7v6a4 4 0 0 1-8 0V7M16 7v6a4 4 0 0 0 8 0V7M9 21h6"/>
-                  </svg>
-                </div>
-                <span className="qadaa-card-status">⚖ تقنية قانونية</span>
-              </div>
-
-              <h3 className="qadaa-card-title">QADAA · قضاء</h3>
-              <p className="qadaa-card-tagline">قانون. مُعاد تصوره.</p>
-              <p className="qadaa-card-desc">منصة تربط العملاء بالمحامين وتدعم تحليل القضايا والمستندات بتجربة عربية واضحة وراقية.</p>
-
-              <div className="qadaa-card-tags">
-                <span className="qadaa-tag qadaa-tag--gold">تقنية قانونية</span>
-                <span className="qadaa-tag qadaa-tag--mahogany">السعودية · الإمارات</span>
-              </div>
-
-              <a href="/qadaa" className="qadaa-card-link">
-                اكتشف المنصة <span className="qadaa-card-link-arrow">←</span>
-              </a>
-            </article>
-
-            {/* MUSCLE HUSTLE */}
-            <article className="product-card reveal delay-400" id="card-muscle-ar" data-accent="crimson">
-              <div className="card-accent-bar" />
-              <div className="card-header">
-                <div className="card-icon crimson-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6.5 6.5h11M6.5 17.5h11M4 12h16"/></svg>
-                </div>
-                <span className="card-status dev">◌ قيد التطوير</span>
-              </div>
-              <h3 className="card-title">MUSCLE HUSTLE</h3>
-              <p className="card-tagline">سوق المدربين الشخصيين</p>
-              <p className="card-desc">منصة لياقة تربط المدربين بالعملاء مع تدريب ذكي وتجربة تفاعلية محفزة.</p>
-              <div className="card-tags"><span className="tag">لياقة بدنية</span><span className="tag">سوق إلكتروني</span></div>
-              <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20Muscle%20Hustle%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
-            </article>
-
-            {/* AQAR */}
-            <article className="product-card reveal delay-500" id="card-aqar-ar" data-accent="gold">
-              <div className="card-accent-bar" />
-              <div className="card-header">
-                <div className="card-icon gold-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                </div>
-                <span className="card-status dev">◌ قيد التطوير</span>
-              </div>
-              <h3 className="card-title">AQAR · عقار</h3>
-              <p className="card-tagline">عقار أذكى للسوق السعودي</p>
-              <p className="card-desc">منصة عقارية تساعد على تحليل السوق، مطابقة الاحتياج، وتبسيط قرارات الشراء والاستثمار.</p>
-              <div className="card-tags"><span className="tag">تقنية عقارية</span><span className="tag">رؤية 2030</span></div>
-              <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20AQAR%20%C2%B7%20%D8%B9%D9%82%D8%A7%D8%B1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
-            </article>
-
-            {/* UMMI · أمي — Botanical Retro-Care card */}
-            <article className="product-card product-card--ummi featured reveal delay-600" id="card-ummi-ar" data-accent="ummi">
-
-              {/* ── Ivory warm background base ── */}
-              <div className="ummi-bg" aria-hidden="true" />
-
-              {/* ── Floating teardrop petals (FloatingPetals pattern) ── */}
-              <svg className="ummi-petals" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                {/* Pink petals */}
-                <path d="M248 18 Q254 24 254 30 Q254 36 248 42 Q242 36 242 30 Q242 24 248 18Z" fill="#F2C6D0" opacity="0.45"/>
-                <path d="M18 160 Q24 166 24 172 Q24 178 18 184 Q12 178 12 172 Q12 166 18 160Z" fill="#F2C6D0" opacity="0.35"/>
-                <path d="M140 6 Q145 11 145 16 Q145 21 140 26 Q135 21 135 16 Q135 11 140 6Z" fill="#FADAC8" opacity="0.4"/>
-                {/* Sage petals */}
-                <path d="M268 90 Q273 96 273 102 Q273 108 268 114 Q263 108 263 102 Q263 96 268 90Z" fill="#A8C8B0" opacity="0.3"/>
-                <path d="M8 60 Q13 66 13 72 Q13 78 8 84 Q3 78 3 72 Q3 66 8 60Z" fill="#A8C8B0" opacity="0.25"/>
-                <path d="M200 195 Q204 200 204 205 Q204 210 200 215 Q196 210 196 205 Q196 200 200 195Z" fill="#F6B89E" opacity="0.35"/>
-                {/* Vine divider hint */}
-                <path d="M0 200 Q35 196 70 200 Q105 204 140 200 Q175 196 210 200 L280 200" stroke="#A8C8B0" strokeWidth="0.8" opacity="0.3"/>
-                <path d="M48 198 Q46 194 48 190 Q50 194 48 198Z" fill="#A8C8B0" opacity="0.25"/>
-                <path d="M140 204 Q138 208 140 212 Q142 208 140 204Z" fill="#A8C8B0" opacity="0.22"/>
-                {/* Corner flourish top-right */}
-                <path d="M260 2 Q250 2 242 8 Q234 14 228 24" stroke="#A8C8B0" strokeWidth="0.9" opacity="0.35"/>
-                <path d="M258 4 Q252 7 250 12 Q250 9 253 7Z" fill="#A8C8B0" opacity="0.22"/>
-              </svg>
-
-              {/* ── Peach → mint botanical accent bar ── */}
-              <div className="ummi-card-accent-bar" />
-
-              {/* ── DEMO LIVE badge ── */}
-              <div className="ummi-card-demo-badge">🟢 DEMO LIVE</div>
-
-              <div className="card-header">
-                {/* WalletRoseIcon — exact app logo SVG */}
-                <div className="ummi-card-icon">
-                  <svg width="34" height="34" viewBox="0 0 64 64">
-                    <defs>
-                      <linearGradient id="wg" x1="16" y1="30" x2="48" y2="52" gradientUnits="userSpaceOnUse">
-                        <stop offset="0" stopColor="#FADAC8"/>
-                        <stop offset="1" stopColor="#F6B89E"/>
-                      </linearGradient>
-                      <linearGradient id="rg" x1="32" y1="4" x2="32" y2="30" gradientUnits="userSpaceOnUse">
-                        <stop offset="0" stopColor="#F6B89E"/>
-                        <stop offset="1" stopColor="#E8957A"/>
-                      </linearGradient>
-                    </defs>
-                    {/* Wallet body */}
-                    <rect x="14" y="32" rx="6" ry="6" width="36" height="24" fill="url(#wg)" stroke="#E8957A" strokeWidth="1.5"/>
-                    <rect x="40" y="38" rx="4" ry="4" width="10" height="10" fill="#FFFCF2" stroke="#E8957A" strokeWidth="1"/>
-                    <circle cx="45" cy="43" r="2" fill="#E8957A" opacity="0.5"/>
-                    {/* Heart petal on wallet */}
-                    <path d="M27 42 Q27 38 31 38 Q35 38 35 42 Q35 46 31 50 Q27 46 27 42Z" fill="#F2C6D0"/>
-                    {/* Stem */}
-                    <path d="M32 32 L32 18" stroke="#6BB89A" strokeWidth="2" strokeLinecap="round"/>
-                    {/* Leaves */}
-                    <path d="M32 26 Q26 22 24 26 Q26 30 32 26" fill="#8FCFB3"/>
-                    <path d="M32 22 Q38 18 40 22 Q38 26 32 22" fill="#B5E0CC"/>
-                    {/* Rose bloom */}
-                    <path d="M24 14 Q22 6 32 4 Q42 6 40 14 Q40 20 32 22 Q24 20 24 14Z" fill="url(#rg)"/>
-                    <path d="M28 12 Q28 8 32 6 Q36 8 36 12 Q36 18 32 20 Q28 18 28 12Z" fill="#F6B89E" opacity="0.6"/>
-                    <circle cx="37" cy="10" r="2" fill="white" opacity="0.7"/>
-                  </svg>
-                </div>
-                <span className="ummi-card-badge">🌸 عرض تفاعلي</span>
-              </div>
-
-              <h3 className="ummi-card-title">UMMI · أمي</h3>
-              <p className="ummi-card-tagline">محفظة العائلة ورعاية الأم</p>
-              <p className="ummi-card-desc">نظام مالي عائلي خاص — ميزانية ذكية، جيوب مخصصة، راتب تلقائي للأم، ونظام طوارئ. ٢٨ وحدة، ٤ أدوار، عربي/إنجليزي.</p>
-
-              <div className="ummi-card-tags">
-                <span className="ummi-tag ummi-tag--mint">تقنية مالية</span>
-                <span className="ummi-tag ummi-tag--peach">عائلي · ٤ أدوار</span>
-                <span className="ummi-tag ummi-tag--sage">٢٨ وحدة</span>
-              </div>
-
-              <a href="/ummiwallet/" className="ummi-card-link">
-                شاهد العرض التفاعلي <span className="ummi-card-link-arrow">←</span>
-              </a>
-            </article>
-
-            {/* RELAYBOT — Neo-Brutalist themed card */}
-            <article className="product-card product-card--relay reveal delay-100" id="card-relay-ar" data-accent="relay">
-
-              {/* ── Teal scanlines + BLE ripple waves ── */}
-              <svg className="relay-bg-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                {/* Horizontal scanlines */}
-                {[20,36,52,68,84,100,116,132,148,164,180,196,212].map((y) => (
-                  <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="#AED4D3" strokeWidth="0.5"/>
-                ))}
-                {/* BLE ripple rings — top right */}
-                <circle cx="245" cy="35" r="18" stroke="#AED4D3" strokeWidth="1" fill="none" opacity="0.6"/>
-                <circle cx="245" cy="35" r="30" stroke="#AED4D3" strokeWidth="0.7" fill="none" opacity="0.4"/>
-                <circle cx="245" cy="35" r="44" stroke="#AED4D3" strokeWidth="0.5" fill="none" opacity="0.25"/>
-                {/* Small BLE device dot */}
-                <circle cx="245" cy="35" r="4" fill="#AED4D3" opacity="0.7"/>
-                {/* Red accent corner */}
-                <rect x="0" y="0" width="6" height="220" fill="#E6492D" opacity="0.12"/>
-              </svg>
-
-              {/* ── Solid red-orange accent bar ── */}
-              <div className="relay-card-accent-bar" />
-
-              {/* ── Blinking terminal DEV badge ── */}
-              <div className="relay-card-dev-badge">◌ UNDER DEV</div>
-
-              <div className="card-header">
-                {/* Cream icon box — RelayBot device icon */}
-                <div className="relay-card-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16324F" strokeWidth="2" strokeLinecap="round">
-                    {/* PCB/relay board shape */}
-                    <rect x="4" y="5" width="16" height="11" rx="1.5"/>
-                    {/* Pins */}
-                    <line x1="7" y1="16" x2="7" y2="19"/>
-                    <line x1="12" y1="16" x2="12" y2="19"/>
-                    <line x1="17" y1="16" x2="17" y2="19"/>
-                    {/* BLE signal dots */}
-                    <circle cx="19" cy="5.5" r="1" fill="#E6492D" stroke="none"/>
-                  </svg>
-                </div>
-                <span className="relay-card-status">◌ قيد التطوير</span>
-              </div>
-
-              <h3 className="relay-card-title">RELAYBOT</h3>
-              <p className="relay-card-tagline">جسر نص ذكي للأنظمة المقيدة</p>
-              <p className="relay-card-desc">جهاز يربط بين لوحة المفاتيح والحاسوب ليُدخل النصوص المحسّنة بالذكاء الاصطناعي إلى أي نظام دون تثبيت.</p>
-
-              <div className="relay-card-tags">
-                <span className="relay-tag relay-tag--green">BLE</span>
-                <span className="relay-tag relay-tag--teal">بلا تثبيت</span>
-                <span className="relay-tag relay-tag--cream">أجهزة</span>
-                <span className="relay-tag relay-tag--red">ESP32</span>
-              </div>
-
-              <a href="https://github.com/momencrafts/relaybot" target="_blank" rel="noopener" className="relay-card-link">
-                GitHub <span className="relay-card-link-arrow">→</span>
-              </a>
-            </article>
-
-            {/* SABHA */}
-            <article className="product-card reveal delay-200" id="card-sabha-ar" data-accent="pearl">
-              <div className="card-accent-bar" />
-              <div className="card-header">
-                <div className="card-icon pearl-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="3" r="1.5"/><circle cx="20.5" cy="7.5" r="1.5"/></svg>
-                </div>
-                <span className="card-status prototype">◈ نموذج أولي</span>
-              </div>
-              <h3 className="card-title">SABHA · سبحة</h3>
-              <p className="card-tagline">سبحة ذكية فاخرة</p>
-              <p className="card-desc">سبحة ذكية تمزج روح الذكر التقليدي مع تقنيات حديثة ومواد فاخرة.</p>
-              <div className="card-tags"><span className="tag">قابل للارتداء</span><span className="tag">فاخر</span></div>
-              <a href="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%AA%D8%AC%20SABHA%20%C2%B7%20%D8%B3%D8%A8%D8%AD%D8%A9%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" target="_blank" rel="noopener" className="card-link">تحدث مع المؤسس ←</a>
-            </article>
-
-            {/* ─── TDC — COMIC FPV REMASTER ─── */}
-            <article className="product-card product-card--tdc reveal delay-300" id="card-tdc-ar" data-accent="tdc">
-              {/* Speed-line burst background */}
-              <div className="tdc2-bg" aria-hidden="true">
-                <svg className="tdc2-speedlines" viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  {/* Radial speed lines from top-right */}
-                  <line x1="300" y1="0" x2="180" y2="110" stroke="#00E5FF" strokeWidth="0.7" strokeOpacity="0.13"/>
-                  <line x1="300" y1="0" x2="160" y2="130" stroke="#00E5FF" strokeWidth="0.5" strokeOpacity="0.09"/>
-                  <line x1="300" y1="0" x2="140" y2="100" stroke="#00E5FF" strokeWidth="0.6" strokeOpacity="0.11"/>
-                  <line x1="300" y1="0" x2="200" y2="90" stroke="#FF2D9B" strokeWidth="0.5" strokeOpacity="0.1"/>
-                  <line x1="300" y1="0" x2="220" y2="130" stroke="#FF2D9B" strokeWidth="0.4" strokeOpacity="0.08"/>
-                  <line x1="300" y1="0" x2="150" y2="80" stroke="#E6492D" strokeWidth="0.6" strokeOpacity="0.12"/>
-                  <line x1="300" y1="0" x2="130" y2="60" stroke="#E6492D" strokeWidth="0.5" strokeOpacity="0.09"/>
-                  {/* Halftone dot cluster — bottom left */}
-                  <circle cx="20" cy="180" r="2" fill="#00E5FF" fillOpacity="0.18"/>
-                  <circle cx="36" cy="192" r="1.5" fill="#00E5FF" fillOpacity="0.13"/>
-                  <circle cx="28" cy="200" r="1" fill="#00E5FF" fillOpacity="0.1"/>
-                  <circle cx="50" cy="178" r="2" fill="#FF2D9B" fillOpacity="0.15"/>
-                  <circle cx="10" cy="165" r="1.5" fill="#FF2D9B" fillOpacity="0.12"/>
-                  <circle cx="42" cy="165" r="1" fill="#E6492D" fillOpacity="0.14"/>
-                  {/* Circuit nodes */}
-                  <circle cx="120" cy="195" r="3" fill="none" stroke="#00E5FF" strokeWidth="0.8" strokeOpacity="0.18"/>
-                  <circle cx="120" cy="195" r="1" fill="#00E5FF" fillOpacity="0.25"/>
-                  <path d="M120 195 L80 195 L80 175" stroke="#00E5FF" strokeWidth="0.6" strokeOpacity="0.15"/>
-                </svg>
-                {/* Halftone texture overlay */}
-                <div className="tdc2-halftone" aria-hidden="true" />
-              </div>
-
-              {/* Top ink accent bar */}
-              <div className="tdc2-ink-bar" />
-
-              {/* Panel corner stamp */}
-              <div className="tdc2-corner-stamp" aria-hidden="true">TDC</div>
-
-              <div className="tdc2-content">
-                {/* Header row */}
-                <div className="tdc2-header">
-                  <div className="tdc2-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#00E5FF" className="tdc2-bolt">
-                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                    </svg>
-                  </div>
-                  <div className="tdc2-badge">⚡ TURBO MODE</div>
-                </div>
-
-                {/* Comic title block */}
-                <div className="tdc2-title-block">
-                  <div className="tdc2-action-text">TURBO</div>
-                  <div className="tdc2-title">DRONE CIRCUIT</div>
-                  <p className="tdc2-tagline">إدارة طاقة طائرات FPV</p>
-                </div>
-
-                <p className="tdc2-desc">دائرة 25×25mm تضيف الجهد من المكثف الفائق على التوالي — +15% فولت فوري. 150 أمبير. بدون برمجيات.</p>
-
-                <div className="tdc2-tags">
-                  <span className="tdc2-tag tdc2-tag--cyan">براءة اختراع</span>
-                  <span className="tdc2-tag tdc2-tag--magenta">FPV · UAV</span>
-                  <span className="tdc2-tag tdc2-tag--dim">150A · 19.3V</span>
-                </div>
-
-                {/* Stat bar */}
-                <div className="tdc2-stat-bar">
-                  <div className="tdc2-stat">
-                    <span className="tdc2-stat-val">+15%</span>
-                    <span className="tdc2-stat-label">فولت</span>
-                  </div>
-                  <div className="tdc2-stat-divider" />
-                  <div className="tdc2-stat">
-                    <span className="tdc2-stat-val">150A</span>
-                    <span className="tdc2-stat-label">تيار</span>
-                  </div>
-                  <div className="tdc2-stat-divider" />
-                  <div className="tdc2-stat">
-                    <span className="tdc2-stat-val">25mm</span>
-                    <span className="tdc2-stat-label">حجم</span>
-                  </div>
-                </div>
-
-                <a href="/tdc" className="tdc2-link">عرض المشروع <span className="tdc2-link-arrow">←</span></a>
-              </div>
-            </article>
-
-            {/* ─── DART — COMIC COMBAT FPV REMASTER ─── */}
-            <article className="product-card product-card--dart2 reveal delay-400" id="card-dart-ar" data-accent="dart">
-              {/* War-comic hatching + targeting overlay */}
-              <div className="dart2-bg" aria-hidden="true">
-                <svg className="dart2-overlay" viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  {/* Targeting reticle — top right */}
-                  <circle cx="248" cy="46" r="28" stroke="#FF4438" strokeWidth="1" strokeOpacity="0.25" strokeDasharray="3 3"/>
-                  <circle cx="248" cy="46" r="16" stroke="#FF4438" strokeWidth="0.8" strokeOpacity="0.35"/>
-                  <circle cx="248" cy="46" r="5" fill="#FF4438" fillOpacity="0.35"/>
-                  <circle cx="248" cy="46" r="2.5" fill="#FF4438" fillOpacity="0.6"/>
-                  {/* Crosshair lines */}
-                  <line x1="248" y1="18" x2="248" y2="30" stroke="#FF4438" strokeWidth="1.2" strokeOpacity="0.5"/>
-                  <line x1="248" y1="62" x2="248" y2="74" stroke="#FF4438" strokeWidth="1.2" strokeOpacity="0.5"/>
-                  <line x1="220" y1="46" x2="232" y2="46" stroke="#FF4438" strokeWidth="1.2" strokeOpacity="0.5"/>
-                  <line x1="264" y1="46" x2="276" y2="46" stroke="#FF4438" strokeWidth="1.2" strokeOpacity="0.5"/>
-                  {/* RF sweep */}
-                  <line x1="248" y1="46" x2="280" y2="14" stroke="#FF8A3D" strokeWidth="1" strokeOpacity="0.28"/>
-                  {/* Hatching lines — bottom left */}
-                  <line x1="0" y1="160" x2="60" y2="220" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.08"/>
-                  <line x1="15" y1="160" x2="75" y2="220" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.07"/>
-                  <line x1="30" y1="160" x2="90" y2="220" stroke="#FF4438" strokeWidth="0.5" strokeOpacity="0.06"/>
-                  <line x1="45" y1="160" x2="105" y2="220" stroke="#FF8A3D" strokeWidth="0.4" strokeOpacity="0.07"/>
-                  {/* Circuit trace */}
-                  <path d="M0 140 L40 140 L40 110 L90 110 L90 90" stroke="#FF8A3D" strokeWidth="0.7" strokeOpacity="0.15"/>
-                  <circle cx="40" cy="140" r="2.5" fill="none" stroke="#FF8A3D" strokeWidth="0.8" strokeOpacity="0.3"/>
-                  <circle cx="40" cy="140" r="1" fill="#FF8A3D" fillOpacity="0.35"/>
-                </svg>
-                <div className="dart2-halftone" aria-hidden="true" />
-              </div>
-
-              {/* Combat accent bar */}
-              <div className="dart2-ink-bar" />
-
-              {/* Panel corner stamp */}
-              <div className="dart2-corner-stamp" aria-hidden="true">DART</div>
-
-              <div className="dart2-content">
-                {/* Header row */}
-                <div className="dart2-header">
-                  <div className="dart2-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF4438" strokeWidth="1.8" strokeLinecap="round" className="dart2-reticle">
-                      <circle cx="12" cy="12" r="10"/>
-                      <circle cx="12" cy="12" r="4"/>
-                      <line x1="12" y1="2" x2="12" y2="6"/>
-                      <line x1="12" y1="18" x2="12" y2="22"/>
-                      <line x1="2" y1="12" x2="6" y2="12"/>
-                      <line x1="18" y1="12" x2="22" y2="12"/>
-                    </svg>
-                  </div>
-                  <div className="dart2-badge">◈ نموذج أولي</div>
-                </div>
-
-                {/* Comic title block */}
-                <div className="dart2-title-block">
-                  <div className="dart2-action-text">LOCK.</div>
-                  <div className="dart2-title">DART</div>
-                  <p className="dart2-tagline">إشارة راديوية للمعركة الجوية</p>
-                </div>
-
-                <p className="dart2-desc">طبقة قتالية معيارية لطائرات FPV — تأمين اتجاهي بالراديو، كشف ضربات بالأشعة الإجلاء، وردود فعل لمسية للطيار.</p>
-
-                <div className="dart2-tags">
-                  <span className="dart2-tag dart2-tag--orange">FPV · UAV</span>
-                  <span className="dart2-tag dart2-tag--red">RF تأمين</span>
-                  <span className="dart2-tag dart2-tag--dim">ESP32</span>
-                </div>
-
-                {/* Stat bar */}
-                <div className="dart2-stat-bar">
-                  <div className="dart2-stat">
-                    <span className="dart2-stat-val">2.4G</span>
-                    <span className="dart2-stat-label">RF</span>
-                  </div>
-                  <div className="dart2-stat-divider" />
-                  <div className="dart2-stat">
-                    <span className="dart2-stat-val">940nm</span>
-                    <span className="dart2-stat-label">IR</span>
-                  </div>
-                  <div className="dart2-stat-divider" />
-                  <div className="dart2-stat">
-                    <span className="dart2-stat-val">&lt;2ms</span>
-                    <span className="dart2-stat-label">تأخر</span>
-                  </div>
-                </div>
-
-                <a href="/dart/" className="dart2-link">عرض البطولة <span className="dart2-link-arrow">←</span></a>
-              </div>
-            </article>
-
-
-
-            <article className="product-card reveal delay-400" id="card-edgetack-ar" data-accent="blue">
-              <div className="card-accent-bar" />
-              <div className="card-header">
-                <div className="card-icon blue-icon">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M5 8h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2"/></svg>
-                </div>
-                <span className="card-status prototype">◈ براءة قيد التسجيل</span>
-              </div>
-              <h3 className="card-title">EDGE TACK</h3>
-              <p className="card-tagline">واقي شاشة بأزرار ألعاب</p>
-              <p className="card-desc">ملحق ألعاب جوال يجمع واقي الشاشة مع أزرار هوائية قابلة للطي لتجربة لعب أدق.</p>
-              <div className="card-tags"><span className="tag">ألعاب الجوال</span><span className="tag">براءة اختراع</span></div>
-              <a href="/edgetack" className="card-link">اعرف أكثر ←</a>
-            </article>
-
-            {/* ─── XHB — ADOPTED PROJECT ─── */}
-            <article className="product-card reveal delay-500" id="card-xhb-ar" data-accent="forest"
-              style={{ border: '1px solid rgba(34,197,94,0.2)', background: 'linear-gradient(145deg, #0a120a 0%, #111116 50%)' }}>
-              <div className="card-accent-bar" style={{ background: 'linear-gradient(90deg, #22c55e, #15803d)' }} />
-
-              {/* Adopted badge */}
-              <div style={{
-                position: 'absolute', top: '.65rem', left: '.75rem',
-                background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.25)',
-                borderRadius: '6px', padding: '.2rem .55rem',
-                fontSize: '.58rem', fontWeight: 700, letterSpacing: '.06em',
-                color: '#22c55e', textTransform: 'uppercase',
-              }}>🤝 مشروع مُتبنّى · ADOPTED</div>
-
-              <div className="card-header" style={{ marginTop: '1.6rem' }}>
-                <div className="card-icon" style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e' }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-                  </svg>
-                </div>
-                <span className="card-status prototype">◈ تأسيس مبكر</span>
-              </div>
-              <h3 className="card-title">XHB</h3>
-              <p className="card-tagline">مقر المؤسسين · Founders' HQ</p>
-              <p className="card-desc">منصة تأسيس مشتركة تجمع الرؤية والخطط والقرارات بين المؤسسين في بيئة محمية ومنظمة.</p>
-
-              {/* Founder credit */}
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: '.5rem',
-                margin: '.6rem 0', padding: '.45rem .65rem',
-                background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.12)',
-                borderRadius: '8px', fontSize: '.68rem', color: 'rgba(240,235,227,0.65)',
-              }}>
-                <span style={{ fontSize: '.85rem' }}>✦</span>
-                <span>مؤسس المشروع: <strong style={{ color: '#22c55e' }}>ملحم الذهبي · Mulham Al Zahabi</strong></span>
-              </div>
-
-              <div className="card-tags">
-                <span className="tag" style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e' }}>تأسيس شراكة</span>
-                <span className="tag" style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e' }}>وصول محدود</span>
-              </div>
-              <button
-                className="card-link"
-                style={{ color: '#22c55e', background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit', textAlign: 'inherit' }}
-                onClick={async (e) => {
-                  e.preventDefault()
-                  const btn = e.currentTarget
-                  const origText = btn.textContent
-                  btn.textContent = 'جاري الدخول…'
-                  btn.setAttribute('disabled', 'true')
-                  try {
-                    const token = sessionStorage.getItem('mcr_token') || ''
-                    if (token) {
-                      await mintXhbSession(token)
-                    } else {
-                      // Admin fallback: portal session exists but mcr_token
-                      // was cleared. Use the portal email to mint an XHB
-                      // session via the admin_sso endpoint (superadmin only).
-                      const email = sessionStorage.getItem('mcr_email') || ''
-                      if (email) {
-                        await mintAdminXhbSession(email)
-                      }
-                    }
-                    window.location.href = '/xhb/'
-                  } catch (err) {
-                    console.error('XHB SSO failed:', err)
-                    window.location.href = '/xhb/'
-                  } finally {
-                    btn.textContent = origText
-                    btn.removeAttribute('disabled')
-                  }
-                }}
-              >دخول مقر XHB ←</button>
-            </article>
-
+      {/* ═══════════════════════════════════════════════════
+          SHEET 02 — PRODUCT CARDS (Step 4.3)
+          C2: all 11 products + XHB from live inventory.
+      ═══════════════════════════════════════════════════ */}
+      <div className="cutline page"><span>SHEET 02 — PRODUCTS</span></div>
+      <section id="products" className="section page">
+        <div className="section__head">
+          <div>
+            <span className="section__index mono">02</span>
+            <h2>المحفظة</h2>
           </div>
+          <span className="section__meta">١٢ منتج · ٥ مجالات</span>
         </div>
+        <div className="grid">
+
+          {/* 01 ROGER·AI */}
+          <article className="card reveal" id="card-roger" style={{'--accent':'var(--gold)'} as React.CSSProperties}>
+            <span className="card__no mono">01</span>
+            <div className="card__row">
+              <div className="card__glyph"><StageGlyph stage="live" /></div>
+              <span className="card__name">ROGER·AI</span>
+              <span className="pill pill--live mono">LIVE</span>
+            </div>
+            <p className="card__tagline">مساعد ذكي يبني لك الأنظمة من الصفر — بدون كود</p>
+            <div className="tags"><span>ذكاء اصطناعي</span><span>بناء أنظمة</span></div>
+            <a href="/rogerai" target="_blank" rel="noopener" className="card__more">عرض المشروع ←</a>
+          </article>
+
+          {/* 02 CLINIQ.ONE */}
+          <article className="card reveal" id="card-cliniq" style={{'--accent':'var(--live)'} as React.CSSProperties}>
+            <span className="card__no mono">02</span>
+            <div className="card__row">
+              <div className="card__glyph"><StageGlyph stage="live" /></div>
+              <span className="card__name">CLINIQ.ONE</span>
+              <span className="pill pill--live mono">LIVE</span>
+            </div>
+            <p className="card__tagline">أول عيادة ذكاء اصطناعي في الخليج — فحص أولي بالذكاء، ملف مريض، حجز</p>
+            <div className="tags"><span>صحة رقمية</span><span>ذكاء اصطناعي</span></div>
+            <a href="/cliniq.one" className="card__more">زيارة cliniq.one ←</a>
+          </article>
+
+          {/* 03 UMMI */}
+          <article className="card reveal" id="card-ummi" style={{'--accent':'var(--live)'} as React.CSSProperties}>
+            <span className="card__no mono">03</span>
+            <div className="card__row">
+              <div className="card__glyph"><StageGlyph stage="live" /></div>
+              <span className="card__name">UMMI · أمي</span>
+              <span className="pill pill--live mono">LIVE</span>
+            </div>
+            <p className="card__tagline">محفظة رقمية لأمك — أرسل لها فلوس وتابع مصروفها بلطف</p>
+            <div className="tags"><span>فينتك</span><span>عائلة</span></div>
+            <a href="/ummiwallet/" className="card__more">عرض المشروع ←</a>
+          </article>
+
+          {/* 04 RELAYBOT */}
+          <article className="card reveal" id="card-relay" style={{'--accent':'var(--beta)'} as React.CSSProperties}>
+            <span className="card__no mono">04</span>
+            <div className="card__row">
+              <div className="card__glyph"><StageGlyph stage="beta" /></div>
+              <span className="card__name">RELAYBOT</span>
+              <span className="pill pill--beta mono">BETA</span>
+            </div>
+            <p className="card__tagline">طابعة حرارية ذكية — جهاز ESP32 يتصل عبر BLE ويطبع الرسائل فوراً</p>
+            <div className="tags"><span>أجهزة ذكية</span><span>BLE · ESP32</span></div>
+            <a href="https://github.com/momencrafts/relaybot" target="_blank" rel="noopener" className="card__more">GitHub ←</a>
+          </article>
+
+          {/* 05 QADAA */}
+          <article className="card reveal" id="card-qadaa" style={{'--accent':'var(--beta)'} as React.CSSProperties}>
+            <span className="card__no mono">05</span>
+            <div className="card__row">
+              <div className="card__glyph"><StageGlyph stage="beta" /></div>
+              <span className="card__name">QADAA · قضاء</span>
+              <span className="pill pill--beta mono">BETA</span>
+            </div>
+            <p className="card__tagline">منصة قانونية ذكية — بحث أحكام، استشارات AI، ملفات قضايا</p>
+            <div className="tags"><span>تقنية قانونية</span><span>ذكاء اصطناعي</span></div>
+            <a href="/qadaa" className="card__more">عرض المنصة ←</a>
+          </article>
+
+          {/* 06 TDC */}
+          <article className="card reveal" id="card-tdc" style={{'--accent':'var(--dev)'} as React.CSSProperties}>
+            <span className="card__no mono">06</span>
+            <div className="card__row">
+              <div className="card__glyph"><StageGlyph stage="dev" /></div>
+              <span className="card__name">TURBO DRONE CIRCUIT</span>
+              <span className="pill pill--dev mono">DEV</span>
+            </div>
+            <p className="card__tagline">دائرة 25×25mm تضيف الجهد من المكثف الفائق على التوالي — +15% فولت فوري</p>
+            <div className="tags"><span>براءة اختراع</span><span>FPV · UAV</span><span className="mono">150A · 19.3V</span></div>
+            <a href="/tdc" className="card__more">عرض المشروع ←</a>
+          </article>
+
+          {/* 07 DART */}
+          <article className="card reveal" id="card-dart" style={{'--accent':'var(--dev)'} as React.CSSProperties}>
+            <span className="card__no mono">07</span>
+            <div className="card__row">
+              <div className="card__glyph"><StageGlyph stage="dev" /></div>
+              <span className="card__name">DART</span>
+              <span className="pill pill--dev mono">DEV</span>
+            </div>
+            <p className="card__tagline">طائرة FPV قتالية مصممة للمناورة في البيئات الحضرية</p>
+            <div className="tags"><span>طيران</span><span>FPV</span></div>
+            <a href="/dart/" className="card__more">عرض المشروع ←</a>
+          </article>
+
+          {/* 08 EDGE TACK */}
+          <article className="card reveal" id="card-edgetack" style={{'--accent':'var(--dev)'} as React.CSSProperties}>
+            <span className="card__no mono">08</span>
+            <div className="card__row">
+              <div className="card__glyph"><StageGlyph stage="dev" /></div>
+              <span className="card__name">EDGE TACK</span>
+              <span className="pill pill--dev mono">DEV</span>
+            </div>
+            <p className="card__tagline">واقي شاشة بأزرار ألعاب — ملحق يجمع واقي الشاشة مع أزرار هوائية قابلة للطي</p>
+            <div className="tags"><span>ألعاب الجوال</span><span>براءة اختراع</span></div>
+            <a href="/edgetack" className="card__more">اعرف أكثر ←</a>
+          </article>
+
+          {/* 09 MUSCLE HUSTLE */}
+          <article className="card reveal" id="card-muscle">
+            <span className="card__no mono">09</span>
+            <div className="card__row"><span className="card__name">MUSCLE HUSTLE</span></div>
+            <p className="card__tagline">منصة لياقة وصالات بنموذج اشتراك مرن</p>
+            <div className="tags"><span>لياقة</span><span>اشتراكات</span></div>
+            <a href={'https://wa.me/966535271122?text=' + encodeURIComponent('أهتم بمنصة Muscle Hustle')} target="_blank" rel="noopener" className="card__more">واتساب ←</a>
+          </article>
+
+          {/* 10 AQAR */}
+          <article className="card reveal" id="card-aqar">
+            <span className="card__no mono">10</span>
+            <div className="card__row"><span className="card__name">AQAR · عقار</span></div>
+            <p className="card__tagline">منصة عقارية ذكية — بحث وتحليل وإدارة عقارات</p>
+            <div className="tags"><span>عقارات</span><span>ذكاء اصطناعي</span></div>
+            <a href={'https://wa.me/966535271122?text=' + encodeURIComponent('أهتم بمنصة AQAR')} target="_blank" rel="noopener" className="card__more">واتساب ←</a>
+          </article>
+
+          {/* 11 SABHA */}
+          <article className="card reveal" id="card-sabha">
+            <span className="card__no mono">11</span>
+            <div className="card__row"><span className="card__name">SABHA · سبحة</span></div>
+            <p className="card__tagline">سبحة إلكترونية — عدّاد ذكر مع إحصائيات وتذكيرات</p>
+            <div className="tags"><span>منتجات إسلامية</span><span>أجهزة ذكية</span></div>
+            <a href={'https://wa.me/966535271122?text=' + encodeURIComponent('أهتم بمنتج SABHA')} target="_blank" rel="noopener" className="card__more">واتساب ←</a>
+          </article>
+
+          {/* 12 XHB — ADOPTED PROJECT (B1: SSO handler verbatim) */}
+          <article className="card card--xhb reveal" id="card-xhb" style={{'--accent':'var(--live)'} as React.CSSProperties}>
+            <span className="card__no mono">12</span>
+            <div className="card__row">
+              <div className="card__glyph"><StageGlyph stage="live" /></div>
+              <span className="card__name">XHB · مقر</span>
+              <span className="pill pill--adopted mono">ADOPTED</span>
+            </div>
+            <p className="card__tagline">مقر XHB — منصة إدارة ذكية لمؤسسة خالد حسن البلوي</p>
+            <div className="tags">
+              <span>تأسيس شراكة</span><span>وصول محدود</span>
+            </div>
+            <button
+              className="card__more"
+              onClick={async (e) => {
+                e.preventDefault()
+                const btn = e.currentTarget
+                const origText = btn.textContent
+                btn.textContent = 'جاري الدخول…'
+                btn.setAttribute('disabled', 'true')
+                try {
+                  const token = sessionStorage.getItem('mcr_token') || ''
+                  if (token) {
+                    await mintXhbSession(token)
+                  } else {
+                    const email = sessionStorage.getItem('mcr_email') || ''
+                    if (email) {
+                      await mintAdminXhbSession(email)
+                    }
+                  }
+                  window.location.href = '/xhb/'
+                } catch (err) {
+                  console.error('XHB SSO failed:', err)
+                  window.location.href = '/xhb/'
+                } finally {
+                  btn.textContent = origText
+                  btn.removeAttribute('disabled')
+                }
+              }}
+            >دخول مقر XHB ←</button>
+          </article>
+
+        </div>{/* /grid */}
       </section>
 
       {/* ══════════════════════════
@@ -2007,6 +1536,7 @@ export default function HomeScreen() {
         )}
 
       </div>{/* /investor-layer */}
-    </div>
+    </div>{/* /home-root */}
+    </div>{/* /bp-root */}
   )
 }
