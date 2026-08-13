@@ -53,6 +53,45 @@ async function padToConstantTime(startMs: number): Promise<void> {
   if (remaining > 0) await new Promise(r => setTimeout(r, remaining))
 }
 
+// ── Login notification email (fire-and-forget) ────────────
+const NOTIFY_EMAIL = 'momen@momencrafts.com'
+
+async function notifyLogin(who: string, displayName: string, method: string) {
+  const resendKey = Deno.env.get('RESEND_API_KEY')
+  if (!resendKey) return
+  // Don't notify Momen about his own logins
+  if (who.toLowerCase() === NOTIFY_EMAIL) return
+  const now = new Date().toLocaleString('en-GB', {
+    timeZone: 'Asia/Riyadh',
+    day: 'numeric', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  })
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'MomenCrafts XHB <onboarding@resend.dev>',
+        to: [NOTIFY_EMAIL],
+        subject: `\u2726 ${displayName || who} just entered XHB`,
+        html: `
+          <div style="font-family:-apple-system,sans-serif;max-width:420px;margin:0 auto;padding:20px;background:#0d0d0d;color:#f0ebe3;border-radius:12px;">
+            <div style="text-align:center;color:#c8a96e;font-size:20px;margin-bottom:6px;">\u2726</div>
+            <div style="text-align:center;font-size:10px;letter-spacing:3px;color:#c8a96e;margin-bottom:14px;">XHB LOGIN</div>
+            <hr style="border:none;border-top:1px solid #2a2520;margin:12px 0;">
+            <p style="font-size:15px;margin:0 0 6px;"><strong style="color:#c8a96e;">${displayName || who}</strong> logged in.</p>
+            <p style="font-size:12px;color:#888;margin:0 0 12px;">Method: ${method} &middot; ${now} KSA</p>
+            <a href="https://www.momencrafts.com/xhb/" style="display:inline-block;padding:10px 24px;background:#c8a96e;color:#0d0d0d;text-decoration:none;border-radius:6px;font-weight:600;font-size:13px;">Open XHB &rarr;</a>
+          </div>
+        `,
+      }),
+    })
+  } catch (_) { /* non-blocking */ }
+}
+
 // ── SSO handler ───────────────────────────────────────────
 // Called by the MomenCrafts portal when a co-founder picks XHB.
 // Verifies the MCR token, confirms the person is in xhb.allowed_users,
@@ -238,6 +277,9 @@ async function handleSSO(
     action: 'sso_session_minted', detail: { ip, token_type: tokenRow.token_type },
   })
 
+  // 8b. Notify Momen about login (fire-and-forget)
+  notifyLogin(resolvedEmail, allowedUser.display_name || '', 'SSO token').catch(() => {})
+
   // 9. Return session tokens — the portal calls setSession with these
   return json(200, {
     access_token: session.access_token,
@@ -367,6 +409,9 @@ async function handleAdminSSO(
     actor: resolvedEmail, subject: resolvedEmail,
     action: 'admin_sso_session_minted', detail: { ip },
   })
+
+  // Notify Momen about login (fire-and-forget)
+  notifyLogin(resolvedEmail, admin.display_name || '', 'Admin SSO').catch(() => {})
 
   return json(200, {
     access_token: session.access_token,

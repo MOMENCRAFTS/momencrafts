@@ -921,7 +921,7 @@ export default function HomeScreen() {
               <span className="card__name">XHB · مقر</span>
               <span className="pill pill--adopted mono">ADOPTED</span>
             </div>
-            <p className="card__tagline">مقر XHB — منصة إدارة ذكية لمؤسسة خالد حسن البلوي</p>
+            <p className="card__tagline">مقر XHB — منصة تأسيس شراكة ذكية مع ملهم الذهبي</p>
             <div className="tags">
               <span>تأسيس شراكة</span><span>وصول محدود</span>
             </div>
