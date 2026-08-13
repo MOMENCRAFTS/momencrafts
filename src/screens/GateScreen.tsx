@@ -43,58 +43,8 @@ const TYPE_LABELS: Record<string, string> = {
   PERMANENT: 'Permanent Access', FOUNDER: 'Founder',
 }
 
-/* ── Particle canvas hook ──────────────────────────────── */
-function useParticleCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')!
-    const isMobile = window.innerWidth < 640
-    const count = isMobile ? 18 : 55
+/* Particle canvas replaced by CSS drafting grid — no canvas hook needed */
 
-    let W = 0, H = 0
-    const particles = Array.from({ length: count }, () => ({
-      x: Math.random() * 2000, y: Math.random() * 1200,
-      r: Math.random() * 1.8 + 0.3,
-      vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.15,
-      a: Math.random() * 0.5 + 0.15, gold: Math.random() > 0.7,
-    }))
-
-    const resize = () => {
-      W = canvas.width = window.innerWidth
-      H = canvas.height = window.innerHeight
-    }
-    resize()
-    window.addEventListener('resize', resize)
-
-    let raf: number
-    let paused = false
-    const draw = () => {
-      if (paused) return
-      ctx.clearRect(0, 0, W, H)
-      particles.forEach(p => {
-        ctx.beginPath()
-        ctx.arc(p.x % W, p.y % H, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = p.gold ? `rgba(200,169,110,${p.a})` : `rgba(240,235,227,${p.a * 0.4})`
-        ctx.fill()
-        p.x += p.vx; p.y += p.vy
-        if (p.x < 0) p.x += W
-        if (p.y < 0) p.y += H
-      })
-      raf = requestAnimationFrame(draw)
-    }
-    draw()
-
-    const onVis = () => { paused = document.hidden; if (!paused) draw() }
-    document.addEventListener('visibilitychange', onVis)
-
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('resize', resize)
-      document.removeEventListener('visibilitychange', onVis)
-    }
-  }, [canvasRef])
-}
 
 /* ── NDA Overlay component ─────────────────────────────── */
 interface NDAProps {
@@ -176,9 +126,6 @@ function NDAOverlay({ token, investorData, lang, onAccept, onDecline }: NDAProps
 export default function GateScreen() {
   const navigate = useNavigate()
   const { lang, toggleLang, setToken } = useAppStore()
-
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  useParticleCanvas(canvasRef)
 
   const [tokenVal, setTokenVal]     = useState('')
   const [error, setError]           = useState('')
@@ -339,8 +286,6 @@ export default function GateScreen() {
 
   return (
     <>
-      <canvas id="gate-canvas" ref={canvasRef} style={{ position:'fixed',inset:0,pointerEvents:'none',opacity:.22,zIndex:0 }} />
-
       <div className="gate-layout">
         {/* ── LEFT — Branding ── */}
         <div className="gate-brand">
