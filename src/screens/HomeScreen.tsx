@@ -660,7 +660,7 @@ export default function HomeScreen() {
     <div className="bp-root" dir="rtl" lang="ar">
       <SheetLayers />
       <div className="home-root" id="home-root">
-      {/* ── Particle canvas ── */}
+        {/* ── Particle canvas ── */}
       <canvas ref={canvasRef} id="hero-canvas" aria-hidden="true"
         style={{ position:'fixed', inset:0, width:'100%', height:'100%', pointerEvents:'none', opacity:.35, zIndex:0 }} />
 
@@ -1532,8 +1532,8 @@ export default function HomeScreen() {
           </div>
         )}
 
-      </div>{/* /investor-layer */}
-    </div>{/* /home-root */}
-    </div>{/* /bp-root */}
+      </div>
+      </div>
+    </div>
   )
 }
