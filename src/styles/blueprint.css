@@ -91,16 +91,122 @@
 /* Override home.css opaque background so atelier/PCB SVGs show through */
 .bp-root .home-root{background:transparent!important;position:relative;z-index:2}
 .bp-root .home-root *{font-family:var(--sans)!important}
-.bp-root .hero,
-.bp-root .products,
-.bp-root .about,
-.bp-root .contact,
-.bp-root .footer,
-.bp-root .capabilities,
-.bp-root .stack,
-.bp-root section{background:transparent!important}
+.bp-root > .home-root > .hero,
+.bp-root > .home-root > section.section,
+.bp-root > .home-root > .title-block,
+.bp-root > .home-root > footer.title-block{background:transparent!important}
 .bp-root .hero::before,
 .bp-root .hero::after{display:none!important}
+
+/* ── INVESTOR LAYER — blueprint harmony ─────────────────────────────
+   Re-skin all investor sections to blueprint palette so they
+   don't break visual continuity with the landing.                   */
+.bp-root #investor-layer{position:relative;z-index:2}
+.bp-root #investor-layer section{
+  background:var(--bp-2)!important;
+  border-top:1px solid var(--draft)!important;
+  color:var(--ink)!important;
+}
+.bp-root #investor-layer section:nth-child(even){background:var(--bp-3)!important}
+.bp-root #investor-layer h2,
+.bp-root #investor-layer h3,
+.bp-root #investor-layer h4{color:var(--ink)!important}
+.bp-root #investor-layer .inv-sec__label,
+.bp-root #investor-layer .inv-sec__index{color:var(--gold)!important}
+.bp-root #investor-layer p,
+.bp-root #investor-layer span,
+.bp-root #investor-layer div{color:var(--ink)!important}
+.bp-root #investor-layer a{color:var(--gold)!important}
+.bp-root #investor-layer a:hover{color:var(--gold-lt)!important}
+
+/* Founder avatar — blueprint circle */
+.bp-root .inv-founder-avatar{
+  background:var(--bp-3)!important;
+  color:var(--gold)!important;
+  border:2px solid var(--draft)!important;
+}
+.bp-root .inv-founder-label{color:var(--gold)!important}
+.bp-root .inv-founder-subtitle{color:var(--draft)!important}
+
+/* Investor cards */
+.bp-root .inv-product-card{
+  background:var(--bp)!important;
+  border:1px solid var(--draft)!important;
+}
+.bp-root .inv-product-card:hover{border-color:var(--gold)!important}
+.bp-root .inv-badge{color:var(--gold)!important;border-color:var(--gold)!important}
+.bp-root .inv-product-card-header{border-bottom-color:var(--draft)!important}
+.bp-root .inv-card-cat{color:var(--draft)!important}
+.bp-root .inv-body-desc{color:rgba(255,255,255,.7)!important}
+.bp-root .inv-detail-label{color:var(--draft)!important}
+.bp-root .inv-detail-value{color:var(--ink)!important}
+.bp-root .inv-demo-link{color:var(--gold)!important}
+
+/* Co-founder section */
+.bp-root .inv-cofounder-section{background:var(--bp-3)!important}
+.bp-root .inv-cf-inner{border-color:var(--draft)!important}
+.bp-root .inv-cf-label{color:var(--gold)!important}
+.bp-root .inv-cf-title{color:var(--ink)!important}
+.bp-root .inv-cf-card{
+  background:var(--bp)!important;
+  border:1px solid var(--draft)!important;
+}
+.bp-root .inv-cf-card-title{color:var(--gold)!important}
+.bp-root .inv-cf-contact-name{color:var(--ink)!important}
+.bp-root .inv-cf-contact-role{color:var(--draft)!important}
+.bp-root .inv-cf-btn{
+  background:var(--bp-2)!important;
+  color:var(--ink)!important;
+  border:1px solid var(--draft)!important;
+}
+.bp-root .inv-cf-btn:hover{border-color:var(--gold)!important}
+.bp-root .inv-cf-ballot-chip{
+  background:var(--bp)!important;
+  color:var(--ink)!important;
+  border:1px solid var(--draft)!important;
+}
+.bp-root .inv-cf-ballot-chip.ranked{
+  background:var(--gold)!important;
+  color:var(--bp)!important;
+  border-color:var(--gold)!important;
+}
+.bp-root .inv-cf-ballot-submit{
+  background:var(--gold)!important;
+  color:var(--bp)!important;
+}
+
+/* Co-section download cards */
+.bp-root .co-section{background:var(--bp-2)!important}
+.bp-root .co-section:nth-child(even){background:var(--bp-3)!important}
+.bp-root .co-dl-card{
+  background:var(--bp)!important;
+  border:1px solid var(--draft)!important;
+}
+.bp-root .co-dl-btn{
+  background:var(--bp-2)!important;
+  color:var(--ink)!important;
+  border:1px solid var(--draft)!important;
+}
+.bp-root .co-dl-btn:hover{border-color:var(--gold)!important}
+
+/* Investor bar */
+.bp-root #investor-bar{
+  background:var(--bp-3)!important;
+  border-bottom:1px solid var(--draft)!important;
+}
+.bp-root #investor-bar *{color:var(--ink)!important}
+.bp-root #inv-bar-badge{color:var(--gold)!important}
+
+/* Let's build / partnership sections */
+.bp-root .letsb-section{background:var(--bp-3)!important}
+.bp-root .letsb-section *{color:var(--ink)!important}
+
+/* Trust footer in investor */
+.bp-root .inv-footer{
+  background:var(--bp-3)!important;
+  border-top:1px solid var(--draft)!important;
+}
+.bp-root .inv-footer *{color:var(--draft)!important}
 
 /* Arabic never in monospace. Latin technical data only. */
 .mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate}
