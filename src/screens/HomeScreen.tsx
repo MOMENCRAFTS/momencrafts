@@ -958,73 +958,70 @@ export default function HomeScreen() {
         </div>{/* /grid */}
       </section>
 
-      {/* ══════════════════════════
-          ABOUT
-      ══════════════════════════ */}
-      <section id="about" className="about">
-        <div className="container about-inner">
-          <div className="about-text">
-            <div className="section-label reveal">الاستوديو</div>
-            <h2 className="section-title reveal delay-100">مصممة بعناية،<br/>مو تجميع</h2>
-            <p className="about-body reveal delay-200">مومن كرافتس استوديو اختراع ومنتجات في الرياض يطوّر أنظمة ذكية في الصحة، القانون، اللياقة، العقار، التمويل العائلي، والأجهزة.</p>
-            <p className="about-body reveal delay-300">أسسه <strong>مومن فرعون</strong> — مؤسس ومهندس يبني الفكرة من أول رسم إلى أول تجربة قابلة للاستخدام.</p>
-            <div className="about-details reveal delay-400">
-              <div className="detail-row"><span className="detail-label">التأسيس</span><span className="detail-value">2026</span></div>
-              <div className="detail-row"><span className="detail-label">المقر</span><span className="detail-value">الرياض، السعودية</span></div>
-              <div className="detail-row"><span className="detail-label">التواصل</span><span className="detail-value">momen@momencrafts.com</span></div>
+      {/* ══════ SHEET 03 — ABOUT (Step 4.4) ══════ */}
+      <div className="cutline page"><span>SHEET 03 — ABOUT</span></div>
+      <section id="about" className="section page">
+        <div className="section__head">
+          <div>
+            <span className="section__index mono">03</span>
+            <h2>الاستوديو</h2>
+          </div>
+        </div>
+        <div className="about-grid">
+          <div className="about__text">
+            <h3 className="about__title reveal">مصممة بعناية،<br/>مو تجميع</h3>
+            <p className="about__body reveal">مومن كرافتس استوديو اختراع ومنتجات في الرياض يطوّر أنظمة ذكية في الصحة، القانون، اللياقة، العقار، التمويل العائلي، والأجهزة.</p>
+            <p className="about__body reveal">أسسه <strong>مومن فرعون</strong> — مؤسس ومهندس يبني الفكرة من أول رسم إلى أول تجربة قابلة للاستخدام.</p>
+            <div className="about__details reveal">
+              <div className="detail"><span className="detail__k mono">EST.</span><span className="detail__v">2026</span></div>
+              <div className="detail"><span className="detail__k mono">HQ</span><span className="detail__v">الرياض، السعودية</span></div>
+              <div className="detail"><span className="detail__k mono">MAIL</span><span className="detail__v">momen@momencrafts.com</span></div>
             </div>
           </div>
-          <div className="about-quote reveal delay-200">
-            <blockquote>
-              <p>«أقوى التقنيات هي التي تختفي — تصبح طبيعية لدرجة أن المستخدم ينسى أنه يتفاعل مع آلة.»</p>
-              <footer>— مومن فرعون، المؤسس · مومن كرافتس</footer>
-            </blockquote>
-          </div>
+          <blockquote className="about__quote reveal">
+            <p>«أقوى التقنيات هي التي تختفي — تصبح طبيعية لدرجة أن المستخدم ينسى أنه يتفاعل مع آلة.»</p>
+            <cite>— مومن فرعون، المؤسس</cite>
+          </blockquote>
         </div>
       </section>
 
-      {/* ══════════════════════════
-          CONTACT
-      ══════════════════════════ */}
-      <section id="contact" className="contact">
-        <div className="container contact-inner">
-          <div className="section-label reveal">تواصل معنا</div>
-          <h2 className="section-title reveal delay-100">خلّنا<br/><em>نبني سوا</em></h2>
-          <p className="section-sub reveal delay-200">يسعدنا تواصلك — لفكرة، شراكة، تبنّي منتج، أو استفسار مباشر.</p>
-          <form className="contact-form reveal delay-300" action="https://formsubmit.co/momen@momencrafts.com" method="POST">
-            <input type="hidden" name="_subject" value="استفسار جديد من momencrafts.com" />
-            <input type="hidden" name="_next" value="https://momencrafts.com/?sent=1" />
-            <input type="hidden" name="_captcha" value="false" />
-            <div className="form-row">
-              <input type="text" name="name" placeholder="الاسم" required />
-              <input type="email" name="email" placeholder="البريد الإلكتروني" required />
-            </div>
-            <textarea name="message" placeholder="أخبرنا عن مشروعك..." rows={5} required />
-            <button type="submit" className="btn btn-primary">إرسال الرسالة <span className="btn-arrow">←</span></button>
-          </form>
-          <div className="contact-links reveal delay-400">
-            <a href="mailto:momen@momencrafts.com" className="contact-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              momen@momencrafts.com
-            </a>
-            <a href="tel:+966535271122" className="contact-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.16 6.16l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              +966 53 527 1122
-            </a>
+      {/* ══════ SHEET 04 — CONTACT (Step 4.4) ══════ */}
+      <div className="cutline page"><span>SHEET 04 — CONTACT</span></div>
+      <section id="contact" className="section page">
+        <div className="section__head">
+          <div>
+            <span className="section__index mono">04</span>
+            <h2>خلّنا <em>نبني سوا</em></h2>
           </div>
+        </div>
+        <p className="contact__sub reveal">يسعدنا تواصلك — لفكرة، شراكة، تبنّي منتج، أو استفسار مباشر.</p>
+        <form className="contact-form reveal" action="https://formsubmit.co/momen@momencrafts.com" method="POST">
+          <input type="hidden" name="_subject" value="استفسار جديد من momencrafts.com" />
+          <input type="hidden" name="_next" value="https://momencrafts.com/?sent=1" />
+          <input type="hidden" name="_captcha" value="false" />
+          <div className="form-row">
+            <input type="text" name="name" placeholder="الاسم" required />
+            <input type="email" name="email" placeholder="البريد الإلكتروني" required />
+          </div>
+          <textarea name="message" placeholder="أخبرنا عن مشروعك..." rows={5} required />
+          <button type="submit" className="btn btn--gold">إرسال الرسالة <span style={{ display:'inline-block', transform:'scaleX(-1)' }}>→</span></button>
+        </form>
+        <div className="contact__links reveal">
+          <a href="mailto:momen@momencrafts.com" className="contact__link mono">momen@momencrafts.com</a>
+          <a href="tel:+966535271122" className="contact__link mono">+966 53 527 1122</a>
+          <a href="https://wa.me/966535271122" target="_blank" rel="noopener" className="contact__link mono">WhatsApp</a>
         </div>
       </section>
 
-      {/* ══════════════════════════
-          FOOTER
-      ══════════════════════════ */}
-      <footer className="footer">
-        <div className="container footer-inner">
-          <div><span className="footer-logo">✦ مومن كرافتس</span><p>استوديو اختراع ومنتجات</p><p>الرياض، المملكة العربية السعودية</p></div>
-          <div className="footer-links"><a href="#products">المنتجات</a><a href="#about">عن الاستوديو</a><a href="#contact">تواصل</a></div>
-          <div style={{ textAlign:'left' }}><p>momen@momencrafts.com</p><p>الرياض · السعودية · 2026</p></div>
+      {/* ══════ TITLE BLOCK + FOOTER (Step 4.4) ══════ */}
+      <footer className="title-block">
+        <div className="tb">
+          <div className="tb__cell"><span className="tb__k mono">STUDIO</span><span className="tb__v">مومن كرافتس</span></div>
+          <div className="tb__cell"><span className="tb__k mono">FOUNDER</span><span className="tb__v">مومن فرعون</span></div>
+          <div className="tb__cell"><span className="tb__k mono">LOCATION</span><span className="tb__v">الرياض · KSA</span></div>
+          <div className="tb__cell"><span className="tb__k mono">REV</span><span className="tb__v">MC-2026.08</span></div>
         </div>
-        <div className="container"><div className="footer-rule" /><div className="footer-copy"><span>© 2026 مومن كرافتس</span><span className="crafted">صُنع بواسطة مومن فرعون ✦</span></div></div>
+        <div className="tb__copy mono">© 2026 MomenCrafts & Co · صُنع بواسطة مومن فرعون ✦</div>
       </footer>
 
       {/* ══════════════════════════
