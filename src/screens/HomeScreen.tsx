@@ -4,6 +4,7 @@ import { useAppStore } from '@/stores/useAppStore'
 import { mintXhbSession, mintAdminXhbSession } from '@/services/xhbSession'
 import { FeedbackPanel } from '@/components/FeedbackPanel'
 import '@/styles/home.css'
+import '@/styles/blueprint.css'
 
 // ── WhatsApp track messages ──
 const TRACKS: Record<string, string> = {
@@ -402,6 +403,129 @@ function useWatermark(name: string, token: string) {
     document.addEventListener('keydown', onKey)
     return () => { window.removeEventListener('resize', draw); document.removeEventListener('keydown', onKey) }
   }, [name, token])
+}
+
+/* ── Blueprint background layers (Step 4.1) ── */
+const RegMark = ({ pos }: { pos: 'tl'|'tr'|'bl'|'br' }) => (
+  <div className={`reg reg--${pos}`} aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 18 18">
+      <circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" strokeWidth="1" />
+      <path d="M9 0v18M0 9h18" stroke="currentColor" strokeWidth=".7" />
+    </svg>
+  </div>
+)
+
+/* ── Blueprint SVG components (Step 4.2) ── */
+type Stage = 'live' | 'beta' | 'dev'
+const CUBE = 'M20 6 L34 14 L34 26 L20 34 L6 26 L6 14 Z'
+const CUBE_LINES = 'M20 6 v28 M6 14 L34 26 M34 14 L6 26'
+
+function StageGlyph({ stage, size = 30 }: { stage: Stage; size?: number }) {
+  if (stage === 'live') return (
+    <svg className="art" width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
+      <path className="fill--solid" d={CUBE} opacity=".22" />
+      <g className="stroke stroke--built"><path d={CUBE} /><path d={CUBE_LINES} /></g>
+    </svg>
+  )
+  if (stage === 'beta') return (
+    <svg className="art" width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
+      <path className="fill--ghost" d={CUBE} />
+      <g className="stroke stroke--built"><path d={CUBE} /><path d="M20 6 v28" /></g>
+      <g className="stroke stroke--sketch"><path d="M6 14 L34 26 M34 14 L6 26" /></g>
+    </svg>
+  )
+  return (
+    <svg className="art" width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
+      <g className="stroke stroke--sketch"><path d={CUBE} /><path d={CUBE_LINES} /></g>
+    </svg>
+  )
+}
+
+const GEAR12 = 'M 111.6 53.2 L 111.6 66.8 L 98.6 70.4 L 97.0 75.3 L 108.0 79.9 L 101.3 91.7 L 88.3 88.3 L 84.4 91.7 L 91.7 101.3 L 79.9 108.0 L 70.4 98.6 L 65.2 99.7 L 66.8 111.6 L 53.2 111.6 L 49.6 98.6 L 44.7 97.0 L 40.1 108.0 L 28.3 101.3 L 31.7 88.3 L 28.3 84.4 L 18.7 91.7 L 12.0 79.9 L 21.4 70.4 L 20.3 65.2 L 8.4 66.8 L 8.4 53.2 L 21.4 49.6 L 23.0 44.7 L 12.0 40.1 L 18.7 28.3 L 31.7 31.7 L 35.6 28.3 L 28.3 18.7 L 40.1 12.0 L 49.6 21.4 L 54.8 20.3 L 53.2 8.4 L 66.8 8.4 L 70.4 21.4 L 75.3 23.0 L 79.9 12.0 L 91.7 18.7 L 88.3 31.7 L 91.7 35.6 L 101.3 28.3 L 108.0 40.1 L 98.6 49.6 L 99.7 54.8 Z'
+const PCB_VIEW = { width: 300, height: 275, viewBox: '4 34 112 78' }
+const PcbBody = ({ variant }: { variant: 1 | 2 | 3 }) => {
+  const s = variant === 1 ? 'stroke stroke--sketch' : 'stroke stroke--built'
+  return (
+    <>
+      {variant === 2 && <rect className="fill--ghost" x="8" y="8" width="104" height="134" rx="5" />}
+      {variant === 3 && <rect className="fill--solid" x="8" y="8" width="104" height="134" rx="5" opacity=".2" />}
+      <rect className={s} x="8" y="8" width="104" height="134" rx="5" />
+      <circle className={s} cx="18" cy="18" r="3" /><circle className={s} cx="102" cy="18" r="3" />
+      <circle className={s} cx="18" cy="132" r="3" /><circle className={s} cx="102" cy="132" r="3" />
+      {variant === 3 && <rect className="fill--solid" x="40" y="44" width="40" height="32" rx="2" opacity=".45" />}
+      <rect className={s} x="40" y="44" width="40" height="32" rx="2" />
+      <path className={s} d="M36 50h4M36 58h4M36 66h4M80 50h4M80 58h4M80 66h4" />
+      <path className={s} d="M36 50h-8l-6-6h-8M36 66h-10l-6 6v14M84 58h10l6-6h6M84 66h6l8 8v10" />
+      <path className={s} d="M60 76v14M60 90h-22M60 90h24" />
+      {variant !== 1 && <>
+        <circle className="fill--solid" cx="14" cy="44" r={variant === 3 ? 2.2 : 1.8} />
+        <circle className="fill--solid" cx="20" cy="86" r={variant === 3 ? 2.2 : 1.8} />
+        <circle className="fill--solid" cx="106" cy="52" r={variant === 3 ? 2.2 : 1.8} />
+        <circle className="fill--solid" cx="106" cy="84" r={variant === 3 ? 2.2 : 1.8} />
+      </>}
+      {variant === 3
+        ? <><rect className="fill--solid" x="22" y="98" width="14" height="7" rx="1" />
+            <rect className="fill--solid" x="86" y="98" width="14" height="7" rx="1" /></>
+        : <><rect className={s} x="22" y="98" width="14" height="7" rx="1" />
+            <rect className={s} x="86" y="98" width="14" height="7" rx="1" /></>}
+      <circle className={s} cx="60" cy="104" r="7" />
+      {variant === 3
+        ? [30,42,54,66,78].map(x => <rect key={x} className="fill--solid" x={x} y="133" width="6" height="7" />)
+        : <path className="stroke stroke--tick" d="M30 136h6M42 136h6M54 136h6M66 136h6M78 136h6" />}
+    </>
+  )
+}
+
+function Terminal() {
+  return (
+    <div className="term" aria-hidden="true">
+      <div className="term__line"><span className="term__prompt">$</span> mc trace --layer 2</div>
+      <div className="term__line">  routing 1,284 nets …</div>
+      <div className="term__line"><span className="term__prompt">$</span> mc assemble --verify</div>
+      <div className="term__line"><span className="term__ok">  ✓</span> 96 components placed</div>
+      <div className="term__line"><span className="term__prompt">$</span> mc deliver --sign MC-001</div>
+      <div className="term__line"><span className="term__ok">  ✓</span> released<span className="term__cursor" /></div>
+    </div>
+  )
+}
+
+function SheetLayers() {
+  return (
+    <>
+      <div className="fx fx-tone"     aria-hidden="true" />
+      <div className="fx fx-mottle"   aria-hidden="true" />
+      <div className="fx fx-folds"    aria-hidden="true" />
+      <div className="fx fx-leak"     aria-hidden="true" />
+      <div className="fx fx-dust"     aria-hidden="true" />
+      <div className="fx fx-vignette" aria-hidden="true" />
+      <div className="grid-bg"        aria-hidden="true" />
+      <RegMark pos="tl" /><RegMark pos="tr" /><RegMark pos="bl" /><RegMark pos="br" />
+      <div className="fx fx-grain" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg">
+          <filter id="mc-grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves={4} stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#mc-grain)" />
+        </svg>
+      </div>
+      <Terminal />
+      <div className="atelier" aria-hidden="true">
+        <div className="art art--1"><svg width="230" height="230" viewBox="0 0 120 120"><path className="stroke stroke--built" d={GEAR12} /><circle className="stroke stroke--built" cx="60" cy="60" r="22" /><circle className="stroke stroke--sketch" cx="60" cy="60" r="10" /></svg></div>
+        <div className="art art--3"><svg width="180" height="180" viewBox="0 0 100 100"><path className="stroke stroke--built" d="M50 14 L82 32 L50 50 L18 32 Z" /><path className="stroke stroke--sketch" d="M18 40 L50 58 L50 92 L18 74 Z" /><path className="stroke stroke--sketch" d="M82 40 L50 58 L50 92 L82 74 Z" /></svg></div>
+        <div className="art art--2"><svg width="250" height="115" viewBox="0 0 130 60"><path className="stroke stroke--built" d="M4 12 h122 M4 48 h122" /><path className="stroke stroke--built" d="M4 12 L22 48 L40 12 L58 48 L76 12 L94 48 L112 12 L126 48" /></svg></div>
+        <div className="art art--5"><svg width="170" height="170" viewBox="0 0 100 100"><circle className="stroke stroke--built" cx="50" cy="50" r="42" /><ellipse className="stroke stroke--sketch" cx="50" cy="50" rx="16" ry="42" /><ellipse className="stroke stroke--sketch" cx="50" cy="50" rx="32" ry="42" /><ellipse className="stroke stroke--built" cx="50" cy="50" rx="42" ry="15" /></svg></div>
+        <div className="art art--6"><svg width="140" height="180" viewBox="0 0 80 100"><path className="stroke stroke--built" d="M40 8 L16 88 M40 8 L64 88" /><circle className="fill--solid" cx="40" cy="8" r="3.4" /><path className="stroke stroke--sketch" d="M22 66 q18 10 36 0" /></svg></div>
+      </div>
+      <div className="thesis art" aria-hidden="true">
+        {[1, 2, 3].map(v => (
+          <svg key={v} className={`thesis__layer thesis__layer--${v}`} {...PCB_VIEW}>
+            <PcbBody variant={v as 1 | 2 | 3} />
+          </svg>
+        ))}
+      </div>
+    </>
+  )
 }
 
 export default function HomeScreen() {

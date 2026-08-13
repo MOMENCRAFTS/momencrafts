@@ -1,0 +1,403 @@
+/* ═══════════════════════════════════════════════════════════════════
+   MOMENCRAFTS — LANDING "BLUEPRINT"
+   Production stylesheet. Drop-in replacement for home.css.
+
+   Contents
+     1  Tokens
+     2  Base + fonts
+     3  Print-artifact overlay layers (grain, mottle, folds, leak, dust, vignette)
+     4  Drafting grid
+     5  Artifact linework system (3 build stages)
+     6  Nav
+     7  Hero + dimension line + stage legend
+     8  Cut lines + section heads
+     9  Product cards
+    10  Founders / XHB
+    11  Title block + footer
+    12  Reveal animations
+    13  Responsive
+    14  Accessibility (focus, reduced motion, print)
+
+   RULES
+     · All colours below are contrast-verified on the blueprint ground.
+     · Crimson (#C41E3A) is FORBIDDEN here — 1.74:1. Gold is the accent.
+     · Use logical properties only (inline-start/end) — this is an RTL site.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── 1 · TOKENS ─────────────────────────────────────────────────── */
+/* C1 CORRECTION: tokens scoped to .bp-root, not :root.
+   The original file set these on :root which bleeds into the gate,
+   admin, and investor routes when Vite injects this CSS globally.   */
+.bp-root{
+  /* ground */
+  --bp:#0E4372;            /* base sheet */
+  --bp-2:#164E80;          /* card / panel */
+  --bp-3:#0B3760;          /* deep, footer wells */
+
+  /* strokes & rules */
+  --line:rgba(255,255,255,.14);
+  --line-gold:rgba(226,185,107,.34);
+  --draft:#FFFFFF;         /* ALL technical linework is white */
+
+  /* type */
+  --ink:#FFFFFF;           /* body          10.2:1 */
+  --ink-2:#C3D9EC;         /* secondary      7.0:1 */
+  --ink-3:#93B4D0;         /* muted — large/UI only, 4.7:1 */
+
+  /* accent — gold replaces crimson on blueprint */
+  --gold:#E2B96B;          /* 5.5:1 — links, kickers, CTA fill */
+  --gold-lt:#F0D69B;       /* 7.2:1 — brighter gold text */
+
+  /* status */
+  --live:#7FD6A6;          /* 5.9:1 */
+  --beta:#F0B26B;          /* 5.5:1 */
+  --dev:#93B4D0;           /* 4.7:1 */
+
+  /* elevation */
+  --sh:0 2px 10px rgba(0,0,0,.22), 0 14px 40px rgba(0,0,0,.20);
+  --sh-lift:0 6px 18px rgba(0,0,0,.28), 0 26px 60px rgba(0,0,0,.26);
+
+  /* type stacks */
+  --serif:"Fraunces","Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --sans:"Tajawal","IBM Plex Sans Arabic","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+  --mono:"JetBrains Mono",Consolas,ui-monospace,monospace;
+
+  /* rhythm */
+  --pad-x:56px;
+  --maxw:1180px;
+  --radius:16px;
+}
+
+/* ── 2 · BASE ───────────────────────────────────────────────────── */
+/* C1 CORRECTION: all global selectors scoped to .bp-root.
+   Without this, html{background:--bp} repaints the gate blue,
+   a{color:--gold} recolours every link in the app (P15).          */
+.bp-root,.bp-root *,.bp-root *::before,.bp-root *::after{box-sizing:border-box;margin:0;padding:0}
+.bp-root{
+  background:var(--bp);
+  color:var(--ink);
+  font:15px/1.75 var(--sans);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+.bp-root img,.bp-root svg{display:block;max-width:100%}
+.bp-root button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+.bp-root a{color:var(--gold);text-decoration:none}
+.bp-root a:hover{color:var(--gold-lt)}
+
+/* Arabic never in monospace. Latin technical data only. */
+.mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate}
+.serif{font-family:var(--serif)}
+
+/* ── 3 · PRINT-ARTIFACT OVERLAYS ────────────────────────────────
+   Order matters. mottle/folds/leak sit BEHIND content (z 1-3);
+   grain sits ABOVE everything (z 60) so it unifies the surface.
+   All are pointer-events:none.                                     */
+.fx{position:fixed;inset:0;pointer-events:none}
+
+/* exposure mottling — uneven cyanotype wash */
+.fx-mottle{z-index:1;mix-blend-mode:soft-light;opacity:.85;
+  background:
+    radial-gradient(38% 30% at 18% 12%, rgba(255,255,255,.30), transparent 62%),
+    radial-gradient(30% 26% at 76% 22%, rgba(0,0,0,.28), transparent 64%),
+    radial-gradient(42% 34% at 62% 58%, rgba(255,255,255,.22), transparent 66%),
+    radial-gradient(34% 30% at 24% 74%, rgba(0,0,0,.26), transparent 64%),
+    radial-gradient(46% 36% at 88% 88%, rgba(255,255,255,.16), transparent 68%);}
+
+/* fold creases — the sheet was folded into eighths */
+.fx-folds{z-index:2;opacity:.55;
+  background:
+    linear-gradient(90deg,transparent calc(25% - 1.5px),rgba(255,255,255,.10) calc(25% - .5px),rgba(0,0,0,.16) calc(25% + .5px),transparent calc(25% + 1.5px)),
+    linear-gradient(90deg,transparent calc(50% - 1.5px),rgba(255,255,255,.12) calc(50% - .5px),rgba(0,0,0,.18) calc(50% + .5px),transparent calc(50% + 1.5px)),
+    linear-gradient(90deg,transparent calc(75% - 1.5px),rgba(255,255,255,.10) calc(75% - .5px),rgba(0,0,0,.16) calc(75% + .5px),transparent calc(75% + 1.5px)),
+    linear-gradient(180deg,transparent calc(34% - 1.5px),rgba(255,255,255,.09) calc(34% - .5px),rgba(0,0,0,.15) calc(34% + .5px),transparent calc(34% + 1.5px)),
+    linear-gradient(180deg,transparent calc(68% - 1.5px),rgba(255,255,255,.09) calc(68% - .5px),rgba(0,0,0,.15) calc(68% + .5px),transparent calc(68% + 1.5px));}
+
+/* light leak — sun on the corner of the sheet */
+.fx-leak{z-index:2;mix-blend-mode:screen;opacity:.22;
+  background:radial-gradient(50% 40% at 96% 4%, rgba(226,185,107,.55), rgba(226,185,107,.12) 46%, transparent 70%);}
+
+/* dust & specks */
+.fx-dust{z-index:3;opacity:.5;
+  background-image:
+    radial-gradient(circle at 12% 22%, rgba(255,255,255,.55) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 47% 9%,  rgba(255,255,255,.40) 0 .8px,transparent 1.2px),
+    radial-gradient(circle at 78% 34%, rgba(255,255,255,.50) 0 1.1px,transparent 1.5px),
+    radial-gradient(circle at 31% 61%, rgba(255,255,255,.35) 0 .9px, transparent 1.3px),
+    radial-gradient(circle at 66% 77%, rgba(255,255,255,.45) 0 1px,  transparent 1.4px),
+    radial-gradient(circle at 88% 55%, rgba(255,255,255,.30) 0 .8px, transparent 1.2px),
+    radial-gradient(circle at 21% 88%, rgba(255,255,255,.40) 0 1px,  transparent 1.4px),
+    radial-gradient(circle at 57% 44%, rgba(255,255,255,.28) 0 .7px, transparent 1.1px);}
+
+/* vignette — edges of the print */
+.fx-vignette{z-index:3;
+  box-shadow:inset 0 0 220px rgba(4,22,42,.55), inset 0 0 60px rgba(4,22,42,.30);}
+
+/* page tone — exposure gradient */
+.fx-tone{z-index:0;
+  background:radial-gradient(120% 70% at 50% -10%,rgba(255,255,255,.10),transparent 62%),
+             radial-gradient(90% 60% at 50% 110%,rgba(0,0,0,.30),transparent 60%);}
+
+/* film grain — SVG turbulence, above everything */
+.fx-grain{z-index:60;mix-blend-mode:overlay;opacity:.16}
+.fx-grain svg{width:100%;height:100%}
+
+/* ── 4 · DRAFTING GRID ──────────────────────────────────────────── */
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.075) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.075) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(140% 95% at 50% 10%,#000 30%,transparent 88%);
+  -webkit-mask-image:radial-gradient(140% 95% at 50% 10%,#000 30%,transparent 88%);}
+
+/* registration marks — sheet corners */
+.reg{position:fixed;z-index:4;color:var(--draft);opacity:.28;pointer-events:none}
+.reg--tl{top:76px;inset-inline-start:20px}
+.reg--tr{top:76px;inset-inline-end:20px}
+.reg--bl{bottom:20px;inset-inline-start:20px}
+.reg--br{bottom:20px;inset-inline-end:20px}
+
+/* ── 5 · ARTIFACT LINEWORK SYSTEM ───────────────────────────────
+   Three build stages. A glyph's stage MUST match its status pill. */
+.art{color:var(--draft)}
+.art svg{overflow:visible}
+.stroke{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.stroke--sketch{stroke-dasharray:3 5;stroke-width:1.1;opacity:.6}   /* DEV   — drawn      */
+.stroke--built {stroke-width:1.5}                                    /* BETA  — assembled  */
+.fill--solid   {fill:currentColor;stroke:none}                       /* LIVE  — delivered  */
+.fill--ghost   {fill:currentColor;opacity:.16;stroke:none}
+.stroke--tick  {stroke:currentColor;stroke-width:.8;opacity:.5}
+
+/* background artifacts */
+.atelier{position:absolute;top:0;inset-inline:0;height:1800px;z-index:1;
+  pointer-events:none;overflow:hidden}
+.atelier .art{position:absolute}
+.atelier .art--1{top:96px;  inset-inline-end:4%;   opacity:.30; animation:spin 90s linear infinite}
+.atelier .art--2{top:390px; inset-inline-start:2%; opacity:.26}
+.atelier .art--3{top:150px; inset-inline-start:24%;opacity:.22}
+.atelier .art--4{top:700px; inset-inline-end:11%;  opacity:.24; animation:spin 120s linear infinite reverse}
+.atelier .art--5{top:1010px;inset-inline-start:7%; opacity:.22}
+.atelier .art--6{top:1330px;inset-inline-end:7%;   opacity:.20}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* hero centrepiece — a PCB detail cycling through the three build stages */
+.thesis{position:absolute;top:250px;inset-inline:0;display:flex;justify-content:center;
+  z-index:1;pointer-events:none;color:var(--draft)}
+.thesis__layer{position:absolute;opacity:0}
+.thesis__layer--1{animation:stage1 15s ease-in-out infinite}
+.thesis__layer--2{animation:stage2 15s ease-in-out infinite}
+.thesis__layer--3{animation:stage3 15s ease-in-out infinite}
+@keyframes stage1{0%,24%{opacity:.30} 32%,100%{opacity:0}}
+@keyframes stage2{0%,24%{opacity:0} 32%,57%{opacity:.30} 65%,100%{opacity:0}}
+@keyframes stage3{0%,57%{opacity:0} 65%,92%{opacity:.30} 100%{opacity:0}}
+
+/* self-drawing linework */
+@keyframes draw{from{stroke-dashoffset:520}to{stroke-dashoffset:0}}
+.drawin{stroke-dasharray:520;stroke-dashoffset:520;animation:draw 1.6s ease forwards}
+.drawin--2{animation-delay:.12s}
+.drawin--3{animation-delay:.24s}
+
+.page{position:relative;z-index:2}
+
+
+/* ── coding terminal — the software half of the craft ─────────────
+   Latin code inside an RTL page MUST be direction-isolated.        */
+.term{position:absolute;top:452px;inset-inline-end:5.5%;z-index:1;pointer-events:none;
+  font-family:var(--mono);font-size:11.5px;line-height:2;color:var(--ink);opacity:.32;
+  direction:ltr;text-align:left;unicode-bidi:isolate;
+  border-left:1px solid rgba(255,255,255,.28);padding-left:14px}
+.term__line{white-space:nowrap;overflow:hidden;width:0;
+  animation:type 13s steps(46,end) infinite}
+.term__line:nth-child(1){animation-delay:0s}
+.term__line:nth-child(2){animation-delay:1.5s}
+.term__line:nth-child(3){animation-delay:3.0s}
+.term__line:nth-child(4){animation-delay:4.5s}
+.term__line:nth-child(5){animation-delay:6.0s}
+.term__line:nth-child(6){animation-delay:7.5s}
+.term__prompt{color:var(--gold)}
+.term__ok{color:var(--live)}
+@keyframes type{0%{width:0}9%{width:100%}88%{width:100%}100%{width:0}}
+.term__cursor{display:inline-block;width:7px;height:13px;vertical-align:-2px;
+  background:var(--gold);animation:blink 1.05s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (max-width:1100px){.term{display:none}}
+
+/* ── 6 · NAV ────────────────────────────────────────────────────── */
+.nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;
+  justify-content:space-between;gap:20px;padding:20px var(--pad-x);
+  border-bottom:1px solid var(--line);
+  background:rgba(14,67,114,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.nav__mark{font-family:var(--serif);font-size:17px;letter-spacing:5px}
+.nav__links{display:flex;gap:26px;font-size:13px;color:var(--ink-2)}
+.nav__links a:hover{color:var(--ink)}
+.nav__chip{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--gold);
+  border:1px solid var(--line-gold);padding:5px 12px;border-radius:999px;white-space:nowrap}
+
+/* ── 7 · HERO ───────────────────────────────────────────────────── */
+.hero{min-height:640px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:92px 24px 56px}
+.kicker{font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);font-weight:700;margin-bottom:20px}
+.hero__title{font-family:var(--serif);font-size:clamp(38px,6.4vw,72px);font-weight:400;
+  letter-spacing:.18em;line-height:1.05}
+.hero__title em{font-style:normal;color:var(--gold)}
+
+/* dimension line */
+.dim{display:flex;align-items:center;gap:10px;margin:16px 0 22px;
+  color:var(--draft);opacity:.6}
+.dim__bar{height:1px;background:currentColor;width:clamp(40px,12vw,150px);position:relative}
+.dim__bar::before,.dim__bar::after{content:"";position:absolute;top:-4px;
+  width:1px;height:9px;background:currentColor}
+.dim__bar::before{inset-inline-start:0}
+.dim__bar::after{inset-inline-end:0}
+.dim__val{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;white-space:nowrap}
+
+.hero__statement{font-size:clamp(17px,2.2vw,20px);max-width:660px;line-height:1.95;margin-bottom:12px}
+.hero__sub{font-size:14px;color:var(--ink-2);max-width:520px;margin-bottom:34px}
+
+.btn{display:inline-flex;align-items:center;gap:10px;border-radius:11px;font-weight:700;
+  transition:transform .18s ease,box-shadow .18s ease}
+.btn:active{transform:translateY(1px)}
+.btn--gold{background:linear-gradient(180deg,#EAC583,var(--gold));color:var(--bp);
+  font-size:14.5px;padding:14px 30px;
+  box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 10px 26px rgba(0,0,0,.28)}
+.btn--gold:hover{box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 14px 32px rgba(0,0,0,.34)}
+
+/* stage legend — reads right-to-left in RTL */
+.stages{display:flex;gap:30px;margin-top:50px;align-items:flex-start;flex-wrap:wrap;
+  justify-content:center}
+.stage{display:flex;flex-direction:column;align-items:center;gap:9px;width:108px}
+.stage__label{font-family:var(--mono);font-size:10px;letter-spacing:1.4px;
+  color:var(--ink-3);text-transform:uppercase}
+.stage__ar{font-size:12px;color:var(--gold)}
+.stages__arrow{align-self:center;margin-top:26px;color:var(--draft);opacity:.4;font-size:13px}
+
+/* ── 8 · CUT LINES + SECTIONS ───────────────────────────────────── */
+.cutline{position:relative;height:1px;border-top:1px dashed rgba(255,255,255,.30)}
+.cutline span{position:absolute;top:-9px;inset-inline-start:50%;transform:translateX(50%);
+  background:var(--bp);padding:0 12px;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:2px;color:var(--ink-3)}
+
+.section{padding:78px var(--pad-x)}
+.section--band{background:rgba(255,255,255,.035)}
+.section__head{display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:30px;flex-wrap:wrap;gap:14px}
+.section__head h2{font-family:var(--serif);font-size:clamp(26px,4vw,34px);font-weight:400}
+.section__index{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink-3)}
+.section__meta{font-size:13px;color:var(--ink-2)}
+
+/* ── 9 · PRODUCT CARDS ──────────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.card{position:relative;background:var(--bp-2);border:1px solid var(--line);
+  border-radius:var(--radius);padding:22px;overflow:hidden;box-shadow:var(--sh);
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.card:hover{transform:translateY(-4px);box-shadow:var(--sh-lift);border-color:var(--line-gold)}
+/* hover completes the artifact */
+.card:hover .stroke--sketch{stroke-dasharray:none;opacity:.9;transition:opacity .3s}
+.card::before{content:"";position:absolute;top:0;inset-inline:0;height:2px;
+  background:linear-gradient(90deg,var(--accent,var(--gold)),transparent)}
+.card__no{position:absolute;top:14px;inset-inline-start:16px;font-family:var(--mono);
+  font-size:9.5px;letter-spacing:1.4px;color:var(--ink-3);opacity:.75}
+.card__row{display:flex;align-items:center;gap:12px;margin:6px 0 10px}
+.card__glyph{flex:0 0 auto;color:var(--draft);opacity:.9}
+.card__name{font-family:var(--mono);font-size:15px;letter-spacing:1.4px;
+  direction:ltr;unicode-bidi:isolate;flex:1;text-align:start}
+.card__tagline{font-size:14px;color:var(--ink-2);margin-bottom:16px;min-height:44px}
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.tags span{font-size:11px;color:var(--ink-2);background:rgba(255,255,255,.06);
+  border:1px solid var(--line);padding:4px 11px;border-radius:7px}
+.card__more{font-size:12.5px;color:var(--gold);font-weight:600}
+
+.pill{font-family:var(--mono);font-size:9.5px;letter-spacing:1.2px;padding:4px 9px;
+  border-radius:999px;border:1px solid;font-weight:700;white-space:nowrap}
+.pill--live{color:var(--live);border-color:rgba(127,214,166,.44);background:rgba(127,214,166,.12)}
+.pill--beta{color:var(--beta);border-color:rgba(240,178,107,.44);background:rgba(240,178,107,.12)}
+.pill--dev {color:var(--dev); border-color:rgba(147,180,208,.40);background:rgba(147,180,208,.10)}
+
+/* ── 10 · FOUNDERS / XHB ────────────────────────────────────────── */
+.xhb{position:relative;background:rgba(226,185,107,.10);
+  border:1px solid rgba(226,185,107,.42);border-radius:20px;padding:34px;overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.25),0 20px 54px rgba(226,185,107,.14)}
+.xhb::before{content:"";position:absolute;top:0;inset-inline:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),#F0D69B,transparent)}
+.xhb__mark{position:absolute;inset-inline-end:28px;top:24px;color:var(--gold);
+  opacity:.34;pointer-events:none}
+.xhb__lock{font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold-lt);font-weight:700;margin-bottom:14px}
+.xhb__title{font-family:var(--serif);font-size:30px;font-weight:400;
+  letter-spacing:6px;margin-bottom:6px}
+.xhb__by{font-size:13px;color:var(--ink-2);margin-bottom:18px}
+.xhb__by b{color:var(--gold-lt);font-weight:700}
+.xhb__desc{font-size:14.5px;max-width:600px;margin-bottom:24px;line-height:1.95}
+
+/* ── 11 · TITLE BLOCK + FOOTER ──────────────────────────────────── */
+.sheet{padding:0 var(--pad-x) 40px}
+.titleblock{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;
+  border:1px solid rgba(255,255,255,.28);border-radius:6px;overflow:hidden;
+  font-family:var(--mono);background:rgba(255,255,255,.05)}
+.titleblock__cell{padding:11px 14px;border-inline-start:1px solid rgba(255,255,255,.18)}
+.titleblock__cell:first-child{border-inline-start:0}
+.titleblock__k{font-size:8.5px;letter-spacing:1.6px;color:var(--ink-3);
+  text-transform:uppercase;margin-bottom:4px}
+.titleblock__v{font-size:12px;letter-spacing:.6px}
+.titleblock__v--gold{color:var(--gold)}
+
+.footer{padding:26px var(--pad-x) 40px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--ink-3)}
+
+/* ── 12 · REVEAL ────────────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(16px);
+  transition:opacity .6s ease,transform .6s ease}
+.reveal.is-visible{opacity:1;transform:none}
+.reveal:nth-child(2){transition-delay:.08s}
+.reveal:nth-child(3){transition-delay:.16s}
+.reveal:nth-child(4){transition-delay:.24s}
+.reveal:nth-child(5){transition-delay:.32s}
+.reveal:nth-child(6){transition-delay:.40s}
+
+/* ── 13 · RESPONSIVE ────────────────────────────────────────────── */
+@media (max-width:900px){
+  .bp-root{--pad-x:28px}
+  .nav__links{display:none}
+  .titleblock{grid-template-columns:1fr 1fr}
+  .titleblock__cell:nth-child(3){border-inline-start:0}
+}
+@media (max-width:768px){
+  .fx-grain{opacity:.10}
+  .fx-folds{opacity:.35}
+  .atelier .art--3,.atelier .art--5{display:none}   /* reduce clutter on small screens */
+  .hero{min-height:0;padding:64px 20px 44px}
+  .stages{gap:16px}
+  .stage{width:86px}
+  .section{padding:56px var(--pad-x)}
+}
+@media (max-width:480px){
+  .stages__arrow{display:none}
+  .titleblock{grid-template-columns:1fr}
+  .titleblock__cell{border-inline-start:0;border-top:1px solid rgba(255,255,255,.18)}
+  .titleblock__cell:first-child{border-top:0}
+}
+
+/* ── 14 · ACCESSIBILITY ─────────────────────────────────────────── */
+.bp-root :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+
+@media (prefers-reduced-motion: reduce){
+  .bp-root,.bp-root *,.bp-root *::before,.bp-root *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .atelier .art--1,.atelier .art--4{animation:none}
+  .thesis__layer{animation:none}
+  .thesis__layer--3{opacity:.30}          /* rest on "delivered" */
+  .drawin{stroke-dashoffset:0}
+  .term__line{width:100%;animation:none}
+  .term__cursor{animation:none}
+  .reveal{opacity:1;transform:none}
+  .card:hover{transform:none}
+}
+
+@media print{
+  .fx,.grid-bg,.reg,.atelier,.thesis{display:none!important}
+  .bp-root{background:#fff;color:#000}
+}
