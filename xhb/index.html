@@ -1402,10 +1402,13 @@ function viewOnboarding() {
         html += '<button class="btn btn-gold btn-sm" data-act="ob-annotate-start" data-item="' + item.id + '">✎ Annotate (design answer)</button>' +
           (myStatus === 'annotate' ? '<button class="btn btn-ghost btn-sm" data-act="ob-delete-annotation" data-item="' + item.id + '" style="color:#ef4444;">🗑 Delete</button>' : '');
       } else {
-        // Builder: approve or contest
-        html += '<button class="btn btn-gold btn-sm" data-act="ob-approve" data-item="' + item.id + '">✔ Approve (buildable)</button>' +
-          '<button class="btn btn-ghost btn-sm" data-act="ob-contest-start" data-item="' + item.id + '" style="border-color:#ef4444; color:#ef4444;">⚡ Contest</button>';
-      }
+        // Builder: approve or contest — only after approver has annotated
+        if (itemState === 'awaiting-design') {
+          html += '<div style="font-size:12px; color:var(--cream-dim); padding:6px 0; opacity:0.7;">⏳ Waiting for ' + (approverEmail ? esc(nameFor(approverEmail.email)) : 'approver') + '\'s design answer before you can review.</div>';
+        } else {
+          html += '<button class="btn btn-gold btn-sm" data-act="ob-approve" data-item="' + item.id + '">✔ Approve (buildable)</button>' +
+            '<button class="btn btn-ghost btn-sm" data-act="ob-contest-start" data-item="' + item.id + '" style="border-color:#ef4444; color:#ef4444;">⚡ Contest</button>';
+        }
       html +=
         '</div>';
       // Annotation input (hidden by default, shown by JS)
@@ -2413,6 +2416,10 @@ document.addEventListener("click", async (e) => {
 
   /* ---- Onboarding alignment ---- */
   if (act === "ob-approve") {
+    // Safety: builder cannot approve before approver annotates
+    const itemDisps = alignmentDispositions.filter(d => d.item_id === btn.dataset.item);
+    const hasAnnotation = itemDisps.some(d => d.disposition === 'annotate');
+    if (!hasAnnotation) { toast("Wait for the design answer before approving."); return; }
     await setDisposition(btn.dataset.item, "approve", "");
   }
   if (act === "ob-annotate-start") {

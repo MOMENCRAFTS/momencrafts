@@ -422,6 +422,59 @@
 .bp-root .letsb-cta-wa:hover,.bp-root .letsb-cta-email:hover{border-color:var(--gold)!important}
 .bp-root .letsb-trust{color:var(--draft)!important;font-family:var(--mono)!important;font-size:.65rem!important;margin-top:2rem!important}
 
+/* Partnership track cards + "What you bring" cards */
+.bp-root #investor-layer .inv-track-grid,.bp-root #investor-layer .inv-bring-grid{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr))!important;
+  gap:1.25rem!important;
+}
+.bp-root #investor-layer .inv-track-card,.bp-root #investor-layer .inv-bring-card{
+  background:var(--bp)!important;
+  border:1px solid var(--draft)!important;
+  border-top:2px solid var(--gold)!important;
+  border-radius:8px!important;
+  padding:1.5rem!important;
+  transition:border-color .2s,transform .2s!important;
+}
+.bp-root .inv-track-card:hover,.bp-root .inv-bring-card:hover{
+  border-color:var(--gold)!important;
+  transform:translateY(-2px)!important;
+  box-shadow:0 6px 20px rgba(200,169,110,.12)!important;
+}
+.bp-root .inv-track-icon,.bp-root .inv-bring-icon{font-size:1.5rem!important;margin-bottom:.75rem!important}
+.bp-root .inv-track-title,.bp-root .inv-bring-title{
+  color:var(--ink)!important;font-weight:600!important;font-size:1rem!important;margin-bottom:.5rem!important;
+}
+.bp-root .inv-track-desc,.bp-root .inv-bring-desc{
+  color:rgba(255,255,255,.6)!important;font-size:.8rem!important;line-height:1.7!important;margin-bottom:1rem!important;
+}
+.bp-root .inv-track-btn{
+  display:block!important;text-align:center!important;
+  background:var(--gold)!important;color:var(--bp)!important;
+  border:none!important;border-radius:4px!important;
+  padding:.6rem 1rem!important;font-family:var(--mono)!important;font-size:.7rem!important;
+  cursor:pointer!important;transition:opacity .2s!important;
+  width:100%!important;
+}
+.bp-root .inv-track-btn:hover{opacity:.85!important}
+
+/* Superpower / capability cards in investor layer */
+.bp-root .inv-cap-grid{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;
+  gap:1rem!important;
+}
+.bp-root .inv-cap-card{
+  background:var(--bp)!important;
+  border:1px solid var(--draft)!important;
+  border-radius:8px!important;
+  padding:1.25rem!important;
+  text-align:center!important;
+}
+.bp-root .inv-cap-icon{font-size:1.3rem!important;margin-bottom:.5rem!important}
+.bp-root .inv-cap-title{color:var(--ink)!important;font-weight:600!important;font-size:.85rem!important}
+.bp-root .inv-cap-desc{color:var(--draft)!important;font-size:.7rem!important;line-height:1.5!important}
+
 /* Investor bar */
 .bp-root #investor-bar{
   background:var(--bp-3)!important;
