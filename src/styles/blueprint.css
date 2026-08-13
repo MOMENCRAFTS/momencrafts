@@ -74,6 +74,7 @@
    a{color:--gold} recolours every link in the app (P15).          */
 .bp-root,.bp-root *,.bp-root *::before,.bp-root *::after{box-sizing:border-box;margin:0;padding:0}
 .bp-root{
+  position:relative;
   background:var(--bp);
   color:var(--ink);
   font:15px/1.75 var(--sans);

@@ -346,7 +346,7 @@ function useParticleCanvas(ref: React.RefObject<HTMLCanvasElement | null>) {
 // ── Reveal on scroll hook ──
 function useReveal() {
   useEffect(() => {
-    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }), { threshold: .08 })
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); e.target.classList.add('is-visible') } }), { threshold: .08 })
     document.querySelectorAll('.reveal').forEach(el => io.observe(el))
     return () => io.disconnect()
   }, [])
