@@ -693,8 +693,8 @@
 .btn{display:inline-flex;align-items:center;gap:10px;border-radius:11px;font-weight:700;
   transition:transform .18s ease,box-shadow .18s ease}
 .btn:active{transform:translateY(1px)}
-.btn--gold{background:linear-gradient(180deg,#EAC583,var(--gold));color:var(--bp);
-  font-size:14.5px;padding:14px 30px;
+.btn--gold{background:linear-gradient(180deg,#EAC583,var(--gold));color:var(--bp) !important;
+  font-size:14.5px;padding:14px 30px;text-decoration:none !important;
   box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 10px 26px rgba(0,0,0,.28)}
 .btn--gold:hover{box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 14px 32px rgba(0,0,0,.34)}
 
