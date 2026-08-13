@@ -208,6 +208,31 @@
 }
 .bp-root .inv-footer *{color:var(--draft)!important}
 
+/* ── WhatsApp Float — blueprint edition ─────────────────────────── */
+.bp-root #wa-btn{
+  background:var(--bp-2)!important;
+  border:1.5px solid var(--gold)!important;
+  box-shadow:0 4px 16px rgba(200,169,110,.25)!important;
+  animation:bp-wa-breathe 3s ease-in-out infinite!important;
+}
+.bp-root #wa-btn:hover{
+  transform:scale(1.08)!important;
+  box-shadow:0 6px 24px rgba(200,169,110,.45)!important;
+  border-color:var(--gold-lt)!important;
+}
+.bp-root #wa-btn svg{fill:var(--gold)!important}
+.bp-root #wa-tooltip{
+  background:var(--bp-3)!important;
+  color:var(--ink)!important;
+  border:1px solid var(--draft)!important;
+  font-family:var(--mono)!important;
+  font-size:.65rem!important;
+}
+@keyframes bp-wa-breathe{
+  0%,100%{box-shadow:0 4px 16px rgba(200,169,110,.25)}
+  50%{box-shadow:0 4px 24px rgba(200,169,110,.45),0 0 40px rgba(200,169,110,.12)}
+}
+
 /* Arabic never in monospace. Latin technical data only. */
 .mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate}
 .serif{font-family:var(--serif)}
