@@ -116,7 +116,7 @@ Deno.serve(async (req) => {
     // ── List users ──
     if (action === 'list_users') {
       const { data } = await sb.schema('xhb').from('allowed_users')
-        .select('email, phone, display_name, tier, is_superadmin, disabled_at, added_at')
+        .select('email, phone, display_name, tier, is_superadmin, is_builder, disabled_at, added_at')
         .order('added_at', { ascending: true })
       return json(200, { users: data || [] }, cors)
     }
@@ -168,6 +168,110 @@ Deno.serve(async (req) => {
         .order('created_at', { ascending: false })
         .limit(limit)
       return json(200, { log: data || [] }, cors)
+    }
+
+    // ── Round progress: settled / who holds the ball / how long ──
+    if (action === 'round_progress') {
+      const { data: users, error: uErr } = await sb.schema('xhb')
+        .from('allowed_users')
+        .select('email, display_name, is_builder, disabled_at')
+        .is('disabled_at', null)
+      if (uErr) return json(500, { error: 'allowed_users: ' + uErr.message }, cors)
+
+      const builders = new Set((users || []).filter(u => u.is_builder).map(u => u.email.toLowerCase()))
+
+      const { data: allItems, error: iErr } = await sb.schema('xhb')
+        .from('alignment_items')
+        .select('id, title, round, round_status, category, position, updated_at')
+        .eq('round_status', 'published')
+        .order('position', { ascending: true })
+      if (iErr) return json(500, { error: 'alignment_items: ' + iErr.message }, cors)
+
+      const rounds   = (allItems || []).map(i => i.round ?? 1)
+      const openRound = rounds.length ? Math.max(...rounds) : 1
+      const items = (allItems || []).filter(i => (i.round ?? 1) === openRound && i.category !== 'recap')
+
+      // NOTE: columns are `email` and `disposition` — not `founder_email`/`status`.
+      const { data: disps, error: dErr } = await sb.schema('xhb')
+        .from('alignment_dispositions')
+        .select('item_id, email, disposition, note, updated_at')
+      if (dErr) return json(500, { error: 'alignment_dispositions: ' + dErr.message }, cors)
+
+      // Revision pressure: how many times each item has been re-annotated.
+      const { data: hist } = await sb.schema('xhb')
+        .from('alignment_history')
+        .select('item_id')
+
+      const revisions = new Map<string, number>()
+      for (const h of (hist || [])) {
+        revisions.set(h.item_id, (revisions.get(h.item_id) || 0) + 1)
+      }
+
+      const rows = items.map(it => {
+        const mine       = (disps || []).filter(d => d.item_id === it.id)
+        const annotation = mine.find(d => d.disposition === 'annotate' && !builders.has(d.email.toLowerCase()))
+        const approval   = mine.find(d => d.disposition === 'approve'  &&  builders.has(d.email.toLowerCase()))
+        const contest    = mine.find(d => d.disposition === 'contest'  &&  builders.has(d.email.toLowerCase()))
+
+        let state = 'awaiting_design_answer'
+        let ball: string | null = 'author'
+        let since: string | null = null
+
+        if (annotation) {
+          const annAt = new Date(annotation.updated_at).getTime()
+          if (contest && new Date(contest.updated_at).getTime() > annAt) {
+            state = 'contested'; ball = 'author'; since = contest.updated_at
+          } else if (approval && new Date(approval.updated_at).getTime() > annAt) {
+            state = 'settled';   ball = null;     since = approval.updated_at
+          } else {
+            state = 'awaiting_review'; ball = 'builder'; since = annotation.updated_at
+          }
+        }
+
+        const days = since ? Math.floor((Date.now() - new Date(since).getTime()) / 86400000) : null
+
+        return {
+          id: it.id, position: it.position, title: it.title,
+          state, ball, since, days_in_state: days,
+          revisions: revisions.get(it.id) || 0,
+        }
+      })
+
+      // "Last active" — a DATE per founder, deliberately not a login history.
+      const { data: activity } = await sb.schema('xhb')
+        .from('access_log')
+        .select('actor, action, created_at')
+        .in('action', ['sso_session_minted', 'token_login'])
+        .order('created_at', { ascending: false })
+        .limit(400)
+
+      const lastActive: Record<string, string> = {}
+      for (const a of (activity || [])) {
+        const who = (a.actor || '').toLowerCase()
+        if (who && !lastActive[who]) lastActive[who] = a.created_at.slice(0, 10)
+      }
+
+      return json(200, {
+        round: openRound,
+        summary: {
+          total:              rows.length,
+          settled:            rows.filter(r => r.state === 'settled').length,
+          contested:          rows.filter(r => r.state === 'contested').length,
+          waiting_on_author:  rows.filter(r => r.ball === 'author').length,
+          waiting_on_builder: rows.filter(r => r.ball === 'builder').length,
+        },
+        founders: (users || []).map(u => ({
+          email: u.email,
+          name: u.display_name,
+          role: u.is_builder ? 'builder' : 'author',
+          last_active: lastActive[u.email.toLowerCase()] || null,
+        })),
+        items: rows,
+        oldest_open: rows
+          .filter(r => r.state !== 'settled')
+          .sort((a, b) => (b.days_in_state ?? 9999) - (a.days_in_state ?? 9999))
+          .slice(0, 3),
+      }, cors)
     }
 
     return json(400, { error: 'Unknown action: ' + action }, cors)

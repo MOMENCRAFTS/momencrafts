@@ -10,7 +10,6 @@ const ALLOWED_ORIGINS = [
   'https://www.momencrafts.com',
   'https://momencrafts.com',
   'https://momencrafts-iota.vercel.app',
-  'https://admin.momencrafts.com',
 ]
 
 function getCorsHeaders(req: Request) {
@@ -107,8 +106,8 @@ Deno.serve(async (req) => {
           return json(500, { error: 'Failed to create token' }, corsHeaders)
         }
 
-        const ndaLink = `https://admin.momencrafts.com/nda?t=${data.id}`
-        const portalLink = `https://www.momencrafts.com?token=${data.token}`
+        const ndaLink = `https://www.momencrafts.com/admin/nda?t=${data.id}`
+        const portalLink = 'https://www.momencrafts.com'
 
         return json(200, {
           token: data.token,

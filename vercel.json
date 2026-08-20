@@ -5,13 +5,7 @@
   "cleanUrls": false,
   "redirects": [
     { "source": "/gate", "destination": "/", "permanent": false },
-    { "source": "/room", "destination": "/", "permanent": false },
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "admin.momencrafts.com" }],
-      "destination": "https://www.momencrafts.com/admin",
-      "permanent": false
-    }
+    { "source": "/room", "destination": "/", "permanent": false }
   ],
   "rewrites": [
     { "source": "/home",     "destination": "/index.html" },
@@ -32,8 +26,6 @@
     { "source": "/xhb",        "destination": "/xhb/index.html" },
     { "source": "/xhb/",       "destination": "/xhb/index.html" },
     { "source": "/xhb/:path*", "destination": "/xhb/:path*" },
-    { "source": "/admin",    "destination": "/index.html" },
-    { "source": "/admin/",   "destination": "/index.html" },
     { "source": "/(.*)",     "destination": "/index.html" }
   ],
   "headers": [
@@ -53,3 +45,4 @@
     }
   ]
 }
+

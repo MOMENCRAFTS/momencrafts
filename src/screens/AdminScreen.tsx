@@ -1,12 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import '@/styles/admin.css'
+import { XhbKeyGate, makeXhbApi, XhbProgressPanel, XhbActivityPanel, XhbUsersPanel } from '@/components/AdminXhbPanels'
 
 // Admin password removed — validation should be server-side
 // For the SPA admin screen, password is validated via edge function
 const SUPABASE_URL = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1'
 const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER'])
-
-function getAdminKey() { return sessionStorage.getItem('mcr_admin_key') || '' }
 
 /* ── API helper (top-level so all panels can use it) ── */
 function makeApi(adminKey: string) {
@@ -42,7 +41,7 @@ function tokenStatus(t: any): 'active' | 'revoked' | 'expired' {
 /* ══════════════════════════════════════════════════════
    LOGIN
    ══════════════════════════════════════════════════════ */
-function AdminLogin({ onLogin }: { onLogin: () => void }) {
+function AdminLogin({ onLogin }: { onLogin: (key: string) => void }) {
   const [pass, setPass] = useState('')
   const [err,  setErr]  = useState('')
   const submit = async () => {
@@ -53,7 +52,7 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
         headers: { 'Content-Type': 'application/json', 'X-Admin-Key': pass },
         body: JSON.stringify({ action: 'list' }),
       })
-      if (res.ok) { sessionStorage.setItem('mcr_admin_auth', '1'); sessionStorage.setItem('mcr_admin_key', pass); onLogin() }
+      if (res.ok) { sessionStorage.setItem('mcr_admin_auth', '1'); onLogin(pass) }
       else { setErr('Invalid admin key'); setTimeout(() => setErr(''), 2000) }
     } catch { setErr('Network error'); setTimeout(() => setErr(''), 2000) }
   }
@@ -61,7 +60,7 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
     <div className="admin-login-wrap">
       <div className="admin-login-card">
         <div className="admin-login-mark">✦</div>
-        <h1 className="admin-login-title">& Co Command Center</h1>
+        <h1 className="admin-login-title">MomenCrafts Admin</h1>
         <p className="admin-login-sub">Admin access only · Riyadh, KSA</p>
         <input type="password" className="admin-login-input" placeholder="Password"
           value={pass} onChange={e => setPass(e.target.value)}
@@ -368,10 +367,7 @@ function TokensPanel({ api }: { api: ReturnType<typeof makeApi> }) {
                           onClick={() => copy(t.token, t.token)}>
                           {copied === t.token ? '✅' : '📋'}
                         </button>
-                        <button className="a-btn a-btn--ghost a-btn--sm"
-                          onClick={() => copy(`https://www.momencrafts.com?token=${t.token}`, `link-${t.token}`)}>
-                          {copied === `link-${t.token}` ? '✅' : '🔗'}
-                        </button>
+
                         {status === 'active' && !t.revoked_at && (
                           <button className="a-btn a-btn--danger a-btn--sm"
                             onClick={() => revoke(t.token_id || t.id)}>
@@ -401,8 +397,7 @@ function SessionsPanel({ api }: { api: ReturnType<typeof makeApi> }) {
 
   const load = useCallback(async () => {
     setLoading(true)
-    const r = await api('admin-get-analytics', { period: '30d' })
-    const all = [...(r?.sessionsToday || []), ...(r?.investors || [])]
+    const r = await api('admin-get-analytics', { period: '1d' })
     setSessions(r?.sessionsToday || [])
     setLoading(false)
   }, [api])
@@ -550,10 +545,10 @@ function CoFounderPanel({ api }: { api: ReturnType<typeof makeApi> }) {
             <div className="cfp-share-block">
               <div className="cfp-share-label">📱 WhatsApp / Message</div>
               <div className="cfp-share-text">
-                {`مرحباً،\nدعوة مخصصة للوصول إلى منصة MomenCrafts & Co:\n\nرمز الوصول: ${result.token}\nالرابط: ${result.portalLink}\n\nأدخل الرمز في البوابة أو افتح الرابط مباشرة. WIN-WIN ✦`}
+                {`مرحباً،\nدعوة للوصول إلى منصة MomenCrafts:\n\nافتح ${result.portalLink}\nثم أدخل هذا الرمز:\n\n${result.token}\n\nالرمز خاص بك — لا تعِد إرساله.`}
               </div>
               <button className="cfp-copy-btn" onClick={() => copy(
-                `مرحباً،\nدعوة مخصصة للوصول إلى منصة MomenCrafts & Co:\n\nرمز الوصول: ${result.token}\nالرابط: ${result.portalLink}\n\nأدخل الرمز في البوابة أو افتح الرابط مباشرة. WIN-WIN ✦`,
+                `مرحباً،\nدعوة للوصول إلى منصة MomenCrafts:\n\nافتح ${result.portalLink}\nثم أدخل هذا الرمز:\n\n${result.token}\n\nالرمز خاص بك — لا تعِد إرساله.`,
                 'wa'
               )}>{copied === 'wa' ? '✅ Copied' : '📋 Copy WA Message'}</button>
             </div>
@@ -705,13 +700,18 @@ function TopStatsBar({ api }: { api: ReturnType<typeof makeApi> }) {
 /* ══════════════════════════════════════════════════════
    MAIN ADMIN SHELL
    ══════════════════════════════════════════════════════ */
-type Tab = 'dashboard' | 'cofounders' | 'tokens' | 'sessions' | 'journal' | 'downloads' | 'traction' | 'board' | 'registry' | 'feedback'
+type Tab = 'dashboard' | 'cofounders' | 'tokens' | 'sessions'
+         | 'xhbprogress' | 'xhbactivity' | 'xhbusers'
+         | 'journal' | 'downloads' | 'traction' | 'board' | 'registry' | 'feedback'
 
 const TABS: { key: Tab; label: string; icon: string; section?: string }[] = [
   { key: 'dashboard',  label: 'Dashboard',   icon: '📊', section: 'OVERVIEW' },
   { key: 'cofounders', label: 'Co-Founders', icon: '✦',  section: 'CO-BUILDERS' },
   { key: 'tokens',     label: 'Tokens',      icon: '🔑' },
   { key: 'sessions',   label: 'Sessions',    icon: '🧾' },
+  { key: 'xhbprogress', label: 'XHB Progress', icon: '◈', section: 'XHB' },
+  { key: 'xhbactivity', label: 'XHB Activity', icon: '🧾' },
+  { key: 'xhbusers',    label: 'XHB Users',    icon: '👤' },
   { key: 'journal',    label: 'Journal',     icon: '📓', section: 'DATA' },
   { key: 'traction',   label: 'Traction',    icon: '📈' },
   { key: 'feedback',   label: 'Feedback',    icon: '💬' },
@@ -723,37 +723,15 @@ const TABS: { key: Tab; label: string; icon: string; section?: string }[] = [
 export default function AdminScreen() {
   const [authed,       setAuthed]       = useState(() => sessionStorage.getItem('mcr_admin_auth') === '1')
   const [tab,          setTab]          = useState<Tab>('dashboard')
-  const [adminKey,     setAdminKey]     = useState(() => getAdminKey())
+  const [adminKey,     setAdminKey]     = useState('')
   const [showKeyModal, setShowKeyModal] = useState(false)
+  const [xhbKey,       setXhbKey]       = useState('')          // never persisted — refresh re-prompts
 
   const api = useCallback(makeApi(adminKey), [adminKey])
 
-  const logout = () => { sessionStorage.removeItem('mcr_admin_auth'); setAuthed(false) }
+  const logout = () => { sessionStorage.removeItem('mcr_admin_auth'); setAuthed(false); setAdminKey('') }
 
-  if (!authed) return <AdminLogin onLogin={() => { setAdminKey(getAdminKey()); setAuthed(true) }} />
-
-  if (!adminKey) {
-    return (
-      <div className="admin-login-wrap">
-        <div className="admin-login-card">
-          <div className="admin-login-mark">🔑</div>
-          <h1 className="admin-login-title">Supabase Admin Key</h1>
-          <p className="admin-login-sub">Enter your ADMIN_SECRET_KEY</p>
-          <input type="password" className="admin-login-input" placeholder="ADMIN_SECRET_KEY"
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                const val = (e.target as HTMLInputElement).value
-                sessionStorage.setItem('mcr_admin_key', val); setAdminKey(val)
-              }
-            }} autoFocus />
-          <button className="admin-login-btn" onClick={() => {
-            const el = document.querySelector<HTMLInputElement>('.admin-login-input')
-            if (el?.value) { sessionStorage.setItem('mcr_admin_key', el.value); setAdminKey(el.value) }
-          }}>Connect →</button>
-        </div>
-      </div>
-    )
-  }
+  if (!authed) return <AdminLogin onLogin={(key: string) => { setAdminKey(key); setAuthed(true) }} />
 
   const renderPanel = () => {
     switch (tab) {
@@ -761,6 +739,15 @@ export default function AdminScreen() {
       case 'cofounders': return <CoFounderPanel api={api} />
       case 'tokens':     return <TokensPanel api={api} />
       case 'sessions':   return <SessionsPanel api={api} />
+      case 'xhbprogress':
+      case 'xhbactivity':
+      case 'xhbusers': {
+        if (!xhbKey) return <XhbKeyGate onKey={setXhbKey} />
+        const x = makeXhbApi(xhbKey)
+        if (tab === 'xhbprogress') return <XhbProgressPanel api={x} />
+        if (tab === 'xhbactivity') return <XhbActivityPanel api={x} />
+        return <XhbUsersPanel api={x} />
+      }
       case 'journal':    return <GenericPanel api={api} tabKey="journal"   title="Journal"   icon="📓" />
       case 'downloads':  return <GenericPanel api={api} tabKey="downloads" title="Downloads" icon="📥" />
       case 'traction':   return <GenericPanel api={api} tabKey="traction"  title="Traction"  icon="📈" />
@@ -776,7 +763,7 @@ export default function AdminScreen() {
       <aside className="admin-sidebar">
         <div className="admin-sidebar-logo">
           <span className="admin-sidebar-logo-mark">✦</span>
-          <span className="admin-sidebar-logo-text">& Co Admin</span>
+          <span className="admin-sidebar-logo-text">MomenCrafts Admin</span>
         </div>
         {TABS.map((t, i) => (
           <>
@@ -788,7 +775,7 @@ export default function AdminScreen() {
           </>
         ))}
         <div className="admin-sidebar-footer">
-          <div className="admin-sidebar-version">MomenCrafts & Co · v2.0</div>
+          <div className="admin-sidebar-version">MomenCrafts · v2.0</div>
         </div>
       </aside>
 
@@ -796,7 +783,7 @@ export default function AdminScreen() {
       <header className="admin-header">
         <div className="admin-header-left">
           <span className="admin-mark">✦</span>
-          <span className="admin-title">& Co Command Center</span>
+          <span className="admin-title">MomenCrafts Admin</span>
         </div>
         <TopStatsBar api={api} />
         <div className="admin-header-right">
@@ -806,7 +793,6 @@ export default function AdminScreen() {
                 className="admin-login-input" defaultValue={adminKey}
                 onKeyDown={e => {
                   if (e.key === 'Enter') {
-                    sessionStorage.setItem('mcr_admin_key', (e.target as HTMLInputElement).value)
                     setAdminKey((e.target as HTMLInputElement).value)
                     setShowKeyModal(false)
                   }

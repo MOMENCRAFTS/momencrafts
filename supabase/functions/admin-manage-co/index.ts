@@ -9,7 +9,6 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const ALLOWED_ORIGINS = [
   'https://www.momencrafts.com',
   'https://momencrafts.com',
-  'https://admin.momencrafts.com',
 ]
 
 function getCorsHeaders(req: Request) {

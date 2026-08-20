@@ -10,7 +10,6 @@ const ALLOWED_ORIGINS = [
   'https://www.momencrafts.com',
   'https://momencrafts.com',
   'https://momencrafts-iota.vercel.app',
-  'https://admin.momencrafts.com',
 ]
 
 function getCorsHeaders(req: Request) {
