@@ -105,6 +105,7 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
     { id: 'relay',    label: cards.relay.name },
     { id: 'sabha',    label: cards.sabha.name },
     { id: 'tdc',      label: cards.tdc.name },
+    { id: 'dart',     label: cards.dart.name },
     { id: 'edgetack', label: cards.edgetack.name },
     { id: 'xhb',      label: cards.xhb.name },
   ]
@@ -544,9 +545,10 @@ const INV_CARDS: {
   { id: 'qadaa',    name: 'QADAA',               cat: 'LegalTech',             badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','language'],       waProduct: 'QADAA' },
   { id: 'muscle',   name: 'MUSCLE HUSTLE',       cat: 'FitTech',               badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','target'],         waProduct: 'Muscle Hustle' },
   { id: 'aqar',     name: 'AQAR',                cat: 'PropTech',              badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','compliance','market'],     waProduct: 'AQAR' },
-  { id: 'relay',    name: 'RELAYBOT',            cat: 'Hardware · IoT',        badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','tech','ip'],               demoLink: 'https://github.com/momencrafts/relaybot' },
+  { id: 'relay',    name: 'RELAYBOT',            cat: 'Hardware · IoT',        badge: 'beta',      badgeClass: 'inv-badge-beta',      keys: ['sector','revenue','tech','ip'],               demoLink: 'https://github.com/momencrafts/relaybot' },
   { id: 'sabha',    name: 'SABHA',               cat: 'Wearable · Islamic',    badge: 'prototype', badgeClass: 'inv-badge-prototype', keys: ['sector','revenue','status','market'],         waProduct: 'SABHA' },
   { id: 'tdc',      name: 'TURBO DRONE CIRCUIT', cat: 'Hardware · Patent',     badge: 'patent',    badgeClass: 'inv-badge-patent',    keys: ['sector','revenue','ipStatus','opportunity'],  demoLink: '/tdc' },
+  { id: 'dart',     name: 'DART',                cat: 'FPV · Esports Hardware', badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','tech','ipStatus'],        demoLink: '/dart/' },
   { id: 'edgetack', name: 'EDGE TACK',           cat: 'Mobile Gaming · Patent', badge: 'patent',   badgeClass: 'inv-badge-patent',    keys: ['sector','revenue','ipStatus','market'],       demoLink: '/edgetack' },
 ]
 

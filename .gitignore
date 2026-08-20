@@ -12,3 +12,9 @@ tsconfig.tsbuildinfo
 
 xhb_seed_tailored.sql
 public/podcast/*.m4a
+_to_delete/
+*.tgz
+*.zip
+*.step
+public/sabha/cad/
+src/assets/sabha/
