@@ -1,33 +1,30 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import deviceImg from '@/assets/device.png'
+import { useT } from '@/i18n'
+import { LangToggle } from '@/components/LangToggle'
 
+/* Language-independent hardware data. Human-readable names live in
+   t.roger.hardware.blockNames, matched to these entries by index. */
 const HW_BLOCKS = [
-  { num:'01', icon:'⚡', name:'Power System', chip:'BQ25895 + BQ29700 + AP2112K + MT3608', nets:['VBAT','VSYS_3V3','VDIG_3V3','VANA_3V3','V5_BOOST','CHG_SDA','CHG_SCL'] },
-  { num:'02', icon:'🧠', name:'MCU Core',     chip:'ESP32-S3-WROOM-1-N16R8 · 240MHz · 16MB Flash · 8MB PSRAM', nets:['GPIO0-48','USB_D+','USB_D-','BOOT','EN','TXD0','RXD0'] },
-  { num:'03', icon:'🔊', name:'Audio System', chip:'ES8388 + MAX98357A · Hi-fi ADC/DAC · I²S · 3W mono', nets:['I2S_BCLK','I2S_WS','I2S_DOUT','I2S_DIN','AMP_SD','AUDIO_SDA','AUDIO_SCL'] },
-  { num:'04', icon:'📺', name:'Display',       chip:'ST7789 TFT · 240×240 · SPI · 60fps', nets:['TFT_CS','TFT_DC','TFT_RST','TFT_MOSI','TFT_SCLK','TFT_BL'] },
-  { num:'05', icon:'🎛️', name:'Controls',      chip:'PTT Button + EC11 Encoder + Power Switch + WS2812B×8', nets:['PTT_BTN','ENC_A','ENC_B','ENC_SW','LED_DATA','NEOPIXEL_EN'] },
-  { num:'06', icon:'📡', name:'Sensors',       chip:'DS3231M RTC + BQ25895 I²C telemetry + DRV2605L + ATECC608B', nets:['RTC_SDA','RTC_SCL','HAPTIC_SDA','CRYPTO_SDA','CRYPTO_SCL'] },
-  { num:'07', icon:'📻', name:'Radio Expansion',chip:'RADIO_PTT out · RADIO_COR in · UART1 serial (prototype)', nets:['RADIO_PTT','RADIO_COR','RADIO_TX','RADIO_RX','RADIO_GND'] },
+  { num:'01', icon:'⚡', chip:'BQ25895 + BQ29700 + AP2112K + MT3608', nets:['VBAT','VSYS_3V3','VDIG_3V3','VANA_3V3','V5_BOOST','CHG_SDA','CHG_SCL'] },
+  { num:'02', icon:'🧠', chip:'ESP32-S3-WROOM-1-N16R8 · 240MHz · 16MB Flash · 8MB PSRAM', nets:['GPIO0-48','USB_D+','USB_D-','BOOT','EN','TXD0','RXD0'] },
+  { num:'03', icon:'🔊', chip:'ES8388 + MAX98357A · Hi-fi ADC/DAC · I²S · 3W mono', nets:['I2S_BCLK','I2S_WS','I2S_DOUT','I2S_DIN','AMP_SD','AUDIO_SDA','AUDIO_SCL'] },
+  { num:'04', icon:'📺', chip:'ST7789 TFT · 240×240 · SPI · 60fps', nets:['TFT_CS','TFT_DC','TFT_RST','TFT_MOSI','TFT_SCLK','TFT_BL'] },
+  { num:'05', icon:'🎛️', chip:'PTT Button + EC11 Encoder + Power Switch + WS2812B×8', nets:['PTT_BTN','ENC_A','ENC_B','ENC_SW','LED_DATA','NEOPIXEL_EN'] },
+  { num:'06', icon:'📡', chip:'DS3231M RTC + BQ25895 I²C telemetry + DRV2605L + ATECC608B', nets:['RTC_SDA','RTC_SCL','HAPTIC_SDA','CRYPTO_SDA','CRYPTO_SCL'] },
+  { num:'07', icon:'📻', chip:'RADIO_PTT out · RADIO_COR in · UART1 serial (prototype)', nets:['RADIO_PTT','RADIO_COR','RADIO_TX','RADIO_RX','RADIO_GND'] },
 ]
 
-const FLOW_NODES = [
-  { icon:'🎙️', label:'PTT Press\nVoice Capture' },
-  { icon:'🎧', label:'ES8388 Codec\nADC 24-bit' },
-  { icon:'⚡', label:'ESP32-S3\n240MHz' },
-  { icon:'☁️', label:'Gemini API\nCloud AI' },
-  { icon:'🧠', label:'Supabase\nMemory' },
-  { icon:'🔊', label:'MAX98357A\nAudio Out' },
-]
+/* Icons only — labels come from t.roger.flow.nodes, matched by index. */
+const FLOW_ICONS = ['🎙️','🎧','⚡','☁️','🧠','🔊']
 
-const LED_MODES = [
-  { cls:'led-listen', state:'Listening',  label:'PTT held — capturing voice' },
-  { cls:'led-think',  state:'Thinking',   label:'AI processing request' },
-  { cls:'led-ready',  state:'Ready',      label:'Response complete' },
-  { cls:'led-mute',   state:'Muted',      label:'Microphone off' },
-  { cls:'led-idle',   state:'Idle',       label:'Standby mode' },
-]
+/* CSS classes only — state/label come from t.roger.led.modes, matched by index. */
+const LED_CLASSES = ['led-listen','led-think','led-ready','led-mute','led-idle']
+
+const MODE_ICONS = ['🎙️','💬','🧠','⚙️']
+
+const BADGE_CLASSES = ['badge-amber','badge-cyan','badge-violet','badge-green']
 
 function useParticle(ref: React.RefObject<HTMLCanvasElement | null>) {
   useEffect(() => {
@@ -87,26 +84,33 @@ function useHamburger() {
 }
 
 export default function RogerAIScreen() {
+  const { t } = useT()
+  const r = t.roger
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useParticle(canvasRef)
   useReveal()
   useHamburger()
 
+  const badges = [r.hero.badges.prototype, r.hero.badges.mcu, r.hero.badges.wireless, r.hero.badges.pcb]
+
   return (
     <>
+      <LangToggle />
+
       <canvas ref={canvasRef} id="r-canvas" style={{position:'fixed',inset:0,pointerEvents:'none',opacity:.25,zIndex:0}} />
 
       <nav id="nav">
-        <Link to="/" className="nav-brand">✦ MOMENCRAFTS</Link>
+        <Link to="/" className="nav-brand">{r.nav.brand}</Link>
         <ul className="nav-links" id="nav-links">
-          <li><a href="#modes">Modes</a></li>
-          <li><a href="#hardware">Hardware</a></li>
-          <li><a href="#flow">How It Works</a></li>
-          <li><a href="#roadmap">Roadmap</a></li>
-          <li><a href="#cta" className="nav-cta">Request Access →</a></li>
+          <li><a href="#modes">{r.nav.modes}</a></li>
+          <li><a href="#hardware">{r.nav.hardware}</a></li>
+          <li><a href="#flow">{r.nav.flow}</a></li>
+          <li><a href="#roadmap">{r.nav.roadmap}</a></li>
+          <li><a href="#cta" className="nav-cta">{r.nav.cta}</a></li>
         </ul>
-        <Link to="/home" className="nav-back">← Investor Room</Link>
-        <button className="nav-hamburger" id="nav-hamburger" aria-label="Menu" aria-expanded="false">
+        <Link to="/home" className="nav-back">{r.nav.back}</Link>
+        <button className="nav-hamburger" id="nav-hamburger" aria-label={r.nav.menuAria} aria-expanded="false">
           <span/><span/><span/>
         </button>
       </nav>
@@ -117,33 +121,30 @@ export default function RogerAIScreen() {
           <div className="hero-text reveal">
             <div className="hero-eyebrow">
               <span className="hero-dot" />
-              MOMENCRAFTS · HARDWARE DIVISION · RIYADH, KSA
+              {r.hero.eyebrow}
             </div>
             <h1 className="hero-title">
-              ROGER·AI <em>Voice of Intelligence</em>
-              <span className="ar">صوت الذكاء</span>
+              {r.hero.titleName} <em>{r.hero.titleEm}</em>
+              <span className="ar">{r.hero.titleAccent}</span>
             </h1>
             <p className="hero-sub">
-              A purpose-built handheld AI assistant — combining hardware engineering, voice AI,
-              and radio integration into a single device designed for executives, field operators,
-              and bilingual Arabic/English power users.
+              {r.hero.sub}
             </p>
             <div className="hero-badges">
-              <span className="badge badge-amber">🧪 PROTOTYPE · SPIN 1</span>
-              <span className="badge badge-cyan">ESP32-S3 · 240MHz</span>
-              <span className="badge badge-violet">WiFi + BLE 5.0</span>
-              <span className="badge badge-green">✓ PCB DESIGNED</span>
+              {badges.map((b,i)=>(
+                <span key={i} className={`badge ${BADGE_CLASSES[i]}`}>{b}</span>
+              ))}
             </div>
             <div className="hero-actions">
-              <a href="#cta" className="btn btn-amber">Request Access →</a>
-              <a href="#hardware" className="btn btn-ghost">View Hardware ↓</a>
+              <a href="#cta" className="btn btn-amber">{r.hero.ctaPrimary}</a>
+              <a href="#hardware" className="btn btn-ghost">{r.hero.ctaSecondary}</a>
             </div>
           </div>
           <div className="hero-device reveal">
             <div>
-              <img src={deviceImg} alt="RogerAI Device" className="device-img"/>
+              <img src={deviceImg} alt={r.hero.deviceAlt} className="device-img"/>
               <div className="device-specs-strip">
-                {['TFT Display','PTT Button','EC11 Encoder','WS2812B × 8','USB-C','3W Speaker'].map(s=>(
+                {r.hero.specTags.map(s=>(
                   <span key={s} className="device-spec-tag">{s}</span>
                 ))}
               </div>
@@ -155,20 +156,15 @@ export default function RogerAIScreen() {
       {/* ── 4 MODES ── */}
       <section id="modes" className="modes">
         <div className="container">
-          <div className="section-label reveal">02 · OPERATING MODES</div>
+          <div className="section-label reveal">{r.modes.label}</div>
           <h2 style={{fontFamily:'var(--font-serif)',fontSize:'clamp(1.8rem,3vw,2.8rem)',fontWeight:700,color:'var(--cream)',margin:'.5rem 0 .75rem'}} className="reveal">
-            Four Modes. One Device.
+            {r.modes.title}
           </h2>
           <div className="modes-grid">
-            {[
-              {icon:'🎙️',num:'01',title:'Voice',desc:'Press PTT, speak, release. Roger processes your command in real time over WiFi — executive briefings, reminders, decisions.'},
-              {icon:'💬',num:'02',title:'Chat',desc:'Persistent conversation thread on the TFT display. Navigate with the rotary encoder. Full Arabic/English bilingual.'},
-              {icon:'🧠',num:'03',title:'AI Mode',desc:'Autonomous intelligence layer — proactive reports, calendar awareness, decision support. Roger surfaces what you need before you ask.'},
-              {icon:'⚙️',num:'04',title:'Settings',desc:'Configure WiFi, language, voice speed, LED brightness, radio PTT mode, and cloud sync from the device screen.'},
-            ].map(m=>(
-              <div key={m.num} className="mode-card reveal">
-                <span className="mode-icon">{m.icon}</span>
-                <div className="mode-name">MODE {m.num}</div>
+            {r.modes.items.map((m,i)=>(
+              <div key={i} className="mode-card reveal">
+                <span className="mode-icon">{MODE_ICONS[i]}</span>
+                <div className="mode-name">{m.name}</div>
                 <div className="mode-title">{m.title}</div>
                 <div className="mode-desc">{m.desc}</div>
               </div>
@@ -180,12 +176,12 @@ export default function RogerAIScreen() {
       {/* ── HARDWARE ── */}
       <section id="hardware" className="hw-specs">
         <div className="container">
-          <div className="section-label reveal">03 · HARDWARE ARCHITECTURE</div>
+          <div className="section-label reveal">{r.hardware.label}</div>
           <h2 style={{fontFamily:'var(--font-serif)',fontSize:'clamp(1.8rem,3vw,2.8rem)',fontWeight:700,color:'var(--cream)',margin:'.5rem 0 .75rem'}} className="reveal">
-            7-Block PCB Design
+            {r.hardware.title}
           </h2>
           <div className="hw-grid">
-            {HW_BLOCKS.map(b=><HWBlock key={b.num} {...b}/>)}
+            {HW_BLOCKS.map((b,i)=><HWBlock key={b.num} {...b} name={r.hardware.blockNames[i]}/>)}
           </div>
         </div>
       </section>
@@ -193,18 +189,18 @@ export default function RogerAIScreen() {
       {/* ── AI FLOW ── */}
       <section id="flow" className="ai-flow">
         <div className="container">
-          <div className="section-label reveal">04 · AI PROCESSING PIPELINE</div>
+          <div className="section-label reveal">{r.flow.label}</div>
           <h2 style={{fontFamily:'var(--font-serif)',fontSize:'clamp(1.8rem,3vw,2.8rem)',fontWeight:700,color:'var(--cream)',margin:'.5rem 0 .75rem'}} className="reveal">
-            From Voice to Intelligence
+            {r.flow.title}
           </h2>
           <div className="flow-diagram">
-            {FLOW_NODES.map((n,i)=>(
+            {r.flow.nodes.map((label,i)=>(
               <>
-                <div key={n.label} className="flow-node">
-                  <div className="flow-icon"><span>{n.icon}</span></div>
-                  <div className="flow-label">{n.label.split('\n').map((l,j)=><span key={j}>{l}<br/></span>)}</div>
+                <div key={label} className="flow-node">
+                  <div className="flow-icon"><span>{FLOW_ICONS[i]}</span></div>
+                  <div className="flow-label">{label.split('\n').map((l,j)=><span key={j}>{l}<br/></span>)}</div>
                 </div>
-                {i < FLOW_NODES.length-1 && (
+                {i < r.flow.nodes.length-1 && (
                   <div key={`arr${i}`} className="flow-arrow">
                     <div className="flow-line"/>
                     <div className="flow-tip"/>
@@ -219,14 +215,14 @@ export default function RogerAIScreen() {
       {/* ── LED RING ── */}
       <section className="led-section">
         <div className="container">
-          <div className="section-label reveal">07 · LED STATUS RING</div>
+          <div className="section-label reveal">{r.led.label}</div>
           <h2 style={{fontFamily:'var(--font-serif)',fontSize:'clamp(1.8rem,3vw,2.8rem)',fontWeight:700,color:'var(--cream)',margin:'.5rem 0 .75rem'}} className="reveal">
-            WS2812B × 8 — Live Demo
+            {r.led.title}
           </h2>
           <div className="led-demo">
-            {LED_MODES.map(m=>(
+            {r.led.modes.map((m,idx)=>(
               <div key={m.state} className="led-mode">
-                <div className={`led-strip ${m.cls}`}>
+                <div className={`led-strip ${LED_CLASSES[idx]}`}>
                   {Array.from({length:8}).map((_,i)=><div key={i} className="led-dot"/>)}
                 </div>
                 <div className="led-state">{m.state}</div>
@@ -240,22 +236,22 @@ export default function RogerAIScreen() {
       {/* ── CTA ── */}
       <section id="cta" className="cta-section">
         <div className="container">
-          <div className="cta-overline">REQUEST ACCESS</div>
-          <h2 className="cta-title">Ready to meet <em>ROGER·AI</em>?</h2>
-          <p className="cta-sub">Join the private beta. Limited to 12 strategic partners and field operators.</p>
+          <div className="cta-overline">{r.cta.overline}</div>
+          <h2 className="cta-title">{r.cta.titlePre}<em>{r.cta.titleEm}</em>{r.cta.titlePost}</h2>
+          <p className="cta-sub">{r.cta.sub}</p>
           <div className="cta-actions">
-            <a href="mailto:momen@momencrafts.com" className="btn btn-amber">Request Access →</a>
-            <Link to="/home" className="btn btn-ghost">← Investor Room</Link>
+            <a href="mailto:momen@momencrafts.com" className="btn btn-amber">{r.cta.primary}</a>
+            <Link to="/home" className="btn btn-ghost">{r.cta.back}</Link>
           </div>
-          <p className="cta-note">Hardware prototype · Riyadh, KSA · 2026</p>
+          <p className="cta-note">{r.cta.note}</p>
         </div>
       </section>
 
       <footer>
         <div className="container" style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'1rem'}}>
-          <span className="footer-brand">✦ MOMENCRAFTS</span>
-          <span className="footer-copy">© 2026 MomenCrafts · All rights reserved</span>
-          <Link to="/home" className="footer-back">← Investor Room</Link>
+          <span className="footer-brand">{r.footer.brand}</span>
+          <span className="footer-copy">{r.footer.copy}</span>
+          <Link to="/home" className="footer-back">{r.footer.back}</Link>
         </div>
       </footer>
     </>
@@ -263,6 +259,7 @@ export default function RogerAIScreen() {
 }
 
 function HWBlock({num,icon,name,chip,nets}:{num:string;icon:string;name:string;chip:string;nets:string[]}) {
+  const { t } = useT()
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -279,7 +276,7 @@ function HWBlock({num,icon,name,chip,nets}:{num:string;icon:string;name:string;c
       <div className="hw-block-body">
         <div className="hw-block-inner">
           <div className="hw-nets">
-            <span>NETS: </span>{nets.join(' · ')}
+            <span>{t.roger.hardware.netsLabel}</span>{nets.join(' · ')}
           </div>
         </div>
       </div>

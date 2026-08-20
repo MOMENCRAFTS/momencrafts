@@ -2,6 +2,8 @@ import { lazy, Suspense, useEffect, useRef } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
 import { verifyToken } from '@/services/supabase'
+import { useDocumentLang } from '@/i18n'
+import '@/styles/lang.css'
 
 const Gate     = lazy(() => import('@/screens/GateScreen'))
 const Home     = lazy(() => import('@/screens/HomeScreen'))
@@ -11,9 +13,8 @@ const TDC      = lazy(() => import('@/screens/TDCScreen'))
 const Qadaa    = lazy(() => import('@/screens/QadaaScreen').then(m => ({ default: m.QadaaScreen })))
 const Admin    = lazy(() => import('@/screens/AdminScreen'))
 
-/* Detect admin subdomain */
-const IS_ADMIN_SUBDOMAIN = typeof window !== 'undefined' &&
-  window.location.hostname === 'admin.momencrafts.com'
+/* ── Subdomain detection ─────────────────────────────── */
+const IS_ADMIN_SUBDOMAIN = window.location.hostname === 'admin.momencrafts.com'
 
 /* ── Check if the stored token has expired ─────────────── */
 function isTokenExpired(): boolean {
@@ -78,6 +79,20 @@ function GateGuard({ children }: { children: React.ReactNode }) {
   return token ? <Navigate to="/home" replace /> : <>{children}</>
 }
 
+/* ── Redirect helper — sends /admin visitors to the subdomain ── */
+function AdminRedirect() {
+  useEffect(() => {
+    window.location.href = 'https://admin.momencrafts.com'
+  }, [])
+  return (
+    <div style={{ display:'flex', alignItems:'center', justifyContent:'center',
+      minHeight:'100vh', background:'#0E4372', color:'#E2B96B',
+      fontFamily:'JetBrains Mono, monospace', fontSize:'.75rem', letterSpacing:'.2em' }}>
+      REDIRECTING TO ADMIN…
+    </div>
+  )
+}
+
 const Loader = () => (
   <div style={{ display:'flex', alignItems:'center', justifyContent:'center',
     minHeight:'100vh', background:'#0C0A09', color:'#F59E0B',
@@ -87,6 +102,24 @@ const Loader = () => (
 )
 
 export default function App() {
+  /* Keeps <html lang>/<html dir> aligned with the active language.
+     Defaults to English (ltr); flips to Arabic (rtl) via the LangToggle. */
+  useDocumentLang()
+
+  /* ── admin.momencrafts.com → render Admin at root ── */
+  if (IS_ADMIN_SUBDOMAIN) {
+    return (
+      <BrowserRouter>
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            <Route path="*" element={<Admin />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    )
+  }
+
+  /* ── Main site (momencrafts.com) ── */
   return (
     <BrowserRouter>
       <Suspense fallback={<Loader />}>
@@ -97,12 +130,12 @@ export default function App() {
           <Route path="/edgetack" element={<AuthGuard><EdgeTack /></AuthGuard>} />
           <Route path="/tdc"      element={<AuthGuard><TDC /></AuthGuard>} />
           <Route path="/qadaa"    element={<AuthGuard><Qadaa /></AuthGuard>} />
-          <Route path="/admin"    element={<Admin />} />
+          {/* /admin on main site → redirect to admin subdomain */}
+          <Route path="/admin"    element={<AdminRedirect />} />
           {/* Legacy redirects */}
           <Route path="/gate" element={<Navigate to="/" replace />} />
           <Route path="/room" element={<Navigate to="/" replace />} />
-          {/* admin subdomain: any path → /admin */}
-          <Route path="*" element={IS_ADMIN_SUBDOMAIN ? <Navigate to="/admin" replace /> : <Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

@@ -10,6 +10,10 @@ export interface InvestorData {
   valid: boolean
 }
 
+/* English is the default language for every first-time visitor.
+   Arabic is opt-in via the LangToggle and is remembered for the session. */
+const DEFAULT_LANG: 'ar' | 'en' = 'en'
+
 interface AppState {
   lang: 'ar' | 'en'
   token: string | null
@@ -25,7 +29,7 @@ interface AppState {
 export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
-      lang: 'ar',
+      lang: DEFAULT_LANG,
       token: null,
       investorData: null,
       ndaAccepted: false,
@@ -50,4 +54,3 @@ export const useAppStore = create<AppState>()(
     }
   )
 )
-

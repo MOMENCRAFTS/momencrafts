@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { useT } from '@/i18n';
+import { LangToggle } from '@/components/LangToggle';
 import '../styles/qadaa.css';
 
 /* ════════════════════════════════════════════════════════
@@ -13,14 +15,34 @@ import '../styles/qadaa.css';
      • Font           Playfair Display (serif) + Inter
    ════════════════════════════════════════════════════════ */
 
+/* Non-textual per-app styling — copy lives in the dictionary. */
+const APP_VISUALS = [
+  { icon: '👤', color: '#C8A24A' },
+  { icon: '⚖️', color: '#B8922E' },
+  { icon: '🏢', color: '#9E7A20' },
+  { icon: '⚙️', color: '#7B5E4D' },
+  { icon: '🤖', color: '#D4B76E' },
+];
+
+const WHY_ICONS = ['🌐', '⚡', '🔒', '📍'];
+
 export function QadaaScreen() {
+  const { t, lang, dir } = useT();
+  const q = t.qadaa;
+
+  const waHref = `https://wa.me/966535271122?text=${encodeURIComponent(q.whatsappMsg)}`;
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'QADAA · قضاء — Legal. Reimagined.';
   }, []);
 
+  useEffect(() => {
+    document.title = q.meta.title;
+  }, [q]);
+
   return (
-    <div className="qadaa-page">
+    <div className="qadaa-page" dir={dir} lang={lang} style={{ direction: dir }}>
+      <LangToggle />
 
       {/* ── Hero ───────────────────────────────── */}
       <section className="qadaa-hero">
@@ -28,7 +50,7 @@ export function QadaaScreen() {
         <div className="qadaa-hero-bg" aria-hidden="true">
           <img
             src="/qadaa-splash.jpg"
-            alt="Riyadh skyline golden hour"
+            alt={q.hero.imgAlt}
             className="qadaa-hero-img"
           />
           <div className="qadaa-hero-overlay" />
@@ -54,38 +76,38 @@ export function QadaaScreen() {
           {/* Badge */}
           <div className="qadaa-hero-badge">
             <span className="qadaa-hero-badge-dot" />
-            منصة قانونية متكاملة
+            {q.hero.badge}
           </div>
 
           {/* Headline */}
           <h1 className="qadaa-hero-headline">
-            <span className="qadaa-hero-headline-white">قانون.</span>
+            <span className="qadaa-hero-headline-white">{q.hero.headlineTop}</span>
             <br />
-            <span className="qadaa-hero-headline-gold">مُعاد تصوره.</span>
+            <span className="qadaa-hero-headline-gold">{q.hero.headlineBottom}</span>
           </h1>
 
           <p className="qadaa-hero-sub">
-            qadaa.law — منصة تربط العملاء بالمحامين وتدعم تحليل القضايا والمستندات بتجربة عربية واضحة وراقية في المملكة العربية السعودية والإمارات.
+            {q.hero.sub}
           </p>
 
           {/* CTAs */}
           <div className="qadaa-hero-ctas">
             <a
-              href="https://wa.me/966535271122?text=أهتم بمنصة QADAA · قضاء — أريد أعرف أكثر"
+              href={waHref}
               target="_blank"
               rel="noopener"
               className="qadaa-btn-gold"
             >
-              تحدث مع المؤسس
+              {q.hero.ctaPrimary}
             </a>
             <a href="#platform" className="qadaa-btn-outline">
-              استعرض المنصة
+              {q.hero.ctaSecondary}
             </a>
           </div>
 
           {/* Trust chips */}
           <div className="qadaa-trust-chips">
-            {['⚖ نزاعات مدنية', '🏢 شركات & استثمار', '🔒 سرية تامة', '🌐 السعودية · الإمارات'].map(chip => (
+            {q.hero.chips.map(chip => (
               <span key={chip} className="qadaa-trust-chip">{chip}</span>
             ))}
           </div>
@@ -93,13 +115,13 @@ export function QadaaScreen() {
 
         {/* Floating stat card */}
         <div className="qadaa-hero-float-card">
-          <p className="qadaa-float-gold">٥ تطبيقات</p>
-          <p className="qadaa-float-label">منظومة قانونية متكاملة</p>
+          <p className="qadaa-float-gold">{q.hero.floatValue}</p>
+          <p className="qadaa-float-label">{q.hero.floatLabel}</p>
         </div>
 
         {/* Scroll indicator */}
         <div className="qadaa-scroll-hint">
-          <span className="qadaa-scroll-text">اكتشف</span>
+          <span className="qadaa-scroll-text">{q.hero.scroll}</span>
           <div className="qadaa-scroll-line" />
         </div>
       </section>
@@ -107,63 +129,30 @@ export function QadaaScreen() {
       {/* ── Platform Overview ──────────────────── */}
       <section id="platform" className="qadaa-section">
         <div className="qadaa-container">
-          <div className="qadaa-section-label">المنصة</div>
-          <h2 className="qadaa-section-title">منظومة من ٥ تطبيقات</h2>
+          <div className="qadaa-section-label">{q.platform.label}</div>
+          <h2 className="qadaa-section-title">{q.platform.title}</h2>
           <p className="qadaa-section-sub">
-            كل تطبيق صُمم بعناية لدور محدد — معاً يشكّلون تجربة قانونية لا مثيل لها في المنطقة.
+            {q.platform.sub}
           </p>
 
           <div className="qadaa-apps-grid">
-            {[
-              {
-                icon: '👤',
-                name: 'تطبيق العميل',
-                desc: 'تواصل مع محامين معتمدين، تتبع قضاياك، وأرسل مستنداتك بأمان من هاتفك.',
-                tags: ['iOS', 'Android'],
-                color: '#C8A24A',
-              },
-              {
-                icon: '⚖️',
-                name: 'تطبيق المحامي',
-                desc: 'إدارة القضايا، مواعيد الجلسات، وتحليل العقود بمساعدة الذكاء الاصطناعي.',
-                tags: ['iOS', 'Android'],
-                color: '#B8922E',
-              },
-              {
-                icon: '🏢',
-                name: 'لوحة مكتب المحاماة',
-                desc: 'إدارة الفريق، الفواتير، والتقارير من لوحة ويب متكاملة.',
-                tags: ['Web'],
-                color: '#9E7A20',
-              },
-              {
-                icon: '⚙️',
-                name: 'لوحة الإدارة',
-                desc: 'مراقبة المنصة، الموافقة على المحامين، والتقارير التشغيلية الشاملة.',
-                tags: ['Web'],
-                color: '#7B5E4D',
-              },
-              {
-                icon: '🤖',
-                name: 'وكيل الذكاء الاصطناعي',
-                desc: 'تحليل العقود، استخراج المخاطر، وصياغة المستندات القانونية آلياً.',
-                tags: ['AI', 'API'],
-                color: '#D4B76E',
-              },
-            ].map((app, i) => (
-              <div key={i} className="qadaa-app-card" style={{ animationDelay: `${i * 0.08}s` }}>
-                <div className="qadaa-app-icon" style={{ borderColor: `${app.color}30`, boxShadow: `0 0 16px ${app.color}18` }}>
-                  <span style={{ fontSize: '1.4rem' }}>{app.icon}</span>
+            {q.platform.apps.map((app, i) => {
+              const visual = APP_VISUALS[i];
+              return (
+                <div key={i} className="qadaa-app-card" style={{ animationDelay: `${i * 0.08}s` }}>
+                  <div className="qadaa-app-icon" style={{ borderColor: `${visual.color}30`, boxShadow: `0 0 16px ${visual.color}18` }}>
+                    <span style={{ fontSize: '1.4rem' }}>{visual.icon}</span>
+                  </div>
+                  <h3 className="qadaa-app-name" style={{ color: visual.color }}>{app.name}</h3>
+                  <p className="qadaa-app-desc">{app.desc}</p>
+                  <div className="qadaa-app-tags">
+                    {app.tags.map(tag => (
+                      <span key={tag} className="qadaa-app-tag" style={{ borderColor: `${visual.color}30`, color: visual.color }}>{tag}</span>
+                    ))}
+                  </div>
                 </div>
-                <h3 className="qadaa-app-name" style={{ color: app.color }}>{app.name}</h3>
-                <p className="qadaa-app-desc">{app.desc}</p>
-                <div className="qadaa-app-tags">
-                  {app.tags.map(t => (
-                    <span key={t} className="qadaa-app-tag" style={{ borderColor: `${app.color}30`, color: app.color }}>{t}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -171,18 +160,13 @@ export function QadaaScreen() {
       {/* ── Why Qadaa ─────────────────────────── */}
       <section className="qadaa-section qadaa-section--dark">
         <div className="qadaa-container">
-          <div className="qadaa-section-label qadaa-section-label--light">لماذا قضاء؟</div>
-          <h2 className="qadaa-section-title qadaa-section-title--light">مصمم للمنطقة. من الألف إلى الياء.</h2>
+          <div className="qadaa-section-label qadaa-section-label--light">{q.why.label}</div>
+          <h2 className="qadaa-section-title qadaa-section-title--light">{q.why.title}</h2>
 
           <div className="qadaa-why-grid">
-            {[
-              { icon: '🌐', title: 'عربي أولاً', desc: 'واجهات RTL، نصوص قانونية معيارية بالعربية، ودعم ثنائي اللغة.' },
-              { icon: '⚡', title: 'ذكاء اصطناعي قانوني', desc: 'تحليل عقود، استخراج مخاطر، وصياغة مستندات في ثوانٍ.' },
-              { icon: '🔒', title: 'سرية وأمان', desc: 'تشفير كامل، مصادقة متعددة، وبنية تحتية متوافقة مع أنظمة البيانات.' },
-              { icon: '📍', title: 'مملكة والإمارات', desc: 'مُكيَّف مع النظام السعودي والإماراتي من أول يوم.' },
-            ].map((item, i) => (
+            {q.why.items.map((item, i) => (
               <div key={i} className="qadaa-why-card">
-                <div className="qadaa-why-icon">{item.icon}</div>
+                <div className="qadaa-why-icon">{WHY_ICONS[i]}</div>
                 <h3 className="qadaa-why-title">{item.title}</h3>
                 <p className="qadaa-why-desc">{item.desc}</p>
               </div>
@@ -210,35 +194,35 @@ export function QadaaScreen() {
             </svg>
           </div>
 
-          <div className="qadaa-section-label">وصول مبكر</div>
+          <div className="qadaa-section-label">{q.cta.label}</div>
           <h2 className="qadaa-cta-title">
-            كن من أوائل مكاتب المحاماة
+            {q.cta.titleTop}
             <br />
-            <span className="qadaa-cta-title-gold">التي تشكّل المستقبل القانوني.</span>
+            <span className="qadaa-cta-title-gold">{q.cta.titleBottom}</span>
           </h2>
           <p className="qadaa-cta-sub">
-            نحن نبني qadaa.law بالتعاون مع مكاتب المحاماة الرائدة في المنطقة. تحدث مع المؤسس مباشرةً.
+            {q.cta.sub}
           </p>
           <a
-            href="https://wa.me/966535271122?text=أهتم بمنصة QADAA · قضاء — أريد أعرف أكثر"
+            href={waHref}
             target="_blank"
             rel="noopener"
             className="qadaa-btn-gold qadaa-cta-btn"
           >
-            ابدأ المحادثة على واتساب ←
+            {q.cta.button} <span className="dir-arrow">→</span>
           </a>
 
           <div className="qadaa-cta-trust">
             <span>⚖</span>
-            <span>منصة متكاملة · ٥ تطبيقات · عربي أولاً · ذكاء اصطناعي قانوني</span>
+            <span>{q.cta.trust}</span>
           </div>
         </div>
       </section>
 
       {/* ── Back to home ──────────────────────── */}
       <div className="qadaa-back-bar">
-        <a href="/" className="qadaa-back-link">← العودة إلى المحفظة</a>
-        <span className="qadaa-back-brand">qadaa.law — Legal. Reimagined.</span>
+        <a href="/" className="qadaa-back-link"><span className="dir-arrow">←</span> {q.back.link}</a>
+        <span className="qadaa-back-brand">{q.back.brand}</span>
       </div>
     </div>
   );

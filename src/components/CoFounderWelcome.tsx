@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useT } from '@/i18n'
 
 /* ═══════════════════════════════════════════════════════
    CoFounderWelcome — Premium celebration overlay
@@ -8,7 +9,6 @@ import { useEffect, useRef, useState } from 'react'
 
 interface CoFounderWelcomeProps {
   name?: string
-  lang: 'ar' | 'en'
   onEnter: () => void
   projectAccess?: string[]
   tokenType?: string
@@ -76,7 +76,9 @@ function useConfettiCanvas(ref: React.RefObject<HTMLCanvasElement | null>, activ
 }
 
 /* ── Main component ─────────────────────────────────── */
-export function CoFounderWelcome({ name, lang, onEnter, projectAccess = [], tokenType = '' }: CoFounderWelcomeProps) {
+export function CoFounderWelcome({ name, onEnter, projectAccess = [], tokenType = '' }: CoFounderWelcomeProps) {
+  const { t, isAr } = useT()
+  const w = t.gate.welcome
   const isXhbFounder = tokenType === 'COFOUNDER' && projectAccess.includes('xhb')
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [visible,   setVisible]   = useState(false)
@@ -106,14 +108,12 @@ export function CoFounderWelcome({ name, lang, onEnter, projectAccess = [], toke
     return () => clearInterval(t)
   }, [contentIn, onEnter])
 
-  const isAr = lang === 'ar'
-
   return (
     <div
       className={`cofound-overlay${visible ? ' cofound-overlay--in' : ''}`}
       role="dialog"
       aria-modal="true"
-      aria-label={isAr ? 'مرحباً بك شريكاً مؤسساً' : 'Welcome, Co-Founder'}
+      aria-label={w.ariaLabel}
     >
       {/* Confetti canvas — full overlay */}
       <canvas
@@ -137,14 +137,14 @@ export function CoFounderWelcome({ name, lang, onEnter, projectAccess = [], toke
 
         {/* ── Registry label ── */}
         <div className={`cofound-registry-label${contentIn ? ' cofound-content--in' : ''}`}>
-          {isXhbFounder ? 'XHB · CO-FOUNDER REGISTRY' : 'MOMENCRAFTS & CO · REGISTRY'}
+          {isXhbFounder ? w.registryXhb : w.registry}
         </div>
 
         {/* ── Name plate ── */}
         {name && (
           <div className={`cofound-name-plate${contentIn ? ' cofound-content--in cofound-content--delay-1' : ''}`}>
             <span className="cofound-name-label">
-              {isAr ? 'مُسجَّل باسم' : 'REGISTERED TO'}
+              {w.registeredTo}
             </span>
             <span className="cofound-name-value">{name}</span>
           </div>
@@ -153,26 +153,14 @@ export function CoFounderWelcome({ name, lang, onEnter, projectAccess = [], toke
         {/* ── Headline ── */}
         <h1 className={`cofound-headline${contentIn ? ' cofound-content--in cofound-content--delay-2' : ''}`}>
           {isXhbFounder ? (
-            isAr ? (
-              <>
-                <span className="cofound-headline-line">مرحباً بك</span>
-                <em className="cofound-headline-gold">يا شريك التأسيس</em>
-              </>
-            ) : (
-              <>
-                <span className="cofound-headline-line">Welcome,</span>
-                <em className="cofound-headline-gold">Co‑Founder</em>
-              </>
-            )
-          ) : isAr ? (
             <>
-              <span className="cofound-headline-line">مرحباً بك</span>
-              <em className="cofound-headline-gold">شريكاً مؤسساً</em>
+              <span className="cofound-headline-line">{w.headlineXhb1}</span>
+              <em className="cofound-headline-gold">{w.headlineXhb2}</em>
             </>
           ) : (
             <>
-              <span className="cofound-headline-line">Welcome to</span>
-              <em className="cofound-headline-gold">MomenCrafts & Co</em>
+              <span className="cofound-headline-line">{w.headline1}</span>
+              <em className="cofound-headline-gold">{w.headline2}</em>
             </>
           )}
         </h1>
@@ -180,34 +168,13 @@ export function CoFounderWelcome({ name, lang, onEnter, projectAccess = [], toke
         {/* ── Win-Win body ── */}
         <div className={`cofound-body-wrap${contentIn ? ' cofound-content--in cofound-content--delay-3' : ''}`}>
           {isXhbFounder ? (
-            isAr ? (
-              <p className="cofound-body cofound-body--ar">
-                أنت شريك تأسيس في <strong>XHB</strong> — المقرّ الأول لمومن كرافتس.
-                مساحتك في المقرّ جاهزة، وقرارات التأسيس تنتظر موافقتك.
-                المشاريع الأخرى في الاستوديو متاحة للاطلاع بموجب اتفاقية السرية.
-              </p>
-            ) : (
-              <p className="cofound-body">
-                You are a founding partner of <strong>XHB</strong> — the MomenCrafts Founders' HQ.
-                Your seat at the table is set, and founding decisions await your alignment.
-                Other studio projects are available for review under NDA terms.
-              </p>
-            )
-          ) : isAr ? (
-            <p className="cofound-body cofound-body--ar">
-              كلمة <strong>«كو»</strong> تُكتسب — وكسبتَها اليوم.
-              كل رؤية تشاركها، وكل تعريف تتيحه، وكل فكرة تثبت قيمتها
-              قد تشكّل ما نبنيه قادماً. وحين تتحول مساهمتك إلى منتج، يحمل اسمك.
-              هذه ليست علاقة في اتجاه واحد — هي دائماً{' '}
-              <strong className="cofound-winwin">WIN-WIN.</strong>
+            <p className={`cofound-body${isAr ? ' cofound-body--ar' : ''}`}>
+              {w.bodyXhbPre}<strong>{w.bodyXhbName}</strong>{w.bodyXhbPost}
             </p>
           ) : (
-            <p className="cofound-body">
-              The <strong>"Co"</strong> is earned — and yours begins today.
-              Every insight you share, every introduction you make, every idea
-              you validate may shape what we build next. When your contribution
-              ships, it ships with your name. This is not a one-way relationship.{' '}
-              It's always a <strong className="cofound-winwin">WIN-WIN.</strong>
+            <p className={`cofound-body${isAr ? ' cofound-body--ar' : ''}`}>
+              {w.bodyPre}<strong>{w.bodyCo}</strong>{w.bodyPost}
+              <strong className="cofound-winwin">{w.winWin}</strong>
             </p>
           )}
         </div>
@@ -215,9 +182,7 @@ export function CoFounderWelcome({ name, lang, onEnter, projectAccess = [], toke
         {/* ── & Co Registry badge ── */}
         <div className={`cofound-badge${contentIn ? ' cofound-content--in cofound-content--delay-4' : ''}`}>
           <span className="cofound-badge-dot" />
-          {isAr
-            ? 'مساهمتك المعتمدة ستُسجَّل في سجل اند كو'
-            : 'Your validated contribution will be credited in the & Co Registry'}
+          {w.badge}
         </div>
 
         {/* ── CTA ── */}
@@ -225,7 +190,7 @@ export function CoFounderWelcome({ name, lang, onEnter, projectAccess = [], toke
           className={`cofound-cta${contentIn ? ' cofound-content--in cofound-content--delay-5' : ''}`}
           onClick={onEnter}
         >
-          {isAr ? `ادخل الاستوديو ← (${countdown})` : `Enter the Studio → (${countdown})`}
+          {w.cta} <span className="dir-arrow">→</span> ({countdown})
         </button>
 
         {/* ── Divider ── */}
@@ -233,9 +198,7 @@ export function CoFounderWelcome({ name, lang, onEnter, projectAccess = [], toke
 
         {/* ── Footer ── */}
         <p className="cofound-footer">
-          {isAr
-            ? 'تم تسجيل قبولك · الجلسة موثّقة'
-            : 'Acceptance logged · Session documented'}
+          {w.footer}
         </p>
       </div>
     </div>

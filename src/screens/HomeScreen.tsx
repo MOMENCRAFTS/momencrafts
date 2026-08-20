@@ -1,21 +1,25 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
+import { useT, type Dict } from '@/i18n'
+import { LangToggle } from '@/components/LangToggle'
 import { mintXhbSession, mintAdminXhbSession } from '@/services/xhbSession'
 import { FeedbackPanel } from '@/components/FeedbackPanel'
 import '@/styles/home.css'
 import '@/styles/blueprint.css'
 
-// ── WhatsApp track messages ──
-const TRACKS: Record<string, string> = {
-  affiliation: 'مرحباً، أنا مهتم بالتابعية مع MomenCrafts — لدي شبكة وصول وأريد معرفة المزيد.',
-  adoption:    'مرحباً، أريد تبني أحد منتجات MomenCrafts في مؤسستي — يسعدني نقاش التفاصيل.',
-  teamup:      'مرحباً، أريد التعاون مع MomenCrafts كشريك استراتيجي / تقني — لدي ما أقدمه.'
+const WA_NUMBER = '966535271122'
+
+// ── WhatsApp helpers ──
+function openWhatsApp(message: string) {
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, '_blank')
 }
-function prefillWhatsApp(track: string) {
-  const msg = encodeURIComponent(TRACKS[track] || '')
-  window.open('https://wa.me/966535271122?text=' + msg, '_blank')
+function waHref(message: string) {
+  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`
 }
+
+// ── Direction-aware arrow ──
+const Arrow = () => <span className="dir-arrow">→</span>
 
 // ── Analytics helper ──
 function trackInv(event: string, data?: Record<string, unknown>) {
@@ -28,16 +32,10 @@ function trackInv(event: string, data?: Record<string, unknown>) {
   }).catch(() => {})
 }
 
-// badge display labels
-const BADGE_LABELS: Record<string, string> = {
-  'inv-badge-live': 'LIVE', 'inv-badge-beta': 'BETA',
-  'inv-badge-dev': 'IN DEV', 'inv-badge-prototype': 'PROTOTYPE', 'inv-badge-patent': 'PATENT'
-}
-
 // ── Investor accordion card ──
-function InvCard({ id, name, tagline, cat, badge, desc, details, demoLink, demoLabel }: {
+function InvCard({ id, name, tagline, cat, badge, badgeLabel, desc, details, demoLink, demoLabel }: {
   id: string; name: string; tagline: string; cat: string;
-  badge: string; desc: string;
+  badge: string; badgeLabel: string; desc: string;
   details: { label: string; value: string }[];
   demoLink?: string; demoLabel?: string;
 }) {
@@ -57,7 +55,7 @@ function InvCard({ id, name, tagline, cat, badge, desc, details, demoLink, demoL
         </div>
         <div className="inv-ph-badges">
           <span className="inv-card-cat">{cat}</span>
-          <span className={`inv-badge ${badge}`}>{BADGE_LABELS[badge] ?? badge}</span>
+          <span className={`inv-badge ${badge}`}>{badgeLabel}</span>
           <span className="inv-toggle-icon" id={`inv-icon-${id}`} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s cubic-bezier(.2,0,0,1)' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </span>
@@ -90,22 +88,27 @@ function InvCard({ id, name, tagline, cat, badge, desc, details, demoLink, demoL
 }
 
 // ── Co-Founder Exclusive Section ──────────────────────────
-const BALLOT_PRODUCTS = [
-  { id: 'cliniq',   label: 'CLINIQ.ONE' },
-  { id: 'ummi',     label: 'UMMI · أمي' },
-  { id: 'roger',    label: 'ROGER·AI' },
-  { id: 'qadaa',    label: 'QADAA · قضاء' },
-  { id: 'muscle',   label: 'MUSCLE HUSTLE' },
-  { id: 'aqar',     label: 'AQAR · عقار' },
-  { id: 'relay',    label: 'RELAYBOT' },
-  { id: 'sabha',    label: 'SABHA · سبحة' },
-  { id: 'tdc',      label: 'TURBO DRONE CIRCUIT' },
-  { id: 'edgetack', label: 'EDGE TACK' },
-  { id: 'xhb',      label: 'XHB · مشروع مُتبنّى' },
-]
 const SUPABASE_FN = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1'
 
 function CoFounderExclusive({ type, name, token }: { type: string; name: string; token: string }) {
+  const { t, isAr } = useT()
+  const c = t.home.cofounder
+  const cards = t.home.cards
+
+  const BALLOT_PRODUCTS = [
+    { id: 'cliniq',   label: cards.cliniq.name },
+    { id: 'ummi',     label: cards.ummi.name },
+    { id: 'roger',    label: cards.roger.name },
+    { id: 'qadaa',    label: cards.qadaa.name },
+    { id: 'muscle',   label: cards.muscle.name },
+    { id: 'aqar',     label: cards.aqar.name },
+    { id: 'relay',    label: cards.relay.name },
+    { id: 'sabha',    label: cards.sabha.name },
+    { id: 'tdc',      label: cards.tdc.name },
+    { id: 'edgetack', label: cards.edgetack.name },
+    { id: 'xhb',      label: cards.xhb.name },
+  ]
+
   const [ballot, setBallot]         = useState<string[]>([])
   const [ballotDone, setBallotDone] = useState(false)
   const [ballotLoading, setBallotLoading] = useState(false)
@@ -137,7 +140,7 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
     setBallotLoading(false)
   }
 
-  const registeredSince = new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })
+  const registeredSince = new Date().toLocaleDateString(isAr ? 'ar-EG' : 'en-GB', { month: 'short', year: 'numeric' })
 
   return (
     <section id="inv-cofounder" data-section="cofounder" className="inv-cofounder-section">
@@ -146,8 +149,8 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
         <div className="inv-cf-header">
           <span className="inv-cf-star">✦</span>
           <div>
-            <div className="inv-cf-label">CO-FOUNDER ACCESS · المؤسسون المشاركون</div>
-            <h2 className="inv-cf-title">& Co Registry</h2>
+            <div className="inv-cf-label">{c.label}</div>
+            <h2 className="inv-cf-title">{c.title}</h2>
           </div>
           <span className="inv-cf-type-badge">{type}</span>
         </div>
@@ -159,25 +162,25 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
           <div className="inv-cf-card">
             <div className="inv-cf-card-header">
               <span className="inv-cf-card-ico">📋</span>
-              <span className="inv-cf-card-title">Your Registry Entry</span>
+              <span className="inv-cf-card-title">{c.registryCard}</span>
             </div>
             <div className="inv-cf-registry-name">{name}</div>
             <div className="inv-cf-registry-meta">
               <div className="inv-cf-registry-row">
-                <span>Status</span>
-                <span><span className="inv-cf-status-dot"/>Active</span>
+                <span>{c.status}</span>
+                <span><span className="inv-cf-status-dot"/>{c.active}</span>
               </div>
               <div className="inv-cf-registry-row">
-                <span>Access Tier</span>
+                <span>{c.tier}</span>
                 <span>{type}</span>
               </div>
               <div className="inv-cf-registry-row">
-                <span>Registered</span>
+                <span>{c.registered}</span>
                 <span>{registeredSince}</span>
               </div>
               <div className="inv-cf-registry-row">
-                <span>Token</span>
-                <span style={{ fontFamily: 'monospace', fontSize: '.65rem', color: '#6a5c3e' }}>
+                <span>{c.tokenLabel}</span>
+                <span style={{ fontFamily: 'monospace', fontSize: '.65rem', color: '#6a5c3e' }} dir="ltr">
                   MCR-••••{token.slice(-4)}
                 </span>
               </div>
@@ -188,37 +191,18 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
           <div className="inv-cf-card">
             <div className="inv-cf-card-header">
               <span className="inv-cf-card-ico">🗺</span>
-              <span className="inv-cf-card-title">Co-Builder Roadmap</span>
+              <span className="inv-cf-card-title">{c.roadmapCard}</span>
             </div>
             <div className="inv-cf-roadmap-steps">
-              <div className="inv-cf-step">
-                <div className="inv-cf-step-dot done"/>
-                <div className="inv-cf-step-text">
-                  <strong>Portal Access Granted</strong>
-                  Full investor view + feedback tools
+              {c.roadmap.map((step, i) => (
+                <div className="inv-cf-step" key={step.title}>
+                  <div className={`inv-cf-step-dot ${i === 0 ? 'done' : i === 1 ? 'next' : 'future'}`}/>
+                  <div className="inv-cf-step-text">
+                    <strong>{step.title}</strong>
+                    {step.desc}
+                  </div>
                 </div>
-              </div>
-              <div className="inv-cf-step">
-                <div className="inv-cf-step-dot next"/>
-                <div className="inv-cf-step-text">
-                  <strong>Shape the Roadmap</strong>
-                  Ballot + product feedback below each card
-                </div>
-              </div>
-              <div className="inv-cf-step">
-                <div className="inv-cf-step-dot future"/>
-                <div className="inv-cf-step-text">
-                  <strong>Contribution Review</strong>
-                  Ideas and intros reviewed quarterly
-                </div>
-              </div>
-              <div className="inv-cf-step">
-                <div className="inv-cf-step-dot future"/>
-                <div className="inv-cf-step-text">
-                  <strong>& Co Credit</strong>
-                  Validated contributions logged publicly
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -226,18 +210,18 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
           <div className="inv-cf-card">
             <div className="inv-cf-card-header">
               <span className="inv-cf-card-ico">📡</span>
-              <span className="inv-cf-card-title">Direct Line · خط مباشر</span>
+              <span className="inv-cf-card-title">{c.directLine}</span>
             </div>
-            <div className="inv-cf-contact-name">Momen Pharaon</div>
-            <div className="inv-cf-contact-role">مومن فرعون · Founder & Engineer · MomenCrafts</div>
+            <div className="inv-cf-contact-name">{t.home.founder.name}</div>
+            <div className="inv-cf-contact-role">{c.founderRole}</div>
             <div className="inv-cf-contact-btns">
               <a
-                href={`https://wa.me/966535271122?text=${encodeURIComponent(`مرحباً مومن — أنا ${name} (${type}). أريد التحدث عن المشاريع.`)}`}
+                href={waHref(t.home.tracks.coFounder(name, type))}
                 target="_blank" rel="noopener"
                 className="inv-cf-btn inv-cf-btn--wa"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                WhatsApp Momen directly
+                {c.waBtn}
               </a>
               <a
                 href="mailto:momen@momencrafts.com"
@@ -254,12 +238,12 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
         <div className="inv-cf-ballot">
           <div className="inv-cf-ballot-header">
             <span style={{ fontSize: '1.1rem' }}>🗳</span>
-            <span className="inv-cf-ballot-title">Priority Ballot · ما الذي نبنيه أولاً؟</span>
-            <span className="inv-cf-ballot-sub">Click to rank — first click = top priority</span>
+            <span className="inv-cf-ballot-title">{c.ballotTitle}</span>
+            <span className="inv-cf-ballot-sub">{c.ballotSub}</span>
           </div>
           {ballotDone ? (
             <div className="inv-cf-ballot-success">
-              ✓ Ballot submitted — your product priorities have been logged. Thank you.
+              {c.ballotSuccess}
             </div>
           ) : (
             <>
@@ -287,18 +271,18 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
                   disabled={ballot.length < 3 || ballotLoading}
                   id="ballot-submit-btn"
                 >
-                  {ballotLoading ? 'Submitting...' : `Submit Priorities (${ballot.length}/10 selected)`}
+                  {ballotLoading ? c.ballotSubmitting : c.ballotSubmit(ballot.length)}
                 </button>
                 {ballot.length > 0 && ballot.length < 3 && (
                   <span style={{ fontFamily: 'monospace', fontSize: '.65rem', color: '#6a5c3e' }}>
-                    Select at least 3 to submit
+                    {c.ballotMin}
                   </span>
                 )}
                 {ballot.length > 0 && (
                   <button
                     onClick={() => setBallot([])}
                     style={{ background: 'none', border: 'none', color: '#6a5c3e', cursor: 'pointer', fontFamily: 'monospace', fontSize: '.65rem' }}
-                  >Clear</button>
+                  >{c.ballotClear}</button>
                 )}
               </div>
             </>
@@ -478,7 +462,7 @@ const PcbBody = ({ variant }: { variant: 1 | 2 | 3 }) => {
 
 function Terminal() {
   return (
-    <div className="term" aria-hidden="true">
+    <div className="term" aria-hidden="true" dir="ltr">
       <div className="term__line"><span className="term__prompt">$</span> mc trace --layer 2</div>
       <div className="term__line">  routing 1,284 nets …</div>
       <div className="term__line"><span className="term__prompt">$</span> mc assemble --verify</div>
@@ -528,9 +512,79 @@ function SheetLayers() {
   )
 }
 
+/* ── Public product grid config — language-independent metadata ── */
+type CardKey = keyof Dict['home']['cards']
+const PUBLIC_CARDS: {
+  key: CardKey; no: string; id: string; accent?: string; stage?: Stage; pill?: string; pillClass?: string;
+  href?: string; external?: boolean; wa?: boolean; xhb?: boolean;
+}[] = [
+  { key: 'roger',    no: '01', id: 'card-roger',    accent: 'var(--gold)', stage: 'live', pill: 'LIVE',    pillClass: 'pill--live',    href: '/rogerai', external: true },
+  { key: 'cliniq',   no: '02', id: 'card-cliniq',   accent: 'var(--live)', stage: 'live', pill: 'LIVE',    pillClass: 'pill--live',    href: '/cliniq.one' },
+  { key: 'ummi',     no: '03', id: 'card-ummi',     accent: 'var(--live)', stage: 'live', pill: 'LIVE',    pillClass: 'pill--live',    href: '/ummiwallet/' },
+  { key: 'relay',    no: '04', id: 'card-relay',    accent: 'var(--beta)', stage: 'beta', pill: 'BETA',    pillClass: 'pill--beta',    href: 'https://github.com/momencrafts/relaybot', external: true },
+  { key: 'qadaa',    no: '05', id: 'card-qadaa',    accent: 'var(--beta)', stage: 'beta', pill: 'BETA',    pillClass: 'pill--beta',    href: '/qadaa' },
+  { key: 'tdc',      no: '06', id: 'card-tdc',      accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/tdc' },
+  { key: 'dart',     no: '07', id: 'card-dart',     accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/dart/' },
+  { key: 'edgetack', no: '08', id: 'card-edgetack', accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/edgetack' },
+  { key: 'muscle',   no: '09', id: 'card-muscle',   wa: true },
+  { key: 'aqar',     no: '10', id: 'card-aqar',     wa: true },
+  { key: 'sabha',    no: '11', id: 'card-sabha',    wa: true },
+  { key: 'xhb',      no: '12', id: 'card-xhb',      accent: 'var(--live)', stage: 'live', pill: 'ADOPTED', pillClass: 'pill--adopted', xhb: true },
+]
+
+/* ── Investor portfolio config — language-independent metadata ── */
+const INV_CARDS: {
+  id: string; name: string; cat: string; badge: keyof Dict['home']['portfolio']['badges'];
+  badgeClass: string; keys: (keyof Dict['home']['portfolio']['detailLabels'])[];
+  demoLink?: string; waProduct?: string;
+}[] = [
+  { id: 'roger',    name: 'ROGER·AI',            cat: 'Voice AI',              badge: 'beta',      badgeClass: 'inv-badge-beta',      keys: ['sector','revenue','platform','status'],       demoLink: '/rogerai' },
+  { id: 'cliniq',   name: 'CLINIQ.ONE',          cat: 'HealthTech',            badge: 'live',      badgeClass: 'inv-badge-live',      keys: ['sector','revenue','compliance','marketSize'], demoLink: '/cliniq.one' },
+  { id: 'ummi',     name: 'UMMI',                cat: 'FinTech',               badge: 'beta',      badgeClass: 'inv-badge-beta',      keys: ['sector','revenue','unique','marketSize'],     demoLink: '/ummiwallet/' },
+  { id: 'qadaa',    name: 'QADAA',               cat: 'LegalTech',             badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','language'],       waProduct: 'QADAA' },
+  { id: 'muscle',   name: 'MUSCLE HUSTLE',       cat: 'FitTech',               badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','target'],         waProduct: 'Muscle Hustle' },
+  { id: 'aqar',     name: 'AQAR',                cat: 'PropTech',              badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','compliance','market'],     waProduct: 'AQAR' },
+  { id: 'relay',    name: 'RELAYBOT',            cat: 'Hardware · IoT',        badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','tech','ip'],               demoLink: 'https://github.com/momencrafts/relaybot' },
+  { id: 'sabha',    name: 'SABHA',               cat: 'Wearable · Islamic',    badge: 'prototype', badgeClass: 'inv-badge-prototype', keys: ['sector','revenue','status','market'],         waProduct: 'SABHA' },
+  { id: 'tdc',      name: 'TURBO DRONE CIRCUIT', cat: 'Hardware · Patent',     badge: 'patent',    badgeClass: 'inv-badge-patent',    keys: ['sector','revenue','ipStatus','opportunity'],  demoLink: '/tdc' },
+  { id: 'edgetack', name: 'EDGE TACK',           cat: 'Mobile Gaming · Patent', badge: 'patent',   badgeClass: 'inv-badge-patent',    keys: ['sector','revenue','ipStatus','market'],       demoLink: '/edgetack' },
+]
+
+const DOWNLOAD_META = [
+  { app_id: 'cliniq-patient', key: 'cliniqPatient', version: 'v2.4.1', status: 'live', emoji: '🏥', size: '63 MB' },
+  { app_id: 'cliniq-doctor',  key: 'cliniqDoctor',  version: 'v2.3.0', status: 'live', emoji: '⚕️', size: '58 MB' },
+  { app_id: 'rogerai',        key: 'rogerai',       version: 'v1.2.0', status: 'beta', emoji: '🎙️', size: '45 MB' },
+  { app_id: 'ummi',           key: 'ummi',          version: 'v3.1.0', status: 'beta', emoji: '💚', size: '52 MB' },
+  { app_id: 'relaybot',       key: 'relaybot',      version: 'v1.8.3', status: 'dev',  emoji: '⌨️', size: '12 MB' },
+] as const
+
+const JOURNAL_META = [
+  { category: 'launch',    product: 'Cliniq',   pinned: true },
+  { category: 'update',    product: null,       pinned: true },
+  { category: 'patent',    product: 'TDC',      pinned: false },
+  { category: 'patent',    product: 'EdgeTack', pinned: false },
+  { category: 'milestone', product: 'Ummi',     pinned: false },
+  { category: 'community', product: null,       pinned: false },
+] as const
+
+const PROGRESS_META = [
+  { name: 'Cliniq.one',  pct: 85, statusKey: 'liveWithUsers',     color: '#0e7490' },
+  { name: 'Ummi Wallet', pct: 75, statusKey: 'betaModules',       color: '#22c55e' },
+  { name: 'Roger·AI',    pct: 60, statusKey: 'privateBeta',       color: '#C8A96E' },
+  { name: 'RelayBot',    pct: 45, statusKey: 'hardwarePrototype', color: '#a855f7' },
+  { name: 'Qadaa',       pct: 20, statusKey: 'architecture',      color: '#3b82f6' },
+] as const
+
+const YOUBRING_ICONS = ['🌐', '🧠', '⚙️', '📋', '🏛️', '🤝']
+const SIGNAL_COLORS  = ['#C8A96E', '#C8A96E', '#C8A96E', '#9B1B30']
+
+const CO_TYPES = ['PERMANENT', 'STRATEGIC', 'COFOUNDER', 'FOUNDER']
+
 export default function HomeScreen() {
   const navigate = useNavigate()
   const { investorData, clearSession } = useAppStore()
+  const { t, lang, isAr, dir } = useT()
+  const h = t.home
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const token   = sessionStorage.getItem('mcr_token')   || ''
@@ -538,22 +592,19 @@ export default function HomeScreen() {
   const type    = sessionStorage.getItem('mcr_type')    || 'MONTH'
   const expires = sessionStorage.getItem('mcr_expires') || ''
   const raw     = token; const masked = raw.length > 4 ? 'MCR-••••' + raw.slice(-4) : raw
+  const isCo    = CO_TYPES.includes(type)
+  const dateLocale = isAr ? 'ar-EG' : 'en-GB'
 
-  const TYPE_LABELS: Record<string, string> = {
-    HOUR: '1-Hour Access', WEEK: '7-Day Access', MONTH: '30-Day Access',
-    '3MONTH': '90-Day Access',
-    STRATEGIC: 'Strategic Partner', COFOUNDER: 'Co-Founder',
-    PERMANENT: 'Permanent Access', FOUNDER: 'Founder',
-  }
-  let typeLabel = TYPE_LABELS[type] || type
+  let typeLabel = (h.accessTypes as unknown as Record<string, string>)[type] || type
   if (expires) {
     const d = new Date(expires)
-    if (!isNaN(d.getTime())) typeLabel += ' · Exp ' + d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+    if (!isNaN(d.getTime())) {
+      typeLabel += ` · ${h.accessTypes.expiresPrefix} ` + d.toLocaleDateString(dateLocale, { day: 'numeric', month: 'short' })
+    }
   }
 
   const [countdown, setCountdown]   = useState('')
   const [expired, setExpired]       = useState(false)
-  const [navOpen, setNavOpen]       = useState(false)
   const [scrollPct, setScrollPct]   = useState(0)
   const [barVisible, setBarVisible] = useState(true)
   const barHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -653,11 +704,24 @@ export default function HomeScreen() {
 
   const footerExpiry = expires ? (() => {
     const d = new Date(expires)
-    return isNaN(d.getTime()) ? '' : 'Access expires: ' + d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+    return isNaN(d.getTime()) ? '' : `${h.accessTypes.accessExpires} ` + d.toLocaleDateString(dateLocale, { day: 'numeric', month: 'short', year: 'numeric' })
   })() : ''
 
+  const barNav: [string, string, boolean][] = [
+    ['#inv-traction',      h.bar.nav.story,     false],
+    ['#inv-portfolio',     h.bar.nav.portfolio, false],
+    ...(isCo ? [['#inv-cofounder', h.bar.nav.coHub, true] as [string, string, boolean]] : []),
+    ['#inv-vision',        h.bar.nav.vision,    false],
+    ['#inv-downloads',     h.bar.nav.testShape, false],
+    ['#inv-journal',       h.bar.nav.journal,   false],
+    ['#inv-traction-live', h.bar.nav.progress,  false],
+    ['#inv-cobuilder',     h.bar.nav.board,     false],
+    ...(!isCo ? [['#inv-letsbuild', h.bar.nav.becomeCo, true] as [string, string, boolean]] : []),
+  ]
+
   return (
-    <div className="bp-root" dir="rtl" lang="ar">
+    <div className="bp-root" dir={dir} lang={lang}>
+      <LangToggle />
       <SheetLayers />
       <div className="home-root" id="home-root">
         {/* ── Particle canvas ── */}
@@ -675,35 +739,31 @@ export default function HomeScreen() {
           <span className="inv-bar-lock">🔒</span>
           <span id="inv-name-display">{name}</span>
           <span className="inv-sep">|</span>
-          <span id="inv-token-display" className="inv-bar-token">{masked}</span>
+          <span id="inv-token-display" className="inv-bar-token" dir="ltr">{masked}</span>
           <span className="inv-sep">|</span>
           <span id="inv-type-display">{typeLabel}</span>
           <span className="inv-sep">|</span>
           {/* Co-founder badge vs NDA tick */}
-          {['PERMANENT','STRATEGIC','COFOUNDER','FOUNDER'].includes(type) ? (
+          {isCo ? (
             <span className="inv-bar-cofound-badge">✦ &amp; Co</span>
           ) : (
             <span className="inv-bar-nda">✓ &amp; Co</span>
           )}
           {countdown && type === 'HOUR' && (
             <span id="inv-expiry-badge" className="inv-expiry-badge" style={{ animation: countdown < '10:00' ? 'pulse 1.2s infinite' : 'none' }}>
-              ⏱ <span id="inv-countdown">{countdown}</span>
+              ⏱ <span id="inv-countdown" dir="ltr">{countdown}</span>
             </span>
           )}
         </div>
         <nav id="inv-section-nav" style={{ display:'flex', gap:'1.2rem', fontSize:'.66rem' }}>
-          {[['#inv-traction','Our Story'],['#inv-portfolio','Portfolio'],
-            ...(['PERMANENT','STRATEGIC','COFOUNDER','FOUNDER'].includes(type) ? [['#inv-cofounder','& Co Hub']] : []),
-            ['#inv-vision','Vision'],['#inv-downloads','Test & Shape'],['#inv-journal','Journal'],['#inv-traction-live','Progress'],['#inv-cobuilder','Board'],
-            ...(!['PERMANENT','STRATEGIC','COFOUNDER','FOUNDER'].includes(type) ? [['#inv-letsbuild','Become & Co →']] : []),
-          ].map(([href, label]) => (
-            <a key={href} href={href} style={{ color: label.includes('→') || label.includes('Hub') ? '#C8A96E' : '#a09070', textDecoration:'none', fontWeight: label.includes('→') || label.includes('Hub') ? 700 : 400 }}>{label}</a>
+          {barNav.map(([href, label, strong]) => (
+            <a key={href} href={href} style={{ color: strong ? '#C8A96E' : '#a09070', textDecoration:'none', fontWeight: strong ? 700 : 400 }}>{label}</a>
           ))}
         </nav>
         <div className="inv-bar-actions">
-          <button onClick={handleExit} className="inv-bar-exit">Exit</button>
-          {!['PERMANENT','STRATEGIC','COFOUNDER','FOUNDER'].includes(type) && (
-            <a href="#inv-letsbuild" className="inv-bar-cta">Become &amp; Co →</a>
+          <button onClick={handleExit} className="inv-bar-exit">{h.bar.exit}</button>
+          {!isCo && (
+            <a href="#inv-letsbuild" className="inv-bar-cta">{h.bar.becomeCo} <Arrow /></a>
           )}
         </div>
       </div>
@@ -717,318 +777,207 @@ export default function HomeScreen() {
       <nav className="nav" id="bp-nav">
         <span className="nav__mark">MOMENCRAFTS</span>
         <div className="nav__links">
-          <a href="#products">المنتجات</a>
-          <a href="#about">عن الاستوديو</a>
-          <a href="#contact">تواصل</a>
+          <a href="#products">{h.nav.products}</a>
+          <a href="#about">{h.nav.about}</a>
+          <a href="#contact">{h.nav.contact}</a>
         </div>
-        <span className="nav__chip mono">{masked}</span>
+        <span className="nav__chip mono" dir="ltr">{masked}</span>
       </nav>
 
       {/* ══════════════════════════
           BLUEPRINT HERO (Step 4.2)
       ══════════════════════════ */}
       <section id="hero" className="hero page">
-        <span className="kicker reveal">IDEA STUDIO · RIYADH, KSA</span>
+        <span className="kicker reveal">{h.hero.kicker}</span>
         <h1 className="hero__title reveal">
-          <em>بعناية</em><br />مصممة معكم
+          <em>{h.hero.titleEm}</em><br />{h.hero.titleRest}
         </h1>
         <div className="dim reveal">
           <div className="dim__bar" />
-          <span className="dim__val mono">SHEET 01 — INDEX</span>
+          <span className="dim__val mono">{h.hero.sheet}</span>
           <div className="dim__bar" />
         </div>
         <p className="hero__statement reveal">
-          ١٢ منتج. ٥ مجالات. استوديو واحد يحوّل الأفكار إلى أنظمة ومنتجات قابلة للتجربة.
+          {h.hero.statement}
         </p>
-        <p className="hero__sub reveal">MomenCrafts &amp; Co</p>
+        <p className="hero__sub reveal">{h.hero.sub}</p>
         <a href="#products" className="btn btn--gold reveal">
-          تصفح أعمالنا <span style={{ display:'inline-block', transform:'scaleX(-1)' }}>→</span>
+          {h.hero.cta} <Arrow />
         </a>
 
         {/* stage legend */}
         <div className="stages reveal">
           <div className="stage">
             <StageGlyph stage="dev" size={28} />
-            <span className="stage__label mono">DRAWN</span>
-            <span className="stage__ar">مرسوم</span>
+            <span className="stage__label mono">{h.stages.drawn.label}</span>
+            <span className="stage__ar">{h.stages.drawn.sub}</span>
           </div>
-          <span className="stages__arrow">→</span>
+          <span className="stages__arrow dir-arrow">→</span>
           <div className="stage">
             <StageGlyph stage="beta" size={28} />
-            <span className="stage__label mono">ASSEMBLED</span>
-            <span className="stage__ar">مُجمّع</span>
+            <span className="stage__label mono">{h.stages.assembled.label}</span>
+            <span className="stage__ar">{h.stages.assembled.sub}</span>
           </div>
-          <span className="stages__arrow">→</span>
+          <span className="stages__arrow dir-arrow">→</span>
           <div className="stage">
             <StageGlyph stage="live" size={28} />
-            <span className="stage__label mono">DELIVERED</span>
-            <span className="stage__ar">مُسلّم</span>
+            <span className="stage__label mono">{h.stages.delivered.label}</span>
+            <span className="stage__ar">{h.stages.delivered.sub}</span>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          SHEET 02 — PRODUCT CARDS (Step 4.3)
-          C2: all 11 products + XHB from live inventory.
+          SHEET 02 — PRODUCT CARDS
       ═══════════════════════════════════════════════════ */}
-      <div className="cutline page"><span>SHEET 02 — PRODUCTS</span></div>
+      <div className="cutline page"><span>{h.sheets.products}</span></div>
       <section id="products" className="section page">
         <div className="section__head">
           <div>
             <span className="section__index mono">02</span>
-            <h2>المحفظة</h2>
+            <h2>{h.productsSection.title}</h2>
           </div>
-          <span className="section__meta">١٢ منتج · ٥ مجالات</span>
+          <span className="section__meta">{h.productsSection.meta}</span>
         </div>
         <div className="grid">
 
-          {/* 01 ROGER·AI */}
-          <article className="card reveal" id="card-roger" style={{'--accent':'var(--gold)'} as React.CSSProperties}>
-            <span className="card__no mono">01</span>
-            <div className="card__row">
-              <div className="card__glyph"><StageGlyph stage="live" /></div>
-              <span className="card__name">ROGER·AI</span>
-              <span className="pill pill--live mono">LIVE</span>
-            </div>
-            <p className="card__tagline">مساعد ذكي يبني لك الأنظمة من الصفر — بدون كود</p>
-            <div className="tags"><span>ذكاء اصطناعي</span><span>بناء أنظمة</span></div>
-            <a href="/rogerai" target="_blank" rel="noopener" className="card__more">عرض المشروع ←</a>
-          </article>
+          {PUBLIC_CARDS.map(c => {
+            const card = h.cards[c.key]
+            return (
+              <article
+                key={c.key}
+                className={`card${c.xhb ? ' card--xhb' : ''} reveal`}
+                id={c.id}
+                style={c.accent ? ({ '--accent': c.accent } as React.CSSProperties) : undefined}
+              >
+                <span className="card__no mono">{c.no}</span>
+                <div className="card__row">
+                  {c.stage && <div className="card__glyph"><StageGlyph stage={c.stage} /></div>}
+                  <span className="card__name">{card.name}</span>
+                  {c.pill && <span className={`pill ${c.pillClass} mono`}>{c.pill}</span>}
+                </div>
+                <p className="card__tagline">{card.tagline}</p>
+                <div className="tags">{card.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
 
-          {/* 02 CLINIQ.ONE */}
-          <article className="card reveal" id="card-cliniq" style={{'--accent':'var(--live)'} as React.CSSProperties}>
-            <span className="card__no mono">02</span>
-            <div className="card__row">
-              <div className="card__glyph"><StageGlyph stage="live" /></div>
-              <span className="card__name">CLINIQ.ONE</span>
-              <span className="pill pill--live mono">LIVE</span>
-            </div>
-            <p className="card__tagline">أول عيادة ذكاء اصطناعي في الخليج — فحص أولي بالذكاء، ملف مريض، حجز</p>
-            <div className="tags"><span>صحة رقمية</span><span>ذكاء اصطناعي</span></div>
-            <a href="/cliniq.one" className="card__more">زيارة cliniq.one ←</a>
-          </article>
-
-          {/* 03 UMMI */}
-          <article className="card reveal" id="card-ummi" style={{'--accent':'var(--live)'} as React.CSSProperties}>
-            <span className="card__no mono">03</span>
-            <div className="card__row">
-              <div className="card__glyph"><StageGlyph stage="live" /></div>
-              <span className="card__name">UMMI · أمي</span>
-              <span className="pill pill--live mono">LIVE</span>
-            </div>
-            <p className="card__tagline">محفظة رقمية لأمك — أرسل لها فلوس وتابع مصروفها بلطف</p>
-            <div className="tags"><span>فينتك</span><span>عائلة</span></div>
-            <a href="/ummiwallet/" className="card__more">عرض المشروع ←</a>
-          </article>
-
-          {/* 04 RELAYBOT */}
-          <article className="card reveal" id="card-relay" style={{'--accent':'var(--beta)'} as React.CSSProperties}>
-            <span className="card__no mono">04</span>
-            <div className="card__row">
-              <div className="card__glyph"><StageGlyph stage="beta" /></div>
-              <span className="card__name">RELAYBOT</span>
-              <span className="pill pill--beta mono">BETA</span>
-            </div>
-            <p className="card__tagline">طابعة حرارية ذكية — جهاز ESP32 يتصل عبر BLE ويطبع الرسائل فوراً</p>
-            <div className="tags"><span>أجهزة ذكية</span><span>BLE · ESP32</span></div>
-            <a href="https://github.com/momencrafts/relaybot" target="_blank" rel="noopener" className="card__more">GitHub ←</a>
-          </article>
-
-          {/* 05 QADAA */}
-          <article className="card reveal" id="card-qadaa" style={{'--accent':'var(--beta)'} as React.CSSProperties}>
-            <span className="card__no mono">05</span>
-            <div className="card__row">
-              <div className="card__glyph"><StageGlyph stage="beta" /></div>
-              <span className="card__name">QADAA · قضاء</span>
-              <span className="pill pill--beta mono">BETA</span>
-            </div>
-            <p className="card__tagline">منصة قانونية ذكية — بحث أحكام، استشارات AI، ملفات قضايا</p>
-            <div className="tags"><span>تقنية قانونية</span><span>ذكاء اصطناعي</span></div>
-            <a href="/qadaa" className="card__more">عرض المنصة ←</a>
-          </article>
-
-          {/* 06 TDC */}
-          <article className="card reveal" id="card-tdc" style={{'--accent':'var(--dev)'} as React.CSSProperties}>
-            <span className="card__no mono">06</span>
-            <div className="card__row">
-              <div className="card__glyph"><StageGlyph stage="dev" /></div>
-              <span className="card__name">TURBO DRONE CIRCUIT</span>
-              <span className="pill pill--dev mono">DEV</span>
-            </div>
-            <p className="card__tagline">دائرة 25×25mm تضيف الجهد من المكثف الفائق على التوالي — +15% فولت فوري</p>
-            <div className="tags"><span>براءة اختراع</span><span>FPV · UAV</span><span className="mono">150A · 19.3V</span></div>
-            <a href="/tdc" className="card__more">عرض المشروع ←</a>
-          </article>
-
-          {/* 07 DART */}
-          <article className="card reveal" id="card-dart" style={{'--accent':'var(--dev)'} as React.CSSProperties}>
-            <span className="card__no mono">07</span>
-            <div className="card__row">
-              <div className="card__glyph"><StageGlyph stage="dev" /></div>
-              <span className="card__name">DART</span>
-              <span className="pill pill--dev mono">DEV</span>
-            </div>
-            <p className="card__tagline">طائرة FPV قتالية مصممة للمناورة في البيئات الحضرية</p>
-            <div className="tags"><span>طيران</span><span>FPV</span></div>
-            <a href="/dart/" className="card__more">عرض المشروع ←</a>
-          </article>
-
-          {/* 08 EDGE TACK */}
-          <article className="card reveal" id="card-edgetack" style={{'--accent':'var(--dev)'} as React.CSSProperties}>
-            <span className="card__no mono">08</span>
-            <div className="card__row">
-              <div className="card__glyph"><StageGlyph stage="dev" /></div>
-              <span className="card__name">EDGE TACK</span>
-              <span className="pill pill--dev mono">DEV</span>
-            </div>
-            <p className="card__tagline">واقي شاشة بأزرار ألعاب — ملحق يجمع واقي الشاشة مع أزرار هوائية قابلة للطي</p>
-            <div className="tags"><span>ألعاب الجوال</span><span>براءة اختراع</span></div>
-            <a href="/edgetack" className="card__more">اعرف أكثر ←</a>
-          </article>
-
-          {/* 09 MUSCLE HUSTLE */}
-          <article className="card reveal" id="card-muscle">
-            <span className="card__no mono">09</span>
-            <div className="card__row"><span className="card__name">MUSCLE HUSTLE</span></div>
-            <p className="card__tagline">منصة لياقة وصالات بنموذج اشتراك مرن</p>
-            <div className="tags"><span>لياقة</span><span>اشتراكات</span></div>
-            <a href={'https://wa.me/966535271122?text=' + encodeURIComponent('أهتم بمنصة Muscle Hustle')} target="_blank" rel="noopener" className="card__more">واتساب ←</a>
-          </article>
-
-          {/* 10 AQAR */}
-          <article className="card reveal" id="card-aqar">
-            <span className="card__no mono">10</span>
-            <div className="card__row"><span className="card__name">AQAR · عقار</span></div>
-            <p className="card__tagline">منصة عقارية ذكية — بحث وتحليل وإدارة عقارات</p>
-            <div className="tags"><span>عقارات</span><span>ذكاء اصطناعي</span></div>
-            <a href={'https://wa.me/966535271122?text=' + encodeURIComponent('أهتم بمنصة AQAR')} target="_blank" rel="noopener" className="card__more">واتساب ←</a>
-          </article>
-
-          {/* 11 SABHA */}
-          <article className="card reveal" id="card-sabha">
-            <span className="card__no mono">11</span>
-            <div className="card__row"><span className="card__name">SABHA · سبحة</span></div>
-            <p className="card__tagline">سبحة إلكترونية — عدّاد ذكر مع إحصائيات وتذكيرات</p>
-            <div className="tags"><span>منتجات إسلامية</span><span>أجهزة ذكية</span></div>
-            <a href={'https://wa.me/966535271122?text=' + encodeURIComponent('أهتم بمنتج SABHA')} target="_blank" rel="noopener" className="card__more">واتساب ←</a>
-          </article>
-
-          {/* 12 XHB — ADOPTED PROJECT (B1: SSO handler verbatim) */}
-          <article className="card card--xhb reveal" id="card-xhb" style={{'--accent':'var(--live)'} as React.CSSProperties}>
-            <span className="card__no mono">12</span>
-            <div className="card__row">
-              <div className="card__glyph"><StageGlyph stage="live" /></div>
-              <span className="card__name">XHB · مقر</span>
-              <span className="pill pill--adopted mono">ADOPTED</span>
-            </div>
-            <p className="card__tagline">مقر XHB — منصة تأسيس شراكة ذكية مع ملهم الذهبي</p>
-            <div className="tags">
-              <span>تأسيس شراكة</span><span>وصول محدود</span>
-            </div>
-            <button
-              className="card__more"
-              onClick={async (e) => {
-                e.preventDefault()
-                const btn = e.currentTarget
-                const origText = btn.textContent
-                btn.textContent = 'جاري الدخول…'
-                btn.setAttribute('disabled', 'true')
-                try {
-                  const token = sessionStorage.getItem('mcr_token') || ''
-                  if (token) {
-                    await mintXhbSession(token)
-                  } else {
-                    const email = sessionStorage.getItem('mcr_email') || ''
-                    if (email) {
-                      await mintAdminXhbSession(email)
-                    }
-                  }
-                  window.location.href = '/xhb/'
-                } catch (err) {
-                  console.error('XHB SSO failed:', err)
-                  window.location.href = '/xhb/'
-                } finally {
-                  btn.textContent = origText
-                  btn.removeAttribute('disabled')
-                }
-              }}
-            >دخول مقر XHB ←</button>
-          </article>
+                {c.xhb ? (
+                  <button
+                    className="card__more"
+                    onClick={async (e) => {
+                      e.preventDefault()
+                      const btn = e.currentTarget
+                      const origText = btn.textContent
+                      btn.textContent = h.cards.xhb.loading
+                      btn.setAttribute('disabled', 'true')
+                      try {
+                        const tk = sessionStorage.getItem('mcr_token') || ''
+                        if (tk) {
+                          await mintXhbSession(tk)
+                        } else {
+                          const email = sessionStorage.getItem('mcr_email') || ''
+                          if (email) {
+                            await mintAdminXhbSession(email)
+                          }
+                        }
+                        window.location.href = '/xhb/'
+                      } catch (err) {
+                        console.error('XHB SSO failed:', err)
+                        window.location.href = '/xhb/'
+                      } finally {
+                        btn.textContent = origText
+                        btn.removeAttribute('disabled')
+                      }
+                    }}
+                  >{card.link} {isAr ? '←' : '→'}</button>
+                ) : c.wa ? (
+                  <a
+                    href={waHref(h.tracks.interestIn(card.name))}
+                    target="_blank" rel="noopener" className="card__more"
+                  >{card.link} <Arrow /></a>
+                ) : (
+                  <a
+                    href={c.href}
+                    {...(c.external ? { target: '_blank', rel: 'noopener' } : {})}
+                    className="card__more"
+                  >{card.link} <Arrow /></a>
+                )}
+              </article>
+            )
+          })}
 
         </div>{/* /grid */}
       </section>
 
-      {/* ══════ SHEET 03 — ABOUT (Step 4.4) ══════ */}
-      <div className="cutline page"><span>SHEET 03 — ABOUT</span></div>
+      {/* ══════ SHEET 03 — ABOUT ══════ */}
+      <div className="cutline page"><span>{h.sheets.about}</span></div>
       <section id="about" className="section page">
         <div className="section__head">
           <div>
             <span className="section__index mono">03</span>
-            <h2>الاستوديو</h2>
+            <h2>{h.about.heading}</h2>
           </div>
         </div>
         <div className="about-grid">
           <div className="about__text">
-            <h3 className="about__title reveal">مصممة بعناية،<br/>مو تجميع</h3>
-            <p className="about__body reveal">مومن كرافتس استوديو اختراع ومنتجات في الرياض يطوّر أنظمة ذكية في الصحة، القانون، اللياقة، العقار، التمويل العائلي، والأجهزة.</p>
-            <p className="about__body reveal">أسسه <strong>مومن فرعون</strong> — مؤسس ومهندس يبني الفكرة من أول رسم إلى أول تجربة قابلة للاستخدام.</p>
+            <h3 className="about__title reveal">{h.about.title}<br/>{h.about.titleLine2}</h3>
+            <p className="about__body reveal">{h.about.body1}</p>
+            <p className="about__body reveal">{h.about.body2Pre}<strong>{h.about.body2Name}</strong>{h.about.body2Post}</p>
             <div className="about__details reveal">
-              <div className="detail"><span className="detail__k mono">EST.</span><span className="detail__v">2026</span></div>
-              <div className="detail"><span className="detail__k mono">HQ</span><span className="detail__v">الرياض، السعودية</span></div>
-              <div className="detail"><span className="detail__k mono">MAIL</span><span className="detail__v">momen@momencrafts.com</span></div>
+              <div className="detail"><span className="detail__k mono">{h.about.estLabel}</span><span className="detail__v">2026</span></div>
+              <div className="detail"><span className="detail__k mono">{h.about.hqLabel}</span><span className="detail__v">{h.about.hqValue}</span></div>
+              <div className="detail"><span className="detail__k mono">{h.about.mailLabel}</span><span className="detail__v" dir="ltr">momen@momencrafts.com</span></div>
             </div>
           </div>
           <blockquote className="about__quote reveal">
-            <p>«أقوى التقنيات هي التي تختفي — تصبح طبيعية لدرجة أن المستخدم ينسى أنه يتفاعل مع آلة.»</p>
-            <cite>— مومن فرعون، المؤسس</cite>
+            <p>{h.about.quote}</p>
+            <cite>{h.about.cite}</cite>
           </blockquote>
         </div>
       </section>
 
-      {/* ══════ SHEET 04 — CONTACT (Step 4.4) ══════ */}
-      <div className="cutline page"><span>SHEET 04 — CONTACT</span></div>
+      {/* ══════ SHEET 04 — CONTACT ══════ */}
+      <div className="cutline page"><span>{h.sheets.contact}</span></div>
       <section id="contact" className="section page">
         <div className="section__head">
           <div>
             <span className="section__index mono">04</span>
-            <h2>خلّنا <em>نبني سوا</em></h2>
+            <h2>{h.contact.heading} <em>{h.contact.headingEm}</em></h2>
           </div>
         </div>
-        <p className="contact__sub reveal">يسعدنا تواصلك — لفكرة، شراكة، تبنّي منتج، أو استفسار مباشر.</p>
+        <p className="contact__sub reveal">{h.contact.sub}</p>
         <form className="contact-form reveal" action="https://formsubmit.co/momen@momencrafts.com" method="POST">
-          <input type="hidden" name="_subject" value="استفسار جديد من momencrafts.com" />
+          <input type="hidden" name="_subject" value={h.contact.emailSubject} />
           <input type="hidden" name="_next" value="https://momencrafts.com/?sent=1" />
           <input type="hidden" name="_captcha" value="false" />
           <div className="form-row">
-            <input type="text" name="name" placeholder="الاسم" required />
-            <input type="email" name="email" placeholder="البريد الإلكتروني" required />
+            <input type="text" name="name" placeholder={h.contact.namePlaceholder} required />
+            <input type="email" name="email" placeholder={h.contact.emailPlaceholder} required dir="ltr" />
           </div>
-          <textarea name="message" placeholder="أخبرنا عن مشروعك..." rows={5} required />
-          <button type="submit" className="btn btn--gold">إرسال الرسالة <span style={{ display:'inline-block', transform:'scaleX(-1)' }}>→</span></button>
+          <textarea name="message" placeholder={h.contact.messagePlaceholder} rows={5} required />
+          <button type="submit" className="btn btn--gold">{h.contact.submit} <Arrow /></button>
         </form>
         <div className="contact__links reveal">
-          <a href="mailto:momen@momencrafts.com" className="contact__link mono">momen@momencrafts.com</a>
-          <a href="tel:+966535271122" className="contact__link mono">+966 53 527 1122</a>
+          <a href="mailto:momen@momencrafts.com" className="contact__link mono" dir="ltr">momen@momencrafts.com</a>
+          <a href="tel:+966535271122" className="contact__link mono" dir="ltr">+966 53 527 1122</a>
           <a href="https://wa.me/966535271122" target="_blank" rel="noopener" className="contact__link mono">WhatsApp</a>
         </div>
       </section>
 
-      {/* ══════ TITLE BLOCK + FOOTER (Step 4.4) ══════ */}
+      {/* ══════ TITLE BLOCK + FOOTER ══════ */}
       <footer className="title-block">
         <div className="tb">
-          <div className="tb__cell"><span className="tb__k mono">STUDIO</span><span className="tb__v">مومن كرافتس</span></div>
-          <div className="tb__cell"><span className="tb__k mono">FOUNDER</span><span className="tb__v">مومن فرعون</span></div>
-          <div className="tb__cell"><span className="tb__k mono">LOCATION</span><span className="tb__v">الرياض · KSA</span></div>
-          <div className="tb__cell"><span className="tb__k mono">REV</span><span className="tb__v">MC-2026.08</span></div>
+          <div className="tb__cell"><span className="tb__k mono">{h.titleBlock.studio}</span><span className="tb__v">{h.titleBlock.studioValue}</span></div>
+          <div className="tb__cell"><span className="tb__k mono">{h.titleBlock.founder}</span><span className="tb__v">{h.titleBlock.founderValue}</span></div>
+          <div className="tb__cell"><span className="tb__k mono">{h.titleBlock.location}</span><span className="tb__v">{h.titleBlock.locationValue}</span></div>
+          <div className="tb__cell"><span className="tb__k mono">{h.titleBlock.rev}</span><span className="tb__v" dir="ltr">MC-2026.08</span></div>
         </div>
-        <div className="tb__copy mono">© 2026 MomenCrafts & Co · صُنع بواسطة مومن فرعون ✦</div>
+        <div className="tb__copy mono">{h.titleBlock.copy}</div>
       </footer>
 
       {/* ══════════════════════════
           WhatsApp Float Button
       ══════════════════════════ */}
-      <a id="wa-btn" href="https://wa.me/966535271122?text=مرحباً مومن كرافتس، أود معرفة المزيد." target="_blank" rel="noopener" aria-label="واتساب">
-        <span id="wa-tooltip">تواصل عبر واتساب</span>
+      <a id="wa-btn" href={waHref(h.whatsapp.message)} target="_blank" rel="noopener" aria-label={h.whatsapp.aria}>
+        <span id="wa-tooltip">{h.whatsapp.tooltip}</span>
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
       </a>
 
@@ -1040,13 +989,16 @@ export default function HomeScreen() {
         {/* 01 TRACTION */}
         <section id="inv-traction" data-section="traction" className="inv-sec inv-sec--dark inv-sec--border">
           <div className="inv-sec__inner">
-            <div className="inv-eyebrow">01 · OUR STORY</div>
-            <h2 className="inv-heading">
-              ما نبنيه — مع الشركاء الصحيحين <span className="inv-heading__ar-sub">· What We're Building — With the Right Co-Builders</span>
-            </h2>
+            <div className="inv-eyebrow">{h.traction.eyebrow}</div>
+            <h2 className="inv-heading">{h.traction.heading}</h2>
             <div className="inv-stat-grid">
-              {[{n:10,label:'منتجات مبنية · Products'},{n:2,label:'طلبات براءات · Patent Filings'},{n:5,label:'قطاعات · Industries'},{n:1,label:'مؤسس · Solo Founder'}].map((item,i) => (
-                <div key={item.n} className="inv-stat-card">
+              {[
+                { n: 10, label: h.traction.stats.products },
+                { n: 2,  label: h.traction.stats.patents },
+                { n: 5,  label: h.traction.stats.industries },
+                { n: 1,  label: h.traction.stats.founder },
+              ].map((item,i) => (
+                <div key={item.label} className="inv-stat-card">
                   <div className="inv-stat-card__glow" />
                   <div className={`inv-stat-card__value${i===3 ? ' inv-stat-card__value--crimson' : ''}`}><CountUp end={item.n} duration={1200} /></div>
                   <div className="inv-stat-card__label">{item.label}</div>
@@ -1055,10 +1007,16 @@ export default function HomeScreen() {
             </div>
             <div className="inv-timeline">
               <div className="inv-timeline__line" />
-              {[['2024','First Concepts'],['2025 Q1','Cliniq.one Beta'],['2025 Q2','Patent Filings'],['2025 Q4','Ummi Wallet Beta'],['2026 →','Early Initiation']].map(([year,label],i) => (
+              {[
+                ['2024',    h.traction.timeline.concepts],
+                ['2025 Q1', h.traction.timeline.cliniqBeta],
+                ['2025 Q2', h.traction.timeline.patents],
+                ['2025 Q4', h.traction.timeline.ummiBeta],
+                ['2026 →',  h.traction.timeline.initiation],
+              ].map(([year,label],i) => (
                 <div key={year} className="inv-timeline__point">
                   <div className={`inv-timeline__dot${i===4 ? ' inv-timeline__dot--active' : ''}`} />
-                  <div className={`inv-timeline__year${i===4 ? ' inv-timeline__year--active' : ''}`}>{year}</div>
+                  <div className={`inv-timeline__year${i===4 ? ' inv-timeline__year--active' : ''}`} dir="ltr">{year}</div>
                   <div className="inv-timeline__label">{label}</div>
                 </div>
               ))}
@@ -1069,81 +1027,55 @@ export default function HomeScreen() {
         {/* 02 PORTFOLIO */}
         <section id="inv-portfolio" data-section="portfolio" style={{ background:'#1A1614', padding:'5rem 1.5rem' }}>
           <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
-            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>02 · PORTFOLIO</div>
+            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>{h.portfolio.eyebrow}</div>
             <h2 style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:'clamp(1.8rem,4vw,3rem)', color:'#f0ebe3', margin:'0 0 .75rem', fontWeight:700 }}>
-              المحفظة الكاملة <span style={{ fontSize:'.55em', color:'#C8A96E', fontStyle:'italic' }}>· Full Portfolio</span>
+              {h.portfolio.title}
             </h2>
-            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>10 products across 5 industries — each designed, built, and tested by the founder. Click any card to expand.</p>
+            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>{h.portfolio.sub}</p>
             <div style={{ display:'flex', flexDirection:'column', gap:'.75rem' }} id="invPortfolioGrid">
-              <InvCard id="roger" name="ROGER·AI" tagline="مساعد تنفيذي ذكي · Executive Voice Intelligence" cat="Voice AI" badge="inv-badge-beta"
-                desc="Voice-first executive assistant with persistent memory, proactive reports, and full Arabic/English bilingual support. Built for C-level users who need intelligent, always-on operational support across iOS and Android."
-                details={[{label:'SECTOR',value:'Enterprise SaaS · Productivity'},{label:'REVENUE MODEL',value:'Monthly subscription · Enterprise licensing'},{label:'PLATFORM',value:'iOS · Android · Web'},{label:'STATUS',value:'Private beta — invite-only'}]}
-                demoLink="/rogerai" demoLabel="🤖 View ROGER·AI →" />
-              <InvCard id="cliniq" name="CLINIQ.ONE" tagline="منصة طب عن بُعد · Full-Stack Telemedicine" cat="HealthTech" badge="inv-badge-live"
-                desc="5-app telemedicine ecosystem — patient, doctor, admin, intake bot, and pharmacy module — purpose-built for MOH compliance in Saudi Arabia and the wider MENA region. Live with real users."
-                details={[{label:'SECTOR',value:'Digital Health · MENA'},{label:'REVENUE MODEL',value:'Clinic SaaS · Per-consultation'},{label:'COMPLIANCE',value:'MOH Saudi Arabia'},{label:'MARKET SIZE',value:'$21.8B Digital Health (MENA) by 2028'}]}
-                demoLink="/cliniq.one" demoLabel="🌐 Visit cliniq.one →" />
-              <InvCard id="ummi" name="UMMI · أمي" tagline="محفظة العائلة ورعاية الأم · Family Finance & Mother Care" cat="FinTech" badge="inv-badge-beta"
-                desc="Private family financial system built with dignity for Saudi families. Dedicated budgeting, smart pockets, automatic mother's salary, emergency fund system — 28 features, 3 family roles, fully bilingual Arabic/English. IoT-connected piggy bank for children."
-                details={[{label:'SECTOR',value:'Islamic FinTech · Family'},{label:'REVENUE MODEL',value:'Family subscription · Hardware sales'},{label:'UNIQUE FEATURE',value:"IoT piggy bank + Mother's salary module"},{label:'MARKET SIZE',value:'$128B Islamic Fintech (Global)'}]}
-                demoLink="/ummiwallet/" demoLabel="🎯 Live Demo →" />
-              <InvCard id="qadaa" name="QADAA · قضاء" tagline="منصة قانونية ذكية · Legal Intelligence Platform" cat="LegalTech" badge="inv-badge-dev"
-                desc="Connects clients to lawyers with AI-powered case analysis and full Arabic language support. Addresses the severe underserving of legal tech in Saudi Arabia and the UAE — most citizens lack affordable, accessible legal guidance."
-                details={[{label:'SECTOR',value:'LegalTech · Saudi Arabia · UAE'},{label:'REVENUE MODEL',value:'Per-session · Lawyer SaaS subscription'},{label:'STATUS',value:'Architecture phase — market validated'},{label:'LANGUAGE',value:'Arabic-first · RTL native'}]}
-                demoLink="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20QADAA%20%C2%B7%20%D9%82%D8%B6%D8%A7%D8%A1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" demoLabel="💬 تحدث مع المؤسس" />
-              <InvCard id="muscle" name="MUSCLE HUSTLE" tagline="سوق المدربين الشخصيين · Fitness Trainer Marketplace" cat="FitTech" badge="inv-badge-dev"
-                desc="Two-sided marketplace connecting certified personal trainers with clients. Smart workout coaching, progress tracking, and premium interactive experience. Targets the high-growth KSA fitness market energized by Vision 2030 lifestyle initiatives."
-                details={[{label:'SECTOR',value:'Fitness · Consumer'},{label:'REVENUE MODEL',value:'Marketplace commission · Trainer subscriptions'},{label:'STATUS',value:'Product design phase'},{label:'TARGET',value:'KSA · Vision 2030 lifestyle'}]}
-                demoLink="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20Muscle%20Hustle%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" demoLabel="💬 تحدث مع المؤسس" />
-              <InvCard id="aqar" name="AQAR · عقار" tagline="منصة عقارية ذكية · Intelligent Real Estate" cat="PropTech" badge="inv-badge-dev"
-                desc="AI-powered real estate platform built to support Vision 2030 — advanced market analysis, intelligent buyer-property matching, and full compliance with RERA regulations. Targets the booming Saudi real estate market."
-                details={[{label:'SECTOR',value:'PropTech · Vision 2030'},{label:'REVENUE MODEL',value:'Listing SaaS · Transaction commission'},{label:'COMPLIANCE',value:'RERA · Saudi NLRP'},{label:'MARKET',value:'SAR 1.2T Vision 2030 Digital Economy'}]}
-                demoLink="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%B5%D8%A9%20AQAR%20%C2%B7%20%D8%B9%D9%82%D8%A7%D8%B1%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" demoLabel="💬 تحدث مع المؤسس" />
-              <InvCard id="relay" name="RELAYBOT" tagline="جسر نص ذكي · Intelligent Text Bridge for Locked Systems" cat="Hardware · IoT" badge="inv-badge-dev"
-                desc="Physical bridge device (ESP32-S3) that sits between a keyboard and any computer. AI enhances text on-device and injects it into any locked system — hospitals, government terminals, air-gapped machines — with zero software installation required."
-                details={[{label:'SECTOR',value:'Hardware · Enterprise · Gov'},{label:'REVENUE MODEL',value:'Device sales · Enterprise SaaS'},{label:'TECH',value:'ESP32-S3 · BLE · OTA'},{label:'IP',value:'Proprietary protocol — open-source core'}]}
-                demoLink="https://github.com/momencrafts/relaybot" demoLabel="📁 GitHub →" />
-              <InvCard id="sabha" name="SABHA · سبحة" tagline="سبحة ذكية فاخرة · Luxury Smart Prayer Beads" cat="Wearable · Islamic" badge="inv-badge-prototype"
-                desc="Premium smart prayer beads combining traditional Islamic dhikr practice with embedded electronics — haptic feedback, count tracking, companion app, and luxurious handcrafted materials. Targets affluent Muslim users globally."
-                details={[{label:'SECTOR',value:'Islamic Wearables · Luxury'},{label:'REVENUE MODEL',value:'Premium hardware · App subscription'},{label:'STATUS',value:'Hardware prototype — seeking manufacturing partner'},{label:'MARKET',value:'2B+ Muslims globally · Luxury segment'}]}
-                demoLink="https://wa.me/966535271122?text=%D8%A3%D9%87%D8%AA%D9%85%20%D8%A8%D9%85%D9%86%D8%AA%D8%AC%20SABHA%20%C2%B7%20%D8%B3%D8%A8%D8%AD%D8%A9%20%E2%80%94%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A3%D9%83%D8%AB%D8%B1" demoLabel="💬 تحدث مع المؤسس" />
-              <InvCard id="tdc" name="TURBO DRONE CIRCUIT" tagline="نظام إدارة طاقة طائرات FPV · FPV Drone Power Management" cat="Hardware · Patent" badge="inv-badge-patent"
-                desc="Patented intelligent circuit that detects and actively compensates for voltage sag in FPV drone batteries — maintaining consistent motor power and extending flight performance. USPTO patent filed covering the core compensation algorithm."
-                details={[{label:'SECTOR',value:'UAV · FPV · Hardware IP'},{label:'REVENUE MODEL',value:'Licensing · OEM integration'},{label:'IP STATUS',value:'USPTO Patent Filed'},{label:'OPPORTUNITY',value:'License to drone manufacturers globally'}]}
-                demoLink="/tdc" demoLabel="→ View TDC Circuit" />
-              <InvCard id="edgetack" name="EDGE TACK" tagline="واقي شاشة مع أزرار ألعاب · Gaming Screen Protector" cat="Mobile Gaming · Patent" badge="inv-badge-patent"
-                desc="Patented mobile gaming accessory combining screen protection with collapsible pneumatic trigger buttons — providing console-grade gaming control with zero bulk when folded flat. Designed for the massive mobile gaming market in Saudi Arabia and MENA."
-                details={[{label:'SECTOR',value:'Mobile Gaming · Consumer Hardware'},{label:'REVENUE MODEL',value:'Retail · Licensing to case manufacturers'},{label:'IP STATUS',value:'USPTO Patent Filed'},{label:'MARKET',value:'KSA #1 mobile gaming market per capita'}]}
-                demoLink="/edgetack" demoLabel="→ View EdgeTack" />
+              {INV_CARDS.map(c => {
+                const items = h.portfolio.items as unknown as Record<string, Record<string, string>>
+                const item = items[c.id]
+                return (
+                  <InvCard
+                    key={c.id}
+                    id={c.id}
+                    name={c.name}
+                    tagline={item.tagline}
+                    cat={c.cat}
+                    badge={c.badgeClass}
+                    badgeLabel={h.portfolio.badges[c.badge]}
+                    desc={item.desc}
+                    details={c.keys.map(k => ({ label: h.portfolio.detailLabels[k], value: item[k] }))}
+                    demoLink={c.demoLink ?? (c.waProduct ? waHref(h.tracks.interestIn(c.waProduct)) : undefined)}
+                    demoLabel={item.demoLabel}
+                  />
+                )
+              })}
             </div>
           </div>
         </section>
 
         {/* ════════════════════════════════════════
             CO-FOUNDER EXCLUSIVE SECTION
-            Visible only to STRATEGIC / COFOUNDER / PERMANENT / FOUNDER
         ════════════════════════════════════════ */}
-        {['STRATEGIC','COFOUNDER','PERMANENT','FOUNDER'].includes(type) && (
-          <CoFounderExclusive type={type} name={name} token={token} />
-        )}
+        {isCo && <CoFounderExclusive type={type} name={name} token={token} />}
 
         {/* 03 VISION */}
         <section id="inv-vision" data-section="vision" className="inv-sec inv-sec--dark">
           <div className="inv-sec__inner inv-vision-grid">
             <div>
-              <div className="inv-eyebrow">03 · SHARED VISION</div>
-              <blockquote className="inv-quote">
-                "The most powerful technology disappears — it becomes so natural the user forgets they are interacting with a machine."
-              </blockquote>
-              <p className="inv-body">MomenCrafts & Co builds the missing tech layer for the Arab world — starting with healthcare, fintech, and IoT. This vision isn't ours alone. Every co-builder who shapes a product shares in this mission.</p>
+              <div className="inv-eyebrow">{h.vision.eyebrow}</div>
+              <blockquote className="inv-quote">{h.vision.quote}</blockquote>
+              <p className="inv-body">{h.vision.body}</p>
             </div>
             <div className="inv-signals">
-              <div className="inv-signals__heading">MARKET SIGNALS</div>
+              <div className="inv-signals__heading">{h.vision.signalsHeading}</div>
               <div className="inv-signals__list">
-                {[['Digital Health','Arabic-first care workflows remain underserved','#C8A96E'],['Family Finance','Private dignity-first household finance — clear gap','#C8A96E'],['LegalTech','Arabic case intake needs better tools','#C8A96E'],['Smart Devices','Hardware bridges unlock restricted workflows','#9B1B30']].map(([label,val,color]) => (
-                  <div key={label} className="inv-signals__row">
-                    <span className="inv-signals__label">{label}</span>
-                    <span className="inv-signals__value" style={{ color }}>{val}</span>
+                {h.vision.signals.map((s, i) => (
+                  <div key={s.label} className="inv-signals__row">
+                    <span className="inv-signals__label">{s.label}</span>
+                    <span className="inv-signals__value" style={{ color: SIGNAL_COLORS[i] }}>{s.value}</span>
                   </div>
                 ))}
               </div>
@@ -1155,16 +1087,16 @@ export default function HomeScreen() {
         <section id="inv-founder" data-section="founder" className="inv-sec inv-sec--warm">
           <div className="inv-sec__inner--narrow inv-founder-grid">
             <div style={{ textAlign:'center' }}>
-              <div className="inv-founder-avatar">م</div>
-              <div className="inv-founder-label">FOUNDER</div>
+              <div className="inv-founder-avatar">{h.founder.avatar}</div>
+              <div className="inv-founder-label">{h.founder.label}</div>
             </div>
             <div>
-              <div className="inv-eyebrow">04 · FOUNDER</div>
-              <h3 className="inv-founder-name">Momen Pharaon</h3>
-              <div className="inv-founder-subtitle">مومن فرعون · Founder &amp; Engineer · Riyadh, KSA</div>
-              <p className="inv-body inv-body--spaced">Built all 10 products — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Founder and engineer from concept to first usable experience.</p>
+              <div className="inv-eyebrow">{h.founder.eyebrow}</div>
+              <h3 className="inv-founder-name">{h.founder.name}</h3>
+              <div className="inv-founder-subtitle">{h.founder.subtitle}</div>
+              <p className="inv-body inv-body--spaced">{h.founder.body}</p>
               <div className="inv-tag-list">
-                {['USPTO Patent Filer','MOH Compliance','10 Products Built','Riyadh · KSA'].map(tag => (
+                {h.founder.tags.map(tag => (
                   <span key={tag} className="inv-tag">{tag}</span>
                 ))}
               </div>
@@ -1175,27 +1107,27 @@ export default function HomeScreen() {
         {/* 05 PARTNERSHIP */}
         <section id="inv-partnership" data-section="partnership" style={{ background:'#0C0A09', padding:'5rem 1.5rem' }}>
           <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
-            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>05 · JOIN THE CO</div>
-            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>كيف تصبح & Co · How You Earn Your Seat</h2>
-            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>There are many ways to become & Co. Choose the path that fits — every validated contribution earns your seat.</p>
+            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>{h.partnership.eyebrow}</div>
+            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>{h.partnership.title}</h2>
+            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2.5rem', lineHeight:1.7 }}>{h.partnership.sub}</p>
             <div className="inv-track-grid">
               <div className="inv-track-card" style={{ border:'1px solid #C8A96E33', borderTop:'3px solid #C8A96E' }}>
                 <div className="inv-track-icon">🌐</div>
-                <h4 className="inv-track-title">Affiliation · التابعية</h4>
-                <p className="inv-track-desc">You have a network — hospitals, clinics, law firms, real estate devs, or enterprise procurement channels. Bring MomenCrafts into your ecosystem as a reseller or referral partner.</p>
-                <button className="inv-track-btn" style={{ background:'#C8A96E', color:'#0C0A09' }} onClick={() => prefillWhatsApp('affiliation')}>💬 مهتم بالتابعية →</button>
+                <h4 className="inv-track-title">{h.partnership.affiliation.title}</h4>
+                <p className="inv-track-desc">{h.partnership.affiliation.desc}</p>
+                <button className="inv-track-btn" style={{ background:'#C8A96E', color:'#0C0A09' }} onClick={() => openWhatsApp(h.tracks.affiliation)}>💬 {h.partnership.affiliation.btn} <Arrow /></button>
               </div>
               <div className="inv-track-card" style={{ border:'1px solid #9B1B3033', borderTop:'3px solid #9B1B30' }}>
                 <div className="inv-track-icon">📦</div>
-                <h4 className="inv-track-title">Adoption · تبني المنتج</h4>
-                <p className="inv-track-desc">You want to deploy one of our 10 products inside your organization — a hospital system using Cliniq, a family office using Ummi Wallet, or an enterprise using RogerAI.</p>
-                <button className="inv-track-btn" style={{ background:'#9B1B30', color:'#fff' }} onClick={() => prefillWhatsApp('adoption')}>💬 أريد تبني منتج →</button>
+                <h4 className="inv-track-title">{h.partnership.adoption.title}</h4>
+                <p className="inv-track-desc">{h.partnership.adoption.desc}</p>
+                <button className="inv-track-btn" style={{ background:'#9B1B30', color:'#fff' }} onClick={() => openWhatsApp(h.tracks.adoption)}>💬 {h.partnership.adoption.btn} <Arrow /></button>
               </div>
               <div className="inv-track-card" style={{ border:'1px solid #0e749033', borderTop:'3px solid #0e7490' }}>
                 <div className="inv-track-icon">⚡</div>
-                <h4 className="inv-track-title">Team-Up · شراكة بناء</h4>
-                <p className="inv-track-desc">You're an engineer, designer, domain expert, or strategic co-founder. You want to co-build, invest capital, or bring domain expertise to accelerate one or more products.</p>
-                <button className="inv-track-btn" style={{ background:'#0e7490', color:'#fff' }} onClick={() => prefillWhatsApp('teamup')}>💬 أريد التعاون →</button>
+                <h4 className="inv-track-title">{h.partnership.teamup.title}</h4>
+                <p className="inv-track-desc">{h.partnership.teamup.desc}</p>
+                <button className="inv-track-btn" style={{ background:'#0e7490', color:'#fff' }} onClick={() => openWhatsApp(h.tracks.teamup)}>💬 {h.partnership.teamup.btn} <Arrow /></button>
               </div>
             </div>
           </div>
@@ -1204,27 +1136,20 @@ export default function HomeScreen() {
         {/* 06 WHAT YOU BRING */}
         <section id="inv-youbring" data-section="youbring" style={{ background:'#1A1614', padding:'5rem 1.5rem' }}>
           <div style={{ maxWidth:'1100px', margin:'0 auto' }}>
-            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>06 · YOUR SUPERPOWER</div>
-            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>كل شريك يحمل قدرة فريدة · What Makes You & Co</h2>
-            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2rem', lineHeight:1.7 }}>You don’t need everything. One strong signal is enough to earn your seat.</p>
+            <div style={{ fontFamily:'monospace', fontSize:'.7rem', letterSpacing:'.2em', color:'#C8A96E', marginBottom:'.5rem' }}>{h.youBring.eyebrow}</div>
+            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.5rem,3vw,2.5rem)', color:'#f0ebe3', margin:'0 0 .75rem' }}>{h.youBring.title}</h2>
+            <p style={{ color:'#a09070', fontSize:'.85rem', margin:'0 0 2rem', lineHeight:1.7 }}>{h.youBring.sub}</p>
             <div className="inv-bring-grid">
-              {[
-                ['🌐','Network & Access · شبكة وصول','Relationships with hospitals, clinics, law firms, real estate developers, government bodies, or enterprise procurement channels that can open doors our products need.'],
-                ['🧠','Domain Expertise · خبرة قطاعية','Deep knowledge of healthcare, legal, fintech, real estate, or government regulations in Saudi Arabia or MENA — helping us build compliant, market-ready products faster.'],
-                ['⚙️','Execution Capacity · قدرة تنفيذية','Engineers, product managers, or designers who can accelerate the roadmap. We have the architecture — we need the hands that can execute at scale alongside us.'],
-                ['📋','Regulatory Pull · مسار تنظيمي','Connections to MOH, SAMA, REGA, or other licensing bodies in KSA. Fast-tracked approvals are often the difference between 6 months and 3 years to market.'],
-                ['🏛️','Market Presence · حضور سوقي','An established brand, user base, or distribution channel in Saudi Arabia or the GCC that our products can integrate with or be offered through.'],
-                ['🤝','Belief · إيمان بالرؤية','You understand what it means to build for the Arab world with care, precision, and ambition. You see the gap — and you want to be part of filling it.'],
-              ].map(([icon,title,desc]) => (
-                <div key={title} className="inv-bring-card">
-                  <div className="inv-bring-icon">{icon}</div>
-                  <div className="inv-bring-title">{title}</div>
-                  <div className="inv-bring-desc">{desc}</div>
+              {h.youBring.items.map((item, i) => (
+                <div key={item.title} className="inv-bring-card">
+                  <div className="inv-bring-icon">{YOUBRING_ICONS[i]}</div>
+                  <div className="inv-bring-title">{item.title}</div>
+                  <div className="inv-bring-desc">{item.desc}</div>
                 </div>
               ))}
             </div>
             <p style={{ color:'#a09070', fontSize:'.78rem', textAlign:'center', marginTop:'.5rem', fontStyle:'italic' }}>
-              You don't need all six. One strong signal is enough to start a conversation. · لا تحتاج لكل القدرات الستة. إشارة واحدة قوية تكفي لبدء محادثة.
+              {h.youBring.footnote}
             </p>
           </div>
         </section>
@@ -1232,41 +1157,42 @@ export default function HomeScreen() {
         {/* 07 TEST & SHAPE */}
         <section id="inv-downloads" data-section="downloads" className="co-section co-section-dark">
           <div className="co-container">
-            <div className="co-eyebrow">07 · TEST & SHAPE</div>
-            <h2 className="co-title">جرّب وشكّل <span className="co-title-en">· Download. Test. Shape What Ships.</span></h2>
-            <p className="co-sub">Every install is a vote. Every bug report earns credit. Download our apps and help shape the next release.</p>
+            <div className="co-eyebrow">{h.downloads.eyebrow}</div>
+            <h2 className="co-title">{h.downloads.title}</h2>
+            <p className="co-sub">{h.downloads.sub}</p>
             <div className="co-downloads-grid">
-              {(coData?.downloads || [
-                { app_id:'cliniq-patient', name:'Cliniq Patient', name_ar:'كلينيك المريض', version:'v2.4.1', status:'live', emoji:'🏥', size:'63 MB', description:'Patient-facing telemedicine app with AI intake' },
-                { app_id:'cliniq-doctor', name:'Cliniq Doctor', name_ar:'كلينيك الطبيب', version:'v2.3.0', status:'live', emoji:'⚕️', size:'58 MB', description:'Doctor dashboard with AI-assisted consultations' },
-                { app_id:'rogerai', name:'Roger·AI', name_ar:'رجر AI', version:'v1.2.0', status:'beta', emoji:'🎙️', size:'45 MB', description:'Voice-first executive assistant' },
-                { app_id:'ummi', name:'Ummi Wallet', name_ar:'محفظة أمي', version:'v3.1.0', status:'beta', emoji:'💚', size:'52 MB', description:'Family finance OS with mother care' },
-                { app_id:'relaybot', name:'RelayBot', name_ar:'ريلي بوت', version:'v1.8.3', status:'dev', emoji:'⌨️', size:'12 MB', description:'Companion app for RelayBot device' },
-              ]).map((app: any) => (
+              {(coData?.downloads?.length
+                ? coData.downloads
+                : DOWNLOAD_META.map(m => ({
+                    ...m,
+                    name: h.downloads.apps[m.key].name,
+                    description: h.downloads.apps[m.key].desc,
+                  }))
+              ).map((app: any) => (
                 <div key={app.app_id || app.id} className="co-download-card">
                   <div className="co-dl-header">
                     <span className="co-dl-emoji">{app.emoji}</span>
                     <span className={`co-dl-status co-dl-${app.status}`}>
-                      {app.status === 'live' ? '🟢 LIVE' : app.status === 'beta' ? '🧪 BETA' : '🔧 DEV'}
+                      {app.status === 'live' ? `🟢 ${h.portfolio.badges.live}` : app.status === 'beta' ? `🧪 ${h.portfolio.badges.beta}` : `🔧 ${h.portfolio.badges.dev}`}
                     </span>
                   </div>
                   <h4 className="co-dl-name">{app.name}</h4>
-                  <p className="co-dl-name-ar">{app.name_ar || app.nameAr}</p>
+                  {(app.name_ar || app.nameAr) && isAr && <p className="co-dl-name-ar">{app.name_ar || app.nameAr}</p>}
                   <p className="co-dl-desc">{app.description || app.desc}</p>
                   <div className="co-dl-meta">
-                    <span>{app.version}</span>
-                    <span>{app.size}</span>
+                    <span dir="ltr">{app.version}</span>
+                    <span dir="ltr">{app.size}</span>
                   </div>
                   <div className="co-dl-actions">
-                    <button className="co-dl-btn co-dl-btn-android" onClick={() => window.open(`https://wa.me/966535271122?text=I'd like the APK for ${app.name}`, '_blank')}>
-                      📱 Android APK
+                    <button className="co-dl-btn co-dl-btn-android" onClick={() => openWhatsApp(h.downloads.apkRequest(app.name))}>
+                      📱 {h.downloads.android}
                     </button>
                     {(app.status === 'live' || app.status === 'beta') && (
                       <button className="co-dl-btn co-dl-btn-feedback" onClick={() => {
                         const section = document.getElementById('inv-cobuilder')
                         if (section) section.scrollIntoView({ behavior: 'smooth' })
                       }}>
-                        🐛 Report / Suggest
+                        🐛 {h.downloads.report}
                       </button>
                     )}
                   </div>
@@ -1274,7 +1200,7 @@ export default function HomeScreen() {
               ))}
             </div>
             <p className="co-dl-footer-note">
-              ⚡ APK links are sent via WhatsApp for security. iOS TestFlight invites available on request.
+              {h.downloads.footerNote}
             </p>
           </div>
         </section>
@@ -1282,32 +1208,40 @@ export default function HomeScreen() {
         {/* 08 STUDIO JOURNAL */}
         <section id="inv-journal" data-section="journal" className="co-section co-section-warm">
           <div className="co-container">
-            <div className="co-eyebrow">08 · STUDIO JOURNAL</div>
-            <h2 className="co-title">يوميات الاستوديو <span className="co-title-en">· What's Happening Inside</span></h2>
-            <p className="co-sub">Real-time updates from the studio. Launches, patents, milestones, and co-builder credits.</p>
+            <div className="co-eyebrow">{h.journal.eyebrow}</div>
+            <h2 className="co-title">{h.journal.title}</h2>
+            <p className="co-sub">{h.journal.sub}</p>
             <div className="co-journal-feed">
-              {(coData?.journal || [
-                { category: 'launch', publish_date: 'Jun 12, 2026', title: 'Cliniq.one Landing Page — Live', body: 'The public-facing landing page for Cliniq.one is now deployed. Patients can learn about the platform and doctors can request onboarding.', product: 'Cliniq', credit: null, pinned: true },
-                { category: 'update', publish_date: 'Jun 10, 2026', title: 'MomenCrafts & Co — Brand Alignment Complete', body: 'The entire investor portal has been rebranded to reflect the & Co philosophy. Every section now speaks the co-builder language.', product: null, credit: null, pinned: true },
-                { category: 'patent', publish_date: 'May 2025', title: 'USPTO: Turbo Drone Circuit Patent Filed', body: 'Intelligent voltage sag compensation circuit for FPV drones. Patent covers the core detection and active compensation algorithm.', product: 'TDC', credit: null, pinned: false },
-                { category: 'patent', publish_date: 'May 2025', title: 'USPTO: Edge Tack Patent Filed', body: 'Collapsible pneumatic trigger buttons integrated into a screen protector for mobile gaming. Patent covers the mechanical design.', product: 'EdgeTack', credit: null, pinned: false },
-                { category: 'milestone', publish_date: 'Apr 2025', title: 'Ummi Wallet — 28 Modules Complete', body: 'All 28 financial modules are coded and functional: smart budgeting, pocket system, mother\'s salary, emergency fund, IoT piggy bank, and more.', product: 'Ummi', credit: null, pinned: false },
-                { category: 'community', publish_date: 'Coming soon', title: 'First & Co Registry Entry', body: 'The first investor to have their suggestion implemented will be the inaugural entry in the & Co registry. Your name. Your contribution. Permanently recorded.', product: null, credit: '— waiting for you', pinned: false },
-              ]).map((entry: any, i: number) => (
-                <article key={i} className={`co-journal-entry${entry.pinned ? ' co-journal-pinned' : ''}`}>
-                  <div className="co-journal-meta">
-                    <span className={`co-journal-cat co-cat-${entry.category || entry.cat}`}>
-                      {(entry.category || entry.cat) === 'launch' ? '🚀 Launch' : (entry.category || entry.cat) === 'patent' ? '📜 Patent' : (entry.category || entry.cat) === 'update' ? '🔄 Update' : (entry.category || entry.cat) === 'milestone' ? '🏆 Milestone' : '🏛 Community'}
-                    </span>
-                    {entry.product && <span className="co-journal-product">{entry.product}</span>}
-                    <span className="co-journal-date">{entry.publish_date || entry.date}</span>
-                    {entry.pinned && <span className="co-journal-pin">📌</span>}
-                  </div>
-                  <h4 className="co-journal-title">{entry.title}</h4>
-                  <p className="co-journal-body">{entry.body}</p>
-                  {entry.credit && <p className="co-journal-credit">& Co Credit: {entry.credit}</p>}
-                </article>
-              ))}
+              {(coData?.journal?.length
+                ? coData.journal
+                : h.journal.fallback.map((entry, i) => ({
+                    ...JOURNAL_META[i],
+                    publish_date: entry.date,
+                    title: entry.title,
+                    body: entry.body,
+                    credit: entry.credit,
+                  }))
+              ).map((entry: any, i: number) => {
+                const cat = entry.category || entry.cat
+                const catLabel = cat === 'launch' ? `🚀 ${h.journal.categories.launch}`
+                  : cat === 'patent' ? `📜 ${h.journal.categories.patent}`
+                  : cat === 'update' ? `🔄 ${h.journal.categories.update}`
+                  : cat === 'milestone' ? `🏆 ${h.journal.categories.milestone}`
+                  : `🏛 ${h.journal.categories.community}`
+                return (
+                  <article key={i} className={`co-journal-entry${entry.pinned ? ' co-journal-pinned' : ''}`}>
+                    <div className="co-journal-meta">
+                      <span className={`co-journal-cat co-cat-${cat}`}>{catLabel}</span>
+                      {entry.product && <span className="co-journal-product">{entry.product}</span>}
+                      <span className="co-journal-date">{entry.publish_date || entry.date}</span>
+                      {entry.pinned && <span className="co-journal-pin">📌</span>}
+                    </div>
+                    <h4 className="co-journal-title">{entry.title}</h4>
+                    <p className="co-journal-body">{entry.body}</p>
+                    {entry.credit && <p className="co-journal-credit">{h.journal.creditPrefix} {entry.credit}</p>}
+                  </article>
+                )
+              })}
             </div>
           </div>
         </section>
@@ -1315,23 +1249,23 @@ export default function HomeScreen() {
         {/* 09 OUR PROGRESS */}
         <section id="inv-traction-live" data-section="traction-live" className="co-section co-section-dark">
           <div className="co-container">
-            <div className="co-eyebrow">09 · OUR PROGRESS</div>
-            <h2 className="co-title">تقدمنا الآن <span className="co-title-en">· Live Traction Dashboard</span></h2>
-            <p className="co-sub">Real numbers. No vanity metrics. Updated by the founder.</p>
+            <div className="co-eyebrow">{h.progress.eyebrow}</div>
+            <h2 className="co-title">{h.progress.title}</h2>
+            <p className="co-sub">{h.progress.sub}</p>
 
             {/* Global KPIs */}
             <div className="co-kpi-grid">
-              {(coData?.kpis || [
-                { label: 'Products Built', value: '10', icon: '📦' },
-                { label: 'Patents Filed', value: '2', icon: '📜' },
-                { label: 'Apps in Beta', value: '4', icon: '🧪' },
-                { label: 'Industries', value: '5', icon: '🏢' },
-                { label: 'Lines of Code', value: '280K+', icon: '💻' },
-                { label: 'Solo Founder', value: '1', icon: '👤' },
+              {(coData?.kpis?.length ? coData.kpis : [
+                { label: h.progress.kpis.products,   value: '10',    icon: '📦' },
+                { label: h.progress.kpis.patents,    value: '2',     icon: '📜' },
+                { label: h.progress.kpis.beta,       value: '4',     icon: '🧪' },
+                { label: h.progress.kpis.industries, value: '5',     icon: '🏢' },
+                { label: h.progress.kpis.loc,        value: '280K+', icon: '💻' },
+                { label: h.progress.kpis.founder,    value: '1',     icon: '👤' },
               ]).map((kpi: any) => (
                 <div key={kpi.label} className="co-kpi-card">
                   <span className="co-kpi-icon">{kpi.icon}</span>
-                  <span className="co-kpi-value">{kpi.value}</span>
+                  <span className="co-kpi-value" dir="ltr">{kpi.value}</span>
                   <span className="co-kpi-label">{kpi.label}</span>
                 </div>
               ))}
@@ -1339,14 +1273,11 @@ export default function HomeScreen() {
 
             {/* Product Progress Bars */}
             <div className="co-progress-section">
-              <h4 className="co-progress-heading">Product Readiness</h4>
-              {(coData?.progress || [
-                { product_name: 'Cliniq.one', pct: 85, status: 'Live with users', color: '#0e7490' },
-                { product_name: 'Ummi Wallet', pct: 75, status: 'Beta — 28 modules', color: '#22c55e' },
-                { product_name: 'Roger·AI', pct: 60, status: 'Private beta', color: '#C8A96E' },
-                { product_name: 'RelayBot', pct: 45, status: 'Hardware prototype', color: '#a855f7' },
-                { product_name: 'Qadaa', pct: 20, status: 'Architecture phase', color: '#3b82f6' },
-              ]).map((p: any) => (
+              <h4 className="co-progress-heading">{h.progress.readiness}</h4>
+              {(coData?.progress?.length ? coData.progress : PROGRESS_META.map(p => ({
+                product_name: p.name, pct: p.pct, color: p.color,
+                status: h.progress.statuses[p.statusKey],
+              }))).map((p: any) => (
                 <div key={p.product_name || p.name} className="co-progress-row">
                   <div className="co-progress-label">
                     <span>{p.product_name || p.name}</span>
@@ -1355,21 +1286,21 @@ export default function HomeScreen() {
                   <div className="co-progress-bar">
                     <div className="co-progress-fill" style={{ width: `${p.pct}%`, background: p.color }} />
                   </div>
-                  <span className="co-progress-pct">{p.pct}%</span>
+                  <span className="co-progress-pct" dir="ltr">{p.pct}%</span>
                 </div>
               ))}
             </div>
 
             {/* Co Impact */}
             <div className="co-impact-box">
-              <h4 className="co-impact-heading">& Co Impact</h4>
+              <h4 className="co-impact-heading">{h.progress.impactHeading}</h4>
               <div className="co-impact-grid">
-                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.bugs_reported ?? 0}</span><span className="co-impact-label">Bugs Reported</span></div>
-                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.suggestions ?? 0}</span><span className="co-impact-label">Suggestions</span></div>
-                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.ideas_shipped ?? 0}</span><span className="co-impact-label">Ideas Shipped</span></div>
-                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.co_builders ?? 0}</span><span className="co-impact-label">Co-Builders</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.bugs_reported ?? 0}</span><span className="co-impact-label">{h.progress.impact.bugs}</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.suggestions ?? 0}</span><span className="co-impact-label">{h.progress.impact.suggestions}</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.ideas_shipped ?? 0}</span><span className="co-impact-label">{h.progress.impact.shipped}</span></div>
+                <div className="co-impact-stat"><span className="co-impact-num">{coData?.impact?.co_builders ?? 0}</span><span className="co-impact-label">{h.progress.impact.builders}</span></div>
               </div>
-              <p className="co-impact-note">These numbers update as co-builders contribute. Be the first.</p>
+              <p className="co-impact-note">{h.progress.impactNote}</p>
             </div>
           </div>
         </section>
@@ -1377,73 +1308,66 @@ export default function HomeScreen() {
         {/* 10 CO-BUILDER BOARD + REGISTRY */}
         <section id="inv-cobuilder" data-section="cobuilder" className="co-section co-section-warm">
           <div className="co-container">
-            <div className="co-eyebrow">10 · CO-BUILDER BOARD</div>
-            <h2 className="co-title">لوحة اند كو <span className="co-title-en">· Ideas. Feedback. Your Name in the Registry.</span></h2>
-            <p className="co-sub">Share ideas, report bugs, suggest features. If it ships — you're & Co.</p>
+            <div className="co-eyebrow">{h.board.eyebrow}</div>
+            <h2 className="co-title">{h.board.title}</h2>
+            <p className="co-sub">{h.board.sub}</p>
 
             {/* Submit Card */}
             <div className="co-submit-card">
-              <h4 className="co-submit-title">💡 Submit Your Idea</h4>
-              <p className="co-submit-desc">Have a feature request, bug report, or product idea? Share it here. If we build it, your name goes on the & Co registry.</p>
+              <h4 className="co-submit-title">💡 {h.board.submitTitle}</h4>
+              <p className="co-submit-desc">{h.board.submitDesc}</p>
               <div className="co-submit-actions">
-                <a href="https://wa.me/966535271122?text=💡 Co-Builder Idea:%0A%0AProduct:%0AIdea:" target="_blank" rel="noopener" className="co-submit-btn">
-                  💬 Submit via WhatsApp
+                <a href="https://wa.me/966535271122?text=%F0%9F%92%A1%20Co-Builder%20Idea%3A%0A%0AProduct%3A%0AIdea%3A" target="_blank" rel="noopener" className="co-submit-btn">
+                  💬 {h.board.submitWa}
                 </a>
                 <a href="mailto:momen@momencrafts.com?subject=Co-Builder Idea&body=Product:%0AIdea:%0AType (bug/feature/suggestion):" className="co-submit-btn co-submit-btn-email">
-                  ✉️ Submit via Email
+                  ✉️ {h.board.submitEmail}
                 </a>
               </div>
             </div>
 
-            {/* Sample Board Posts */}
+            {/* Board Posts */}
             <div className="co-board-posts">
-              <h4 className="co-board-heading">Recent Ideas & Status</h4>
-              {(coData?.board || [
-                { title: 'Body location picker for AI intake', product: 'Cliniq', status: 'reviewing', author_name: '—', votes: 0 },
-                { title: 'Dark mode for doctor dashboard', product: 'Cliniq', status: 'new', author_name: '—', votes: 0 },
-                { title: 'Offline mode for RelayBot companion', product: 'RelayBot', status: 'new', author_name: '—', votes: 0 },
-                { title: 'SAMA integration for Ummi Wallet', product: 'Ummi', status: 'new', author_name: '—', votes: 0 },
-              ]).map((post: any, i: number) => (
+              <h4 className="co-board-heading">{h.board.recentHeading}</h4>
+              {(coData?.board?.length ? coData.board : h.board.fallbackPosts.map(p => ({
+                title: p.title, product: p.product, status: 'new', author_name: '—', votes: 0,
+              }))).map((post: any, i: number) => (
                 <div key={i} className="co-board-post">
                   <div className="co-board-post-main">
                     <span className={`co-board-status co-board-${post.status}`}>
-                      {post.status === 'new' ? '🆕 New' : post.status === 'reviewing' ? '🔍 Reviewing' : post.status === 'approved' ? '✅ Approved' : post.status === 'implemented' ? '🏛 Shipped' : post.status}
+                      {post.status === 'new' ? `🆕 ${h.board.statuses.new}`
+                        : post.status === 'reviewing' ? `🔍 ${h.board.statuses.reviewing}`
+                        : post.status === 'approved' ? `✅ ${h.board.statuses.approved}`
+                        : post.status === 'implemented' ? `🏛 ${h.board.statuses.implemented}`
+                        : post.status}
                     </span>
                     <h5 className="co-board-post-title">{post.title}</h5>
                     <span className="co-board-product">{post.product}</span>
                   </div>
                   <div className="co-board-post-meta">
-                    <span className="co-board-author">By: {post.author_name || post.author || '—'}</span>
+                    <span className="co-board-author">{h.board.by} {post.author_name || post.author || '—'}</span>
                     <span className="co-board-votes">▲ {post.votes}</span>
                   </div>
                 </div>
               ))}
-              <p className="co-board-empty-note">🏛 No implemented ideas yet — be the first to earn your & Co credit.</p>
+              <p className="co-board-empty-note">{h.board.emptyNote}</p>
             </div>
 
             {/* & Co Registry Wall */}
             <div className="co-registry-wall">
               <div className="co-registry-header">
                 <span className="co-registry-icon">🏛</span>
-                <h4 className="co-registry-title">The & Co Registry</h4>
-                <p className="co-registry-sub">Names permanently recorded. Contributions that shipped.</p>
+                <h4 className="co-registry-title">{h.board.registryTitle}</h4>
+                <p className="co-registry-sub">{h.board.registrySub}</p>
               </div>
               <div className="co-registry-empty">
-                <div className="co-registry-placeholder">
-                  <span className="co-registry-question">?</span>
-                  <p>Your name here</p>
-                  <p className="co-registry-prompt">Submit an idea that ships → become & Co</p>
-                </div>
-                <div className="co-registry-placeholder">
-                  <span className="co-registry-question">?</span>
-                  <p>Your name here</p>
-                  <p className="co-registry-prompt">Report a bug that gets fixed → earn credit</p>
-                </div>
-                <div className="co-registry-placeholder">
-                  <span className="co-registry-question">?</span>
-                  <p>Your name here</p>
-                  <p className="co-registry-prompt">Test an app & give feedback → join the Co</p>
-                </div>
+                {h.board.prompts.map(prompt => (
+                  <div className="co-registry-placeholder" key={prompt}>
+                    <span className="co-registry-question">?</span>
+                    <p>{h.board.yourNameHere}</p>
+                    <p className="co-registry-prompt">{prompt}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1459,36 +1383,36 @@ export default function HomeScreen() {
             {/* Eyebrow */}
             <div className="letsb-eyebrow">
               <span className="letsb-eyebrow-dot" />
-              <span>11 · BECOME & CO</span>
+              <span>{h.letsBuild.eyebrow}</span>
             </div>
 
             {/* Main headline */}
             <h2 className="letsb-heading">
-              إن رأيت الفرصة —<br/>
-              <em>صِر اند كو</em>
+              {h.letsBuild.headingLine1}<br/>
+              <em>{h.letsBuild.headingEm}</em>
             </h2>
             <p className="letsb-sub">
-              No pitches. No decks.<br/>
-              Your input becomes code.<br/>
-              Your name joins the registry.
+              {h.letsBuild.sub.map((line, i) => (
+                <span key={i}>{line}{i < h.letsBuild.sub.length - 1 && <br/>}</span>
+              ))}
             </p>
 
             {/* Three partnership tracks */}
             <div className="letsb-tracks">
-              <button onClick={() => prefillWhatsApp('affiliation')} className="letsb-track-btn letsb-track-affiliate">
+              <button onClick={() => openWhatsApp(h.tracks.affiliation)} className="letsb-track-btn letsb-track-affiliate">
                 <span className="letsb-track-icon">🌐</span>
-                <span className="letsb-track-label">مهتم بالتابعية</span>
-                <span className="letsb-track-sub">Affiliate · Distribute · Grow</span>
+                <span className="letsb-track-label">{h.letsBuild.tracks.affiliate.label}</span>
+                <span className="letsb-track-sub">{h.letsBuild.tracks.affiliate.sub}</span>
               </button>
-              <button onClick={() => prefillWhatsApp('adoption')} className="letsb-track-btn letsb-track-adopt">
+              <button onClick={() => openWhatsApp(h.tracks.adoption)} className="letsb-track-btn letsb-track-adopt">
                 <span className="letsb-track-icon">📦</span>
-                <span className="letsb-track-label">أريد تبني منتج</span>
-                <span className="letsb-track-sub">License · Deploy · Scale</span>
+                <span className="letsb-track-label">{h.letsBuild.tracks.adopt.label}</span>
+                <span className="letsb-track-sub">{h.letsBuild.tracks.adopt.sub}</span>
               </button>
-              <button onClick={() => prefillWhatsApp('teamup')} className="letsb-track-btn letsb-track-team">
+              <button onClick={() => openWhatsApp(h.tracks.teamup)} className="letsb-track-btn letsb-track-team">
                 <span className="letsb-track-icon">⚡</span>
-                <span className="letsb-track-label">أريد التعاون</span>
-                <span className="letsb-track-sub">Partner · Invest · Build</span>
+                <span className="letsb-track-label">{h.letsBuild.tracks.team.label}</span>
+                <span className="letsb-track-sub">{h.letsBuild.tracks.team.sub}</span>
               </button>
             </div>
 
@@ -1498,18 +1422,16 @@ export default function HomeScreen() {
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
-                WhatsApp Direct
+                {h.letsBuild.waCta}
               </a>
-              <a href="mailto:momen@momencrafts.com?subject=Partnership Inquiry — MomenCrafts" className="letsb-cta-email">
+              <a href={`mailto:momen@momencrafts.com?subject=${encodeURIComponent(h.letsBuild.emailSubject)}`} className="letsb-cta-email">
                 ✉️ momen@momencrafts.com
               </a>
             </div>
 
             {/* Trust footer */}
             <div className="letsb-trust">
-              <span>🔒 NDA Signed · Confidential</span>
-              <span>📍 Riyadh, Saudi Arabia</span>
-              <span>⚡ Respond within 24h</span>
+              {h.letsBuild.trust.map(item => <span key={item}>{item}</span>)}
               {footerExpiry && <span id="inv-footer-expiry">{footerExpiry}</span>}
             </div>
 
@@ -1524,10 +1446,10 @@ export default function HomeScreen() {
           <div id="inv-expired-overlay" className="visible" style={{ display:'flex' }}>
             <div style={{ textAlign:'center', maxWidth:'420px', padding:'3rem' }}>
               <div style={{ fontSize:'3.5rem', marginBottom:'1rem', animation:'pulse 2s infinite' }}>⏰</div>
-              <h2 style={{ fontFamily:"'Playfair Display',Georgia,serif", color:'#f0ebe3', marginBottom:'.75rem', fontSize:'1.8rem' }}>انتهت الجلسة · Session Ended</h2>
-              <p style={{ color:'#a09070', marginBottom:'.5rem', lineHeight:1.7 }}>Your timed access has expired. Thank you for reviewing MomenCrafts.</p>
-              <p style={{ color:'#a09070', fontSize:'.8rem', marginBottom:'2.5rem', fontFamily:'monospace' }}>If you'd like extended access, reach out directly.</p>
-              <a href="mailto:momen@momencrafts.com?subject=Access Renewal Request" style={{ display:'inline-block', background:'#C8A96E', color:'#0C0A09', padding:'.9rem 2.2rem', borderRadius:'10px', textDecoration:'none', fontFamily:'monospace', fontWeight:700, fontSize:'.9rem' }}>Request Extended Access →</a>
+              <h2 style={{ fontFamily:"'Playfair Display',Georgia,serif", color:'#f0ebe3', marginBottom:'.75rem', fontSize:'1.8rem' }}>{h.expired.title}</h2>
+              <p style={{ color:'#a09070', marginBottom:'.5rem', lineHeight:1.7 }}>{h.expired.body}</p>
+              <p style={{ color:'#a09070', fontSize:'.8rem', marginBottom:'2.5rem', fontFamily:'monospace' }}>{h.expired.note}</p>
+              <a href={`mailto:momen@momencrafts.com?subject=${encodeURIComponent(h.expired.emailSubject)}`} style={{ display:'inline-block', background:'#C8A96E', color:'#0C0A09', padding:'.9rem 2.2rem', borderRadius:'10px', textDecoration:'none', fontFamily:'monospace', fontWeight:700, fontSize:'.9rem' }}>{h.expired.cta} <Arrow /></a>
             </div>
           </div>
         )}
