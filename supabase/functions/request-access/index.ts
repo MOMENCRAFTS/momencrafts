@@ -4,7 +4,7 @@
 // Deploy: supabase functions deploy request-access --no-verify-jwt --project-ref isciigqmdfcozrtojqcm
 // ═══════════════════════════════════════════════════════════
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4'
 import { getCorsHeaders, json } from '../_shared/cors.ts'
 
 Deno.serve(async (req) => {

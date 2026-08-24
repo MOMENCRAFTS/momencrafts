@@ -6,7 +6,7 @@
 // Deploy: supabase functions deploy xhb-manage-access --no-verify-jwt --project-ref isciigqmdfcozrtojqcm
 // ═══════════════════════════════════════════════════════════
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4'
 import { getCorsHeaders } from '../_shared/cors.ts'
 
 const ADMIN_KEY = Deno.env.get('XHB_ADMIN_KEY') || ''

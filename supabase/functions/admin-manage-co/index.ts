@@ -4,7 +4,7 @@
 // Deploy: supabase functions deploy admin-manage-co --no-verify-jwt
 // ═══════════════════════════════════════════════════════════
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4'
 
 const ALLOWED_ORIGINS = [
   'https://www.momencrafts.com',

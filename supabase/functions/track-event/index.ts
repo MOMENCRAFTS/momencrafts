@@ -5,7 +5,7 @@
 // Deploy: supabase functions deploy track-event --no-verify-jwt
 // ═══════════════════════════════════════════════════════════
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4'
 import { getCorsHeaders, json } from '../_shared/cors.ts'
 
 // Events that modify investor state — require sessionKey, reject raw token fallback
