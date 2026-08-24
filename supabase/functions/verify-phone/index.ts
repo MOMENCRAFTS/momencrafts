@@ -4,7 +4,7 @@
 // Deploy: supabase functions deploy verify-phone --no-verify-jwt --project-ref isciigqmdfcozrtojqcm
 // ═══════════════════════════════════════════════════════════
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 import { getCorsHeaders, json as jsonResp, escapeHtml } from '../_shared/cors.ts'
 
 function json(status: number, body: object) {

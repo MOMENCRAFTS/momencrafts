@@ -4,7 +4,7 @@
 // Deploy: supabase functions deploy sign-nda --no-verify-jwt
 // ═══════════════════════════════════════════════════════════
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const ALLOWED_ORIGINS = [
   'https://www.momencrafts.com',

@@ -17,7 +17,7 @@
 // Deploy: supabase functions deploy admin-manage-testers --no-verify-jwt
 // ═══════════════════════════════════════════════════════════
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 import { getCorsHeaders, json } from '../_shared/cors.ts'
 
 Deno.serve(async (req) => {

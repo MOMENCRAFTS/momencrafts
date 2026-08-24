@@ -17,7 +17,7 @@ const out: Record<string, unknown> = {}
 // platform's own boot error rather than this JSON.
 let createClient: unknown
 try {
-  const mod = await import('https://esm.sh/@supabase/supabase-js@2.49.4')
+  const mod = await import('npm:@supabase/supabase-js@2')
   createClient = mod.createClient
   out.importOk = true
   out.createClientType = typeof mod.createClient
