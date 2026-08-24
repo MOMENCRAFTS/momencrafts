@@ -1,208 +1,211 @@
 /* ═══════════════════════════════════════════════════════════
    tester.css — /tester portal
-   Utilitarian sibling of the gate: same ink and gold, none of the
-   ceremony. Optimised for "get the build, start testing".
+
+   A thin layer on top of blueprint.css. Everything structural —
+   ground, grid, cards, pills, tags, buttons, cut lines, title block
+   — comes from the blueprint system. Only what the sheet language
+   does not already cover is defined here, in blueprint tokens.
+
+   All selectors are scoped under .bp-root so nothing leaks into the
+   gate or the product pages.
    ═══════════════════════════════════════════════════════════ */
 
-.ts-root {
-  --ts-ink:      #0C0A09;
-  --ts-panel:    #16110F;
-  --ts-panel-2:  #1E1815;
-  --ts-line:     rgba(200,169,110,.16);
-  --ts-line-hi:  rgba(200,169,110,.4);
-  --ts-gold:     #C8A96E;
-  --ts-gold-hi:  #EAD49E;
-  --ts-cream:    #F0EBE3;
-  --ts-dim:      #A09070;
-  --ts-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --ts-sans: 'Inter', system-ui, sans-serif;
+.bp-root.ts-root { min-height: 100vh; }
 
-  min-height: 100vh;
+/* ── Nav extras ─────────────────────────────────────────── */
+.bp-root .ts-nav-right { display: flex; align-items: center; gap: 10px; }
+.bp-root .ts-exit {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease;
+}
+.bp-root .ts-exit:hover { color: var(--ink); border-color: var(--line-gold); }
+
+/* Keep the language pill clear of the sticky sheet nav. */
+.bp-root.ts-root .lang-toggle--floating { top: 84px; }
+
+/* ── Header block ───────────────────────────────────────── */
+.bp-root .ts-head {
+  padding: 64px var(--pad-x) 40px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+}
+.bp-root .ts-title {
+  font-family: var(--serif);
+  font-size: clamp(30px, 5vw, 50px);
+  font-weight: 400;
+  letter-spacing: .1em;
+  line-height: 1.12;
+  margin-bottom: 22px;
+}
+.bp-root .ts-sub {
+  color: var(--ink-2);
+  font-size: 15px;
+  max-width: 62ch;
+  margin-top: 20px;
+}
+
+/* ── Cards ──────────────────────────────────────────────── */
+/* The shared .card gives a min-height to its tagline for a tidy grid;
+   a tester card has a tags row instead, so relax it. */
+.bp-root .ts-card .card__tagline { min-height: 0; margin-bottom: 14px; }
+
+.bp-root .ts-actions {
+  display: flex; align-items: center; gap: 16px;
+  flex-wrap: wrap; margin-top: 4px;
+}
+
+/* .btn--gold is sized for hero CTAs — this is the in-card size.
+   `.btn` and `.footer` are generic names that other stylesheets in the
+   bundle also claim, so the gold fill is restated here rather than
+   inherited; otherwise a later `.btn` rule flattens it. */
+.bp-root .ts-btn {
+  background: linear-gradient(180deg, #EAC583, var(--gold));
+  color: var(--bp);
+  box-shadow: 0 1px 0 rgba(255,255,255,.45) inset, 0 8px 20px rgba(0,0,0,.26);
+  border-radius: 11px;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 9px 18px;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--mono);
+  letter-spacing: .6px;
+  text-decoration: none;
+}
+.bp-root .ts-btn:hover { box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 12px 26px rgba(0,0,0,.32); }
+.bp-root .ts-btn:disabled { opacity: .6; cursor: progress; }
+
+/* No build uploaded yet — reads as an unfilled slot on the drawing. */
+.bp-root .ts-btn--void {
+  display: inline-flex; align-items: center;
+  border: 1px dashed rgba(255,255,255,.3);
+  border-radius: 11px;
+  background: none;
+  color: var(--ink-3);
+  cursor: not-allowed;
+  font-weight: 700;
+}
+
+.bp-root .ts-note {
+  font-size: 10.5px;
+  color: var(--ink-3);
+  margin-top: 12px;
+  line-height: 1.6;
+}
+.bp-root .ts-error { font-size: 12px; color: #FFB4A2; margin-top: 10px; }
+
+/* ── Installation steps ─────────────────────────────────── */
+.bp-root .ts-steps {
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  max-width: 74ch;
+}
+.bp-root .ts-steps li {
+  display: flex; gap: 14px;
+  font-size: 14.5px; line-height: 1.7;
+  color: var(--ink-2);
+}
+.bp-root .ts-step-no {
+  flex: 0 0 auto;
+  font-size: 10px; letter-spacing: 1.4px;
+  color: var(--gold);
+  border: 1px solid var(--line-gold);
+  border-radius: 6px;
+  padding: 3px 8px;
+  height: fit-content;
+  margin-top: 2px;
+}
+
+/* ── Reporting ──────────────────────────────────────────── */
+.bp-root .ts-report {
+  background: rgba(226,185,107,.10);
+  border: 1px solid rgba(226,185,107,.42);
+  border-radius: 20px;
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,.25), 0 20px 54px rgba(226,185,107,.14);
+}
+.bp-root .ts-report::before {
+  content: ""; position: absolute; top: 0; inset-inline: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold), #F0D69B, transparent);
+}
+.bp-root .ts-report-body {
+  color: var(--ink-2);
+  font-size: 14.5px;
+  max-width: 64ch;
+  margin-bottom: 22px;
+}
+
+/* ── Empty / error states ───────────────────────────────── */
+.bp-root .ts-state {
+  border: 1px dashed rgba(255,255,255,.30);
+  border-radius: var(--radius);
+  padding: 54px 28px;
+  text-align: center;
+  background: rgba(255,255,255,.035);
+}
+.bp-root .ts-state-title { font-family: var(--serif); font-size: 22px; font-weight: 400; margin-bottom: 10px; }
+.bp-root .ts-state-body { color: var(--ink-2); font-size: 14px; max-width: 48ch; margin: 0 auto 22px; }
+
+/* ── Loading — a card being drawn ───────────────────────── */
+.bp-root .ts-skeleton {
+  height: 224px;
+  border-radius: var(--radius);
+  border: 1px dashed rgba(255,255,255,.22);
   background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(200,169,110,.06), transparent 60%),
-    var(--ts-ink);
-  color: var(--ts-cream);
-  font-family: var(--ts-sans);
-  -webkit-font-smoothing: antialiased;
+    linear-gradient(100deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%),
+    var(--bp-2);
+  background-size: 220% 100%, auto;
+  animation: tsDraw 1.5s ease-in-out infinite;
+}
+@keyframes tsDraw { from { background-position: 120% 0, 0 0 } to { background-position: -20% 0, 0 0 } }
+@media (prefers-reduced-motion: reduce) { .bp-root .ts-skeleton { animation: none } }
+
+/* ── Title block footer ─────────────────────────────────── */
+.bp-root .ts-foot { padding: 46px var(--pad-x) 40px; }
+.bp-root .ts-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 26px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  background: none;
+  border: 0;
 }
 
-[dir='rtl'] .ts-root { font-family: 'Tajawal', 'Cairo', var(--ts-sans); }
-
-/* ── Header ─────────────────────────────────────────────── */
-.ts-header {
-  position: sticky; top: 0; z-index: 20;
-  background: rgba(12,10,9,.86);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--ts-line);
-}
-.ts-header-inner {
-  max-width: 940px; margin: 0 auto;
-  padding: .85rem 1.25rem;
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-}
-.ts-brand { display: flex; align-items: center; gap: .6rem; min-width: 0; }
-.ts-brand-mark { color: var(--ts-gold); font-size: 1rem; }
-.ts-brand-name {
-  font-family: var(--ts-mono); font-size: .74rem; letter-spacing: .2em;
-  color: var(--ts-cream); white-space: nowrap;
-}
-[dir='rtl'] .ts-brand-name { letter-spacing: .14em; }
-.ts-badge {
-  font-family: var(--ts-mono); font-size: .58rem; letter-spacing: .14em;
-  color: var(--ts-gold); border: 1px solid var(--ts-line-hi);
-  border-radius: 999px; padding: .22rem .55rem; white-space: nowrap;
-}
-[dir='rtl'] .ts-badge { letter-spacing: normal; }
-.ts-exit {
-  background: none; border: 1px solid var(--ts-line); border-radius: 8px;
-  color: var(--ts-dim); font-family: var(--ts-mono); font-size: .66rem;
-  padding: .38rem .8rem; cursor: pointer; transition: color .2s, border-color .2s;
-}
-.ts-exit:hover { color: var(--ts-cream); border-color: var(--ts-line-hi); }
-
-/* Keep the floating language pill clear of the sticky header. */
-.ts-root .lang-toggle--floating { top: 4rem; }
-
-/* ── Layout ─────────────────────────────────────────────── */
-.ts-main { max-width: 940px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
-
-.ts-intro { margin-bottom: 2.5rem; }
-.ts-greeting {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700;
-  margin: 0 0 .4rem; color: var(--ts-cream);
-}
-[dir='rtl'] .ts-greeting { font-family: 'Tajawal', 'Cairo', serif; }
-.ts-sub { color: var(--ts-dim); font-size: .92rem; line-height: 1.7; margin: 0; max-width: 60ch; }
-
-.ts-section { margin-bottom: 2.5rem; }
-.ts-section-head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;
-}
-.ts-section-title {
-  font-family: var(--ts-mono); font-size: .7rem; letter-spacing: .18em;
-  text-transform: uppercase; color: var(--ts-gold); margin: 0;
-}
-[dir='rtl'] .ts-section-title { letter-spacing: normal; font-size: .82rem; }
-.ts-section-meta { font-family: var(--ts-mono); font-size: .66rem; color: var(--ts-dim); }
-
-/* ── App cards ──────────────────────────────────────────── */
-.ts-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-@media (min-width: 720px) { .ts-grid { grid-template-columns: repeat(2, 1fr); } }
-
-.ts-card {
-  background: var(--ts-panel);
-  border: 1px solid var(--ts-line);
-  border-radius: 14px;
-  padding: 1.15rem 1.15rem 1rem;
-  display: flex; flex-direction: column; gap: .9rem;
-  transition: border-color .2s ease, transform .2s ease;
-}
-.ts-card:hover { border-color: var(--ts-line-hi); transform: translateY(-1px); }
-
-.ts-card-head { display: flex; align-items: flex-start; gap: .75rem; }
-.ts-card-emoji { font-size: 1.5rem; line-height: 1; flex: none; }
-.ts-card-title { flex: 1; min-width: 0; }
-.ts-card-name { margin: 0 0 .25rem; font-size: 1.02rem; font-weight: 600; color: var(--ts-cream); }
-.ts-card-desc { margin: 0; font-size: .8rem; line-height: 1.6; color: var(--ts-dim); }
-
-.ts-stage {
-  flex: none; font-family: var(--ts-mono); font-size: .55rem; letter-spacing: .12em;
-  padding: .25rem .5rem; border-radius: 5px; border: 1px solid currentColor; opacity: .95;
-}
-[dir='rtl'] .ts-stage { letter-spacing: normal; }
-.ts-tone-live { color: #22c55e; }
-.ts-tone-beta { color: var(--ts-gold); }
-.ts-tone-dev  { color: #a855f7; }
-
-.ts-meta {
-  display: flex; flex-wrap: wrap; gap: .4rem .9rem; margin: 0;
-  padding: .7rem .85rem; border-radius: 9px;
-  background: var(--ts-panel-2); border: 1px solid var(--ts-line);
-}
-.ts-meta-item { display: flex; align-items: baseline; gap: .4rem; }
-.ts-meta-item dt { font-family: var(--ts-mono); font-size: .58rem; letter-spacing: .1em; color: var(--ts-dim); text-transform: uppercase; }
-[dir='rtl'] .ts-meta-item dt { letter-spacing: normal; text-transform: none; font-size: .66rem; }
-.ts-meta-item dd { margin: 0; font-family: var(--ts-mono); font-size: .7rem; color: var(--ts-cream); }
-
-.ts-card-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
-.ts-card-note { margin: 0; font-size: .66rem; color: var(--ts-dim); font-family: var(--ts-mono); line-height: 1.5; }
-.ts-card-error { margin: 0; font-size: .72rem; color: #f87171; }
-
-/* ── Buttons ────────────────────────────────────────────── */
-.ts-btn {
-  display: inline-flex; align-items: center; gap: .4rem;
-  padding: .55rem .95rem; border-radius: 9px;
-  font-family: var(--ts-mono); font-size: .72rem; font-weight: 500;
-  text-decoration: none; cursor: pointer; border: 1px solid transparent;
-  transition: background .2s, color .2s, border-color .2s, opacity .2s;
-}
-.ts-btn--primary { background: var(--ts-gold); color: var(--ts-ink); font-weight: 700; }
-.ts-btn--primary:hover:not(:disabled) { background: var(--ts-gold-hi); }
-.ts-btn--primary:disabled { opacity: .55; cursor: progress; }
-.ts-btn--ghost { background: transparent; color: var(--ts-dim); border-color: var(--ts-line); }
-.ts-btn--ghost:hover { color: var(--ts-cream); border-color: var(--ts-line-hi); }
-.ts-btn--disabled { background: transparent; color: #6a5c3e; border-color: var(--ts-line); cursor: not-allowed; }
-
-/* ── Panels (install help, bug reporting) ───────────────── */
-.ts-panel {
-  background: var(--ts-panel);
-  border: 1px solid var(--ts-line);
-  border-radius: 14px; padding: 1.35rem 1.35rem 1.5rem;
-}
-.ts-panel--accent { border-color: var(--ts-line-hi); background: linear-gradient(180deg, var(--ts-panel-2), var(--ts-panel)); }
-.ts-panel-title {
-  font-family: var(--ts-mono); font-size: .7rem; letter-spacing: .16em;
-  text-transform: uppercase; color: var(--ts-gold); margin: 0 0 .9rem;
-}
-[dir='rtl'] .ts-panel-title { letter-spacing: normal; font-size: .84rem; text-transform: none; }
-.ts-panel-body { margin: 0 0 1rem; font-size: .86rem; line-height: 1.7; color: var(--ts-dim); max-width: 62ch; }
-
-.ts-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .7rem; }
-.ts-steps li { display: flex; gap: .7rem; font-size: .85rem; line-height: 1.65; color: var(--ts-dim); }
-.ts-step-no {
-  flex: none; width: 1.4rem; height: 1.4rem; border-radius: 50%;
-  display: grid; place-items: center;
-  background: rgba(200,169,110,.12); color: var(--ts-gold);
-  font-family: var(--ts-mono); font-size: .65rem; margin-top: .08rem;
-}
-
-/* ── Empty / error / loading states ─────────────────────── */
-.ts-state {
-  background: var(--ts-panel); border: 1px dashed var(--ts-line-hi);
-  border-radius: 14px; padding: 2.25rem 1.5rem; text-align: center;
-}
-.ts-state-title { margin: 0 0 .5rem; font-size: 1.02rem; color: var(--ts-cream); font-weight: 600; }
-.ts-state-body { margin: 0 auto 1.25rem; max-width: 46ch; font-size: .85rem; line-height: 1.7; color: var(--ts-dim); }
-
-.ts-skeletons { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-@media (min-width: 720px) { .ts-skeletons { grid-template-columns: repeat(2, 1fr); } }
-.ts-skeleton {
-  height: 190px; border-radius: 14px;
-  background: linear-gradient(100deg, var(--ts-panel) 30%, var(--ts-panel-2) 50%, var(--ts-panel) 70%);
-  background-size: 220% 100%;
-  animation: tsShimmer 1.4s ease-in-out infinite;
-  border: 1px solid var(--ts-line);
-}
-@keyframes tsShimmer { 0% { background-position: 120% 0; } 100% { background-position: -20% 0; } }
-@media (prefers-reduced-motion: reduce) { .ts-skeleton { animation: none; } }
-
-/* ── Footer ─────────────────────────────────────────────── */
-.ts-footer {
-  border-top: 1px solid var(--ts-line);
-  padding: 1.75rem 1.25rem 2.5rem; text-align: center;
-}
-.ts-footer p { margin: 0 auto; max-width: 58ch; font-size: .74rem; line-height: 1.7; color: var(--ts-dim); }
-.ts-footer-mark { margin-top: .6rem !important; font-family: var(--ts-mono); font-size: .62rem; color: #6a5c3e; }
-
-/* ── Testing terms overlay (reuses the gate's overlay shell) ── */
+/* ── Testing-terms overlay (rendered on the gate) ───────── */
 .ts-terms-points { list-style: none; margin: 0 0 1.25rem; padding: 0; text-align: start; }
 .ts-terms-points li {
-  position: relative; padding-inline-start: 1.1rem; margin-bottom: .55rem;
-  font-size: .82rem; line-height: 1.65; color: var(--g-cream-dim, #cfc6b8);
+  position: relative;
+  padding-inline-start: 1.2rem;
+  margin-bottom: .6rem;
+  font-size: .84rem;
+  line-height: 1.7;
+  color: var(--g-cream-dim, #C3D9EC);
 }
 .ts-terms-points li::before {
-  content: '✓'; position: absolute; inset-inline-start: 0;
-  color: var(--g-gold, #C8A96E); font-size: .75rem;
+  content: '✓';
+  position: absolute; inset-inline-start: 0;
+  color: var(--g-gold, #E2B96B);
+  font-size: .78rem;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .bp-root .ts-head { padding: 48px 22px 30px; }
+  .bp-root .ts-nav-right .nav__chip { display: none; }
+  .bp-root .ts-actions { gap: 12px; }
 }

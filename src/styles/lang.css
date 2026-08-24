@@ -8,28 +8,38 @@
   gap: .45rem;
   padding: .42rem .8rem;
   border-radius: 999px;
-  border: 1px solid rgba(200, 169, 110, .38);
-  background: rgba(12, 10, 9, .72);
-  color: #C8A96E;
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  /* Blueprint gold on the sheet ground — matches .nav__chip. */
+  border: 1px solid rgba(226, 185, 107, .34);
+  background: rgba(14, 67, 114, .72);
+  color: #E2B96B;
+  font-family: 'JetBrains Mono', Consolas, ui-monospace, monospace;
   font-size: .68rem;
   font-weight: 500;
   letter-spacing: .08em;
   line-height: 1;
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: border-color .2s ease, color .2s ease, background .2s ease, transform .2s ease;
 }
 
 .lang-toggle:hover,
 .lang-toggle:focus-visible {
-  border-color: rgba(200, 169, 110, .85);
-  color: #EAD49E;
-  background: rgba(26, 22, 20, .9);
+  border-color: rgba(226, 185, 107, .8);
+  color: #F0D69B;
+  background: rgba(22, 78, 128, .9);
 }
 
-.lang-toggle:active { transform: scale(.97); }
+.lang-toggle:active { transform: translateY(1px); }
+
+/* Inside a blueprint sheet, take the live tokens rather than literals. */
+.bp-root .lang-toggle {
+  border-color: var(--line-gold);
+  background: rgba(14, 67, 114, .72);
+  color: var(--gold);
+}
+.bp-root .lang-toggle:hover,
+.bp-root .lang-toggle:focus-visible { color: var(--gold-lt); }
 
 .lang-toggle svg { flex: none; opacity: .85; }
 

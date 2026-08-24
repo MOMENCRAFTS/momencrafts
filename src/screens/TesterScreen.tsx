@@ -3,112 +3,105 @@ import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
 import { useT } from '@/i18n'
 import { LangToggle } from '@/components/LangToggle'
+import { BlueprintSheet, StageGlyph, type Stage } from '@/components/BlueprintSheet'
 import { listTesterApps, requestApkUrl, type TesterApp } from '@/services/supabase'
+import '@/styles/blueprint.css'
 import '@/styles/tester.css'
 
 /* ═══════════════════════════════════════════════════════════
    TesterScreen — /tester
 
-   Deliberately narrow: builds, guides, and a way to report bugs.
-   No investor copy, no financials, no & Co content — a tester who
-   lands here should not be able to tell the investor room exists.
+   Same drawing sheet as the landing page: blueprint ground, drafting
+   grid, cut lines, build-stage glyphs. Read as three sheets —
+   01 builds, 02 installation, 03 reporting.
+
+   Deliberately narrow in content: builds, guides and bug reporting.
+   No investor copy, no financials, no & Co material.
    ═══════════════════════════════════════════════════════════ */
 
 const WA_NUMBER = '966535271122'
 const waHref = (msg: string) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 
-const STATUS_TONE: Record<string, string> = {
-  live: 'ts-tone-live', beta: 'ts-tone-beta', dev: 'ts-tone-dev', disabled: 'ts-tone-dev',
+/* status → the card's accent, pill and glyph stage, kept in lockstep
+   so a card never shows a "built" cube next to a DEV pill. */
+const STATUS_MAP: Record<string, { accent: string; pill: string; stage: Stage }> = {
+  live:     { accent: 'var(--live)', pill: 'pill--live', stage: 'live' },
+  beta:     { accent: 'var(--beta)', pill: 'pill--beta', stage: 'beta' },
+  dev:      { accent: 'var(--dev)',  pill: 'pill--dev',  stage: 'dev'  },
+  disabled: { accent: 'var(--dev)',  pill: 'pill--dev',  stage: 'dev'  },
 }
 
-function AppCard({ app, token }: { app: TesterApp; token: string }) {
+const Arrow = () => <span className="dir-arrow">→</span>
+
+function AppCard({ app, index, token }: { app: TesterApp; index: number; token: string }) {
   const { t, isAr } = useT()
   const s = t.tester
   const [busy, setBusy] = useState(false)
   const [err, setErr]   = useState('')
 
+  const tone = STATUS_MAP[app.status] ?? STATUS_MAP.dev
   const stageLabel = app.stage ? s.stages[app.stage] : null
   const displayName = isAr && app.nameAr ? app.nameAr : app.name
 
   const download = useCallback(async () => {
     setBusy(true); setErr('')
-    // The signed URL is minted at click time and lives ~5 minutes, so it is
-    // never stored in component state or reused.
+    // Minted at click time and valid ~5 minutes — never cached in state.
     const res = await requestApkUrl(token, app.appId)
-    if (res.ok) {
-      window.location.href = res.url
-    } else {
-      setErr(res.error)
-    }
+    if (res.ok) window.location.href = res.url
+    else setErr(res.error)
     setBusy(false)
   }, [token, app.appId])
 
   return (
-    <article className="ts-card" id={`ts-card-${app.appId}`}>
-      <div className="ts-card-head">
-        <span className="ts-card-emoji" aria-hidden="true">{app.emoji || '📱'}</span>
-        <div className="ts-card-title">
-          <h3 className="ts-card-name">{displayName}</h3>
-          {app.description && <p className="ts-card-desc">{app.description}</p>}
-        </div>
-        {stageLabel && (
-          <span className={`ts-stage ${STATUS_TONE[app.status] || 'ts-tone-dev'}`}>{stageLabel}</span>
-        )}
+    <article
+      className="card reveal ts-card"
+      id={`ts-card-${app.appId}`}
+      style={{ '--accent': tone.accent } as React.CSSProperties}
+    >
+      <span className="card__no mono">{String(index + 1).padStart(2, '0')}</span>
+
+      <div className="card__row">
+        <div className="card__glyph"><StageGlyph stage={tone.stage} size={30} /></div>
+        <span className="card__name">{displayName}</span>
+        {stageLabel && <span className={`pill ${tone.pill} mono`}>{stageLabel}</span>}
       </div>
 
-      <dl className="ts-meta">
-        <div className="ts-meta-item">
-          <dt>{s.meta.version}</dt>
-          <dd dir="ltr">{app.version}</dd>
-        </div>
-        {app.buildDate && (
-          <div className="ts-meta-item">
-            <dt>{s.meta.build}</dt>
-            <dd dir="ltr">{app.buildDate}</dd>
-          </div>
-        )}
-        {app.size && (
-          <div className="ts-meta-item">
-            <dt>{s.meta.size}</dt>
-            <dd dir="ltr">{app.size}</dd>
-          </div>
-        )}
-        {app.minAndroid && (
-          <div className="ts-meta-item">
-            <dt>{s.meta.requires}</dt>
-            <dd dir="ltr">{app.minAndroid}</dd>
-          </div>
-        )}
-      </dl>
+      {app.description && <p className="card__tagline">{app.description}</p>}
 
-      <div className="ts-card-actions">
+      <div className="tags">
+        <span className="mono">{app.version}</span>
+        {app.size && <span className="mono">{app.size}</span>}
+        {app.minAndroid && <span className="mono">{app.minAndroid}</span>}
+        {app.buildDate && <span className="mono">{app.buildDate}</span>}
+      </div>
+
+      <div className="ts-actions">
         {app.hasBuild ? (
-          <button className="ts-btn ts-btn--primary" onClick={download} disabled={busy}>
+          <button className="btn btn--gold ts-btn" onClick={download} disabled={busy}>
             {busy ? s.downloading : `⬇ ${s.download}`}
           </button>
         ) : (
-          <span className="ts-btn ts-btn--disabled" aria-disabled="true" title={s.noBuildNote}>
+          <span className="ts-btn ts-btn--void mono" aria-disabled="true" title={s.noBuildNote}>
             {s.noBuild}
           </span>
         )}
 
         {app.guideUrl && (
-          <a className="ts-btn ts-btn--ghost" href={app.guideUrl} target="_blank" rel="noopener">
-            📖 {s.guide}
+          <a className="card__more" href={app.guideUrl} target="_blank" rel="noopener">
+            {s.guide} <Arrow />
           </a>
         )}
-
         <a
-          className="ts-btn ts-btn--ghost"
+          className="card__more"
           href={waHref(s.bug.message(app.name, app.version))}
           target="_blank" rel="noopener"
         >
-          🐛 {s.reportBug}
+          {s.reportBug} <Arrow />
         </a>
       </div>
 
-      {app.hasBuild && <p className="ts-card-note">{s.downloadNote}</p>}
-      {err && <p className="ts-card-error" role="alert">{err}</p>}
+      {app.hasBuild && <p className="ts-note mono">{s.downloadNote}</p>}
+      {err && <p className="ts-error" role="alert">{err}</p>}
     </article>
   )
 }
@@ -121,10 +114,11 @@ export default function TesterScreen() {
 
   const token = sessionStorage.getItem('mcr_token') || ''
   const storedName = sessionStorage.getItem('mcr_name') || ''
+  const masked = token.length > 4 ? 'MCR-••••' + token.slice(-4) : token
 
-  const [apps, setApps]       = useState<TesterApp[] | null>(null)
-  const [name, setName]       = useState(storedName)
-  const [error, setError]     = useState('')
+  const [apps, setApps]        = useState<TesterApp[] | null>(null)
+  const [name, setName]        = useState(storedName)
+  const [error, setError]      = useState('')
   const [reloadKey, setReload] = useState(0)
 
   useEffect(() => {
@@ -144,9 +138,17 @@ export default function TesterScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, reloadKey])
 
+  useEffect(() => { document.title = 'MomenCrafts — Tester Portal' }, [])
+
+  // Reveal-on-scroll, matching the landing page's behaviour
   useEffect(() => {
-    document.title = 'MomenCrafts — Tester Portal'
-  }, [])
+    const io = new IntersectionObserver(
+      es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible', 'is-visible') }),
+      { threshold: .08 },
+    )
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el))
+    return () => io.disconnect()
+  }, [apps])
 
   const handleExit = () => {
     ;['mcr_investor','mcr_token','mcr_session','mcr_name','mcr_type','mcr_expires','mcr_email','mcr_ts','mcr_projects']
@@ -156,83 +158,134 @@ export default function TesterScreen() {
   }
 
   return (
-    <div className="ts-root" dir={dir} lang={lang}>
+    <div className="bp-root ts-root" dir={dir} lang={lang}>
+      <BlueprintSheet />
       <LangToggle />
 
-      <header className="ts-header">
-        <div className="ts-header-inner">
-          <div className="ts-brand">
-            <span className="ts-brand-mark">✦</span>
-            <span className="ts-brand-name">MOMENCRAFTS</span>
-            <span className="ts-badge">{s.badge}</span>
-          </div>
-          <button className="ts-exit" onClick={handleExit}>{s.exit}</button>
+      {/* ── Sheet nav ── */}
+      <nav className="nav">
+        <span className="nav__mark">MOMENCRAFTS</span>
+        <div className="nav__links">
+          <a href="#builds">{s.appsHeading}</a>
+          <a href="#install">{s.install.heading}</a>
+          <a href="#report">{s.bug.heading}</a>
         </div>
+        <div className="ts-nav-right">
+          <span className="nav__chip mono">{masked}</span>
+          <button className="ts-exit mono" onClick={handleExit}>{s.exit}</button>
+        </div>
+      </nav>
+
+      {/* ── Header block ── */}
+      <header className="page ts-head">
+        <span className="kicker">{s.badge}</span>
+        <h1 className="ts-title">{name ? s.greeting(name) : s.greetingAnon}</h1>
+        <div className="dim">
+          <div className="dim__bar" />
+          <span className="dim__val mono">SHEET 01 — TEST BUILDS</span>
+          <div className="dim__bar" />
+        </div>
+        <p className="ts-sub">{s.sub}</p>
       </header>
 
-      <main className="ts-main">
-        <section className="ts-intro">
-          <h1 className="ts-greeting">{name ? s.greeting(name) : s.greetingAnon}</h1>
-          <p className="ts-sub">{s.sub}</p>
-        </section>
-
-        {/* ── Apps ── */}
-        <section className="ts-section">
-          <div className="ts-section-head">
-            <h2 className="ts-section-title">{s.appsHeading}</h2>
-            {apps && apps.length > 0 && <span className="ts-section-meta">{s.appsCount(apps.length)}</span>}
+      {/* ── 01 · Builds ── */}
+      <div className="cutline page"><span>SHEET 01 — TEST BUILDS</span></div>
+      <section id="builds" className="section page">
+        <div className="section__head">
+          <div>
+            <span className="section__index mono">01</span>
+            <h2>{s.appsHeading}</h2>
           </div>
+          {apps && apps.length > 0 && <span className="section__meta">{s.appsCount(apps.length)}</span>}
+        </div>
 
-          {error ? (
-            <div className="ts-state">
-              <h3 className="ts-state-title">{s.error.heading}</h3>
-              <p className="ts-state-body">{error}</p>
-              <button className="ts-btn ts-btn--primary" onClick={() => setReload(k => k + 1)}>
-                {s.error.retry}
-              </button>
-            </div>
-          ) : apps === null ? (
-            <div className="ts-skeletons" aria-busy="true">
-              {[0, 1, 2].map(i => <div className="ts-skeleton" key={i} />)}
-            </div>
-          ) : apps.length === 0 ? (
-            <div className="ts-state">
-              <h3 className="ts-state-title">{s.empty.heading}</h3>
-              <p className="ts-state-body">{s.empty.body}</p>
-              <a className="ts-btn ts-btn--primary" href={waHref(s.empty.message)} target="_blank" rel="noopener">
-                {s.empty.cta}
-              </a>
-            </div>
-          ) : (
-            <div className="ts-grid">
-              {apps.map(app => <AppCard key={app.appId} app={app} token={token} />)}
-            </div>
-          )}
-        </section>
+        {error ? (
+          <div className="ts-state">
+            <h3 className="ts-state-title">{s.error.heading}</h3>
+            <p className="ts-state-body">{error}</p>
+            <button className="btn btn--gold ts-btn" onClick={() => setReload(k => k + 1)}>
+              {s.error.retry}
+            </button>
+          </div>
+        ) : apps === null ? (
+          <div className="grid" aria-busy="true">
+            {[0, 1, 2].map(i => <div className="ts-skeleton" key={i} />)}
+          </div>
+        ) : apps.length === 0 ? (
+          <div className="ts-state">
+            <h3 className="ts-state-title">{s.empty.heading}</h3>
+            <p className="ts-state-body">{s.empty.body}</p>
+            <a className="btn btn--gold ts-btn" href={waHref(s.empty.message)} target="_blank" rel="noopener">
+              {s.empty.cta} <Arrow />
+            </a>
+          </div>
+        ) : (
+          <div className="grid">
+            {apps.map((app, i) => <AppCard key={app.appId} app={app} index={i} token={token} />)}
+          </div>
+        )}
+      </section>
 
-        {/* ── Install help ── */}
-        <section className="ts-section ts-panel">
-          <h2 className="ts-panel-title">{s.install.heading}</h2>
-          <ol className="ts-steps">
-            {s.install.steps.map((step, i) => (
-              <li key={i}><span className="ts-step-no">{i + 1}</span><span>{step}</span></li>
-            ))}
-          </ol>
-        </section>
+      {/* ── 02 · Installation ── */}
+      <div className="cutline page"><span>SHEET 02 — INSTALLATION</span></div>
+      <section id="install" className="section section--band page">
+        <div className="section__head">
+          <div>
+            <span className="section__index mono">02</span>
+            <h2>{s.install.heading}</h2>
+          </div>
+        </div>
+        <ol className="ts-steps">
+          {s.install.steps.map((step, i) => (
+            <li key={i}>
+              <span className="ts-step-no mono">{String(i + 1).padStart(2, '0')}</span>
+              <span>{step}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-        {/* ── Bug reporting ── */}
-        <section className="ts-section ts-panel ts-panel--accent">
-          <h2 className="ts-panel-title">{s.bug.heading}</h2>
-          <p className="ts-panel-body">{s.bug.body}</p>
-          <a className="ts-btn ts-btn--primary" href={waHref(s.bug.generic)} target="_blank" rel="noopener">
-            💬 {s.bug.cta}
+      {/* ── 03 · Reporting ── */}
+      <div className="cutline page"><span>SHEET 03 — REPORTING</span></div>
+      <section id="report" className="section page">
+        <div className="section__head">
+          <div>
+            <span className="section__index mono">03</span>
+            <h2>{s.bug.heading}</h2>
+          </div>
+        </div>
+        <div className="ts-report">
+          <p className="ts-report-body">{s.bug.body}</p>
+          <a className="btn btn--gold ts-btn" href={waHref(s.bug.generic)} target="_blank" rel="noopener">
+            💬 {s.bug.cta} <Arrow />
           </a>
-        </section>
-      </main>
+        </div>
+      </section>
 
-      <footer className="ts-footer">
-        <p>{s.footer}</p>
-        <p className="ts-footer-mark">© 2026 MomenCrafts</p>
+      {/* ── Title block ── */}
+      <footer className="page ts-foot">
+        <div className="titleblock">
+          <div className="titleblock__cell">
+            <div className="titleblock__k">STUDIO</div>
+            <div className="titleblock__v">MomenCrafts</div>
+          </div>
+          <div className="titleblock__cell">
+            <div className="titleblock__k">{s.badge}</div>
+            <div className="titleblock__v titleblock__v--gold" dir="ltr">{masked}</div>
+          </div>
+          <div className="titleblock__cell">
+            <div className="titleblock__k">SHEETS</div>
+            <div className="titleblock__v">03</div>
+          </div>
+          <div className="titleblock__cell">
+            <div className="titleblock__k">REV</div>
+            <div className="titleblock__v" dir="ltr">MC-2026.08</div>
+          </div>
+        </div>
+        <div className="ts-footer-row">
+          <span>{s.footer}</span>
+          <span className="mono">© 2026 MomenCrafts</span>
+        </div>
       </footer>
     </div>
   )

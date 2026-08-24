@@ -1448,10 +1448,10 @@ export default function HomeScreen() {
           <div id="inv-expired-overlay" className="visible" style={{ display:'flex' }}>
             <div style={{ textAlign:'center', maxWidth:'420px', padding:'3rem' }}>
               <div style={{ fontSize:'3.5rem', marginBottom:'1rem', animation:'pulse 2s infinite' }}>⏰</div>
-              <h2 style={{ fontFamily:"'Playfair Display',Georgia,serif", color:'#f0ebe3', marginBottom:'.75rem', fontSize:'1.8rem' }}>{h.expired.title}</h2>
-              <p style={{ color:'#a09070', marginBottom:'.5rem', lineHeight:1.7 }}>{h.expired.body}</p>
-              <p style={{ color:'#a09070', fontSize:'.8rem', marginBottom:'2.5rem', fontFamily:'monospace' }}>{h.expired.note}</p>
-              <a href={`mailto:momen@momencrafts.com?subject=${encodeURIComponent(h.expired.emailSubject)}`} style={{ display:'inline-block', background:'#C8A96E', color:'#0C0A09', padding:'.9rem 2.2rem', borderRadius:'10px', textDecoration:'none', fontFamily:'monospace', fontWeight:700, fontSize:'.9rem' }}>{h.expired.cta} <Arrow /></a>
+              <h2 style={{ fontFamily:"'Playfair Display',Georgia,serif", color:'#FFFFFF', marginBottom:'.75rem', fontSize:'1.8rem' }}>{h.expired.title}</h2>
+              <p style={{ color:'#C3D9EC', marginBottom:'.5rem', lineHeight:1.7 }}>{h.expired.body}</p>
+              <p style={{ color:'#93B4D0', fontSize:'.8rem', marginBottom:'2.5rem', fontFamily:'monospace' }}>{h.expired.note}</p>
+              <a href={`mailto:momen@momencrafts.com?subject=${encodeURIComponent(h.expired.emailSubject)}`} style={{ display:'inline-block', background:'#E2B96B', color:'#0E4372', padding:'.9rem 2.2rem', borderRadius:'10px', textDecoration:'none', fontFamily:'monospace', fontWeight:700, fontSize:'.9rem' }}>{h.expired.cta} <Arrow /></a>
             </div>
           </div>
         )}

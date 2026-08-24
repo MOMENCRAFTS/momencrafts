@@ -5,6 +5,7 @@ import { verifyToken } from '@/services/supabase'
 import { useDocumentLang } from '@/i18n'
 import { landingFor } from '@/lib/access'
 import '@/styles/lang.css'
+import '@/styles/chrome.css'
 
 const Gate     = lazy(() => import('@/screens/GateScreen'))
 const Home     = lazy(() => import('@/screens/HomeScreen'))
@@ -89,27 +90,39 @@ function GateGuard({ children }: { children: React.ReactNode }) {
   return token ? <Navigate to={landingFor(investorData?.type)} replace /> : <>{children}</>
 }
 
+/* ── Blueprint splash — the drawing sheet, drawn on every route ──
+   Shown while a lazy route loads and while /admin redirects, so the
+   first paint is the studio's sheet rather than a black flash. */
+const CUBE = 'M20 6 L34 14 L34 26 L20 34 L6 26 L6 14 Z'
+const CUBE_LINES = 'M20 6 v28 M6 14 L34 26 M34 14 L6 26'
+
+function BlueprintSplash({ label }: { label: string }) {
+  return (
+    <div className="bp-splash" role="status" aria-live="polite">
+      <div className="bp-splash__inner">
+        <svg className="bp-splash__cube" width="52" height="52" viewBox="0 0 40 40" aria-hidden="true">
+          <path d={CUBE} />
+          <path d={CUBE_LINES} />
+        </svg>
+        <div className="bp-splash__label">
+          <span className="bp-splash__bar" />
+          <span>{label}</span>
+          <span className="bp-splash__bar" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ── Redirect helper — sends /admin visitors to the subdomain ── */
 function AdminRedirect() {
   useEffect(() => {
     window.location.href = 'https://admin.momencrafts.com'
   }, [])
-  return (
-    <div style={{ display:'flex', alignItems:'center', justifyContent:'center',
-      minHeight:'100vh', background:'#0E4372', color:'#E2B96B',
-      fontFamily:'JetBrains Mono, monospace', fontSize:'.75rem', letterSpacing:'.2em' }}>
-      REDIRECTING TO ADMIN…
-    </div>
-  )
+  return <BlueprintSplash label="Redirecting to admin" />
 }
 
-const Loader = () => (
-  <div style={{ display:'flex', alignItems:'center', justifyContent:'center',
-    minHeight:'100vh', background:'#0C0A09', color:'#F59E0B',
-    fontFamily:'JetBrains Mono, monospace', fontSize:'.75rem', letterSpacing:'.2em' }}>
-    LOADING…
-  </div>
-)
+const Loader = () => <BlueprintSplash label="Loading" />
 
 export default function App() {
   /* Keeps <html lang>/<html dir> aligned with the active language.
