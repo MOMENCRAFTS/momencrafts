@@ -9,6 +9,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const ALLOWED_ORIGINS = [
   'https://www.momencrafts.com',
   'https://momencrafts.com',
+  'https://admin.momencrafts.com',
+  'https://momencrafts-iota.vercel.app',
 ]
 
 function getCorsHeaders(req: Request) {

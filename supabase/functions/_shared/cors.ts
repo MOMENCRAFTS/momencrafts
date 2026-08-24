@@ -6,6 +6,7 @@
 export const ALLOWED_ORIGINS = [
   'https://www.momencrafts.com',
   'https://momencrafts.com',
+  'https://admin.momencrafts.com',
   'https://momencrafts-iota.vercel.app',
 ]
 
