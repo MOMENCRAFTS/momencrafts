@@ -39,7 +39,8 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json()
-    const { tokenId, signerName, signerEmail, signatureData, signatureType } = body
+    const { tokenId, signerName, signerEmail, signatureData, signatureType, docType } = body
+    const doc = docType === 'TESTING_TERMS' ? 'TESTING_TERMS' : 'NDA'
 
     if (!tokenId || !signerName) {
       return json(400, { error: 'tokenId and signerName are required' }, corsHeaders)
@@ -93,6 +94,7 @@ Deno.serve(async (req) => {
         signer_email: signerEmail || null,
         signature_data: signatureData || null,
         signature_type: signatureType || 'typed',
+        doc_type: doc,
         ip_address: ip,
         user_agent: ua,
       })

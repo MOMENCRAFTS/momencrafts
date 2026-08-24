@@ -299,6 +299,8 @@ function TokensPanel({ api }: { api: ReturnType<typeof makeApi> }) {
                 <option value="HOUR">HOUR — 1 hour</option>
                 <option value="WEEK">WEEK — 7 days</option>
                 <option value="MONTH">MONTH — 30 days</option>
+                <option value="3MONTH">3MONTH — 90 days</option>
+                <option value="TESTER">TESTER — 90 days · app testing portal</option>
               </select>
             </div>
             <div className="a-field">

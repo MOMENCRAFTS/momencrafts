@@ -114,6 +114,7 @@ Deno.serve(async (req) => {
         COFOUNDER: 'Co-Founder', FOUNDER: 'Founder',
         HALF_HOUR: '30-Min Access', HOUR: '1-Hour Access',
         WEEK: '7-Day Access', MONTH: '30-Day Access',
+        '3MONTH': '90-Day Access', TESTER: '🧪 App Tester',
       } as Record<string, string>)[row.token_type] ?? row.token_type
 
       const projects = (row.project_access || []).join(', ') || 'All'

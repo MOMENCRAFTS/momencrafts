@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
 import { verifyToken } from '@/services/supabase'
 import { useDocumentLang } from '@/i18n'
+import { landingFor } from '@/lib/access'
 import '@/styles/lang.css'
 
 const Gate     = lazy(() => import('@/screens/GateScreen'))
@@ -12,6 +13,7 @@ const EdgeTack = lazy(() => import('@/screens/EdgeTackScreen'))
 const TDC      = lazy(() => import('@/screens/TDCScreen'))
 const Qadaa    = lazy(() => import('@/screens/QadaaScreen').then(m => ({ default: m.QadaaScreen })))
 const Admin    = lazy(() => import('@/screens/AdminScreen'))
+const Tester   = lazy(() => import('@/screens/TesterScreen'))
 
 /* ── Subdomain detection ─────────────────────────────── */
 const IS_ADMIN_SUBDOMAIN = window.location.hostname === 'admin.momencrafts.com'
@@ -23,8 +25,11 @@ function isTokenExpired(): boolean {
   return new Date(investorData.expires) < new Date()
 }
 
-/* ── AuthGuard — checks existence + expiry + re-validates ─ */
-function AuthGuard({ children }: { children: React.ReactNode }) {
+/* ── AuthGuard — checks existence + expiry + re-validates ─
+   `area` keeps the two portals apart: a TESTER token can never render an
+   investor route, and an investor token never lands in the tester portal.
+   Both read the destination from landingFor() so there is one rule. */
+function AuthGuard({ children, area = 'investor' }: { children: React.ReactNode; area?: 'investor' | 'tester' }) {
   const token        = useAppStore((s) => s.token)
   const investorData = useAppStore((s) => s.investorData)
   const clearSession = useAppStore((s) => s.clearSession)
@@ -55,6 +60,11 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   // No token → gate
   if (!token) return <Navigate to="/" replace />
 
+  // Wrong portal for this token type → send it to the right one
+  const landing = landingFor(investorData?.type)
+  if (area === 'investor' && landing === '/tester') return <Navigate to="/tester" replace />
+  if (area === 'tester'   && landing !== '/tester') return <Navigate to={landing} replace />
+
   // Expired → clear and gate
   if (investorData?.expires && new Date(investorData.expires) < new Date()) {
     // Can't call clearSession in render, use effect above — but still redirect
@@ -76,7 +86,7 @@ function GateGuard({ children }: { children: React.ReactNode }) {
     return <>{children}</>
   }
 
-  return token ? <Navigate to="/home" replace /> : <>{children}</>
+  return token ? <Navigate to={landingFor(investorData?.type)} replace /> : <>{children}</>
 }
 
 /* ── Redirect helper — sends /admin visitors to the subdomain ── */
@@ -126,6 +136,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<GateGuard><Gate /></GateGuard>} />
           <Route path="/home"     element={<AuthGuard><Home /></AuthGuard>} />
+          <Route path="/tester"   element={<AuthGuard area="tester"><Tester /></AuthGuard>} />
           <Route path="/rogerai"  element={<AuthGuard><RogerAI /></AuthGuard>} />
           <Route path="/edgetack" element={<AuthGuard><EdgeTack /></AuthGuard>} />
           <Route path="/tdc"      element={<AuthGuard><TDC /></AuthGuard>} />

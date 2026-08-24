@@ -25,11 +25,18 @@ function getCorsHeaders(req: Request) {
 // Duration map — co-founder types have null expiry
 const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER', 'FOUNDER'])
 const DURATIONS: Record<string, number> = {
+  HALF_HOUR: 30 * 60 * 1000,
   HOUR:   60 * 60 * 1000,
   WEEK:   7 * 24 * 60 * 60 * 1000,
   MONTH:  30 * 24 * 60 * 60 * 1000,
   '3MONTH': 90 * 24 * 60 * 60 * 1000,
+  // Testers get a generous window — testing cycles outlive investor reviews.
+  TESTER: 90 * 24 * 60 * 60 * 1000,
 }
+
+// Known types. An unknown type silently falls back to MONTH below, which is
+// why this list exists: add new types here and to DURATIONS together.
+const KNOWN_TYPES = new Set([...Object.keys(DURATIONS), 'PERMANENT', 'STRATEGIC', 'COFOUNDER', 'FOUNDER'])
 
 function json(status: number, body: object, corsHeaders: Record<string, string>) {
   return new Response(JSON.stringify(body), {
@@ -79,6 +86,10 @@ Deno.serve(async (req) => {
         const tokenType = tt || body.tokenType
         if (!label || !tokenType) {
           return json(400, { error: 'label and token_type are required' }, corsHeaders)
+        }
+        // Reject unknown types rather than silently issuing a 30-day token.
+        if (!KNOWN_TYPES.has(tokenType)) {
+          return json(400, { error: `Unknown token_type: ${tokenType}` }, corsHeaders)
         }
 
         // Generate MCR-XXXXXXXXXXXXXXXX (16 chars, ~82 bits, crypto-secure)

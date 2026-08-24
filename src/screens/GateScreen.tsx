@@ -3,13 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/stores/useAppStore'
 import { useT } from '@/i18n'
 import { LangToggle } from '@/components/LangToggle'
-import { verifyToken } from '@/services/supabase'
+import { verifyToken, acceptAgreement } from '@/services/supabase'
+import { landingFor, isTester, COFOUNDER_TYPES } from '@/lib/access'
+import '@/styles/tester.css'
 import { CoFounderWelcome } from '@/components/CoFounderWelcome'
 import { RequestAccessForm } from '@/components/RequestAccessForm'
 import '@/styles/gate.css'
-
-/* Co-founder token types → celebration screen */
-const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER', 'FOUNDER'])
 
 /* ── NDA Overlay component ─────────────────────────────── */
 interface NDAProps {
@@ -76,6 +75,49 @@ function NDAOverlay({ token, investorData, onAccept, onDecline }: NDAProps) {
   )
 }
 
+/* ── Testing Terms overlay — the tester's lighter agreement ──
+   Same shell as the NDA so it feels part of the same gate, but the
+   copy is about builds and confidentiality, not investment material. */
+function TestingTermsOverlay({ name, onAccept, onDecline }: {
+  name?: string; onAccept: () => void; onDecline: () => void
+}) {
+  const { t } = useT()
+  const c = t.tester.terms
+
+  return (
+    <div className="nda-overlay visible" role="dialog" aria-modal="true">
+      <div className="nda-card">
+        <div className="nda-mark">🧪</div>
+        <div className="nda-title">{c.title}</div>
+
+        {name && (
+          <div className="nda-prepared-for">
+            <span className="nda-pf-label">{c.preparedFor}</span>
+            <span className="nda-pf-name">{name}</span>
+          </div>
+        )}
+
+        <p className="nda-body">{c.intro}</p>
+
+        <ul className="ts-terms-points">
+          {c.points.map((point, i) => <li key={i}>{point}</li>)}
+        </ul>
+
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: '.65rem', color: 'var(--cream-mute)', textAlign: 'center', marginBottom: '1.25rem', letterSpacing: '.05em' }}>
+          {c.logged}
+        </p>
+
+        <button className="nda-accept" onClick={onAccept}>
+          {c.accept} <span className="dir-arrow">→</span>
+        </button>
+        <button className="nda-decline" onClick={onDecline}>
+          {c.decline}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 /* ── Gate Screen ───────────────────────────────────────── */
 export default function GateScreen() {
   const navigate = useNavigate()
@@ -92,7 +134,8 @@ export default function GateScreen() {
   const [showNDA,        setShowNDA]        = useState(false)
   const [vaultOpen,      setVaultOpen]      = useState(false)
   const [showCoFounder,  setShowCoFounder]  = useState(false)
-  const [pendingData, setPendingData] = useState<{ token: string; name?: string; type: string; expires?: string | null; session: string; projectAccess?: string[] } | null>(null)
+  const [showTerms,      setShowTerms]      = useState(false)
+  const [pendingData, setPendingData] = useState<{ token: string; tokenId?: string; name?: string; type: string; expires?: string | null; session: string; projectAccess?: string[] } | null>(null)
 
   const insights = g.insights
 
@@ -142,9 +185,11 @@ export default function GateScreen() {
       sessionStorage.setItem('mcr_projects', JSON.stringify(data.projectAccess ?? []))
       sessionStorage.setItem('mcr_email',   data.email ?? '')
 
-      setPendingData({ token: tokenVal, name: investorName, type: tokenType, expires: data.expires ?? null, session, projectAccess: data.projectAccess ?? [] })
+      setPendingData({ token: tokenVal, tokenId: data.tokenId, name: investorName, type: tokenType, expires: data.expires ?? null, session, projectAccess: data.projectAccess ?? [] })
       setInputState('success')
-      setShowNDA(true)
+      // Testers get short testing terms instead of the co-builder NDA.
+      if (isTester(tokenType)) setShowTerms(true)
+      else setShowNDA(true)
     } catch {
       setInputState('error')
       setError(g.errors.invalid)
@@ -179,7 +224,7 @@ export default function GateScreen() {
         valid: true,
       })
       setVaultOpen(true)
-      setTimeout(() => navigate('/home'), 500)
+      setTimeout(() => navigate(landingFor(pendingData.type)), 500)
     }
   }
 
@@ -199,15 +244,48 @@ export default function GateScreen() {
       })
     }
     setVaultOpen(true)
-    setTimeout(() => navigate('/home'), 800)
+    setTimeout(() => navigate(landingFor(pendingData?.type)), 800)
   }
 
   const declineNDA = () => {
     setShowNDA(false)
+    setShowTerms(false)
     setInputState('default')
     setTokenVal('')
     setPendingData(null)
     ;['mcr_session','mcr_token','mcr_name','mcr_type','mcr_expires','mcr_email','mcr_projects'].forEach(k => sessionStorage.removeItem(k))
+  }
+
+  const acceptTerms = () => {
+    if (!pendingData) return
+    setShowTerms(false)
+
+    // Log the acceptance against the token (fire-and-forget — a failed log
+    // must not block a tester who already agreed on screen).
+    if (pendingData.tokenId) {
+      acceptAgreement({
+        tokenId: pendingData.tokenId,
+        signerName: pendingData.name || pendingData.token,
+        docType: 'TESTING_TERMS',
+      }).catch(() => {})
+    }
+    fetch('https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/track-event', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: pendingData.token, event: 'testing_terms_accepted', sessionId: pendingData.session }),
+    }).catch(() => {})
+
+    sessionStorage.setItem('mcr_investor', '1')
+    sessionStorage.setItem('mcr_ts', new Date().toISOString())
+    setToken(pendingData.token, {
+      name: pendingData.name ?? '',
+      label: pendingData.name ?? '',
+      type: pendingData.type,
+      expires: pendingData.expires ?? null,
+      session: pendingData.session,
+      valid: true,
+    })
+    setVaultOpen(true)
+    setTimeout(() => navigate('/tester'), 500)
   }
 
   const inputClass = `token-input${inputState === 'error' ? ' error' : inputState === 'success' ? ' success' : ''}`
@@ -356,6 +434,15 @@ export default function GateScreen() {
           token={pendingData.token}
           investorData={pendingData}
           onAccept={acceptNDA}
+          onDecline={declineNDA}
+        />
+      )}
+
+      {/* Testing Terms — TESTER tokens only */}
+      {showTerms && pendingData && (
+        <TestingTermsOverlay
+          name={pendingData.name}
+          onAccept={acceptTerms}
           onDecline={declineNDA}
         />
       )}

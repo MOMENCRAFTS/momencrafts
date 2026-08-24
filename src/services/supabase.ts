@@ -1,5 +1,5 @@
-const VERIFY_URL =
-  'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1/verify-token'
+const FN_BASE = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1'
+const VERIFY_URL = `${FN_BASE}/verify-token`
 
 export interface TokenResult {
   valid: boolean
@@ -11,6 +11,11 @@ export interface TokenResult {
   error?: string
   projectAccess?: string[]
   email?: string
+  /** Needed by sign-nda / testing terms. */
+  tokenId?: string
+  /** True when this token has not yet accepted its agreement. */
+  ndaRequired?: boolean
+  ndaSignedAt?: string | null
 }
 
 export async function verifyToken(token: string): Promise<TokenResult> {
@@ -35,9 +40,102 @@ export async function verifyToken(token: string): Promise<TokenResult> {
       expires: raw.expiresAt   ?? raw.expires ?? null,
       session: raw.sessionKey  ?? raw.session,
       projectAccess: raw.projectAccess ?? [],
+      email:   raw.investorEmail ?? raw.email ?? '',
+      tokenId: raw.tokenId,
+      ndaRequired: raw.ndaRequired ?? !raw.ndaSignedAt,
+      ndaSignedAt: raw.ndaSignedAt ?? null,
     }
   } catch {
     return { valid: false, error: 'Network error — check your connection.' }
   }
 }
 
+/* ═══════════════════════════════════════════════════════════
+   Tester portal
+   ═══════════════════════════════════════════════════════════ */
+
+export interface TesterApp {
+  appId: string
+  name: string
+  nameAr: string
+  version: string
+  status: 'live' | 'beta' | 'dev' | 'disabled'
+  stage?: 'alpha' | 'beta' | 'rc' | 'stable' | null
+  emoji?: string
+  size?: string
+  description?: string
+  guideUrl?: string | null
+  buildDate?: string | null
+  minAndroid?: string | null
+  /** False when no build has been uploaded yet — show "coming soon". */
+  hasBuild: boolean
+}
+
+/** The apps this token is allowed to test. Gated server-side. */
+export async function listTesterApps(
+  token: string,
+): Promise<{ ok: true; testerName?: string; apps: TesterApp[] } | { ok: false; error: string }> {
+  try {
+    const res = await fetch(`${FN_BASE}/tester-apk`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    })
+    const raw = await res.json()
+    if (!res.ok) return { ok: false, error: raw.error ?? 'Could not load your apps' }
+    return { ok: true, testerName: raw.testerName, apps: raw.apps ?? [] }
+  } catch {
+    return { ok: false, error: 'Network error — check your connection.' }
+  }
+}
+
+/**
+ * Mint a short-lived signed download URL for one APK.
+ * The URL expires in ~5 minutes, so request it at click time — never cache it.
+ */
+export async function requestApkUrl(
+  token: string,
+  appId: string,
+): Promise<{ ok: true; url: string; fileName?: string } | { ok: false; error: string }> {
+  try {
+    const res = await fetch(`${FN_BASE}/tester-apk`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, appId }),
+    })
+    const raw = await res.json()
+    if (!res.ok || !raw.url) return { ok: false, error: raw.error ?? 'Download unavailable' }
+    return { ok: true, url: raw.url, fileName: raw.fileName }
+  } catch {
+    return { ok: false, error: 'Network error — check your connection.' }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Agreements — NDA (investors) and testing terms (testers)
+   Both land in investor_nda_signatures, separated by doc_type.
+   ═══════════════════════════════════════════════════════════ */
+
+export async function acceptAgreement(opts: {
+  tokenId: string
+  signerName: string
+  signerEmail?: string
+  docType: 'NDA' | 'TESTING_TERMS'
+}): Promise<boolean> {
+  try {
+    const res = await fetch(`${FN_BASE}/sign-nda`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tokenId: opts.tokenId,
+        signerName: opts.signerName,
+        signerEmail: opts.signerEmail,
+        signatureType: 'typed',
+        docType: opts.docType,
+      }),
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
