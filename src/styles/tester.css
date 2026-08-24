@@ -102,6 +102,33 @@
 }
 .bp-root .ts-error { font-size: 12px; color: #FFB4A2; margin-top: 10px; }
 
+/* ── Open programmes ────────────────────────────────────── */
+.bp-root .ts-lead {
+  color: var(--ink-2);
+  font-size: 14.5px;
+  max-width: 68ch;
+  margin: -14px 0 26px;
+}
+.bp-root .ts-muted {
+  color: var(--ink-3);
+  font-size: 14px;
+  padding: 26px 0;
+}
+
+/* A programme you do not have yet is drawn, not built. */
+.bp-root .ts-card--open { background: rgba(255,255,255,.045); }
+.bp-root .ts-card--open .card__glyph { opacity: .6; }
+
+.bp-root .ts-btn--pending {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--line-gold);
+  border-radius: 11px;
+  background: rgba(226,185,107,.12);
+  color: var(--gold);
+  cursor: default;
+  font-weight: 700;
+}
+
 /* ── Installation steps ─────────────────────────────────── */
 .bp-root .ts-steps {
   list-style: none;

@@ -8,6 +8,18 @@ export const en = {
   exit: 'Sign out',
 
   appsHeading: 'Your test builds',
+  /* ── SHEET 02 — open programmes ── */
+  open: {
+    heading: 'Open programmes',
+    count: (n: number) => (n === 1 ? '1 programme open to join' : `${n} programmes open to join`),
+    intro: 'Programmes you can ask to join. The founder reviews each request.',
+    request: 'Request to join',
+    requesting: 'Sending…',
+    pending: 'Requested · awaiting approval',
+    denied: 'Not approved',
+    requestedNote: 'You will get your access key updated once the founder approves.',
+    none: 'No other programmes are open right now.',
+  },
   appsCount: (n: number) => (n === 1 ? '1 app assigned' : `${n} apps assigned`),
 
   stages: {
@@ -53,7 +65,7 @@ export const en = {
 
   empty: {
     heading: 'No apps assigned yet',
-    body: 'Your access key is valid, but no test builds are assigned to it. Message the founder and he will add you to a build.',
+    body: 'Your access key is valid, but no builds are assigned to it yet. Ask to join one of the open programmes below, or message the founder directly.',
     cta: 'Message the founder',
     message: 'Hello Momen — my tester key works but no apps are assigned to it yet.',
   },
@@ -91,6 +103,17 @@ export const ar: typeof en = {
   exit: 'تسجيل الخروج',
 
   appsHeading: 'نسخ الاختبار الخاصة بك',
+  open: {
+    heading: 'برامج مفتوحة',
+    count: (n: number) => (n === 1 ? 'برنامج واحد متاح للانضمام' : `${n} برامج متاحة للانضمام`),
+    intro: 'برامج يمكنك طلب الانضمام إليها. يراجع المؤسس كل طلب.',
+    request: 'اطلب الانضمام',
+    requesting: 'جارٍ الإرسال…',
+    pending: 'تم الطلب · بانتظار الموافقة',
+    denied: 'لم تتم الموافقة',
+    requestedNote: 'سيُحدَّث وصولك فور موافقة المؤسس.',
+    none: 'لا توجد برامج أخرى مفتوحة حالياً.',
+  },
   appsCount: (n: number) => (n === 1 ? 'تطبيق واحد مُسند إليك' : `${n} تطبيقات مُسندة إليك`),
 
   stages: {
@@ -136,7 +159,7 @@ export const ar: typeof en = {
 
   empty: {
     heading: 'لا توجد تطبيقات مُسندة بعد',
-    body: 'رمز الوصول الخاص بك صالح، لكن لا توجد نسخ اختبار مسندة إليه. راسل المؤسس وسيضيفك إلى إحدى النسخ.',
+    body: 'رمز الوصول الخاص بك صالح، لكن لا توجد نسخ مسندة إليه بعد. اطلب الانضمام إلى أحد البرامج المفتوحة أدناه، أو راسل المؤسس مباشرة.',
     cta: 'راسل المؤسس',
     message: 'مرحباً مومن — رمز الاختبار الخاص بي يعمل لكن لا توجد تطبيقات مسندة إليه بعد.',
   },

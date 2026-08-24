@@ -4,26 +4,32 @@ import { useAppStore } from '@/stores/useAppStore'
 import { useT } from '@/i18n'
 import { LangToggle } from '@/components/LangToggle'
 import { BlueprintSheet, StageGlyph, type Stage } from '@/components/BlueprintSheet'
-import { listTesterApps, requestApkUrl, type TesterApp } from '@/services/supabase'
+import {
+  listTesterApps, requestApkUrl, requestJoinProgramme,
+  type TesterApp, type TesterCatalogue,
+} from '@/services/supabase'
 import '@/styles/blueprint.css'
 import '@/styles/tester.css'
 
 /* ═══════════════════════════════════════════════════════════
    TesterScreen — /tester
 
-   Same drawing sheet as the landing page: blueprint ground, drafting
-   grid, cut lines, build-stage glyphs. Read as three sheets —
-   01 builds, 02 installation, 03 reporting.
+   Same drawing sheet as the landing page, read as four sheets:
+     01 your builds        — assigned to this tester, downloadable
+     02 open programmes    — advertised, joinable on request
+     03 installation
+     04 reporting
 
-   Deliberately narrow in content: builds, guides and bug reporting.
-   No investor copy, no financials, no & Co material.
+   Access is explicit: a build is downloadable only if the founder has
+   assigned it. Everything else is either invisible (private) or
+   listed as joinable, never silently available.
    ═══════════════════════════════════════════════════════════ */
 
 const WA_NUMBER = '966535271122'
 const waHref = (msg: string) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 
-/* status → the card's accent, pill and glyph stage, kept in lockstep
-   so a card never shows a "built" cube next to a DEV pill. */
+/* status → accent, pill and glyph stage, kept in lockstep so a card
+   never shows a "built" cube next to a DEV pill. */
 const STATUS_MAP: Record<string, { accent: string; pill: string; stage: Stage }> = {
   live:     { accent: 'var(--live)', pill: 'pill--live', stage: 'live' },
   beta:     { accent: 'var(--beta)', pill: 'pill--beta', stage: 'beta' },
@@ -33,7 +39,8 @@ const STATUS_MAP: Record<string, { accent: string; pill: string; stage: Stage }>
 
 const Arrow = () => <span className="dir-arrow">→</span>
 
-function AppCard({ app, index, token }: { app: TesterApp; index: number; token: string }) {
+/* ── A build this tester has ─────────────────────────────── */
+function AssignedCard({ app, index, token }: { app: TesterApp; index: number; token: string }) {
   const { t, isAr } = useT()
   const s = t.tester
   const [busy, setBusy] = useState(false)
@@ -45,7 +52,7 @@ function AppCard({ app, index, token }: { app: TesterApp; index: number; token: 
 
   const download = useCallback(async () => {
     setBusy(true); setErr('')
-    // Minted at click time and valid ~5 minutes — never cached in state.
+    // Minted at click time, valid ~5 minutes — never cached in state.
     const res = await requestApkUrl(token, app.appId)
     if (res.ok) window.location.href = res.url
     else setErr(res.error)
@@ -106,6 +113,65 @@ function AppCard({ app, index, token }: { app: TesterApp; index: number; token: 
   )
 }
 
+/* ── A programme this tester could join ──────────────────── */
+function OpenCard({ app, index, token }: { app: TesterApp; index: number; token: string }) {
+  const { t, isAr } = useT()
+  const s = t.tester
+  const [status, setStatus] = useState(app.requestStatus ?? null)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr]   = useState('')
+
+  const tone = STATUS_MAP[app.status] ?? STATUS_MAP.dev
+  const stageLabel = app.stage ? s.stages[app.stage] : null
+  const displayName = isAr && app.nameAr ? app.nameAr : app.name
+
+  const join = useCallback(async () => {
+    setBusy(true); setErr('')
+    const res = await requestJoinProgramme(token, app.appId)
+    if (res.ok) setStatus('pending')
+    else setErr(res.error)
+    setBusy(false)
+  }, [token, app.appId])
+
+  return (
+    <article
+      className="card reveal ts-card ts-card--open"
+      id={`ts-open-${app.appId}`}
+      style={{ '--accent': tone.accent } as React.CSSProperties}
+    >
+      <span className="card__no mono">{String(index + 1).padStart(2, '0')}</span>
+
+      <div className="card__row">
+        <div className="card__glyph"><StageGlyph stage="dev" size={30} /></div>
+        <span className="card__name">{displayName}</span>
+        {stageLabel && <span className={`pill ${tone.pill} mono`}>{stageLabel}</span>}
+      </div>
+
+      {app.description && <p className="card__tagline">{app.description}</p>}
+
+      <div className="tags">
+        <span className="mono">{app.version}</span>
+        {app.minAndroid && <span className="mono">{app.minAndroid}</span>}
+      </div>
+
+      <div className="ts-actions">
+        {status === 'pending' ? (
+          <span className="ts-btn ts-btn--pending mono" aria-live="polite">◷ {s.open.pending}</span>
+        ) : status === 'denied' ? (
+          <span className="ts-btn ts-btn--void mono">{s.open.denied}</span>
+        ) : (
+          <button className="btn btn--gold ts-btn" onClick={join} disabled={busy}>
+            {busy ? s.open.requesting : `＋ ${s.open.request}`}
+          </button>
+        )}
+      </div>
+
+      {status === 'pending' && <p className="ts-note mono">{s.open.requestedNote}</p>}
+      {err && <p className="ts-error" role="alert">{err}</p>}
+    </article>
+  )
+}
+
 export default function TesterScreen() {
   const navigate = useNavigate()
   const clearSession = useAppStore(st => st.clearSession)
@@ -116,7 +182,7 @@ export default function TesterScreen() {
   const storedName = sessionStorage.getItem('mcr_name') || ''
   const masked = token.length > 4 ? 'MCR-••••' + token.slice(-4) : token
 
-  const [apps, setApps]        = useState<TesterApp[] | null>(null)
+  const [cat, setCat]          = useState<TesterCatalogue | null>(null)
   const [name, setName]        = useState(storedName)
   const [error, setError]      = useState('')
   const [reloadKey, setReload] = useState(0)
@@ -124,12 +190,12 @@ export default function TesterScreen() {
   useEffect(() => {
     let cancelled = false
     if (!token) { setError(s.error.heading); return }
-    setApps(null); setError('')
+    setCat(null); setError('')
     listTesterApps(token).then(res => {
       if (cancelled) return
       if (res.ok) {
-        setApps(res.apps)
-        if (res.testerName) setName(res.testerName)
+        setCat(res.data)
+        if (res.data.testerName) setName(res.data.testerName)
       } else {
         setError(res.error)
       }
@@ -148,7 +214,7 @@ export default function TesterScreen() {
     )
     document.querySelectorAll('.reveal').forEach(el => io.observe(el))
     return () => io.disconnect()
-  }, [apps])
+  }, [cat])
 
   const handleExit = () => {
     ;['mcr_investor','mcr_token','mcr_session','mcr_name','mcr_type','mcr_expires','mcr_email','mcr_ts','mcr_projects']
@@ -156,6 +222,9 @@ export default function TesterScreen() {
     clearSession()
     navigate('/')
   }
+
+  const assigned = cat?.assigned ?? []
+  const open     = cat?.open ?? []
 
   return (
     <div className="bp-root ts-root" dir={dir} lang={lang}>
@@ -167,6 +236,7 @@ export default function TesterScreen() {
         <span className="nav__mark">MOMENCRAFTS</span>
         <div className="nav__links">
           <a href="#builds">{s.appsHeading}</a>
+          <a href="#open">{s.open.heading}</a>
           <a href="#install">{s.install.heading}</a>
           <a href="#report">{s.bug.heading}</a>
         </div>
@@ -188,7 +258,7 @@ export default function TesterScreen() {
         <p className="ts-sub">{s.sub}</p>
       </header>
 
-      {/* ── 01 · Builds ── */}
+      {/* ── 01 · Your builds ── */}
       <div className="cutline page"><span>SHEET 01 — TEST BUILDS</span></div>
       <section id="builds" className="section page">
         <div className="section__head">
@@ -196,7 +266,7 @@ export default function TesterScreen() {
             <span className="section__index mono">01</span>
             <h2>{s.appsHeading}</h2>
           </div>
-          {apps && apps.length > 0 && <span className="section__meta">{s.appsCount(apps.length)}</span>}
+          {assigned.length > 0 && <span className="section__meta">{s.appsCount(assigned.length)}</span>}
         </div>
 
         {error ? (
@@ -207,11 +277,11 @@ export default function TesterScreen() {
               {s.error.retry}
             </button>
           </div>
-        ) : apps === null ? (
+        ) : cat === null ? (
           <div className="grid" aria-busy="true">
             {[0, 1, 2].map(i => <div className="ts-skeleton" key={i} />)}
           </div>
-        ) : apps.length === 0 ? (
+        ) : assigned.length === 0 ? (
           <div className="ts-state">
             <h3 className="ts-state-title">{s.empty.heading}</h3>
             <p className="ts-state-body">{s.empty.body}</p>
@@ -221,17 +291,42 @@ export default function TesterScreen() {
           </div>
         ) : (
           <div className="grid">
-            {apps.map((app, i) => <AppCard key={app.appId} app={app} index={i} token={token} />)}
+            {assigned.map((app, i) => <AssignedCard key={app.appId} app={app} index={i} token={token} />)}
           </div>
         )}
       </section>
 
-      {/* ── 02 · Installation ── */}
-      <div className="cutline page"><span>SHEET 02 — INSTALLATION</span></div>
-      <section id="install" className="section section--band page">
+      {/* ── 02 · Open programmes ── */}
+      <div className="cutline page"><span>SHEET 02 — OPEN PROGRAMMES</span></div>
+      <section id="open" className="section section--band page">
         <div className="section__head">
           <div>
             <span className="section__index mono">02</span>
+            <h2>{s.open.heading}</h2>
+          </div>
+          {open.length > 0 && <span className="section__meta">{s.open.count(open.length)}</span>}
+        </div>
+        <p className="ts-lead">{s.open.intro}</p>
+
+        {cat === null ? (
+          <div className="grid" aria-busy="true">
+            {[0, 1].map(i => <div className="ts-skeleton" key={i} />)}
+          </div>
+        ) : open.length === 0 ? (
+          <p className="ts-muted">{s.open.none}</p>
+        ) : (
+          <div className="grid">
+            {open.map((app, i) => <OpenCard key={app.appId} app={app} index={i} token={token} />)}
+          </div>
+        )}
+      </section>
+
+      {/* ── 03 · Installation ── */}
+      <div className="cutline page"><span>SHEET 03 — INSTALLATION</span></div>
+      <section id="install" className="section page">
+        <div className="section__head">
+          <div>
+            <span className="section__index mono">03</span>
             <h2>{s.install.heading}</h2>
           </div>
         </div>
@@ -245,12 +340,12 @@ export default function TesterScreen() {
         </ol>
       </section>
 
-      {/* ── 03 · Reporting ── */}
-      <div className="cutline page"><span>SHEET 03 — REPORTING</span></div>
+      {/* ── 04 · Reporting ── */}
+      <div className="cutline page"><span>SHEET 04 — REPORTING</span></div>
       <section id="report" className="section page">
         <div className="section__head">
           <div>
-            <span className="section__index mono">03</span>
+            <span className="section__index mono">04</span>
             <h2>{s.bug.heading}</h2>
           </div>
         </div>
@@ -275,7 +370,7 @@ export default function TesterScreen() {
           </div>
           <div className="titleblock__cell">
             <div className="titleblock__k">SHEETS</div>
-            <div className="titleblock__v">03</div>
+            <div className="titleblock__v">04</div>
           </div>
           <div className="titleblock__cell">
             <div className="titleblock__k">REV</div>

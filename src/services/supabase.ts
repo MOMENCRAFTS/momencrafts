@@ -69,12 +69,22 @@ export interface TesterApp {
   minAndroid?: string | null
   /** False when no build has been uploaded yet — show "coming soon". */
   hasBuild: boolean
+  /** Only present on open programmes: this tester's latest request. */
+  requestStatus?: 'pending' | 'approved' | 'denied' | null
 }
 
-/** The apps this token is allowed to test. Gated server-side. */
+export interface TesterCatalogue {
+  testerName?: string
+  /** Apps assigned to this tester — downloadable. */
+  assigned: TesterApp[]
+  /** Open-enrolment programmes they do not have — joinable on request. */
+  open: TesterApp[]
+}
+
+/** What this token may test, and what it may ask to join. Gated server-side. */
 export async function listTesterApps(
   token: string,
-): Promise<{ ok: true; testerName?: string; apps: TesterApp[] } | { ok: false; error: string }> {
+): Promise<{ ok: true; data: TesterCatalogue } | { ok: false; error: string }> {
   try {
     const res = await fetch(`${FN_BASE}/tester-apk`, {
       method: 'POST',
@@ -83,7 +93,10 @@ export async function listTesterApps(
     })
     const raw = await res.json()
     if (!res.ok) return { ok: false, error: raw.error ?? 'Could not load your apps' }
-    return { ok: true, testerName: raw.testerName, apps: raw.apps ?? [] }
+    return {
+      ok: true,
+      data: { testerName: raw.testerName, assigned: raw.assigned ?? [], open: raw.open ?? [] },
+    }
   } catch {
     return { ok: false, error: 'Network error — check your connection.' }
   }
@@ -106,6 +119,25 @@ export async function requestApkUrl(
     const raw = await res.json()
     if (!res.ok || !raw.url) return { ok: false, error: raw.error ?? 'Download unavailable' }
     return { ok: true, url: raw.url, fileName: raw.fileName }
+  } catch {
+    return { ok: false, error: 'Network error — check your connection.' }
+  }
+}
+
+/** Ask to join an open-enrolment programme. Needs the founder's approval. */
+export async function requestJoinProgramme(
+  token: string,
+  appId: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    const res = await fetch(`${FN_BASE}/tester-apk`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, appId, action: 'request' }),
+    })
+    const raw = await res.json()
+    if (!res.ok) return { ok: false, error: raw.error ?? 'Could not send your request' }
+    return { ok: true }
   } catch {
     return { ok: false, error: 'Network error — check your connection.' }
   }

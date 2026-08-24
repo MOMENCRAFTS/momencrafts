@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import '@/styles/admin.css'
 import { XhbKeyGate, makeXhbApi, XhbProgressPanel, XhbActivityPanel, XhbUsersPanel } from '@/components/AdminXhbPanels'
+import { AdminTesterPanel } from '@/components/AdminTesterPanel'
 
 // Admin password removed — validation should be server-side
 // For the SPA admin screen, password is validated via edge function
@@ -702,7 +703,7 @@ function TopStatsBar({ api }: { api: ReturnType<typeof makeApi> }) {
 /* ══════════════════════════════════════════════════════
    MAIN ADMIN SHELL
    ══════════════════════════════════════════════════════ */
-type Tab = 'dashboard' | 'cofounders' | 'tokens' | 'sessions'
+type Tab = 'dashboard' | 'cofounders' | 'tokens' | 'sessions' | 'testers'
          | 'xhbprogress' | 'xhbactivity' | 'xhbusers'
          | 'journal' | 'downloads' | 'traction' | 'board' | 'registry' | 'feedback'
 
@@ -711,6 +712,7 @@ const TABS: { key: Tab; label: string; icon: string; section?: string }[] = [
   { key: 'cofounders', label: 'Co-Founders', icon: '✦',  section: 'CO-BUILDERS' },
   { key: 'tokens',     label: 'Tokens',      icon: '🔑' },
   { key: 'sessions',   label: 'Sessions',    icon: '🧾' },
+  { key: 'testers',    label: 'Testers',     icon: '🧪' },
   { key: 'xhbprogress', label: 'XHB Progress', icon: '◈', section: 'XHB' },
   { key: 'xhbactivity', label: 'XHB Activity', icon: '🧾' },
   { key: 'xhbusers',    label: 'XHB Users',    icon: '👤' },
@@ -741,6 +743,7 @@ export default function AdminScreen() {
       case 'cofounders': return <CoFounderPanel api={api} />
       case 'tokens':     return <TokensPanel api={api} />
       case 'sessions':   return <SessionsPanel api={api} />
+      case 'testers':    return <AdminTesterPanel api={api} />
       case 'xhbprogress':
       case 'xhbactivity':
       case 'xhbusers': {
