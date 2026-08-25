@@ -34,7 +34,22 @@ export const useAppStore = create<AppState>()(
       investorData: null,
       ndaAccepted: false,
 
-      toggleLang: () => set((s) => ({ lang: s.lang === 'ar' ? 'en' : 'ar' })),
+      toggleLang: () => {
+        const body = typeof document !== 'undefined' ? document.body : null
+        if (body) {
+          body.style.transition = 'opacity .2s ease'
+          body.style.opacity = '0'
+          setTimeout(() => {
+            set((s) => ({ lang: s.lang === 'ar' ? 'en' : 'ar' }))
+            requestAnimationFrame(() => {
+              body.style.opacity = '1'
+              setTimeout(() => { body.style.transition = '' }, 250)
+            })
+          }, 200)
+        } else {
+          set((s) => ({ lang: s.lang === 'ar' ? 'en' : 'ar' }))
+        }
+      },
       setLang: (lang) => set({ lang }),
       setToken: (token, data) => {
         sessionStorage.setItem('mcr_investor', '1')
