@@ -394,6 +394,19 @@ export default function GateScreen() {
               <div className="btn-spinner" />
               <span className="btn-text">{g.card.submit} <span className="dir-arrow">→</span></span>
             </button>
+
+            {/* Role hint — clarifies the single input handles all access types */}
+            <div className="gate-role-hint">
+              <div className="gate-role-icons">
+                {(g.card as any).roles?.map((r: { icon: string; label: string }, i: number) => (
+                  <span key={i} className="gate-role-chip">
+                    <span className="gate-role-icon">{r.icon}</span>
+                    <span className="gate-role-label">{r.label}</span>
+                  </span>
+                ))}
+              </div>
+              <p className="gate-role-text">{(g.card as any).roleHint}</p>
+            </div>
           </div>
 
           {/* ── Request Access ── */}

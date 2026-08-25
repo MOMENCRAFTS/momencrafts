@@ -36,6 +36,12 @@ export const en = {
     sub: 'Enter your access key to enter the studio. Your perspective may shape what we build next.',
     fieldLabel: 'ACCESS KEY',
     submit: 'Enter',
+    roleHint: 'Co-Founder · Investor · App Tester — one key, the system knows your role.',
+    roles: [
+      { icon: '🤝', label: 'Co-Founder' },
+      { icon: '📊', label: 'Investor' },
+      { icon: '🧪', label: 'App Tester' },
+    ],
   },
 
   errors: {
@@ -152,6 +158,12 @@ export const ar: typeof en = {
     sub: 'أدخل رمز الوصول للدخول إلى الاستوديو. قد تشكّل رؤيتك ما نبنيه بعد ذلك.',
     fieldLabel: 'رمز الوصول',
     submit: 'دخول',
+    roleHint: 'شريك مؤسس · مستثمر · مختبر تطبيقات — رمز واحد، والنظام يعرف دورك.',
+    roles: [
+      { icon: '🤝', label: 'شريك مؤسس' },
+      { icon: '📊', label: 'مستثمر' },
+      { icon: '🧪', label: 'مختبر تطبيقات' },
+    ],
   },
 
   errors: {

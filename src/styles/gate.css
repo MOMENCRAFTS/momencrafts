@@ -821,6 +821,52 @@ body:has(.gate-layout) {
 }
 
 
+/* ── Role Hint — clarifies the three access paths ─────── */
+.gate-role-hint {
+  margin-top: 1.3rem;
+  text-align: center;
+}
+.gate-role-icons {
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+  margin-bottom: .6rem;
+  flex-wrap: wrap;
+}
+.gate-role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .3rem .65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .1);
+  transition: border-color .2s ease, background .2s ease;
+}
+.gate-role-chip:hover {
+  border-color: rgba(200, 169, 110, .35);
+  background: rgba(200, 169, 110, .06);
+}
+.gate-role-icon {
+  font-size: .85rem;
+  line-height: 1;
+}
+.gate-role-label {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: .6rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(240, 235, 227, .7);
+}
+.gate-role-text {
+  font-size: .7rem;
+  line-height: 1.55;
+  color: rgba(240, 235, 227, .35);
+  max-width: 34ch;
+  margin: 0 auto;
+  letter-spacing: .02em;
+}
+
 /* ── Request Access Section ───────────────────────────── */
 .gate-request-wrap {
   margin-top: 1rem;
