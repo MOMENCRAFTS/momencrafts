@@ -151,6 +151,62 @@ Deno.serve(async (req) => {
         return json(200, { decided: action }, cors)
       }
 
+      /* ── Signed upload URL for APK builds ── */
+      case 'uploadUrl': {
+        const { appId, fileName } = body
+        if (!appId || !fileName) return json(400, { error: 'appId and fileName are required' }, cors)
+
+        const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_')
+        const storagePath = `${appId}/${safeName}`
+
+        // Delete previous file at this path (overwrite)
+        await supabase.storage.from('tester-apks').remove([storagePath])
+
+        const { data, error } = await supabase.storage
+          .from('tester-apks')
+          .createSignedUploadUrl(storagePath)
+
+        if (error) {
+          console.error('uploadUrl error:', error)
+          return json(500, { error: 'Could not create upload URL' }, cors)
+        }
+
+        return json(200, {
+          signedUrl: data.signedUrl,
+          token: data.token,
+          storagePath,
+        }, cors)
+      }
+
+      /* ── Delete an APK from storage ── */
+      case 'deleteApk': {
+        const { appId } = body
+        if (!appId) return json(400, { error: 'appId is required' }, cors)
+
+        // Get current path from DB
+        const { data: appRow } = await supabase
+          .from('co_downloads')
+          .select('apk_path')
+          .eq('app_id', appId)
+          .maybeSingle()
+
+        if (appRow?.apk_path) {
+          await supabase.storage.from('tester-apks').remove([appRow.apk_path])
+        }
+
+        // Clear the path in DB
+        const { error } = await supabase
+          .from('co_downloads')
+          .update({ apk_path: null })
+          .eq('app_id', appId)
+
+        if (error) {
+          console.error('deleteApk error:', error)
+          return json(500, { error: 'Could not clear build' }, cors)
+        }
+        return json(200, { deleted: true }, cors)
+      }
+
       /* ── Edit an app's tester-facing settings ── */
       case 'setApp': {
         const { appId } = body

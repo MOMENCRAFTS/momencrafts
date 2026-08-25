@@ -108,3 +108,87 @@
   color: var(--a-ink, #0E4372);
 }
 .at-tick:focus-visible { outline: 2px solid var(--a-gold, #E2B96B); outline-offset: 2px; }
+
+/* ── APK upload ────────────────────────────────────────── */
+.at-file-input { display: none; }
+
+.at-build-cell { min-width: 140px; }
+
+.at-btn {
+  font-family: var(--a-font-mono, 'JetBrains Mono', monospace);
+  font-size: .68rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: .35rem .7rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  background: rgba(255, 255, 255, .06);
+  color: var(--a-cream, #F0EBE3);
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.at-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, .12);
+  border-color: var(--a-gold, #E2B96B);
+}
+.at-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.at-btn--upload {
+  background: rgba(226, 185, 107, .12);
+  border-color: var(--a-gold, #E2B96B);
+  color: var(--a-gold, #E2B96B);
+}
+.at-btn--upload:hover:not(:disabled) {
+  background: rgba(226, 185, 107, .22);
+}
+
+.at-btn--sm { padding: .25rem .5rem; font-size: .62rem; }
+
+.at-btn--danger {
+  color: #e87474;
+  border-color: rgba(232, 116, 116, .3);
+}
+.at-btn--danger:hover:not(:disabled) {
+  background: rgba(232, 116, 116, .15);
+  border-color: #e87474;
+}
+
+.at-build-info {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.at-build-actions {
+  display: flex;
+  gap: .3rem;
+}
+
+.at-upload-progress {
+  position: relative;
+  height: 22px;
+  min-width: 100px;
+  background: rgba(255, 255, 255, .06);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.at-upload-bar {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  background: linear-gradient(90deg, rgba(226, 185, 107, .3), rgba(226, 185, 107, .6));
+  border-radius: 6px;
+  transition: width .2s ease;
+}
+.at-upload-pct {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: var(--a-font-mono, monospace);
+  font-size: .66rem;
+  font-weight: 700;
+  color: var(--a-gold, #E2B96B);
+  letter-spacing: .05em;
+}

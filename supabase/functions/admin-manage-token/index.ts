@@ -93,9 +93,9 @@ Deno.serve(async (req) => {
           return json(400, { error: `Unknown token_type: ${tokenType}` }, corsHeaders)
         }
 
-        // Generate MCR-XXXXXXXXXXXXXXXX (16 chars, ~82 bits, crypto-secure)
+        // Generate MCR-XXXXXXXX (8 chars, ~41 bits, crypto-secure)
         const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // no I/O/0/1
-        const bytes = new Uint8Array(16)
+        const bytes = new Uint8Array(8)
         crypto.getRandomValues(bytes)
         const token = 'MCR-' + Array.from(bytes, b => chars[b % chars.length]).join('')
 

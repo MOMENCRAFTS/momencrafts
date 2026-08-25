@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import '@/styles/admin-testers.css'
 
 /* ═══════════════════════════════════════════════════════════
@@ -46,6 +46,8 @@ export function AdminTesterPanel({ api }: { api: Api }) {
   const [loading, setLoading]   = useState(true)
   const [busy, setBusy]         = useState<string | null>(null)
   const [err, setErr]           = useState('')
+  const [uploading, setUploading] = useState<Record<string, number>>({})
+  const fileRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
   const load = useCallback(async () => {
     setLoading(true); setErr('')
@@ -94,6 +96,48 @@ export function AdminTesterPanel({ api }: { api: Api }) {
     setApps(as => as.map(a => a.appId === appId ? { ...a, ...patch } as AppRow : a))
     const r = await api('admin-manage-testers', { action: 'setApp', appId, ...patch })
     if (r?.error) { setErr(r.error); await load() }
+    setBusy(null)
+  }
+
+  /* ── APK upload: get signed URL, PUT via XHR for progress, then setApp ── */
+  const uploadApk = async (appId: string, file: File) => {
+    setUploading(u => ({ ...u, [appId]: 0 }))
+    setErr('')
+    try {
+      // 1. Get signed upload URL
+      const urlRes = await api('admin-manage-testers', {
+        action: 'uploadUrl', appId, fileName: file.name,
+      })
+      if (urlRes?.error) { setErr(urlRes.error); setUploading(u => { const n = { ...u }; delete n[appId]; return n }); return }
+
+      // 2. Upload via XHR for progress tracking
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) setUploading(u => ({ ...u, [appId]: Math.round((e.loaded / e.total) * 100) }))
+        }
+        xhr.onload = () => xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error(`Upload failed: ${xhr.status}`))
+        xhr.onerror = () => reject(new Error('Upload failed'))
+        xhr.open('PUT', urlRes.signedUrl)
+        xhr.setRequestHeader('Content-Type', 'application/vnd.android.package-archive')
+        xhr.send(file)
+      })
+
+      // 3. Update DB with storage path
+      await setApp(appId, { apkPath: urlRes.storagePath })
+      await load()
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Upload failed')
+    } finally {
+      setUploading(u => { const n = { ...u }; delete n[appId]; return n })
+    }
+  }
+
+  const removeApk = async (appId: string) => {
+    setBusy(appId)
+    const r = await api('admin-manage-testers', { action: 'deleteApk', appId })
+    if (r?.error) setErr(r.error)
+    await load()
     setBusy(null)
   }
 
@@ -247,20 +291,52 @@ export function AdminTesterPanel({ api }: { api: Api }) {
                           onClick={() => setApp(a.appId, { openEnrolment: !a.openEnrolment })}
                         >{a.openEnrolment ? '✓' : ''}</button>
                       </td>
-                      <td>
-                        {a.hasBuild
-                          ? <span className="a-badge a-badge--active">uploaded</span>
-                          : <span className="at-tester-meta">none</span>}
+                      <td className="at-build-cell">
+                        <input
+                          ref={el => { fileRefs.current[a.appId] = el }}
+                          type="file"
+                          accept=".apk"
+                          className="at-file-input"
+                          onChange={e => {
+                            const f = e.target.files?.[0]
+                            if (f) uploadApk(a.appId, f)
+                            e.target.value = ''
+                          }}
+                        />
+                        {uploading[a.appId] != null ? (
+                          <div className="at-upload-progress">
+                            <div className="at-upload-bar" style={{ width: `${uploading[a.appId]}%` }} />
+                            <span className="at-upload-pct">{uploading[a.appId]}%</span>
+                          </div>
+                        ) : a.hasBuild ? (
+                          <div className="at-build-info">
+                            <span className="a-badge a-badge--active">uploaded</span>
+                            <div className="at-build-actions">
+                              <button
+                                className="at-btn at-btn--sm"
+                                disabled={busy === a.appId}
+                                onClick={() => fileRefs.current[a.appId]?.click()}
+                              >Replace</button>
+                              <button
+                                className="at-btn at-btn--sm at-btn--danger"
+                                disabled={busy === a.appId}
+                                onClick={() => removeApk(a.appId)}
+                              >✕</button>
+                            </div>
+                          </div>
+                        ) : (
+                          <button
+                            className="at-btn at-btn--upload"
+                            disabled={busy === a.appId}
+                            onClick={() => fileRefs.current[a.appId]?.click()}
+                          >Upload APK</button>
+                        )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <p className="at-hint">
-              Upload the APK to the private <code>tester-apks</code> bucket, then set
-              <code> apk_path</code> on the row (e.g. <code>ummi/ummi-3.1.0.apk</code>).
-            </p>
           </section>
         </>
       )}
