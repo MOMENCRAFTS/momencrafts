@@ -125,7 +125,29 @@ Deno.serve(async (req) => {
       for (const r of reqRows || []) if (!reqByApp.has(r.app_id)) reqByApp.set(r.app_id, r.status)
 
       const all = rows || []
-      const assigned = all.filter(r => canReach(r.app_id)).map(r => shape(r))
+
+      // Latest release notes per app
+      const appIds = all.map(r => r.app_id)
+      // deno-lint-ignore no-explicit-any
+      const releaseMap = new Map<string, any>()
+      if (appIds.length > 0) {
+        const { data: rels } = await supabase
+          .from('co_releases')
+          .select('app_id, changelog, released_at')
+          .in('app_id', appIds)
+          .order('released_at', { ascending: false })
+        for (const r of rels || []) {
+          if (!releaseMap.has(r.app_id)) releaseMap.set(r.app_id, r)
+        }
+      }
+
+      const assigned = all.filter(r => canReach(r.app_id)).map(r => {
+        const rel = releaseMap.get(r.app_id)
+        return shape(r, {
+          changelog: rel?.changelog ?? null,
+          releasedAt: rel?.released_at ?? null,
+        })
+      })
       // Joinable = advertised, and not already reachable.
       const open = all
         .filter(r => r.open_enrolment && !canReach(r.app_id))

@@ -82,6 +82,18 @@ function AssignedCard({ app, index, token }: { app: TesterApp; index: number; to
         {app.buildDate && <span className="mono">{app.buildDate}</span>}
       </div>
 
+      {/* What's new — only for assigned cards with a changelog */}
+      {app.changelog && (
+        <div className="ts-whats-new">
+          <h4 className="ts-whats-new__heading mono">{s.whatsNew.heading}</h4>
+          <ul className="ts-whats-new__list">
+            {app.changelog.split('\n').filter(l => l.trim()).map((line, i) => (
+              <li key={i}>{line.replace(/^[-•*]\s*/, '')}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="ts-actions">
         {app.hasBuild ? (
           <button className="btn btn--gold ts-btn" onClick={download} disabled={busy}>

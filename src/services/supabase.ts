@@ -71,6 +71,10 @@ export interface TesterApp {
   hasBuild: boolean
   /** Only present on open programmes: this tester's latest request. */
   requestStatus?: 'pending' | 'approved' | 'denied' | null
+  /** Latest release changelog (assigned apps only). */
+  changelog?: string | null
+  /** When the latest release was created (assigned apps only). */
+  releasedAt?: string | null
 }
 
 export interface TesterCatalogue {

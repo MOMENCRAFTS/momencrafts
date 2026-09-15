@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import '@/styles/admin-testers.css'
 
 /* ═══════════════════════════════════════════════════════════
@@ -19,6 +19,7 @@ interface AppRow {
   testerVisible: boolean; openEnrolment: boolean; hasBuild: boolean
   apkPath?: string | null; guideUrl?: string | null
   buildDate?: string | null; minAndroid?: string | null; testStage?: string | null
+  release?: { version: string; changelog?: string | null; notifiedAt?: string | null; releasedAt?: string | null } | null
 }
 interface TesterRow {
   tokenId: string; token: string; label: string; email?: string
@@ -47,6 +48,9 @@ export function AdminTesterPanel({ api }: { api: Api }) {
   const [busy, setBusy]         = useState<string | null>(null)
   const [err, setErr]           = useState('')
   const [uploading, setUploading] = useState<Record<string, number>>({})
+  const [changelogs, setChangelogs] = useState<Record<string, string>>({})
+  const [notifyState, setNotifyState] = useState<Record<string, { status: 'idle' | 'saving' | 'notifying' | 'done'; result?: string }>>({}
+  )
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
   const load = useCallback(async () => {
@@ -60,6 +64,18 @@ export function AdminTesterPanel({ api }: { api: Api }) {
   }, [api])
 
   useEffect(() => { load() }, [load])
+
+  // Seed changelog state from server data when apps load
+  useEffect(() => {
+    const init: Record<string, string> = {}
+    for (const a of apps) {
+      if (a.release?.changelog && !(a.appId in changelogs)) {
+        init[a.appId] = a.release.changelog
+      }
+    }
+    if (Object.keys(init).length) setChangelogs(prev => ({ ...init, ...prev }))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apps])
 
   const testerApps = useMemo(() => apps.filter(a => a.testerVisible), [apps])
   const pending    = useMemo(() => requests.filter(r => r.status === 'pending'), [requests])
@@ -140,6 +156,43 @@ export function AdminTesterPanel({ api }: { api: Api }) {
     await load()
     setBusy(null)
   }
+
+  /* ── Save release notes ── */
+  const saveChangelog = async (appId: string) => {
+    const app = apps.find(a => a.appId === appId)
+    if (!app) return
+    const version = app.release?.version || app.version
+    setNotifyState(s => ({ ...s, [appId]: { status: 'saving' } }))
+    const r = await api('admin-manage-testers', {
+      action: 'setRelease', appId, version,
+      changelog: changelogs[appId] ?? '',
+    })
+    if (r?.error) { setErr(r.error); setNotifyState(s => ({ ...s, [appId]: { status: 'idle' } })); return }
+    setNotifyState(s => ({ ...s, [appId]: { status: 'idle', result: 'Notes saved ✓' } }))
+    setTimeout(() => setNotifyState(s => ({ ...s, [appId]: { status: 'idle' } })), 2500)
+  }
+
+  /* ── Notify testers ── */
+  const notifyTesters = async (appId: string) => {
+    const app = apps.find(a => a.appId === appId)
+    if (!app) return
+    const version = app.release?.version || app.version
+    setNotifyState(s => ({ ...s, [appId]: { status: 'notifying' } }))
+    const r = await api('admin-manage-testers', { action: 'notifyTesters', appId, version })
+    if (r?.error) { setErr(r.error); setNotifyState(s => ({ ...s, [appId]: { status: 'idle' } })); return }
+    const parts: string[] = []
+    if (r.sent > 0) parts.push(`✓ ${r.sent} sent`)
+    if (r.skippedNoEmail > 0) parts.push(`${r.skippedNoEmail} skipped (no email)`)
+    if (r.alreadyNotified > 0) parts.push(`${r.alreadyNotified} already notified`)
+    if (r.failed > 0) parts.push(`${r.failed} failed`)
+    setNotifyState(s => ({ ...s, [appId]: { status: 'done', result: parts.join(' · ') || 'No testers to notify' } }))
+    await load()
+  }
+
+  /** Count eligible testers for an app */
+  const eligibleCount = useCallback((appId: string) => {
+    return testers.filter(t => !t.revoked && t.appIds.includes(appId)).length
+  }, [testers])
 
   return (
     <div>
@@ -266,7 +319,8 @@ export function AdminTesterPanel({ api }: { api: Api }) {
                 </thead>
                 <tbody>
                   {apps.map(a => (
-                    <tr key={a.appId}>
+                    <React.Fragment key={a.appId}>
+                    <tr>
                       <td>
                         <span className="at-col-emoji">{a.emoji || '📱'}</span>{' '}
                         <strong>{a.name}</strong>
@@ -333,6 +387,47 @@ export function AdminTesterPanel({ api }: { api: Api }) {
                         )}
                       </td>
                     </tr>
+
+                    {/* Release notes + notify row */}
+                    {a.hasBuild && (
+                      <tr key={`${a.appId}-release`}>
+                        <td colSpan={6} style={{ paddingTop: 0 }}>
+                          <div className="at-changelog">
+                            <textarea
+                              className="at-changelog__input"
+                              placeholder={`What's new in ${a.version}? (one line per change)`}
+                              rows={3}
+                              value={changelogs[a.appId] ?? a.release?.changelog ?? ''}
+                              onChange={e => setChangelogs(c => ({ ...c, [a.appId]: e.target.value }))}
+                              onBlur={() => saveChangelog(a.appId)}
+                            />
+                            <div className="at-changelog__actions">
+                              <button
+                                className="at-btn at-btn--sm"
+                                disabled={notifyState[a.appId]?.status === 'saving'}
+                                onClick={() => saveChangelog(a.appId)}
+                              >{notifyState[a.appId]?.status === 'saving' ? 'Saving…' : 'Save notes'}</button>
+                              <button
+                                className="at-notify-btn"
+                                disabled={notifyState[a.appId]?.status === 'notifying' || eligibleCount(a.appId) === 0}
+                                onClick={() => notifyTesters(a.appId)}
+                              >
+                                {notifyState[a.appId]?.status === 'notifying'
+                                  ? 'Sending…'
+                                  : a.release?.notifiedAt
+                                    ? `Notified ${relTime(a.release.notifiedAt)} · Re-notify`
+                                    : `Notify ${eligibleCount(a.appId)} testers ✉️`
+                                }
+                              </button>
+                              {notifyState[a.appId]?.result && (
+                                <span className="at-notify-state mono">{notifyState[a.appId]?.result}</span>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                   ))}
                 </tbody>
               </table>

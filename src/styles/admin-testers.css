@@ -192,3 +192,69 @@
   color: var(--a-gold, #E2B96B);
   letter-spacing: .05em;
 }
+
+/* ── Changelog / release notes ─────────────────────────── */
+.at-changelog {
+  padding: .5rem .75rem .75rem;
+  border-top: 1px solid rgba(255, 255, 255, .06);
+}
+.at-changelog__input {
+  width: 100%;
+  min-height: 60px;
+  max-height: 180px;
+  resize: vertical;
+  font-family: var(--a-font-mono, 'JetBrains Mono', monospace);
+  font-size: .7rem;
+  line-height: 1.55;
+  color: var(--a-cream, #F0EBE3);
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 6px;
+  padding: .5rem .6rem;
+  transition: border-color .15s ease;
+}
+.at-changelog__input::placeholder {
+  color: rgba(240, 235, 227, .3);
+}
+.at-changelog__input:focus {
+  outline: none;
+  border-color: var(--a-gold, #E2B96B);
+}
+.at-changelog__actions {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .45rem;
+  flex-wrap: wrap;
+}
+
+/* ── Notify button ─────────────────────────────────────── */
+.at-notify-btn {
+  font-family: var(--a-font-mono, 'JetBrains Mono', monospace);
+  font-size: .66rem;
+  letter-spacing: .06em;
+  padding: .35rem .75rem;
+  border-radius: 6px;
+  border: 1px solid var(--a-gold, #E2B96B);
+  background: linear-gradient(135deg, rgba(226, 185, 107, .15), rgba(226, 185, 107, .08));
+  color: var(--a-gold, #E2B96B);
+  cursor: pointer;
+  transition: background .15s ease, transform .1s ease;
+}
+.at-notify-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(226, 185, 107, .25), rgba(226, 185, 107, .15));
+}
+.at-notify-btn:active:not(:disabled) {
+  transform: scale(.97);
+}
+.at-notify-btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+/* ── Notify state feedback ─────────────────────────────── */
+.at-notify-state {
+  font-size: .62rem;
+  color: var(--a-cream-40, #93B4D0);
+  letter-spacing: .03em;
+}

@@ -77,6 +77,11 @@ export const en = {
 
   footer: 'Test builds are confidential. Please do not redistribute the files or share screenshots publicly.',
 
+  whatsNew: {
+    heading: "What's new",
+    noNotes: 'No release notes yet.',
+  },
+
   /* ── Testing terms (shown once, before the portal) ── */
   terms: {
     title: 'TESTING TERMS',
@@ -170,6 +175,11 @@ export const ar: typeof en = {
   },
 
   footer: 'نسخ الاختبار سرية. نرجو عدم إعادة توزيع الملفات أو نشر لقطات الشاشة علناً.',
+
+  whatsNew: {
+    heading: 'الجديد في هذه النسخة',
+    noNotes: 'لا توجد ملاحظات إصدار بعد.',
+  },
 
   terms: {
     title: 'شروط الاختبار',
