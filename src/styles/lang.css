@@ -43,17 +43,21 @@
 
 .lang-toggle svg { flex: none; opacity: .85; }
 
-/* Pinned variant — top corner, opposite the reading direction start. */
-.lang-toggle--floating {
+/* Pinned variant — top corner, opposite the reading direction start.
+   Doubled selector + inset-inline-start:auto: investor.css pins every .lang-toggle
+   to "right" and gate.css to "left"; without the reset the pill stretched across
+   the whole page in Arabic (right + left both set). */
+.lang-toggle.lang-toggle--floating {
   position: fixed;
   top: max(1rem, env(safe-area-inset-top));
   inset-inline-end: 1rem;
+  inset-inline-start: auto;
   z-index: 9997;
 }
 
 @media (max-width: 640px) {
   .lang-toggle { font-size: .62rem; padding: .38rem .65rem; }
-  .lang-toggle--floating { top: max(.6rem, env(safe-area-inset-top)); inset-inline-end: .6rem; }
+  .lang-toggle.lang-toggle--floating { top: max(.6rem, env(safe-area-inset-top)); inset-inline-end: .6rem; }
 }
 
 /* Arabic body copy gets the Arabic type stack. */

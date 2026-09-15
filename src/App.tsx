@@ -11,6 +11,7 @@ const Gate     = lazy(() => import('@/screens/GateScreen'))
 const Home     = lazy(() => import('@/screens/HomeScreen'))
 const RogerAI  = lazy(() => import('@/screens/RogerAIScreen'))
 const EdgeTack = lazy(() => import('@/screens/EdgeTackScreen'))
+const Kuras    = lazy(() => import('@/screens/KurasScreen'))
 const TDC      = lazy(() => import('@/screens/TDCScreen'))
 const Qadaa    = lazy(() => import('@/screens/QadaaScreen').then(m => ({ default: m.QadaaScreen })))
 const Admin    = lazy(() => import('@/screens/AdminScreen'))
@@ -152,6 +153,7 @@ export default function App() {
           <Route path="/tester"   element={<AuthGuard area="tester"><Tester /></AuthGuard>} />
           <Route path="/rogerai"  element={<AuthGuard><RogerAI /></AuthGuard>} />
           <Route path="/edgetack" element={<AuthGuard><EdgeTack /></AuthGuard>} />
+          <Route path="/kuras"    element={<AuthGuard><Kuras /></AuthGuard>} />
           <Route path="/tdc"      element={<AuthGuard><TDC /></AuthGuard>} />
           <Route path="/qadaa"    element={<AuthGuard><Qadaa /></AuthGuard>} />
           {/* /admin on main site → redirect to admin subdomain */}

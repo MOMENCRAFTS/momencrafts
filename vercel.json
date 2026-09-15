@@ -14,6 +14,7 @@
     { "source": "/tdc/",     "destination": "/tdc/index.html" },
     { "source": "/tdc/:path*", "destination": "/tdc/:path*" },
     { "source": "/edgetack", "destination": "/index.html" },
+    { "source": "/kuras",    "destination": "/index.html" },
     { "source": "/dart",      "destination": "/dart/index.html" },
     { "source": "/dart/",     "destination": "/dart/index.html" },
     { "source": "/dart/:path*", "destination": "/dart/:path*" },

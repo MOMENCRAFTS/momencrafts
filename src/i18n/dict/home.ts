@@ -24,7 +24,7 @@ export const en = {
     titleEm: 'Crafted',
     titleRest: 'With You',
     sheet: 'SHEET 01 — INDEX',
-    statement: '12 products. 5 industries. One studio turning ideas into systems and products you can actually try.',
+    statement: '13 products. 6 industries. One studio turning ideas into systems and products you can actually try.',
     sub: 'MomenCrafts & Co',
     cta: 'Browse our work',
   },
@@ -44,7 +44,7 @@ export const en = {
 
   productsSection: {
     title: 'The Portfolio',
-    meta: '12 products · 5 industries',
+    meta: '13 products · 6 industries',
   },
 
   cards: {
@@ -114,6 +114,12 @@ export const en = {
       tags: ['Islamic Products', 'Smart Devices'],
       link: 'WhatsApp',
     },
+    kuras: {
+      name: 'KURAS · كُرّاس',
+      tagline: 'A parent-gated Arabic learning workbook for children aged 6 to 9 — every question approved by the parent before the child sees it.',
+      tags: ['EdTech', 'Arabic', 'Parent-Gated', 'Artificial Intelligence'],
+      link: 'View KURAS',
+    },
     xhb: {
       name: 'XHB · HQ',
       tagline: 'XHB HQ — an intelligent founding-partnership platform built with Molham Al-Dhahabi.',
@@ -128,7 +134,7 @@ export const en = {
     heading: 'The Studio',
     title: 'Crafted with care,',
     titleLine2: 'not assembled',
-    body1: 'MomenCrafts is an invention and product studio in Riyadh, building intelligent systems across healthcare, law, fitness, real estate, family finance, and hardware.',
+    body1: 'MomenCrafts is an invention and product studio in Riyadh, building intelligent systems across healthcare, law, fitness, real estate, family finance, education, and hardware.',
     body2Pre: 'Founded by ',
     body2Name: 'Momen Pharaon',
     body2Post: ' — a founder and engineer who takes an idea from the first sketch to the first usable experience.',
@@ -224,7 +230,7 @@ export const en = {
   portfolio: {
     eyebrow: '02 · PORTFOLIO',
     title: 'Full Portfolio',
-    sub: '10 products across 5 industries — each designed, built, and tested by the founder. Click any card to expand.',
+    sub: '13 products across 6 industries — each designed, built, and tested by the founder. Click any card to expand.',
     detailLabels: {
       sector: 'SECTOR',
       revenue: 'REVENUE MODEL',
@@ -344,6 +350,15 @@ export const en = {
         market: 'KSA — #1 mobile gaming market per capita',
         demoLabel: 'View EdgeTack',
       },
+      kuras: {
+        tagline: 'Parent-Gated Arabic Workbook',
+        desc: 'A daily learning workbook for children aged 6 to 9 where the parent approves every question before the child sees it. Content comes from a hand-verified bank; AI only rephrases wording inside a closed vocabulary. Adaptive difficulty per skill, drawn logic puzzles, on-device or printed, progress reported in words. Web app built; Android wrapper and admin console next.',
+        sector: 'EdTech · Family',
+        revenue: 'Family subscription · School licensing',
+        status: 'In development — web app built, Android release planned',
+        target: 'Arabic-speaking families · KSA first',
+        demoLabel: 'View KURAS',
+      },
     },
   },
 
@@ -397,8 +412,8 @@ export const en = {
     label: 'FOUNDER',
     name: 'Momen Pharaon',
     subtitle: 'Founder & Engineer · Riyadh, KSA',
-    body: 'Built all 10 products — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Founder and engineer from concept to first usable experience.',
-    tags: ['USPTO patent filer', 'MOH compliance', '10 products built', 'Riyadh · KSA'],
+    body: 'Built all 13 products — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Founder and engineer from concept to first usable experience.',
+    tags: ['USPTO patent filer', 'MOH compliance', '13 products built', 'Riyadh · KSA'],
   },
 
   /* ── 05 Partnership ── */
@@ -413,7 +428,7 @@ export const en = {
     },
     adoption: {
       title: 'Adoption',
-      desc: 'You want to deploy one of our 10 products inside your organisation — a hospital system using Cliniq, a family office using Ummi Wallet, or an enterprise using RogerAI.',
+      desc: 'You want to deploy one of our 13 products inside your organisation — a hospital system using Cliniq, a family office using Ummi Wallet, or an enterprise using RogerAI.',
       btn: 'I want to adopt a product',
     },
     teamup: {
@@ -586,7 +601,7 @@ export const ar: typeof en = {
     titleEm: 'بعناية',
     titleRest: 'مصممة معكم',
     sheet: 'اللوحة ٠١ — الفهرس',
-    statement: '١٢ منتج. ٥ مجالات. استوديو واحد يحوّل الأفكار إلى أنظمة ومنتجات قابلة للتجربة.',
+    statement: '١٣ منتج. ٦ مجالات. استوديو واحد يحوّل الأفكار إلى أنظمة ومنتجات قابلة للتجربة.',
     sub: 'مومن كرافتس اند كو',
     cta: 'تصفح أعمالنا',
   },
@@ -605,7 +620,7 @@ export const ar: typeof en = {
 
   productsSection: {
     title: 'المحفظة',
-    meta: '١٢ منتج · ٥ مجالات',
+    meta: '١٣ منتج · ٦ مجالات',
   },
 
   cards: {
@@ -675,6 +690,12 @@ export const ar: typeof en = {
       tags: ['منتجات إسلامية', 'أجهزة ذكية'],
       link: 'واتساب',
     },
+    kuras: {
+      name: 'KURAS · كُرّاس',
+      tagline: 'كُرّاس تعلّم عربي للأطفال من ٦ إلى ٩ سنوات — كل سؤال يعتمده الوالد قبل أن يراه الطفل.',
+      tags: ['تعليم', 'عربي', 'بإشراف الوالدين', 'ذكاء اصطناعي'],
+      link: 'عرض KURAS',
+    },
     xhb: {
       name: 'XHB · مقر',
       tagline: 'مقر XHB — منصة تأسيس شراكة ذكية مع ملهم الذهبي.',
@@ -688,7 +709,7 @@ export const ar: typeof en = {
     heading: 'الاستوديو',
     title: 'مصممة بعناية،',
     titleLine2: 'مو تجميع',
-    body1: 'مومن كرافتس استوديو اختراع ومنتجات في الرياض يطوّر أنظمة ذكية في الصحة، القانون، اللياقة، العقار، التمويل العائلي، والأجهزة.',
+    body1: 'مومن كرافتس استوديو اختراع ومنتجات في الرياض يطوّر أنظمة ذكية في الصحة، القانون، اللياقة، العقار، التمويل العائلي، التعليم، والأجهزة.',
     body2Pre: 'أسسه ',
     body2Name: 'مومن فرعون',
     body2Post: ' — مؤسس ومهندس يبني الفكرة من أول رسم إلى أول تجربة قابلة للاستخدام.',
@@ -780,7 +801,7 @@ export const ar: typeof en = {
   portfolio: {
     eyebrow: '٠٢ · المحفظة',
     title: 'المحفظة الكاملة',
-    sub: '١٠ منتجات في ٥ قطاعات — صُمم كل منها وبُني واختُبر بيد المؤسس. اضغط أي بطاقة لعرض التفاصيل.',
+    sub: '١٣ منتجًا في ٦ قطاعات — صُمم كل منها وبُني واختُبر بيد المؤسس. اضغط أي بطاقة لعرض التفاصيل.',
     detailLabels: {
       sector: 'القطاع',
       revenue: 'نموذج الإيراد',
@@ -900,6 +921,15 @@ export const ar: typeof en = {
         market: 'السعودية — الأولى عالمياً في ألعاب الجوال لكل فرد',
         demoLabel: 'عرض EdgeTack',
       },
+      kuras: {
+        tagline: 'كُرّاس عربي بإشراف الوالدين',
+        desc: 'كُرّاس تعلّم يومي للأطفال من ٦ إلى ٩ سنوات، يعتمد فيه الوالد كل سؤال قبل أن يراه الطفل. المحتوى من بنك مُراجَع يدويًا، والذكاء الاصطناعي يعيد الصياغة فقط ضمن مفردات مغلقة. صعوبة تتكيّف مع كل مهارة، ألغاز منطق مرسومة، حلّ على الجهاز أو على الورق، وتقدّم يُعرض بالكلمات. تطبيق الويب مبني؛ غلاف أندرويد ولوحة الإدارة هما التاليان.',
+        sector: 'تعليم · أسرة',
+        revenue: 'اشتراك أسري · ترخيص للمدارس',
+        status: 'قيد التطوير — تطبيق الويب مبني، إصدار أندرويد مخطَّط',
+        target: 'الأسر الناطقة بالعربية · السعودية أولًا',
+        demoLabel: 'عرض KURAS',
+      },
     },
   },
 
@@ -951,7 +981,7 @@ export const ar: typeof en = {
     name: 'مومن فرعون',
     subtitle: 'مؤسس ومهندس · الرياض، السعودية',
     body: 'بنى المنتجات العشرة كاملة — من تصميم لوحات الدوائر إلى تطبيقات iOS و Android، والبنية السحابية، وأنظمة الذكاء الاصطناعي، وطلبات البراءات. مؤسس ومهندس من الفكرة إلى أول تجربة قابلة للاستخدام.',
-    tags: ['مقدّم طلبات براءة لدى USPTO', 'امتثال وزارة الصحة', '١٠ منتجات مبنية', 'الرياض · السعودية'],
+    tags: ['مقدّم طلبات براءة لدى USPTO', 'امتثال وزارة الصحة', '١٣ منتجًا مبنيًا', 'الرياض · السعودية'],
   },
 
   partnership: {

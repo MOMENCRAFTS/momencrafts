@@ -107,6 +107,7 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
     { id: 'tdc',      label: cards.tdc.name },
     { id: 'dart',     label: cards.dart.name },
     { id: 'edgetack', label: cards.edgetack.name },
+    { id: 'kuras',    label: cards.kuras.name },
     { id: 'xhb',      label: cards.xhb.name },
   ]
 
@@ -527,10 +528,11 @@ const PUBLIC_CARDS: {
   { key: 'tdc',      no: '06', id: 'card-tdc',      accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/tdc' },
   { key: 'dart',     no: '07', id: 'card-dart',     accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/dart/' },
   { key: 'edgetack', no: '08', id: 'card-edgetack', accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/edgetack' },
-  { key: 'muscle',   no: '09', id: 'card-muscle',   wa: true },
-  { key: 'aqar',     no: '10', id: 'card-aqar',     wa: true },
-  { key: 'sabha',    no: '11', id: 'card-sabha',    wa: true },
-  { key: 'xhb',      no: '12', id: 'card-xhb',      accent: 'var(--live)', stage: 'live', pill: 'ADOPTED', pillClass: 'pill--adopted', xhb: true },
+  { key: 'kuras',    no: '09', id: 'card-kuras',    accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/kuras' },
+  { key: 'muscle',   no: '10', id: 'card-muscle',   wa: true },
+  { key: 'aqar',     no: '11', id: 'card-aqar',     wa: true },
+  { key: 'sabha',    no: '12', id: 'card-sabha',    wa: true },
+  { key: 'xhb',      no: '13', id: 'card-xhb',      accent: 'var(--live)', stage: 'live', pill: 'ADOPTED', pillClass: 'pill--adopted', xhb: true },
 ]
 
 /* ── Investor portfolio config — language-independent metadata ── */
@@ -550,6 +552,7 @@ const INV_CARDS: {
   { id: 'tdc',      name: 'TURBO DRONE CIRCUIT', cat: 'Hardware · Patent',     badge: 'patent',    badgeClass: 'inv-badge-patent',    keys: ['sector','revenue','ipStatus','opportunity'],  demoLink: '/tdc' },
   { id: 'dart',     name: 'DART',                cat: 'FPV · Esports Hardware', badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','tech','ipStatus'],        demoLink: '/dart/' },
   { id: 'edgetack', name: 'EDGE TACK',           cat: 'Mobile Gaming · Patent', badge: 'patent',   badgeClass: 'inv-badge-patent',    keys: ['sector','revenue','ipStatus','market'],       demoLink: '/edgetack' },
+  { id: 'kuras',    name: 'KURAS',               cat: 'EdTech · Family',        badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','target'],         demoLink: '/kuras' },
 ]
 
 const DOWNLOAD_META = [
@@ -995,9 +998,9 @@ export default function HomeScreen() {
             <h2 className="inv-heading">{h.traction.heading}</h2>
             <div className="inv-stat-grid">
               {[
-                { n: 10, label: h.traction.stats.products },
+                { n: 13, label: h.traction.stats.products },
                 { n: 2,  label: h.traction.stats.patents },
-                { n: 5,  label: h.traction.stats.industries },
+                { n: 6,  label: h.traction.stats.industries },
                 { n: 1,  label: h.traction.stats.founder },
               ].map((item,i) => (
                 <div key={item.label} className="inv-stat-card">
