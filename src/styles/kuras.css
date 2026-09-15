@@ -1,28 +1,6 @@
 /* KURAS product page — additions on top of the shared showcase styles
-   (hero, badges, cap-grid, cta-section and footer come from index.css / dark.css).
-   Everything is scoped to .kuras-page so nothing leaks into other screens. */
-
-/* ── Nav: the shared #nav rules expect a .nav-inner wrapper; lay the bare nav out as one row ── */
-/* End padding leaves room for the floating language toggle pinned in that corner. */
-.kuras-page #nav{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding-block:.9rem;padding-inline:var(--gutter) calc(var(--gutter) + 6.5rem)}
-.kuras-page .nav-brand{color:var(--green)}
-.kuras-page .nav-back{color:#1f2a24;border:1px solid var(--green-border);white-space:nowrap}
-.kuras-page .nav-back:hover{color:var(--green);border-color:var(--green)}
-.kuras-page .nav-hamburger{display:none}
-@media(min-width:901px){
-  .kuras-page .nav-links{display:flex;align-items:center;gap:1.75rem;margin:0;padding:0}
-  .kuras-page .nav-links a{border-bottom:none;color:#3b4640}
-  .kuras-page .nav-links a:hover{color:var(--green)}
-  .kuras-page .nav-links a.nav-cta{color:#fff!important;background:var(--green)!important;border:2px solid var(--green)!important;padding:.45rem 1rem!important;border-radius:0}
-}
-@media(max-width:900px){
-  .kuras-page .nav-hamburger{display:flex}
-  .kuras-page #nav-links{display:none}
-  /* index.css gives .nav-links inset:0; with the shared dropdown's top:100% that bottom:0
-     collapsed the list to a few pixels and its items spilled out from behind the bar. */
-  .kuras-page #nav-links.open{display:flex!important;bottom:auto;justify-content:flex-start;align-items:stretch;gap:.25rem}
-  .kuras-page #nav-links a.nav-cta{background:var(--green)!important;color:#fff!important;justify-content:center;margin-top:.75rem}
-}
+   (nav from product-nav.css; hero, badges, cap-grid, cta-section and footer
+   from index.css / dark.css). Scoped to .kuras-page so nothing leaks. */
 
 /* ── Hero mascot ── */
 .kuras-hero .device-img{max-width:min(440px,78vw);height:auto;filter:drop-shadow(0 18px 32px rgba(0,0,0,.16))}
@@ -46,7 +24,5 @@
 [dir="rtl"] .kuras-page .cta-title em{font-style:normal}
 
 @media(max-width:640px){
-  .kuras-page #nav{padding-inline:var(--gutter) calc(var(--gutter) + 7rem)}
-  .kuras-page .nav-back{display:none}   /* the CTA block and footer carry the same link */
   .kuras-facts{gap:1.5rem 2.5rem;padding-block:2rem}
 }

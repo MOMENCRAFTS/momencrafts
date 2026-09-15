@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import heroImg from '@/assets/kuras/hero.png'
 import { useT } from '@/i18n'
 import { LangToggle } from '@/components/LangToggle'
+import '@/styles/product-nav.css'
 import '@/styles/kuras.css'
 
 function useReveal() {
@@ -40,7 +41,7 @@ export default function KurasScreen() {
   useReveal()
   useHamburger()
   return (
-    <div className="kuras-page">
+    <div className="kuras-page product-page">
       <LangToggle />
 
       <nav id="nav">

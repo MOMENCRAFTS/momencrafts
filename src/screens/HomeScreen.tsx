@@ -564,6 +564,7 @@ const DOWNLOAD_META = [
 ] as const
 
 const JOURNAL_META = [
+  { category: 'update',    product: 'KURAS',    pinned: true },
   { category: 'launch',    product: 'Cliniq',   pinned: true },
   { category: 'update',    product: null,       pinned: true },
   { category: 'patent',    product: 'TDC',      pinned: false },

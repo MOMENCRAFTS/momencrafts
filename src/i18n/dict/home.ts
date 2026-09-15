@@ -483,6 +483,7 @@ export const en = {
     },
     creditPrefix: '& Co credit:',
     fallback: [
+      { title: 'KURAS joins the portfolio — product 13', body: 'A parent-gated Arabic learning workbook for children aged 6 to 9: every question is approved by the parent first, from a hand-verified bank, and AI only rephrases wording. Web app built, admin console in progress, Android release planned. Showcase page live at /kuras.', date: 'Sep 15, 2026', credit: null },
       { title: 'Cliniq.one landing page — live', body: 'The public-facing landing page for Cliniq.one is now deployed. Patients can learn about the platform and doctors can request onboarding.', date: 'Jun 12, 2026', credit: null },
       { title: 'MomenCrafts & Co — brand alignment complete', body: 'The entire investor portal has been rebranded to reflect the & Co philosophy. Every section now speaks the co-builder language.', date: 'Jun 10, 2026', credit: null },
       { title: 'USPTO: Turbo Drone Circuit patent filed', body: 'High-current supercapacitor series injection power board for FPV drones — 150A burst and +15% voltage jump.', date: 'May 2025', credit: null },
@@ -1047,6 +1048,7 @@ export const ar: typeof en = {
     },
     creditPrefix: 'توثيق اند كو:',
     fallback: [
+      { title: 'كُرّاس ينضم إلى المحفظة — المنتج ١٣', body: 'كُرّاس تعلّم عربي بإشراف الوالدين للأطفال من ٦ إلى ٩ سنوات: كل سؤال يعتمده الوالد أولًا من بنك مُراجَع يدويًا، والذكاء الاصطناعي يعيد الصياغة فقط. تطبيق الويب مبني، لوحة الإدارة قيد العمل، وإصدار أندرويد مخطَّط. صفحة العرض متاحة الآن على /kuras.', date: '١٥ سبتمبر ٢٠٢٦', credit: null },
       { title: 'صفحة Cliniq.one — تعمل الآن', body: 'تم نشر الصفحة التعريفية العامة لـ Cliniq.one. يمكن للمرضى التعرف على المنصة وللأطباء طلب الانضمام.', date: '١٢ يونيو ٢٠٢٦', credit: null },
       { title: 'مومن كرافتس اند كو — اكتمال توحيد الهوية', body: 'أُعيدت هوية بوابة المستثمرين بالكامل لتعكس فلسفة اند كو. كل قسم الآن يتحدث بلغة الشريك البنّاء.', date: '١٠ يونيو ٢٠٢٦', credit: null },
       { title: 'USPTO: تقديم براءة Turbo Drone Circuit', body: 'لوحة قدرة فائقة لحقن المكثف الفائق على التوالي لطائرات FPV — تيار انطلاق ١٥٠ أمبير وقفزة جهد +١٥٪.', date: 'مايو ٢٠٢٥', credit: null },

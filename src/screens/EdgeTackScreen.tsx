@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import deviceHero from '@/assets/edgetacktic/hero.png'
 import { useT } from '@/i18n'
 import { LangToggle } from '@/components/LangToggle'
+import '@/styles/product-nav.css'
 
 function useReveal() {
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function EdgeTackScreen() {
   useReveal()
   useHamburger()
   return (
-    <>
+    <div className="product-page">
       <LangToggle />
 
       <nav id="nav">
@@ -103,6 +104,6 @@ export default function EdgeTackScreen() {
           <Link to="/home" className="footer-back">{e.footer.back}</Link>
         </div>
       </footer>
-    </>
+    </div>
   )
 }

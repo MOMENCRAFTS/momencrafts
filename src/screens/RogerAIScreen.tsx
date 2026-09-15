@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import deviceImg from '@/assets/device.png'
 import { useT } from '@/i18n'
 import { LangToggle } from '@/components/LangToggle'
+import '@/styles/product-nav.css'
 
 /* Language-independent hardware data. Human-readable names live in
    t.roger.hardware.blockNames, matched to these entries by index. */
@@ -95,7 +96,7 @@ export default function RogerAIScreen() {
   const badges = [r.hero.badges.prototype, r.hero.badges.mcu, r.hero.badges.wireless, r.hero.badges.pcb]
 
   return (
-    <>
+    <div className="product-page">
       <LangToggle />
 
       <canvas ref={canvasRef} id="r-canvas" style={{position:'fixed',inset:0,pointerEvents:'none',opacity:.25,zIndex:0}} />
@@ -254,7 +255,7 @@ export default function RogerAIScreen() {
           <Link to="/home" className="footer-back">{r.footer.back}</Link>
         </div>
       </footer>
-    </>
+    </div>
   )
 }
 
