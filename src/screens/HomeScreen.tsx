@@ -108,6 +108,7 @@ function CoFounderExclusive({ type, name, token }: { type: string; name: string;
     { id: 'dart',     label: cards.dart.name },
     { id: 'edgetack', label: cards.edgetack.name },
     { id: 'kuras',    label: cards.kuras.name },
+    { id: 'sahhaaab', label: cards.sahhaaab.name },
     { id: 'xhb',      label: cards.xhb.name },
   ]
 
@@ -529,10 +530,11 @@ const PUBLIC_CARDS: {
   { key: 'dart',     no: '07', id: 'card-dart',     accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/dart/' },
   { key: 'edgetack', no: '08', id: 'card-edgetack', accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/edgetack' },
   { key: 'kuras',    no: '09', id: 'card-kuras',    accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/kuras' },
-  { key: 'muscle',   no: '10', id: 'card-muscle',   wa: true },
-  { key: 'aqar',     no: '11', id: 'card-aqar',     wa: true },
-  { key: 'sabha',    no: '12', id: 'card-sabha',    wa: true },
-  { key: 'xhb',      no: '13', id: 'card-xhb',      accent: 'var(--live)', stage: 'live', pill: 'ADOPTED', pillClass: 'pill--adopted', xhb: true },
+  { key: 'sahhaaab', no: '10', id: 'card-sahhaaab', accent: 'var(--dev)',  stage: 'dev',  pill: 'DEV',     pillClass: 'pill--dev',     href: '/sahhaaab' },
+  { key: 'muscle',   no: '11', id: 'card-muscle',   wa: true },
+  { key: 'aqar',     no: '12', id: 'card-aqar',     wa: true },
+  { key: 'sabha',    no: '13', id: 'card-sabha',    wa: true },
+  { key: 'xhb',      no: '14', id: 'card-xhb',      accent: 'var(--live)', stage: 'live', pill: 'ADOPTED', pillClass: 'pill--adopted', xhb: true },
 ]
 
 /* ── Investor portfolio config — language-independent metadata ── */
@@ -553,6 +555,7 @@ const INV_CARDS: {
   { id: 'dart',     name: 'DART',                cat: 'FPV · Esports Hardware', badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','tech','ipStatus'],        demoLink: '/dart/' },
   { id: 'edgetack', name: 'EDGE TACK',           cat: 'Mobile Gaming · Patent', badge: 'patent',   badgeClass: 'inv-badge-patent',    keys: ['sector','revenue','ipStatus','market'],       demoLink: '/edgetack' },
   { id: 'kuras',    name: 'KURAS',               cat: 'EdTech · Family',        badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','target'],         demoLink: '/kuras' },
+  { id: 'sahhaaab', name: 'SAHHAAAB',            cat: 'Mobile Gaming',          badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','market'],         demoLink: '/sahhaaab' },
 ]
 
 const DOWNLOAD_META = [
@@ -564,6 +567,7 @@ const DOWNLOAD_META = [
 ] as const
 
 const JOURNAL_META = [
+  { category: 'update',    product: 'Sahhaaab', pinned: true },
   { category: 'update',    product: 'KURAS',    pinned: true },
   { category: 'launch',    product: 'Cliniq',   pinned: true },
   { category: 'update',    product: null,       pinned: true },
@@ -999,9 +1003,9 @@ export default function HomeScreen() {
             <h2 className="inv-heading">{h.traction.heading}</h2>
             <div className="inv-stat-grid">
               {[
-                { n: 13, label: h.traction.stats.products },
+                { n: 14, label: h.traction.stats.products },
                 { n: 2,  label: h.traction.stats.patents },
-                { n: 6,  label: h.traction.stats.industries },
+                { n: 7,  label: h.traction.stats.industries },
                 { n: 1,  label: h.traction.stats.founder },
               ].map((item,i) => (
                 <div key={item.label} className="inv-stat-card">

@@ -18,3 +18,15 @@ recommendation. Every row stays until answered.
 | D9 | Who builds? | Claude writes prompts + reviews, Antigravity executes, Claude verifies by running; Claude builds directly where faster. Momen: decisions, logins, COMMIT/PUSH/apply/deploy. | **Start Phase 1 now**, Claude builds directly in the momencrafts repo; staged, not committed, not deployed until Momen says so. | 2026-09-23 |
 | D-KURAS-1 | When KURAS families are deleted, purge their rows from the `events` log (child nicknames, consent records)? | Yes — purge the removed families' rows, keep admin rows. | taken by recommendation | 2026-09-23 |
 | D-ROGER-1 | Which RogerAI accounts are the keep-list? | Momen names them from a masked list once the CLI can read that database. | pending | |
+
+## Sahhaaab card + page (plan: 2026-09-23-sahhaaab-card.md)
+
+| # | Question | Recommendation | Momen's answer | Date |
+|---|---|---|---|---|
+| D-SAH-1 | Where does the card sit and with which stage? | Card 10, DEV pill, right after KURAS; the three WhatsApp cards become 11-13 and XHB becomes 14. Product 14 in every counter. | taken by recommendation | 2026-09-23 |
+| D-SAH-2 | Count games as a new industry (6 to 7) and add "games" to the studio sentence? | Yes. Edge Tack and DART are hardware; Sahhaaab is the studio's first game. | taken by recommendation | 2026-09-23 |
+| D-SAH-3 | Say on the site that the genre's classic died in 2016 (never naming it)? | Yes, unnamed, in the investor blurb only. It is the strongest market line the game has; the name never appears anywhere on the site. | taken by recommendation | 2026-09-23 |
+| D-SAH-4 | Hero art for the /sahhaaab page? | The Old Damascus opening scene (scene-dam-opening.png, portrait) in a phone-shaped frame. Alternative: the aiming duelist cut-out. Both are original studio art. | taken by recommendation | 2026-09-23 |
+| D-SAH-5 | Revenue line: "cosmetics and energy, never pay-to-win"? | Yes. The game log calls this stance "leaning"; the site states it plainly, and it is the line that answers the genre's biggest complaint. | taken by recommendation | 2026-09-23 |
+| D-SAH-6 | Journal entry "Sahhaaab joins the portfolio - product 14", pinned, plus a live co_journal row? | Yes. Fallback entry in the build; the live row goes in through the admin Journal tab after PUSH (or Claude inserts it on Momen's OK, as with KURAS). | taken by recommendation | 2026-09-23 |
+| D-SAH-7 | Who builds, and when? | Claude builds directly in this repo on "go": staged, not committed, not pushed until Momen writes COMMIT / PUSH. One session, same size as KURAS. Nothing is written to the Sahhaaab repo. | taken by recommendation | 2026-09-23 |

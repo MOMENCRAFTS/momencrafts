@@ -24,7 +24,7 @@ export const en = {
     titleEm: 'Crafted',
     titleRest: 'With You',
     sheet: 'SHEET 01 — INDEX',
-    statement: '13 products. 6 industries. One studio turning ideas into systems and products you can actually try.',
+    statement: '14 products. 7 industries. One studio turning ideas into systems and products you can actually try.',
     sub: 'MomenCrafts & Co',
     cta: 'Browse our work',
   },
@@ -44,7 +44,7 @@ export const en = {
 
   productsSection: {
     title: 'The Portfolio',
-    meta: '13 products · 6 industries',
+    meta: '14 products · 7 industries',
   },
 
   cards: {
@@ -120,6 +120,12 @@ export const en = {
       tags: ['EdTech', 'Arabic', 'Parent-Gated', 'Artificial Intelligence'],
       link: 'View KURAS',
     },
+    sahhaaab: {
+      name: 'SAHHAAAB · سحّاب',
+      tagline: 'A real-time one-on-one duel game for the phone, set in Old Damascus. Holster the phone at your hip, wait for the buzz, draw, and fire.',
+      tags: ['Mobile Game', 'Real-Time Duels', 'Arabic First', 'Old Damascus'],
+      link: 'View Sahhaaab',
+    },
     xhb: {
       name: 'XHB · HQ',
       tagline: 'XHB HQ — an intelligent founding-partnership platform built with Molham Al-Dhahabi.',
@@ -134,7 +140,7 @@ export const en = {
     heading: 'The Studio',
     title: 'Crafted with care,',
     titleLine2: 'not assembled',
-    body1: 'MomenCrafts is an invention and product studio in Riyadh, building intelligent systems across healthcare, law, fitness, real estate, family finance, education, and hardware.',
+    body1: 'MomenCrafts is an invention and product studio in Riyadh, building intelligent systems across healthcare, law, fitness, real estate, family finance, education, games, and hardware.',
     body2Pre: 'Founded by ',
     body2Name: 'Momen Pharaon',
     body2Post: ' — a founder and engineer who takes an idea from the first sketch to the first usable experience.',
@@ -230,7 +236,7 @@ export const en = {
   portfolio: {
     eyebrow: '02 · PORTFOLIO',
     title: 'Full Portfolio',
-    sub: '13 products across 6 industries — each designed, built, and tested by the founder. Click any card to expand.',
+    sub: '14 products across 7 industries — each designed, built, and tested by the founder. Click any card to expand.',
     detailLabels: {
       sector: 'SECTOR',
       revenue: 'REVENUE MODEL',
@@ -359,6 +365,15 @@ export const en = {
         target: 'Arabic-speaking families · KSA first',
         demoLabel: 'View KURAS',
       },
+      sahhaaab: {
+        tagline: 'Real-Time Duel Game',
+        desc: 'A phone game of one-on-one duels: you holster the phone, wait for the buzz, draw, tilt to aim, and fire. Set in Old Damascus, with its coffeehouse, tailor, gunsmith and notice board, and with rivalry, reputation and neighbourhood pride as the loop. The phone-duel genre had millions of Gulf players before its classic died in 2016; nothing credible replaced it. Arabic first. Version 1 plays offline against bots; online duels follow.',
+        sector: 'Mobile Gaming · Arab heritage',
+        revenue: 'In-app purchases — cosmetics and energy, never pay-to-win',
+        status: 'In development — duel engine, art pack and duel scene built; first feel-test build next',
+        market: 'Gulf — Saudi and Kuwait first',
+        demoLabel: 'View Sahhaaab',
+      },
     },
   },
 
@@ -412,8 +427,8 @@ export const en = {
     label: 'FOUNDER',
     name: 'Momen Pharaon',
     subtitle: 'Founder & Engineer · Riyadh, KSA',
-    body: 'Built all 13 products — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Founder and engineer from concept to first usable experience.',
-    tags: ['USPTO patent filer', 'MOH compliance', '13 products built', 'Riyadh · KSA'],
+    body: 'Built all 14 products — from PCB hardware design to iOS/Android apps, cloud infrastructure, AI systems, and patent filings. Founder and engineer from concept to first usable experience.',
+    tags: ['USPTO patent filer', 'MOH compliance', '14 products built', 'Riyadh · KSA'],
   },
 
   /* ── 05 Partnership ── */
@@ -428,7 +443,7 @@ export const en = {
     },
     adoption: {
       title: 'Adoption',
-      desc: 'You want to deploy one of our 13 products inside your organisation — a hospital system using Cliniq, a family office using Ummi Wallet, or an enterprise using RogerAI.',
+      desc: 'You want to deploy one of our 14 products inside your organisation — a hospital system using Cliniq, a family office using Ummi Wallet, or an enterprise using RogerAI.',
       btn: 'I want to adopt a product',
     },
     teamup: {
@@ -483,6 +498,7 @@ export const en = {
     },
     creditPrefix: '& Co credit:',
     fallback: [
+      { title: 'Sahhaaab joins the portfolio — product 14', body: 'An original real-time duel game for the phone, set in Old Damascus: holster, wait for the buzz, draw, fire. Arabic first, Gulf first. Version 1 plays offline against bots; the first feel-test build on real phones is next. Showcase page live at /sahhaaab.', date: 'Sep 23, 2026', credit: null },
       { title: 'KURAS joins the portfolio — product 13', body: 'A parent-gated Arabic learning workbook for children aged 6 to 9: every question is approved by the parent first, from a hand-verified bank, and AI only rephrases wording. Web app built, admin console in progress, Android release planned. Showcase page live at /kuras.', date: 'Sep 15, 2026', credit: null },
       { title: 'Cliniq.one landing page — live', body: 'The public-facing landing page for Cliniq.one is now deployed. Patients can learn about the platform and doctors can request onboarding.', date: 'Jun 12, 2026', credit: null },
       { title: 'MomenCrafts & Co — brand alignment complete', body: 'The entire investor portal has been rebranded to reflect the & Co philosophy. Every section now speaks the co-builder language.', date: 'Jun 10, 2026', credit: null },
@@ -602,7 +618,7 @@ export const ar: typeof en = {
     titleEm: 'بعناية',
     titleRest: 'مصممة معكم',
     sheet: 'اللوحة ٠١ — الفهرس',
-    statement: '١٣ منتج. ٦ مجالات. استوديو واحد يحوّل الأفكار إلى أنظمة ومنتجات قابلة للتجربة.',
+    statement: '١٤ منتج. ٧ مجالات. استوديو واحد يحوّل الأفكار إلى أنظمة ومنتجات قابلة للتجربة.',
     sub: 'مومن كرافتس اند كو',
     cta: 'تصفح أعمالنا',
   },
@@ -621,7 +637,7 @@ export const ar: typeof en = {
 
   productsSection: {
     title: 'المحفظة',
-    meta: '١٣ منتج · ٦ مجالات',
+    meta: '١٤ منتج · ٧ مجالات',
   },
 
   cards: {
@@ -697,6 +713,12 @@ export const ar: typeof en = {
       tags: ['تعليم', 'عربي', 'بإشراف الوالدين', 'ذكاء اصطناعي'],
       link: 'عرض KURAS',
     },
+    sahhaaab: {
+      name: 'SAHHAAAB · سحّاب',
+      tagline: 'لعبة مبارزة فردية لحظية على الجوال في دمشق القديمة. ضع الجوال على خصرك، انتظر الاهتزاز، اسحب، وأطلق.',
+      tags: ['لعبة جوال', 'مبارزات لحظية', 'العربية أولًا', 'دمشق القديمة'],
+      link: 'عرض Sahhaaab',
+    },
     xhb: {
       name: 'XHB · مقر',
       tagline: 'مقر XHB — منصة تأسيس شراكة ذكية مع ملهم الذهبي.',
@@ -710,7 +732,7 @@ export const ar: typeof en = {
     heading: 'الاستوديو',
     title: 'مصممة بعناية،',
     titleLine2: 'مو تجميع',
-    body1: 'مومن كرافتس استوديو اختراع ومنتجات في الرياض يطوّر أنظمة ذكية في الصحة، القانون، اللياقة، العقار، التمويل العائلي، التعليم، والأجهزة.',
+    body1: 'مومن كرافتس استوديو اختراع ومنتجات في الرياض يطوّر أنظمة ذكية في الصحة، القانون، اللياقة، العقار، التمويل العائلي، التعليم، الألعاب، والأجهزة.',
     body2Pre: 'أسسه ',
     body2Name: 'مومن فرعون',
     body2Post: ' — مؤسس ومهندس يبني الفكرة من أول رسم إلى أول تجربة قابلة للاستخدام.',
@@ -802,7 +824,7 @@ export const ar: typeof en = {
   portfolio: {
     eyebrow: '٠٢ · المحفظة',
     title: 'المحفظة الكاملة',
-    sub: '١٣ منتجًا في ٦ قطاعات — صُمم كل منها وبُني واختُبر بيد المؤسس. اضغط أي بطاقة لعرض التفاصيل.',
+    sub: '١٤ منتجًا في ٧ قطاعات — صُمم كل منها وبُني واختُبر بيد المؤسس. اضغط أي بطاقة لعرض التفاصيل.',
     detailLabels: {
       sector: 'القطاع',
       revenue: 'نموذج الإيراد',
@@ -931,6 +953,15 @@ export const ar: typeof en = {
         target: 'الأسر الناطقة بالعربية · السعودية أولًا',
         demoLabel: 'عرض KURAS',
       },
+      sahhaaab: {
+        tagline: 'لعبة مبارزات لحظية',
+        desc: 'لعبة مبارزة فردية على الجوال: تضع الجوال على خصرك، تنتظر الاهتزاز، تسحب، تميل الجوال للتصويب، وتطلق. تدور في دمشق القديمة بمقهاها وخياطها وصانع أسلحتها ولوحة إعلاناتها، ودافعها التنافس والسمعة وفخر الحارة. كان لهذا النوع من الألعاب ملايين اللاعبين في الخليج قبل أن تتوقف لعبته الكلاسيكية عام ٢٠١٦ ولم يعوّضها شيء جدير. العربية أولًا. النسخة الأولى تُلعب دون اتصال ضد خصوم آليين، والمبارزات عبر الإنترنت تليها.',
+        sector: 'ألعاب الجوال · تراث عربي',
+        revenue: 'مشتريات داخل التطبيق — مظاهر وطاقة، ولا دفع مقابل الفوز',
+        status: 'قيد التطوير — محرك المبارزة وحزمة الرسوم ومشهد المبارزة مبنية، ونسخة اختبار الإحساس هي التالية',
+        market: 'الخليج — السعودية والكويت أولًا',
+        demoLabel: 'عرض Sahhaaab',
+      },
     },
   },
 
@@ -981,8 +1012,8 @@ export const ar: typeof en = {
     label: 'المؤسس',
     name: 'مومن فرعون',
     subtitle: 'مؤسس ومهندس · الرياض، السعودية',
-    body: 'بنى المنتجات العشرة كاملة — من تصميم لوحات الدوائر إلى تطبيقات iOS و Android، والبنية السحابية، وأنظمة الذكاء الاصطناعي، وطلبات البراءات. مؤسس ومهندس من الفكرة إلى أول تجربة قابلة للاستخدام.',
-    tags: ['مقدّم طلبات براءة لدى USPTO', 'امتثال وزارة الصحة', '١٣ منتجًا مبنيًا', 'الرياض · السعودية'],
+    body: 'بنى المنتجات الأربعة عشر كاملة — من تصميم لوحات الدوائر إلى تطبيقات iOS و Android، والبنية السحابية، وأنظمة الذكاء الاصطناعي، وطلبات البراءات. مؤسس ومهندس من الفكرة إلى أول تجربة قابلة للاستخدام.',
+    tags: ['مقدّم طلبات براءة لدى USPTO', 'امتثال وزارة الصحة', '١٤ منتجًا مبنيًا', 'الرياض · السعودية'],
   },
 
   partnership: {
@@ -996,7 +1027,7 @@ export const ar: typeof en = {
     },
     adoption: {
       title: 'تبني المنتج',
-      desc: 'تريد تشغيل أحد منتجاتنا العشرة داخل مؤسستك — نظام مستشفى يستخدم Cliniq، أو مكتب عائلي يستخدم محفظة أمي، أو مؤسسة تستخدم RogerAI.',
+      desc: 'تريد تشغيل أحد منتجاتنا الأربعة عشر داخل مؤسستك — نظام مستشفى يستخدم Cliniq، أو مكتب عائلي يستخدم محفظة أمي، أو مؤسسة تستخدم RogerAI.',
       btn: 'أريد تبني منتج',
     },
     teamup: {
@@ -1048,6 +1079,7 @@ export const ar: typeof en = {
     },
     creditPrefix: 'توثيق اند كو:',
     fallback: [
+      { title: 'سحّاب ينضم إلى المحفظة — المنتج ١٤', body: 'لعبة مبارزة لحظية أصيلة على الجوال تدور في دمشق القديمة: ضع الجوال على خصرك، انتظر الاهتزاز، اسحب، أطلق. العربية أولًا، والخليج أولًا. النسخة الأولى تُلعب دون اتصال ضد خصوم آليين، والتالي نسخة اختبار الإحساس على هواتف حقيقية. صفحة العرض متاحة الآن على /sahhaaab.', date: '٢٣ سبتمبر ٢٠٢٦', credit: null },
       { title: 'كُرّاس ينضم إلى المحفظة — المنتج ١٣', body: 'كُرّاس تعلّم عربي بإشراف الوالدين للأطفال من ٦ إلى ٩ سنوات: كل سؤال يعتمده الوالد أولًا من بنك مُراجَع يدويًا، والذكاء الاصطناعي يعيد الصياغة فقط. تطبيق الويب مبني، لوحة الإدارة قيد العمل، وإصدار أندرويد مخطَّط. صفحة العرض متاحة الآن على /kuras.', date: '١٥ سبتمبر ٢٠٢٦', credit: null },
       { title: 'صفحة Cliniq.one — تعمل الآن', body: 'تم نشر الصفحة التعريفية العامة لـ Cliniq.one. يمكن للمرضى التعرف على المنصة وللأطباء طلب الانضمام.', date: '١٢ يونيو ٢٠٢٦', credit: null },
       { title: 'مومن كرافتس اند كو — اكتمال توحيد الهوية', body: 'أُعيدت هوية بوابة المستثمرين بالكامل لتعكس فلسفة اند كو. كل قسم الآن يتحدث بلغة الشريك البنّاء.', date: '١٠ يونيو ٢٠٢٦', credit: null },

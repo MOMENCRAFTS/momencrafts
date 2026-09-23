@@ -24,6 +24,7 @@ import * as roger    from './dict/roger'
 import * as tdc      from './dict/tdc'
 import * as edgetack from './dict/edgetack'
 import * as kuras    from './dict/kuras'
+import * as sahhaaab from './dict/sahhaaab'
 import * as tester   from './dict/tester'
 
 export type Lang = 'en' | 'ar'
@@ -38,6 +39,7 @@ const EN = {
   tdc:      tdc.en,
   edgetack: edgetack.en,
   kuras:    kuras.en,
+  sahhaaab: sahhaaab.en,
   tester:   tester.en,
 }
 
@@ -51,6 +53,7 @@ const AR: typeof EN = {
   tdc:      tdc.ar,
   edgetack: edgetack.ar,
   kuras:    kuras.ar,
+  sahhaaab: sahhaaab.ar,
   tester:   tester.ar,
 }
 

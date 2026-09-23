@@ -1,0 +1,28 @@
+/* Sahhaaab product page — additions on top of the shared showcase styles
+   (nav from product-nav.css; hero, badges, cap-grid, cta-section and footer
+   from index.css / dark.css). Scoped to .sahhaaab-page so nothing leaks. */
+
+/* ── Hero: the opening scene of the game in a phone-shaped frame ── */
+.sahhaaab-hero .device-img{max-width:min(340px,72vw);height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:28px;border:6px solid #1a1410;box-shadow:0 24px 48px rgba(0,0,0,.28)}
+
+/* ── Facts strip ── */
+.sahhaaab-facts{display:flex;flex-wrap:wrap;justify-content:center;gap:2.5rem 4rem;padding:2.5rem var(--gutter);border-top:3px solid var(--green);border-bottom:3px solid var(--green);background:#fff}
+.sahhaaab-facts .stat{align-items:center;text-align:center}
+
+/* ── Steps + pillars: white cards need dark ink ── */
+.sahhaaab-page .cap-card h3{color:#111815}
+.sahhaaab-page .cap-card p{color:#3b4640}
+.sahhaaab-step-no{font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.22em;color:var(--green);margin-bottom:.6rem}
+.sahhaaab-page .cap-icon{font-size:1.3rem;font-weight:700}
+
+/* ── Arabic: the serif display face has no Arabic glyphs ── */
+[dir="rtl"] .sahhaaab-page .hero-title,
+[dir="rtl"] .sahhaaab-page .section-title,
+[dir="rtl"] .sahhaaab-page .cta-title,
+[dir="rtl"] .sahhaaab-page .cap-card h3{font-family:'Cairo','Tajawal',system-ui,sans-serif}
+[dir="rtl"] .sahhaaab-page .hero-title em,
+[dir="rtl"] .sahhaaab-page .cta-title em{font-style:normal}
+
+@media(max-width:640px){
+  .sahhaaab-facts{gap:1.5rem 2.5rem;padding-block:2rem}
+}
