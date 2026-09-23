@@ -63,7 +63,7 @@ const ERROR_TEXT: Record<string, string> = {
 const fmt = (v: unknown) => (typeof v === 'object' && v !== null ? JSON.stringify(v) : String(v ?? '—'))
 const label = (k: string) => k.replace(/_/g, ' ')
 
-export function AdminProductsPanel({ api }: { api: Api }) {
+export function AdminProductsPanel({ api, canExecute = true, only }: { api: Api; canExecute?: boolean; only?: string }) {
   const [cards, setCards]       = useState<Card[]>([])
   const [loading, setLoading]   = useState(true)
   const [history, setHistory]   = useState<any[]>([])
@@ -81,8 +81,10 @@ export function AdminProductsPanel({ api }: { api: Api }) {
       api('admin-products', { action: 'list' }),
       api('admin-products', { action: 'history' }),
     ])
-    setCards(Array.isArray(l?.apps) ? l.apps : [])
-    setHistory(Array.isArray(h?.rows) ? h.rows : [])
+    const apps: Card[] = Array.isArray(l?.apps) ? l.apps : []
+    setCards(only ? apps.filter(a => a.id === only) : apps)
+    const rows: any[] = Array.isArray(h?.rows) ? h.rows : []
+    setHistory((only ? rows.filter(r => r.app_id === only) : rows).filter(r => String(r.action).includes('fresh_start')))
     setLoading(false)
   }, [api])
 
@@ -92,7 +94,7 @@ export function AdminProductsPanel({ api }: { api: Api }) {
 
   const startPreview = async (card: Card) => {
     reset(); setSelected(card); setBusy(true)
-    const r = await api('admin-products', { action: 'preview', app: card.id })
+    const r = await api('admin-products', { action: 'call', product: card.id, std: 'fresh_start.preview' })
     setBusy(false)
     if (!r?.ok) { setErr(ERROR_TEXT[r?.error] ?? r?.error ?? 'Preview failed'); return }
     setPreview(r as Preview)
@@ -104,7 +106,10 @@ export function AdminProductsPanel({ api }: { api: Api }) {
     if (code.trim().toUpperCase() !== (preview.confirm_code ?? '')) { setErr('The code does not match the one shown above.'); return }
     if (!confirm(`Fresh start on ${selected.name}. This cannot be undone. Continue?`)) return
     setBusy(true); setErr('')
-    const r = await api('admin-products', { action: 'execute', app: selected.id, confirm_code: code.trim().toUpperCase(), typed_name: typed.trim() })
+    const r = await api('admin-products', {
+      action: 'call', product: selected.id, std: 'fresh_start.execute',
+      payload: { confirm_code: code.trim().toUpperCase(), typed_name: typed.trim() },
+    })
     setBusy(false)
     if (!r?.ok) {
       const reasons = Array.isArray(r?.guard?.reasons) ? ` (${r.guard.reasons.join('; ')})` : ''
@@ -169,9 +174,11 @@ export function AdminProductsPanel({ api }: { api: Api }) {
               <div className="a-kpi-sub">{ERROR_TEXT[c.error ?? ''] ?? c.error ?? 'No data'}</div>
             )}
             {c.guard?.refused && <div className="a-error fs-reasons">{c.guard.reasons.join(' · ')}</div>}
-            <button className="a-btn a-btn--danger" disabled={busy || c.status !== 'ok'} onClick={() => startPreview(c)}>
-              Fresh start…
-            </button>
+            {canExecute && (
+              <button className="a-btn a-btn--danger" disabled={busy || c.status !== 'ok'} onClick={() => startPreview(c)}>
+                Fresh start…
+              </button>
+            )}
           </div>
         ))}
         {cards.length === 0 && <div className="admin-empty">No products registered.</div>}

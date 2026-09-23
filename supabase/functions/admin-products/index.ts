@@ -1,66 +1,47 @@
 // ═══════════════════════════════════════════════════════════
-// MOMENCRAFTS — admin-products: the Fresh Start Console hub (Phase 4)
-// Plan: docs/plan/2026-09-23-fresh-start-console.md §5 Phase 4, §6
+// MOMENCRAFTS HQ — admin-products: the hub
+// Plan: docs/plan/2026-09-23-momencrafts-hq.md §3 Layer 1, §6 (grew out of the Fresh Start Console)
 //
-// The admin asks; each product decides and deletes inside its own project. This hub only:
+// The admin asks; each product decides and acts inside its own project. This hub only:
 //   1. identifies the admin (Google + authenticator session on the allowlist — _shared/adminAuth.ts),
-//   2. forwards to the product's own admin-fresh-start function with that product's key
-//      (one Supabase secret per product; the browser never sees any key),
-//   3. writes the audit row with the real outcome (withAudit).
+//   2. checks the role (owner for anything that changes something) and the product's capabilities,
+//   3. forwards to the product's own function with that product's key (one Supabase secret per
+//      product; the browser never sees any key),
+//   4. writes the audit row with the real outcome (withAudit).
 //
-//   { action: 'list' }                                  any admin  — cards: status + counts per product
-//   { action: 'preview', app }                          any admin  — the product mints a 10-minute code
-//   { action: 'execute', app, confirm_code, typed_name } owner only — typed_name must equal the app id
-//   { action: 'history' }                               any admin  — fresh-start rows from admin_audit_log
+//   { action: 'whoami' }                                   → { email, role }
+//   { action: 'registry' }                                 → the product registry (no secrets)
+//   { action: 'list' }                                     → health card per product (status, 5 s each)
+//   { action: 'history', product? }                        → HQ audit rows for the console screens
+//   { action: 'call', product, action: <std>, payload? }   → forwarded to the product's admin-console
 //
-// Adding a product = one line in APPS + its secret on this project + its own admin-fresh-start function.
+// Standard actions (see _shared/products.ts): status · fresh_start.status/preview/execute ·
+// users.list/detail/delete_preview/delete_execute · flags.list/set · releases.list · sso.link.
+// Executes need the owner role and, for the destructive ones, payload.typed_name === product id.
 // Deploy: supabase functions deploy admin-products   (config.toml: verify_jwt = false)
 // ═══════════════════════════════════════════════════════════
 
 import { getCorsHeaders, json } from '../_shared/cors.ts'
 import { requireAdmin, isRefusal, withAudit, ADMIN_ALLOW_HEADERS } from '../_shared/adminAuth.ts'
-
-interface AppEntry {
-  id: string
-  name: string
-  functionUrl: string
-  secretEnv: string
-  /** Android package, for the "clear the test phone" hint after a run. */
-  package?: string
-}
-
-const APPS: AppEntry[] = [
-  {
-    id: 'ummi-wallet',
-    name: 'Ummi Wallet',
-    functionUrl: 'https://opkowdluhkocvfevjdoh.supabase.co/functions/v1/admin-fresh-start',
-    secretEnv: 'FRESH_START_KEY_UMMI',
-    package: 'com.momencrafts.ummiwallet',
-  },
-  {
-    id: 'muscle-hustle',
-    name: 'Muscle Hustle',
-    functionUrl: 'https://prguqyjtuueiriasmbyj.supabase.co/functions/v1/admin-fresh-start',
-    secretEnv: 'FRESH_START_KEY_MH',
-    package: 'com.musclehustle.app',
-  },
-]
+import {
+  PRODUCTS, findProduct, READ_ACTIONS, TYPED_CONFIRM_ACTIONS, capabilityOf, translateForV1, type Product,
+} from '../_shared/products.ts'
 
 const STATUS_TIMEOUT_MS = 5_000
 const ACTION_TIMEOUT_MS = 55_000
 
-interface AppReply { status: number; data: Record<string, unknown> }
+interface ProductReply { status: number; data: Record<string, unknown> }
 
-/** Call a product's admin-fresh-start with its key. Never throws; network trouble becomes a reply. */
-async function callApp(app: AppEntry, body: Record<string, unknown>, timeoutMs: number): Promise<AppReply> {
-  const key = Deno.env.get(app.secretEnv) ?? ''
+/** Call a product's function with its key. Never throws; network trouble becomes a reply. */
+async function callProduct(p: Product, body: Record<string, unknown>, timeoutMs: number): Promise<ProductReply> {
+  const key = Deno.env.get(p.secretEnv) ?? ''
   if (!key) return { status: 503, data: { error: 'not_configured' } }
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), timeoutMs)
   try {
-    const res = await fetch(app.functionUrl, {
+    const res = await fetch(p.apiUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Fresh-Start-Key': key },
+      headers: { 'Content-Type': 'application/json', 'X-Fresh-Start-Key': key, 'X-Console-Key': key },
       body: JSON.stringify(body),
       signal: ctrl.signal,
     })
@@ -73,28 +54,44 @@ async function callApp(app: AppEntry, body: Record<string, unknown>, timeoutMs: 
   }
 }
 
+/** The registry as the UI may see it: no secret names, no internal URLs. */
+function publicRegistry() {
+  return PRODUCTS.map(p => ({
+    id: p.id, name: p.name, icon: p.icon, api: p.api, capabilities: p.capabilities,
+    consoleUrl: p.consoleUrl, package: p.package ?? null, note: p.note ?? null,
+  }))
+}
+
 Deno.serve(withAudit('admin-products', async (req, ctx) => {
   const cors = { ...getCorsHeaders(req), 'Access-Control-Allow-Headers': ADMIN_ALLOW_HEADERS }
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors })
   if (req.method !== 'POST') return json(405, { error: 'POST only' }, cors)
 
   const body = await req.json().catch(() => ({})) as Record<string, unknown>
-  const action = typeof body.action === 'string' ? body.action : null
-  const appId = typeof body.app === 'string' ? body.app : null
-  ctx.action = action
-  ctx.appId = appId
-  if (typeof body.typed_name === 'string') ctx.details.typed_name = body.typed_name
+  const hubAction = typeof body.action === 'string' ? body.action : null
+  const productId = typeof body.product === 'string' ? body.product : null
+  // For 'call', the audit row carries the product action itself (e.g. fresh_start.execute) + app_id.
+  const stdAction = hubAction === 'call' && typeof body.std === 'string' ? body.std : null
+  ctx.action = hubAction === 'call' ? (stdAction ?? 'call:?') : hubAction
+  ctx.appId = productId
 
-  // Who is asking? Execute needs an owner; everything else any enabled admin.
-  const admin = await requireAdmin(req, ctx.sb, action === 'execute' ? { role: 'owner' } : {})
+  // Owner for anything that changes something; any enabled admin for the rest.
+  const needsOwner = hubAction === 'call' && stdAction !== null && !READ_ACTIONS.has(stdAction)
+  const admin = await requireAdmin(req, ctx.sb, needsOwner ? { role: 'owner' } : {})
   if (isRefusal(admin)) return json(admin.status, { ok: false, error: admin.error }, cors)
   ctx.actor = admin
 
-  switch (action) {
-    // ── Cards: status of every product, in parallel, each with a short timeout ──
+  switch (hubAction) {
+    case 'whoami':
+      return json(200, { ok: true, email: admin.email, role: admin.role, method: admin.method }, cors)
+
+    case 'registry':
+      return json(200, { ok: true, products: publicRegistry() }, cors)
+
+    // ── Health card per product, in parallel, each with a short timeout ──
     case 'list': {
-      const apps = await Promise.all(APPS.map(async (app) => {
-        const r = await callApp(app, { action: 'status', requested_by: admin.email }, STATUS_TIMEOUT_MS)
+      const apps = await Promise.all(PRODUCTS.map(async (p) => {
+        const r = await callProduct(p, { action: p.api === 'v1' ? 'status' : 'status', requested_by: admin.email }, STATUS_TIMEOUT_MS)
         const guard = r.data.guard as { refused?: boolean; reasons?: string[] } | undefined
         const status =
           r.status === 200 ? (guard?.refused ? 'refused' : 'ok')
@@ -102,58 +99,68 @@ Deno.serve(withAudit('admin-products', async (req, ctx) => {
           : r.status === 0 ? 'unreachable'
           : 'error'
         return {
-          id: app.id, name: app.name, package: app.package, status,
+          id: p.id, name: p.name, icon: p.icon, package: p.package ?? null, consoleUrl: p.consoleUrl,
+          capabilities: p.capabilities, status,
           counts: r.status === 200 ? r.data.counts : undefined,
           guard: r.status === 200 ? guard : undefined,
+          version: r.status === 200 ? (r.data.version ?? null) : null,
           error: r.status === 200 ? undefined : String(r.data.error ?? `http_${r.status}`),
         }
       }))
       return json(200, { ok: true, apps }, cors)
     }
 
-    // ── Step 1: the product mints the code and records a preview run ──
-    case 'preview': {
-      const app = APPS.find(a => a.id === appId)
-      if (!app) return json(400, { ok: false, error: 'unknown_app' }, cors)
-      const r = await callApp(app, { action: 'preview', requested_by: admin.email }, ACTION_TIMEOUT_MS)
-      ctx.details.status = r.status
-      const status = r.status === 0 ? 502 : r.status
-      // the code goes to the browser; it never goes to the audit log (scrub drops confirm_code)
-      return json(status, { ...r.data, ok: r.status === 200, app: app.id }, cors)
-    }
-
-    // ── Step 2: execute — owner, typed app id, the product checks the code and the guard ──
-    case 'execute': {
-      const app = APPS.find(a => a.id === appId)
-      if (!app) return json(400, { ok: false, error: 'unknown_app' }, cors)
-      if (body.typed_name !== app.id) return json(400, { ok: false, error: 'typed_name_mismatch' }, cors)
-      const code = typeof body.confirm_code === 'string' ? body.confirm_code.trim().toUpperCase() : ''
-      if (!code) return json(400, { ok: false, error: 'code_required' }, cors)
-
-      const r = await callApp(app, { action: 'execute', confirm_code: code, requested_by: admin.email }, ACTION_TIMEOUT_MS)
-      ctx.details.status = r.status
-      if (r.data.run_id) ctx.details.run_id = r.data.run_id
-      if (r.data.before) ctx.details.before = r.data.before
-      if (r.data.after) ctx.details.after = r.data.after
-      if (r.data.error) ctx.details.app_error = r.data.error
-      const status = r.status === 0 ? 502 : r.status
-      return json(status, { ...r.data, ok: r.status === 200, app: app.id }, cors)
-    }
-
-    // ── History: this hub's own audit rows for the console ──
+    // ── HQ audit rows for the History screens ──
     case 'history': {
-      const { data, error } = await ctx.sb
+      let q = ctx.sb
         .from('admin_audit_log')
         .select('id, at, actor_email, action, app_id, outcome, details')
         .like('action', 'admin-products.%')
-        .not('action', 'in', '("admin-products.list","admin-products.history")')
+        .not('action', 'in', '("admin-products.list","admin-products.history","admin-products.whoami","admin-products.registry")')
         .order('at', { ascending: false })
-        .limit(50)
+        .limit(100)
+      if (productId) q = q.eq('app_id', productId)
+      const { data, error } = await q
       if (error) return json(500, { ok: false, error: 'history_failed' }, cors)
       return json(200, { ok: true, rows: data ?? [] }, cors)
     }
 
+    // ── The gateway: forward a standard action to a product ──
+    case 'call': {
+      const p = findProduct(productId)
+      if (!p) return json(400, { ok: false, error: 'unknown_product' }, cors)
+      if (!stdAction) return json(400, { ok: false, error: 'std_required' }, cors)
+      const cap = capabilityOf(stdAction)
+      if (!cap || !p.capabilities.includes(cap)) return json(400, { ok: false, error: 'unsupported', action: stdAction }, cors)
+
+      const payload = (typeof body.payload === 'object' && body.payload !== null ? body.payload : {}) as Record<string, unknown>
+      if (TYPED_CONFIRM_ACTIONS.has(stdAction) && payload.typed_name !== p.id) {
+        return json(400, { ok: false, error: 'typed_name_mismatch' }, cors)
+      }
+      // ids worth keeping in the audit row (codes and tokens are scrubbed by audit())
+      for (const k of ['id', 'key', 'typed_name'] as const) if (payload[k] !== undefined) ctx.details[k] = payload[k]
+
+      let productAction: string | null = stdAction
+      if (p.api === 'v1') {
+        productAction = translateForV1(stdAction)
+        if (!productAction) return json(400, { ok: false, error: 'unsupported', action: stdAction }, cors)
+      }
+      const { typed_name: _typed, ...forward } = payload
+      const r = await callProduct(
+        p,
+        { ...forward, action: productAction, requested_by: admin.email },
+        stdAction === 'status' || stdAction === 'fresh_start.status' ? STATUS_TIMEOUT_MS : ACTION_TIMEOUT_MS,
+      )
+      ctx.details.status = r.status
+      if (r.data.run_id) ctx.details.run_id = r.data.run_id
+      if (r.data.before) ctx.details.before = r.data.before
+      if (r.data.after) ctx.details.after = r.data.after
+      if (r.data.error) ctx.details.product_error = r.data.error
+      const status = r.status === 0 ? 502 : r.status
+      return json(status, { ...r.data, ok: r.status === 200, product: p.id }, cors)
+    }
+
     default:
-      return json(400, { ok: false, error: `Unknown action: ${action ?? '?'}` }, cors)
+      return json(400, { ok: false, error: `Unknown action: ${hubAction ?? '?'}` }, cors)
   }
-}, { readActions: ['list', 'history'] }))
+}, { readActions: ['whoami', 'registry', 'list', 'history', ...READ_ACTIONS] }))

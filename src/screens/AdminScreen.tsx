@@ -3,6 +3,12 @@ import '@/styles/admin.css'
 import { XhbKeyGate, makeXhbApi, XhbProgressPanel, XhbActivityPanel, XhbUsersPanel } from '@/components/AdminXhbPanels'
 import { AdminTesterPanel } from '@/components/AdminTesterPanel'
 import { AdminProductsPanel } from '@/components/AdminProductsPanel'
+import { HqDashboard } from '@/components/hq/HqDashboard'
+import { ProductOverview } from '@/components/hq/ProductOverview'
+import { ProductAccounts } from '@/components/hq/ProductAccounts'
+import { ProductFlags } from '@/components/hq/ProductFlags'
+import { HqHistory } from '@/components/hq/HqHistory'
+import { hqRegistry, hqWhoAmI, type Product, type WhoAmI } from '@/components/hq/hqApi'
 import {
   resolveStep, signInWithGoogle, signOut, enrolTotp, verifyTotp, getAccessToken, onAuthChange,
   type AdminStepResult,
@@ -821,18 +827,30 @@ function TopStatsBar({ api }: { api: ReturnType<typeof makeApi> }) {
 /* ══════════════════════════════════════════════════════
    MAIN ADMIN SHELL
    ══════════════════════════════════════════════════════ */
-type Tab = 'dashboard' | 'cofounders' | 'tokens' | 'sessions' | 'testers'
-         | 'products'
+type StaticTab = 'dashboard' | 'cofounders' | 'tokens' | 'sessions' | 'testers'
+         | 'hq' | 'hqhistory' | 'products'
          | 'xhbprogress' | 'xhbactivity' | 'xhbusers'
          | 'journal' | 'downloads' | 'traction' | 'board' | 'registry' | 'feedback'
+/** HQ product screens are dynamic: `hq:<product id>:<overview|accounts|flags|fresh_start>` */
+type Tab = StaticTab | `hq:${string}`
 
-const TABS: { key: Tab; label: string; icon: string; section?: string }[] = [
-  { key: 'dashboard',  label: 'Dashboard',   icon: '📊', section: 'OVERVIEW' },
+/** Screens every product gets in the sidebar (each screen says so itself when the product lacks the capability). */
+const HQ_SCREENS: { key: string; label: string; icon: string; needs?: Product['capabilities'][number] }[] = [
+  { key: 'overview',    label: 'Overview',    icon: '◎' },
+  { key: 'accounts',    label: 'Accounts',    icon: '👤' },
+  { key: 'flags',       label: 'Flags',       icon: '⚑' },
+  { key: 'fresh_start', label: 'Fresh start', icon: '🧹', needs: 'fresh_start' },
+]
+
+const TABS: { key: StaticTab; label: string; icon: string; section?: string }[] = [
+  { key: 'hq',         label: 'HQ',          icon: '🏛', section: 'MOMENCRAFTS HQ' },
+  { key: 'hqhistory',  label: 'History',     icon: '🧾' },
+  { key: 'dashboard',  label: 'Dashboard',   icon: '📊', section: 'MOMENCRAFTS.COM' },
   { key: 'cofounders', label: 'Co-Founders', icon: '✦',  section: 'CO-BUILDERS' },
   { key: 'tokens',     label: 'Tokens',      icon: '🔑' },
   { key: 'sessions',   label: 'Sessions',    icon: '🧾' },
   { key: 'testers',    label: 'Testers',     icon: '🧪' },
-  { key: 'products',   label: 'Fresh Start', icon: '🧹', section: 'PRODUCTS' },
+  { key: 'products',   label: 'Fresh Start (all)', icon: '🧹' },
   { key: 'xhbprogress', label: 'XHB Progress', icon: '◈', section: 'XHB' },
   { key: 'xhbactivity', label: 'XHB Activity', icon: '🧾' },
   { key: 'xhbusers',    label: 'XHB Users',    icon: '👤' },
@@ -847,7 +865,9 @@ const TABS: { key: Tab; label: string; icon: string; section?: string }[] = [
 export default function AdminScreen() {
   const [auth,         setAuth]         = useState<AdminAuth | null>(null)
   const [loginNotice,  setLoginNotice]  = useState('')
-  const [tab,          setTab]          = useState<Tab>('dashboard')
+  const [tab,          setTab]          = useState<Tab>('hq')
+  const [products,     setProducts]     = useState<Product[]>([])
+  const [me,           setMe]           = useState<WhoAmI | null>(null)
   const [showKeyModal, setShowKeyModal] = useState(false)
   const [xhbKey,       setXhbKey]       = useState('')          // legacy XHB key — never persisted
 
@@ -860,7 +880,22 @@ export default function AdminScreen() {
 
   const api = useCallback(makeApi(auth, onAuthError), [auth, onAuthError])
 
-  const logout = async () => { if (auth?.kind === 'jwt') await signOut(); setAuth(null); setLoginNotice('') }
+  const logout = async () => { if (auth?.kind === 'jwt') await signOut(); setAuth(null); setLoginNotice(''); setProducts([]); setMe(null) }
+
+  // HQ: who am I (role) and which products exist — once per sign-in.
+  useEffect(() => {
+    if (!auth) return
+    let cancelled = false
+    ;(async () => {
+      const [w, r] = await Promise.all([hqWhoAmI(api), hqRegistry(api)])
+      if (cancelled) return
+      if (w?.ok) setMe({ email: w.email, role: w.role, method: w.method })
+      if (r?.ok && Array.isArray(r.products)) setProducts(r.products)
+    })()
+    return () => { cancelled = true }
+  }, [auth, api])
+
+  const canExecute = me?.role === 'owner' || auth?.kind === 'legacy'
 
   if (!auth) return <AdminLogin notice={loginNotice} onLogin={(a) => { setAuth(a); setLoginNotice('') }} />
 
@@ -871,7 +906,9 @@ export default function AdminScreen() {
       case 'tokens':     return <TokensPanel api={api} />
       case 'sessions':   return <SessionsPanel api={api} />
       case 'testers':    return <AdminTesterPanel api={api} />
-      case 'products':   return <AdminProductsPanel api={api} />
+      case 'hq':         return <HqDashboard api={api} onOpenProduct={(id, screen) => setTab(`hq:${id}:${screen}`)} />
+      case 'hqhistory':  return <HqHistory api={api} products={products} />
+      case 'products':   return <AdminProductsPanel api={api} canExecute={canExecute} />
       case 'xhbprogress':
       case 'xhbactivity':
       case 'xhbusers': {
@@ -890,6 +927,20 @@ export default function AdminScreen() {
       case 'registry':   return <GenericPanel api={api} tabKey="registry"  title="Registry"  icon="🏅" />
       case 'feedback':   return <GenericPanel api={api} tabKey="feedback"  title="Feedback"  icon="💬" />
     }
+    // HQ product screens: hq:<id>:<screen>
+    if (tab.startsWith('hq:')) {
+      const [, id, screen] = tab.split(':')
+      const p = products.find(x => x.id === id)
+      if (!p) return <div className="admin-empty">Loading product…</div>
+      const open = (s: string) => setTab(`hq:${p.id}:${s}`)
+      switch (screen) {
+        case 'accounts':    return <ProductAccounts api={api} product={p} canExecute={canExecute} />
+        case 'flags':       return <ProductFlags api={api} product={p} canExecute={canExecute} />
+        case 'fresh_start': return <AdminProductsPanel api={api} canExecute={canExecute} only={p.id} />
+        default:            return <ProductOverview api={api} product={p} onOpen={open} />
+      }
+    }
+    return null
   }
 
   return (
@@ -908,6 +959,27 @@ export default function AdminScreen() {
               <span className="admin-tab-label">{t.label}</span>
             </button>
           </>
+        ))}
+        {/* One section per product, from the HQ registry */}
+        {products.map(p => (
+          <div key={p.id}>
+            <div className="admin-sidebar-section">{p.icon} {p.name.toUpperCase()}</div>
+            {HQ_SCREENS.filter(s => !s.needs || p.capabilities.includes(s.needs)).map(s => {
+              const key: Tab = `hq:${p.id}:${s.key}`
+              return (
+                <button key={key} className={`admin-tab${tab === key ? ' active' : ''}`} onClick={() => setTab(key)}>
+                  <span className="admin-tab-icon">{s.icon}</span>
+                  <span className="admin-tab-label">{s.label}</span>
+                </button>
+              )
+            })}
+            {p.consoleUrl && (
+              <a className="admin-tab" href={p.consoleUrl} target="_blank" rel="noreferrer">
+                <span className="admin-tab-icon">↗</span>
+                <span className="admin-tab-label">Console</span>
+              </a>
+            )}
+          </div>
         ))}
         <div className="admin-sidebar-footer">
           <div className="admin-sidebar-version">MomenCrafts · v2.0</div>

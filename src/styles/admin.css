@@ -804,3 +804,11 @@ body:has(.admin-shell) {
 .fs-confirm-row .a-input { max-width: 240px; }
 .fs-hint { font-size: .8rem; line-height: 1.55; color: var(--a-text-dim, #a9a29a); margin: .5rem 0; }
 .fs-code { font-family: var(--a-font-mono); font-weight: 800; letter-spacing: .12em; color: var(--a-gold); background: var(--a-gold-glow, rgba(226,185,107,.12)); padding: .1rem .45rem; border-radius: 6px; }
+
+/* ── MomenCrafts HQ shell (docs/plan/2026-09-23-momencrafts-hq.md, Phase A) ── */
+.hq-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-bottom: 1.25rem; }
+.hq-toolbar .a-input { flex: 1 1 260px; max-width: 420px; }
+.hq-card-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: auto; }
+.hq-row--selected td { background: var(--a-gold-glow, rgba(226,185,107,.12)); }
+.hq-pre { font-family: var(--a-font-mono); font-size: .72rem; white-space: pre-wrap; word-break: break-all; margin: 0; padding: .5rem .75rem; background: rgba(0,0,0,.25); border-radius: 8px; max-height: 260px; overflow: auto; }
+a.admin-tab { text-decoration: none; }

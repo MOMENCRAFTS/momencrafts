@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.momencrafts.hq",
+      "sha256_cert_fingerprints": [
+        "1C:47:28:7F:7A:CF:CF:34:D5:61:66:F0:D2:C4:E9:96:CB:36:06:E7:B7:77:65:2B:C0:E4:B0:2D:EA:E8:50:35"
+      ]
+    }
+  }
+]
