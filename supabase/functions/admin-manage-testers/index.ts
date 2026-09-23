@@ -20,26 +20,26 @@
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { getCorsHeaders, json, escapeHtml } from '../_shared/cors.ts'
+import { requireAdmin, isRefusal, withAudit, ADMIN_ALLOW_HEADERS } from '../_shared/adminAuth.ts'
 
-Deno.serve(async (req) => {
-  const cors = { ...getCorsHeaders(req), 'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key' }
+Deno.serve(withAudit('admin-manage-testers', async (req, ctx) => {
+  const cors = { ...getCorsHeaders(req), 'Access-Control-Allow-Headers': ADMIN_ALLOW_HEADERS }
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors })
   if (req.method !== 'POST') return json(405, { error: 'POST only' }, cors)
 
   try {
-    const ADMIN_KEY = Deno.env.get('ADMIN_SECRET_KEY')
-    const clientKey = req.headers.get('X-Admin-Key')
-    if (!ADMIN_KEY || !clientKey || clientKey !== ADMIN_KEY) {
-      return json(401, { error: 'Unauthorized' }, cors)
+    const body = await req.json().catch(() => ({}))
+    const { action } = body
+    ctx.action = typeof action === 'string' ? action : null
+    for (const k of ['tokenId', 'appId', 'version', 'requestId'] as const) {
+      if (body[k] !== undefined) ctx.details[k] = body[k]
     }
 
-    const body = await req.json()
-    const { action } = body
-
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-    )
+    // Who is asking? Google + authenticator session on the allowlist, or (transition only) the legacy key.
+    const supabase = ctx.sb
+    const admin = await requireAdmin(req, supabase)
+    if (isRefusal(admin)) return json(admin.status, { error: admin.error }, cors)
+    ctx.actor = admin
 
     switch (action) {
       /* ── Everything the panel renders, in one round trip ── */
@@ -471,4 +471,4 @@ Deno.serve(async (req) => {
     console.error('admin-manage-testers error:', err)
     return json(500, { error: 'Internal error' }, cors)
   }
-})
+}, { readActions: ['list'] }))

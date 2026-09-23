@@ -5,6 +5,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
+import { requireAdmin, isRefusal, withAudit } from '../_shared/adminAuth.ts'
 
 const ALLOWED_ORIGINS = [
   'https://www.momencrafts.com',
@@ -18,29 +19,25 @@ function getCorsHeaders(req: Request) {
   const allowed = ALLOWED_ORIGINS.includes(origin) || origin.startsWith('http://localhost:')
   return {
     'Access-Control-Allow-Origin': allowed ? origin : ALLOWED_ORIGINS[0],
-    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key, Authorization',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   }
 }
 
-Deno.serve(async (req) => {
+Deno.serve(withAudit('admin-get-analytics', async (req, ctx) => {
   const corsHeaders = getCorsHeaders(req)
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders })
   }
 
   try {
-    // Verify admin key
-    const ADMIN_KEY = Deno.env.get('ADMIN_SECRET_KEY')
-    const clientKey = req.headers.get('X-Admin-Key')
-    if (!ADMIN_KEY || !clientKey || clientKey !== ADMIN_KEY) {
-      return json(401, { error: 'Unauthorized' }, corsHeaders)
-    }
+    ctx.action = 'analytics'
 
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-    )
+    // Who is asking? Google + authenticator session on the allowlist, or (transition only) the legacy key.
+    const supabase = ctx.sb
+    const admin = await requireAdmin(req, supabase)
+    if (isRefusal(admin)) return json(admin.status, { error: admin.error }, corsHeaders)
+    ctx.actor = admin
 
     // 1. Investor overview
     const { data: investors } = await supabase
@@ -101,7 +98,7 @@ Deno.serve(async (req) => {
     console.error('admin-get-analytics error:', err)
     return json(500, { error: 'Internal error' }, corsHeaders)
   }
-})
+}, { readActions: ['analytics'] }))
 
 function json(status: number, body: object, corsHeaders: Record<string, string>) {
   return new Response(JSON.stringify(body), {

@@ -2,22 +2,39 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import '@/styles/admin.css'
 import { XhbKeyGate, makeXhbApi, XhbProgressPanel, XhbActivityPanel, XhbUsersPanel } from '@/components/AdminXhbPanels'
 import { AdminTesterPanel } from '@/components/AdminTesterPanel'
+import {
+  resolveStep, signInWithGoogle, signOut, enrolTotp, verifyTotp, getAccessToken, onAuthChange,
+  type AdminStepResult,
+} from '@/services/adminSession'
 
-// Admin password removed — validation should be server-side
-// For the SPA admin screen, password is validated via edge function
+// Identity is decided server-side (supabase/functions/_shared/adminAuth.ts):
+//   jwt    — Google sign-in + authenticator code, email on the admin_users allowlist (D1, D3)
+//   legacy — the old shared key, accepted only until decision D2 is completed
 const SUPABASE_URL = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1'
 const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER'])
 
+export type AdminAuth =
+  | { kind: 'jwt'; email: string }
+  | { kind: 'legacy'; key: string }
+
 /* ── API helper (top-level so all panels can use it) ── */
-function makeApi(adminKey: string) {
+function makeApi(auth: AdminAuth | null, onAuthError: (reason: string) => void) {
   return async (fn: string, body?: object) => {
     const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-    if (adminKey) headers['X-Admin-Key'] = adminKey
+    if (auth?.kind === 'legacy' && auth.key) headers['X-Admin-Key'] = auth.key
+    if (auth?.kind === 'jwt') {
+      const token = await getAccessToken()
+      if (token) headers['Authorization'] = `Bearer ${token}`
+    }
     const res = await fetch(`${SUPABASE_URL}/${fn}`, {
       method: 'POST', headers,
       body: body ? JSON.stringify(body) : undefined,
     })
-    return res.json()
+    const data = await res.json().catch(() => ({ error: `HTTP ${res.status}` }))
+    if (res.status === 401 || (res.status === 403 && data?.error === 'not_an_admin')) {
+      onAuthError(typeof data?.error === 'string' ? data.error : 'unauthorized')
+    }
+    return data
   }
 }
 
@@ -42,32 +59,132 @@ function tokenStatus(t: any): 'active' | 'revoked' | 'expired' {
 /* ══════════════════════════════════════════════════════
    LOGIN
    ══════════════════════════════════════════════════════ */
-function AdminLogin({ onLogin }: { onLogin: (key: string) => void }) {
-  const [pass, setPass] = useState('')
-  const [err,  setErr]  = useState('')
-  const submit = async () => {
-    if (!pass.trim()) { setErr('Enter a password'); setTimeout(() => setErr(''), 2000); return }
+type LoginStep = AdminStepResult['step'] | 'loading' | 'legacy'
+
+/**
+ * Google sign-in → authenticator code → panel.
+ * First visit shows a QR code once (enrolment); every later visit asks for the 6 digits.
+ * The server refuses anything below aal2 or off the allowlist, so this screen is UI, not the gate.
+ */
+function AdminLogin({ onLogin, notice }: { onLogin: (auth: AdminAuth) => void; notice?: string }) {
+  const [step,     setStep]     = useState<LoginStep>('loading')
+  const [email,    setEmail]    = useState('')
+  const [factorId, setFactorId] = useState('')
+  const [enrol,    setEnrol]    = useState<{ qrCodeSvg: string; secret: string } | null>(null)
+  const [code,     setCode]     = useState('')
+  const [pass,     setPass]     = useState('')
+  const [err,      setErr]      = useState('')
+  const [busy,     setBusy]     = useState(false)
+  const enrolStarted = useRef(false)
+
+  const flash = (m: string) => { setErr(m); setTimeout(() => setErr(''), 3500) }
+
+  const refresh = useCallback(async () => {
+    try {
+      const r = await resolveStep()
+      setEmail(r.session?.user?.email ?? '')
+      if (r.step === 'ready') { onLogin({ kind: 'jwt', email: r.session?.user?.email ?? '' }); return }
+      if (r.step === 'need_mfa_code') setFactorId(r.factorId || '')
+      if (r.step === 'need_mfa_enrol' && !enrolStarted.current) {
+        enrolStarted.current = true
+        const e = await enrolTotp()
+        setFactorId(e.factorId)
+        setEnrol({ qrCodeSvg: e.qrCodeSvg, secret: e.secret })
+      }
+      setStep(r.step)
+    } catch (e) {
+      flash((e as Error).message || 'Sign-in check failed')
+      setStep('signed_out')
+    }
+  }, [onLogin])
+
+  // Runs on load (also right after the Google redirect lands) and on every auth change.
+  useEffect(() => { refresh(); return onAuthChange(() => { refresh() }) }, [refresh])
+
+  const google = async () => {
+    setBusy(true)
+    try { await signInWithGoogle() } catch (e) { flash((e as Error).message || 'Google sign-in failed'); setBusy(false) }
+  }
+  const submitCode = async () => {
+    if (code.trim().length < 6) { flash('Enter the 6-digit code'); return }
+    setBusy(true)
+    try { await verifyTotp(factorId, code); setCode(''); await refresh() }
+    catch (e) { flash((e as Error).message || 'Wrong code') }
+    finally { setBusy(false) }
+  }
+  const back = async () => {
+    await signOut()
+    enrolStarted.current = false
+    setEnrol(null); setCode(''); setStep('signed_out')
+  }
+  // Transition only (D2): the shared key still opens the panel until ADMIN_LEGACY_KEY_ENABLED=false.
+  const legacy = async () => {
+    if (!pass.trim()) { flash('Enter the legacy key'); return }
+    setBusy(true)
     try {
       const res = await fetch(`${SUPABASE_URL}/admin-manage-token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Admin-Key': pass },
         body: JSON.stringify({ action: 'list' }),
       })
-      if (res.ok) { sessionStorage.setItem('mcr_admin_auth', '1'); onLogin(pass) }
-      else { setErr('Invalid admin key'); setTimeout(() => setErr(''), 2000) }
-    } catch { setErr('Network error'); setTimeout(() => setErr(''), 2000) }
+      if (res.ok) onLogin({ kind: 'legacy', key: pass })
+      else flash('Invalid admin key')
+    } catch { flash('Network error') }
+    finally { setBusy(false) }
   }
+
+  const codeInput = (
+    <input className="admin-login-input" inputMode="numeric" autoComplete="one-time-code"
+      placeholder="6-digit code" value={code} onChange={e => setCode(e.target.value)}
+      onKeyDown={e => e.key === 'Enter' && submitCode()} autoFocus />
+  )
+
   return (
     <div className="admin-login-wrap">
       <div className="admin-login-card">
         <div className="admin-login-mark">✦</div>
         <h1 className="admin-login-title">MomenCrafts Admin</h1>
         <p className="admin-login-sub">Admin access only · Riyadh, KSA</p>
-        <input type="password" className="admin-login-input" placeholder="Password"
-          value={pass} onChange={e => setPass(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && submit()} autoFocus />
+        {notice && <div className="admin-login-err">{notice}</div>}
+
+        {step === 'loading' && <p className="admin-login-hint">Checking your session…</p>}
+
+        {step === 'signed_out' && (<>
+          <button className="admin-login-btn" onClick={google} disabled={busy}>Sign in with Google →</button>
+          <button className="admin-login-link" onClick={() => setStep('legacy')}>use legacy key</button>
+        </>)}
+
+        {step === 'need_mfa_enrol' && (<>
+          <p className="admin-login-hint">
+            Signed in as <b>{email}</b>. One-time setup: scan this code with your authenticator app
+            (Google Authenticator, Authy, 1Password), then enter the 6 digits it shows.
+          </p>
+          {enrol
+            ? <img className="admin-login-qr" src={enrol.qrCodeSvg} alt="Authenticator QR code" />
+            : <p className="admin-login-hint">Preparing…</p>}
+          {enrol && <p className="admin-login-secret">Cannot scan? Enter this key by hand: <code>{enrol.secret}</code></p>}
+          {codeInput}
+          <button className="admin-login-btn" onClick={submitCode} disabled={busy}>Activate →</button>
+          <button className="admin-login-link" onClick={back}>sign out</button>
+        </>)}
+
+        {step === 'need_mfa_code' && (<>
+          <p className="admin-login-hint">Signed in as <b>{email}</b>. Enter the code from your authenticator app.</p>
+          {codeInput}
+          <button className="admin-login-btn" onClick={submitCode} disabled={busy}>Continue →</button>
+          <button className="admin-login-link" onClick={back}>sign out</button>
+        </>)}
+
+        {step === 'legacy' && (<>
+          <p className="admin-login-hint">Transition only — the shared key stops working once Google sign-in is live (decision D2).</p>
+          <input type="password" className="admin-login-input" placeholder="Legacy admin key"
+            value={pass} onChange={e => setPass(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && legacy()} autoFocus />
+          <button className="admin-login-btn" onClick={legacy} disabled={busy}>Enter →</button>
+          <button className="admin-login-link" onClick={() => setStep('signed_out')}>back to Google sign-in</button>
+        </>)}
+
         {err && <div className="admin-login-err">{err}</div>}
-        <button className="admin-login-btn" onClick={submit}>Enter →</button>
       </div>
     </div>
   )
@@ -725,17 +842,24 @@ const TABS: { key: Tab; label: string; icon: string; section?: string }[] = [
 ]
 
 export default function AdminScreen() {
-  const [authed,       setAuthed]       = useState(() => sessionStorage.getItem('mcr_admin_auth') === '1')
+  const [auth,         setAuth]         = useState<AdminAuth | null>(null)
+  const [loginNotice,  setLoginNotice]  = useState('')
   const [tab,          setTab]          = useState<Tab>('dashboard')
-  const [adminKey,     setAdminKey]     = useState('')
   const [showKeyModal, setShowKeyModal] = useState(false)
-  const [xhbKey,       setXhbKey]       = useState('')          // never persisted — refresh re-prompts
+  const [xhbKey,       setXhbKey]       = useState('')          // legacy XHB key — never persisted
 
-  const api = useCallback(makeApi(adminKey), [adminKey])
+  // The server said no: end the session first (otherwise the login screen would bounce straight back in).
+  const onAuthError = useCallback(async (reason: string) => {
+    if (auth?.kind === 'jwt') { try { await signOut() } catch { /* already gone */ } }
+    setLoginNotice(reason === 'not_an_admin' ? 'This Google account is not an admin.' : 'Session ended — sign in again.')
+    setAuth(null)
+  }, [auth])
 
-  const logout = () => { sessionStorage.removeItem('mcr_admin_auth'); setAuthed(false); setAdminKey('') }
+  const api = useCallback(makeApi(auth, onAuthError), [auth, onAuthError])
 
-  if (!authed) return <AdminLogin onLogin={(key: string) => { setAdminKey(key); setAuthed(true) }} />
+  const logout = async () => { if (auth?.kind === 'jwt') await signOut(); setAuth(null); setLoginNotice('') }
+
+  if (!auth) return <AdminLogin notice={loginNotice} onLogin={(a) => { setAuth(a); setLoginNotice('') }} />
 
   const renderPanel = () => {
     switch (tab) {
@@ -747,8 +871,10 @@ export default function AdminScreen() {
       case 'xhbprogress':
       case 'xhbactivity':
       case 'xhbusers': {
-        if (!xhbKey) return <XhbKeyGate onKey={setXhbKey} />
-        const x = makeXhbApi(xhbKey)
+        // Google session: the owner identity is enough for the XHB functions (checked server-side).
+        // Legacy shared-key session: the XHB key is still needed until D2 completes.
+        if (auth?.kind === 'legacy' && !xhbKey) return <XhbKeyGate onKey={setXhbKey} />
+        const x = makeXhbApi(xhbKey, auth?.kind === 'jwt' ? getAccessToken : undefined)
         if (tab === 'xhbprogress') return <XhbProgressPanel api={x} />
         if (tab === 'xhbactivity') return <XhbActivityPanel api={x} />
         return <XhbUsersPanel api={x} />
@@ -792,19 +918,24 @@ export default function AdminScreen() {
         </div>
         <TopStatsBar api={api} />
         <div className="admin-header-right">
-          {showKeyModal && (
+          {auth.kind === 'jwt' && (
+            <span className="admin-header-user" title="Signed in with Google + authenticator">{auth.email}</span>
+          )}
+          {auth.kind === 'legacy' && showKeyModal && (
             <div className="admin-key-modal">
               <input type="password" placeholder="New ADMIN_SECRET_KEY"
-                className="admin-login-input" defaultValue={adminKey}
+                className="admin-login-input" defaultValue={auth.key}
                 onKeyDown={e => {
                   if (e.key === 'Enter') {
-                    setAdminKey((e.target as HTMLInputElement).value)
+                    setAuth({ kind: 'legacy', key: (e.target as HTMLInputElement).value })
                     setShowKeyModal(false)
                   }
                 }} />
             </div>
           )}
-          <button className="admin-key-btn" onClick={() => setShowKeyModal(k => !k)} title="Change API Key">🔑 Key</button>
+          {auth.kind === 'legacy' && (
+            <button className="admin-key-btn" onClick={() => setShowKeyModal(k => !k)} title="Change API Key">🔑 Key</button>
+          )}
           <button className="admin-logout-btn" onClick={logout}>Logout</button>
         </div>
       </header>

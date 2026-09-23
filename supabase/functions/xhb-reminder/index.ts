@@ -19,8 +19,10 @@
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { getCorsHeaders, json, escapeHtml } from '../_shared/cors.ts'
+import { requireAdmin, isRefusal, withAudit } from '../_shared/adminAuth.ts'
 
-const ADMIN_KEY = Deno.env.get('XHB_ADMIN_KEY') || ''
+// Auth: an owner session (Google + authenticator) from the admin panel, or XHB_ADMIN_KEY as the
+// machine key for the scheduled run. See _shared/adminAuth.ts.
 const APP_URL   = 'https://www.momencrafts.com/xhb/'
 
 /** Don't nag more often than this. A co-founder who gets a daily email stops reading the sender. */
@@ -98,12 +100,13 @@ function daysSince(iso: string | null): number | null {
 }
 
 /* ═════════════════════════════════════════════════════════════════════ */
-Deno.serve(async (req) => {
+Deno.serve(withAudit('xhb-reminder', async (req, ctx) => {
   const cors = getCorsHeaders(req)
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors })
 
-  const key = req.headers.get('X-Admin-Key') || ''
-  if (!ADMIN_KEY || key !== ADMIN_KEY) return json(401, { error: 'Unauthorized' }, cors)
+  const admin = await requireAdmin(req, ctx.sb, { role: 'owner', machineKeyEnv: 'XHB_ADMIN_KEY' })
+  if (isRefusal(admin)) return json(admin.status, { error: admin.error }, cors)
+  ctx.actor = admin
 
   const resendKey = Deno.env.get('RESEND_API_KEY')
   const sender    = Deno.env.get('XHB_MAIL_FROM') || 'MomenCrafts XHB <xhb@momencrafts.com>'
@@ -113,6 +116,8 @@ Deno.serve(async (req) => {
   const mode   = body.mode === 'progress' ? 'progress' : 'pending'
   const dryRun = body.dryRun === true
   const force  = body.force === true
+  ctx.action = dryRun ? `${mode}:dry-run` : mode
+  ctx.details.force = force
 
   if (!resendKey && !dryRun) return json(500, { error: 'RESEND_API_KEY not configured' }, cors)
 
@@ -289,4 +294,4 @@ Deno.serve(async (req) => {
     console.error('xhb-reminder error:', err)
     return json(500, { error: 'Internal error' }, cors)
   }
-})
+}, { readActions: ['pending:dry-run', 'progress:dry-run'] }))

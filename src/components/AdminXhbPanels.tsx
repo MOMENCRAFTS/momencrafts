@@ -27,11 +27,20 @@ import { useState, useEffect, useCallback } from 'react'
 const FN_BASE = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1'
 
 /* ── shared fetcher, key never persisted ─────────────────────────────── */
-export function makeXhbApi(xhbKey: string) {
+/**
+ * xhbKey   — legacy shared XHB key (transition only, decision D2)
+ * getToken — the admin's Google + authenticator session; when present the server accepts it
+ *            and no XHB key is needed
+ */
+export function makeXhbApi(xhbKey: string, getToken?: () => Promise<string | null>) {
   return async (fn: 'xhb-manage-access' | 'xhb-reminder', body: object) => {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+    if (xhbKey) headers['X-Admin-Key'] = xhbKey
+    const token = getToken ? await getToken() : null
+    if (token) headers['Authorization'] = `Bearer ${token}`
     const res = await fetch(`${FN_BASE}/${fn}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': xhbKey },
+      headers,
       body: JSON.stringify(body),
     })
     const data = await res.json().catch(() => ({ error: 'Bad response' }))

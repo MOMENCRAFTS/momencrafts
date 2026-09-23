@@ -401,3 +401,24 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 # declarative_schema_path = "./database"
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
+
+# Admin functions authenticate inside (_shared/adminAuth.ts); the gateway must not require a JWT.
+[functions.admin-manage-token]
+verify_jwt = false
+
+[functions.admin-manage-testers]
+verify_jwt = false
+
+[functions.admin-manage-co]
+verify_jwt = false
+
+[functions.admin-get-analytics]
+verify_jwt = false
+
+[functions.xhb-manage-access]
+verify_jwt = false
+
+[functions.xhb-reminder]
+verify_jwt = false
+
+

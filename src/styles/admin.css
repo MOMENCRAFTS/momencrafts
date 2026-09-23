@@ -753,3 +753,26 @@ body:has(.admin-shell) {
   .a-grid-auto { grid-template-columns: 1fr; }
   .admin-content { padding: 1.25rem; }
 }
+
+/* ── Admin sign-in: Google + authenticator (Phase 1, docs/plan/2026-09-23-fresh-start-console.md) ── */
+.admin-login-hint {
+  font-size: .85rem; line-height: 1.5; color: var(--a-text-dim, #a9a29a);
+  margin: 0 0 1rem; text-align: left;
+}
+.admin-login-hint b { color: var(--a-text, #f3ede4); font-weight: 600; }
+.admin-login-link {
+  display: block; margin: .85rem auto 0; background: none; border: none; cursor: pointer;
+  font-size: .78rem; color: var(--a-text-dim, #a9a29a); text-decoration: underline; text-underline-offset: 3px;
+}
+.admin-login-link:hover { color: var(--a-gold); }
+.admin-login-qr {
+  display: block; width: 180px; height: 180px; margin: 0 auto 1rem; padding: 8px;
+  background: #fff; border-radius: 12px;
+}
+.admin-login-secret { font-size: .72rem; color: var(--a-text-dim, #a9a29a); word-break: break-all; margin: 0 0 1rem; }
+.admin-login-secret code { font-size: .75rem; letter-spacing: .04em; color: var(--a-text, #f3ede4); }
+.admin-login-btn:disabled { opacity: .55; cursor: progress; transform: none; }
+.admin-header-user {
+  font-size: .78rem; color: var(--a-text-dim, #a9a29a); margin-right: .75rem;
+  max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}

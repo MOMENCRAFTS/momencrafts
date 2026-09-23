@@ -5,6 +5,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
+import { requireAdmin, isRefusal, withAudit } from '../_shared/adminAuth.ts'
 
 const ALLOWED_ORIGINS = [
   'https://www.momencrafts.com',
@@ -18,7 +19,7 @@ function getCorsHeaders(req: Request) {
   const allowed = ALLOWED_ORIGINS.includes(origin) || origin.startsWith('http://localhost:')
   return {
     'Access-Control-Allow-Origin': allowed ? origin : ALLOWED_ORIGINS[0],
-    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key, Authorization',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   }
 }
@@ -33,7 +34,7 @@ function json(status: number, body: object, corsHeaders: Record<string, string>)
 // Valid tables for admin operations
 const VALID_TABLES = ['co_journal', 'co_downloads', 'co_traction', 'co_product_progress', 'co_board', 'co_feedback', 'co_registry', 'co_chat'] as const
 
-Deno.serve(async (req) => {
+Deno.serve(withAudit('admin-manage-co', async (req, ctx) => {
   const corsHeaders = getCorsHeaders(req)
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders })
@@ -43,15 +44,16 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Verify admin key
-    const ADMIN_KEY = Deno.env.get('ADMIN_SECRET_KEY')
-    const clientKey = req.headers.get('X-Admin-Key')
-    if (!ADMIN_KEY || !clientKey || clientKey !== ADMIN_KEY) {
-      return json(403, { error: 'Unauthorized' }, corsHeaders)
-    }
-
-    const body = await req.json()
+    const body = await req.json().catch(() => ({}))
     const { action, table, data, id } = body
+    ctx.action = typeof action === 'string' ? action : null
+    if (table) ctx.details.table = table
+    if (id) ctx.details.id = id
+
+    // Who is asking? Google + authenticator session on the allowlist, or (transition only) the legacy key.
+    const admin = await requireAdmin(req, ctx.sb)
+    if (isRefusal(admin)) return json(admin.status, { error: admin.error }, corsHeaders)
+    ctx.actor = admin
 
     // Validate table
     if (!table || !VALID_TABLES.includes(table)) {
@@ -174,4 +176,4 @@ Deno.serve(async (req) => {
     console.error('admin-manage-co error:', err)
     return json(500, { error: (err as Error).message || 'Internal server error' }, corsHeaders)
   }
-})
+}, { readActions: ['list'] }))

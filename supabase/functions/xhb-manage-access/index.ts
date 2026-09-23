@@ -8,8 +8,10 @@
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { getCorsHeaders } from '../_shared/cors.ts'
+import { requireAdmin, isRefusal, withAudit } from '../_shared/adminAuth.ts'
 
-const ADMIN_KEY = Deno.env.get('XHB_ADMIN_KEY') || ''
+// Auth: an owner session (Google + authenticator, admin_users allowlist) or — transition only —
+// the legacy XHB_ADMIN_KEY. See _shared/adminAuth.ts.
 
 function json(status: number, body: object, cors: Record<string, string>) {
   return new Response(JSON.stringify(body), {
@@ -30,26 +32,24 @@ function generateToken(): string {
   return 'XHB-' + Array.from(bytes, b => chars[b % chars.length]).join('')
 }
 
-Deno.serve(async (req) => {
+Deno.serve(withAudit('xhb-manage-access', async (req, ctx) => {
   const cors = getCorsHeaders(req)
 
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: cors })
   }
 
-  // ── Auth: X-Admin-Key header ──
-  const adminKey = req.headers.get('X-Admin-Key') || ''
-  if (!ADMIN_KEY || adminKey !== ADMIN_KEY) {
-    return json(401, { error: 'Unauthorized' }, cors)
-  }
-
-  const sb = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-  )
+  // ── Auth: owner session, or the legacy XHB key during the transition ──
+  const sb = ctx.sb
+  const admin = await requireAdmin(req, sb, { role: 'owner', legacySecretEnv: 'XHB_ADMIN_KEY' })
+  if (isRefusal(admin)) return json(admin.status, { error: admin.error }, cors)
+  ctx.actor = admin
 
   try {
     const { action, ...params } = await req.json()
+    ctx.action = typeof action === 'string' ? action : null
+    if (params.email) ctx.details.email = params.email
+    if (params.token_id) ctx.details.token_id = params.token_id
 
     // ── Issue a new enrolment token ──
     if (action === 'issue_token') {
@@ -280,4 +280,4 @@ Deno.serve(async (req) => {
     console.error('xhb-manage-access error:', err)
     return json(500, { error: 'Internal error' }, cors)
   }
-})
+}, { readActions: ['list_tokens', 'list_users', 'access_log', 'round_progress'] }))

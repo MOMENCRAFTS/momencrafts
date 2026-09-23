@@ -15,7 +15,7 @@ export function getCorsHeaders(req: Request): Record<string, string> {
   const allowed = ALLOWED_ORIGINS.includes(origin) || origin.startsWith('http://localhost:')
   return {
     'Access-Control-Allow-Origin': allowed ? origin : ALLOWED_ORIGINS[0],
-    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key, Authorization',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   }
 }

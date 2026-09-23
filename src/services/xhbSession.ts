@@ -14,8 +14,8 @@
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 
-const SUPABASE_URL = 'https://isciigqmdfcozrtojqcm.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzY2lpZ3FtZGZjb3pydG9qcWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMDk4ODYsImV4cCI6MjA5NjU4NTg4Nn0.OUV0dUWUt0UBU9bdJpwWiXI2PgclddNO0t1cA4ZLF_8'
+export const SUPABASE_URL = 'https://isciigqmdfcozrtojqcm.supabase.co'
+export const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzY2lpZ3FtZGZjb3pydG9qcWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMDk4ODYsImV4cCI6MjA5NjU4NTg4Nn0.OUV0dUWUt0UBU9bdJpwWiXI2PgclddNO0t1cA4ZLF_8'
 const XHB_GATE_URL = `${SUPABASE_URL}/functions/v1/xhb-gate-request`
 
 let _client: SupabaseClient | null = null
