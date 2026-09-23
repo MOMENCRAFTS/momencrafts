@@ -421,4 +421,9 @@ verify_jwt = false
 [functions.xhb-reminder]
 verify_jwt = false
 
+# Fresh Start Console hub (Phase 4): identifies the admin inside, forwards to each product's own
+# admin-fresh-start with that product's key. The gateway must not require a JWT.
+[functions.admin-products]
+verify_jwt = false
+
 

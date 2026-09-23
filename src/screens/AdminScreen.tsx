@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import '@/styles/admin.css'
 import { XhbKeyGate, makeXhbApi, XhbProgressPanel, XhbActivityPanel, XhbUsersPanel } from '@/components/AdminXhbPanels'
 import { AdminTesterPanel } from '@/components/AdminTesterPanel'
+import { AdminProductsPanel } from '@/components/AdminProductsPanel'
 import {
   resolveStep, signInWithGoogle, signOut, enrolTotp, verifyTotp, getAccessToken, onAuthChange,
   type AdminStepResult,
@@ -821,6 +822,7 @@ function TopStatsBar({ api }: { api: ReturnType<typeof makeApi> }) {
    MAIN ADMIN SHELL
    ══════════════════════════════════════════════════════ */
 type Tab = 'dashboard' | 'cofounders' | 'tokens' | 'sessions' | 'testers'
+         | 'products'
          | 'xhbprogress' | 'xhbactivity' | 'xhbusers'
          | 'journal' | 'downloads' | 'traction' | 'board' | 'registry' | 'feedback'
 
@@ -830,6 +832,7 @@ const TABS: { key: Tab; label: string; icon: string; section?: string }[] = [
   { key: 'tokens',     label: 'Tokens',      icon: '🔑' },
   { key: 'sessions',   label: 'Sessions',    icon: '🧾' },
   { key: 'testers',    label: 'Testers',     icon: '🧪' },
+  { key: 'products',   label: 'Fresh Start', icon: '🧹', section: 'PRODUCTS' },
   { key: 'xhbprogress', label: 'XHB Progress', icon: '◈', section: 'XHB' },
   { key: 'xhbactivity', label: 'XHB Activity', icon: '🧾' },
   { key: 'xhbusers',    label: 'XHB Users',    icon: '👤' },
@@ -868,6 +871,7 @@ export default function AdminScreen() {
       case 'tokens':     return <TokensPanel api={api} />
       case 'sessions':   return <SessionsPanel api={api} />
       case 'testers':    return <AdminTesterPanel api={api} />
+      case 'products':   return <AdminProductsPanel api={api} />
       case 'xhbprogress':
       case 'xhbactivity':
       case 'xhbusers': {

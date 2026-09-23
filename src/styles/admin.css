@@ -776,3 +776,31 @@ body:has(.admin-shell) {
   font-size: .78rem; color: var(--a-text-dim, #a9a29a); margin-right: .75rem;
   max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+
+/* ── Fresh Start Console (Phase 4, docs/plan/2026-09-23-fresh-start-console.md) ── */
+.fs-intro { font-size: .82rem; line-height: 1.55; color: var(--a-text-dim, #a9a29a); margin: 0 0 1.25rem; max-width: 760px; }
+.fs-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem; }
+.fs-card { display: flex; flex-direction: column; gap: .75rem; }
+.fs-card--selected { border-color: var(--a-gold); }
+.fs-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: .75rem; }
+.fs-card-counts { display: flex; flex-direction: column; gap: .2rem; }
+.fs-big { font-family: var(--a-font-mono); font-size: 2rem; font-weight: 800; color: var(--a-text, #f3ede4); }
+.fs-mono { font-family: var(--a-font-mono); font-size: .78rem; }
+.fs-pill { font-size: .66rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: .22rem .55rem; border-radius: 999px; white-space: nowrap; }
+.fs-pill--ok { background: rgba(74,222,128,.12); color: #4ade80; border: 1px solid rgba(74,222,128,.3); }
+.fs-pill--refused { background: rgba(251,191,36,.12); color: #fbbf24; border: 1px solid rgba(251,191,36,.3); }
+.fs-pill--down { background: rgba(248,113,113,.12); color: #f87171; border: 1px solid rgba(248,113,113,.3); }
+.fs-reasons { font-size: .72rem; }
+.fs-panel { margin-bottom: 1.5rem; }
+.fs-panel-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .75rem; }
+.fs-panel-title { font-size: .95rem; font-weight: 700; margin: 0 0 .5rem; }
+.fs-columns { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; }
+@media (max-width: 900px) { .fs-columns { grid-template-columns: 1fr; } }
+.fs-table td, .fs-table th { padding: .4rem .6rem; }
+.fs-stays { color: #4ade80; font-size: .7rem; font-weight: 700; }
+.fs-goes { color: #f87171; font-size: .7rem; font-weight: 700; }
+.fs-confirm { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--a-border); }
+.fs-confirm-row { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; }
+.fs-confirm-row .a-input { max-width: 240px; }
+.fs-hint { font-size: .8rem; line-height: 1.55; color: var(--a-text-dim, #a9a29a); margin: .5rem 0; }
+.fs-code { font-family: var(--a-font-mono); font-weight: 800; letter-spacing: .12em; color: var(--a-gold); background: var(--a-gold-glow, rgba(226,185,107,.12)); padding: .1rem .45rem; border-radius: 6px; }
