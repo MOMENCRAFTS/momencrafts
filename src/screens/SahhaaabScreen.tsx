@@ -86,7 +86,7 @@ export default function SahhaaabScreen() {
         </div>
       </section>
 
-      <section className="sahhaaab-facts" aria-label="Sahhaaab in numbers">
+      <section className="sahhaaab-facts" aria-label="Es-hab in numbers">
         {s.facts.map(f => (
           <div className="stat reveal" key={f.label}>
             <span className="stat-num">{f.num}</span>

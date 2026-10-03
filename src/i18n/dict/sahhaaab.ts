@@ -16,7 +16,7 @@ export const en = {
 
   hero: {
     eyebrow: 'MOMENCRAFTS STUDIOS · GAMES',
-    titleName: 'SAHHAAAB · سحّاب',
+    titleName: 'ES-HAB · اسحب',
     titleEm: 'Holster. Wait.',
     titleRest: 'Draw.',
     sub: 'A real-time one-on-one duel game for the phone, set in the alleys of Old Damascus. You holster the phone at your hip, wait for the buzz, draw, tilt to aim, and fire. An original world with its own art, its own words and its own rules.',
@@ -27,7 +27,7 @@ export const en = {
     },
     ctaPrimary: 'Talk to the founder →',
     ctaSecondary: 'See how a duel works ↓',
-    deviceAlt: 'The opening scene of Sahhaaab: an alley in Old Damascus',
+    deviceAlt: 'The opening scene of Es-hab: an alley in Old Damascus',
   },
 
   facts: [
@@ -52,7 +52,7 @@ export const en = {
   why: {
     label: 'WHY IT IS DIFFERENT',
     title: 'An original world, built for the Gulf.',
-    sub: 'The phone-duel genre had millions of Gulf players before its classic died in 2016. Nothing credible replaced it. Sahhaaab is built from scratch to be that game, and to be obviously nobody else’s.',
+    sub: 'The phone-duel genre had millions of Gulf players before its classic died in 2016. Nothing credible replaced it. Es-hab is built from scratch to be that game, and to be obviously nobody else’s.',
     items: [
       { icon: '◈', title: 'An original world',   body: 'Old Damascus, drawn from scratch: rivals in tarboushes, a coffeehouse, a tailor, a gunsmith. Every picture, word and rule is the studio’s own.' },
       { icon: '⌖', title: 'The phone is the gun', body: 'Sensors read the holster and the tilt; haptics give the signal. No joystick on the screen, no buttons to learn.' },
@@ -64,7 +64,7 @@ export const en = {
   cta: {
     overline: 'CO-BUILD',
     titlePre: 'Help bring ',
-    titleEm: 'Sahhaaab to the Gulf',
+    titleEm: 'Es-hab to the Gulf',
     sub: 'In development. The duel engine, the art pack and the duel scene are built; the first feel-test build on real phones is next, then online duels. Game designers, Arabic writers, artists and co-founders are welcome.',
     primary: 'Contact Founder →',
     back: '← Investor Room',
@@ -89,7 +89,7 @@ export const ar: typeof en = {
 
   hero: {
     eyebrow: 'مومن كرافتس ستوديوز · الألعاب',
-    titleName: 'سحّاب · SAHHAAAB',
+    titleName: 'اسحب · ES-HAB',
     titleEm: 'ضعه على خصرك. انتظر.',
     titleRest: 'اسحب.',
     sub: 'لعبة مبارزة فردية لحظية على الجوال، تدور في أزقة دمشق القديمة. تضع الجوال على خصرك، تنتظر الاهتزاز، تسحب، تميل الجوال للتصويب، وتطلق. عالم أصيل برسومه وكلماته وقواعده.',
@@ -100,7 +100,7 @@ export const ar: typeof en = {
     },
     ctaPrimary: 'تحدث مع المؤسس ←',
     ctaSecondary: 'شاهد كيف تجري المبارزة ↓',
-    deviceAlt: 'المشهد الافتتاحي في سحّاب: زقاق في دمشق القديمة',
+    deviceAlt: 'المشهد الافتتاحي في «اسحب»: زقاق في دمشق القديمة',
   },
 
   facts: [
@@ -125,7 +125,7 @@ export const ar: typeof en = {
   why: {
     label: 'ما الفرق',
     title: 'عالم أصيل، مبني للخليج.',
-    sub: 'كان لهذا النوع من الألعاب ملايين اللاعبين في الخليج قبل أن تتوقف لعبته الكلاسيكية عام ٢٠١٦، ولم يعوّضها شيء جدير. سحّاب مبني من الصفر ليكون تلك اللعبة، وليكون بوضوح لعبة لا تشبه غيرها.',
+    sub: 'كان لهذا النوع من الألعاب ملايين اللاعبين في الخليج قبل أن تتوقف لعبته الكلاسيكية عام ٢٠١٦، ولم يعوّضها شيء جدير. «اسحب» مبنية من الصفر لتكون تلك اللعبة، ولتكون بوضوح لعبة لا تشبه غيرها.',
     items: [
       { icon: '◈', title: 'عالم أصيل',        body: 'دمشق القديمة مرسومة من الصفر: خصوم بالطرابيش، مقهى، خياط، وصانع أسلحة. كل صورة وكلمة وقاعدة من صنع الاستوديو.' },
       { icon: '⌖', title: 'الجوال هو المسدس', body: 'المستشعرات تقرأ وضع الخصر والميل، والاهتزاز يعطي الإشارة. لا عصا تحكم على الشاشة، ولا أزرار تتعلّمها.' },
@@ -137,7 +137,7 @@ export const ar: typeof en = {
   cta: {
     overline: 'شارك في البناء',
     titlePre: 'ساعد في إيصال ',
-    titleEm: 'سحّاب إلى الخليج',
+    titleEm: '«اسحب» إلى الخليج',
     sub: 'قيد التطوير. محرك المبارزة وحزمة الرسوم ومشهد المبارزة مبنية؛ والتالي نسخة اختبار الإحساس على هواتف حقيقية، ثم المبارزات عبر الإنترنت. نرحّب بمصممي الألعاب وكتّاب العربية والرسامين والشركاء المؤسسين.',
     primary: 'تواصل مع المؤسس ←',
     back: 'غرفة المستثمرين →',

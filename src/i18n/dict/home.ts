@@ -121,10 +121,10 @@ export const en = {
       link: 'View KURAS',
     },
     sahhaaab: {
-      name: 'SAHHAAAB · سحّاب',
+      name: 'ES-HAB · اسحب',
       tagline: 'A real-time one-on-one duel game for the phone, set in Old Damascus. Holster the phone at your hip, wait for the buzz, draw, and fire.',
       tags: ['Mobile Game', 'Real-Time Duels', 'Arabic First', 'Old Damascus'],
-      link: 'View Sahhaaab',
+      link: 'View Es-hab',
     },
     xhb: {
       name: 'XHB · HQ',
@@ -372,7 +372,7 @@ export const en = {
         revenue: 'In-app purchases — cosmetics and energy, never pay-to-win',
         status: 'In development — duel engine, art pack and duel scene built; first feel-test build next',
         market: 'Gulf — Saudi and Kuwait first',
-        demoLabel: 'View Sahhaaab',
+        demoLabel: 'View Es-hab',
       },
     },
   },
@@ -498,7 +498,7 @@ export const en = {
     },
     creditPrefix: '& Co credit:',
     fallback: [
-      { title: 'Sahhaaab joins the portfolio — product 14', body: 'An original real-time duel game for the phone, set in Old Damascus: holster, wait for the buzz, draw, fire. Arabic first, Gulf first. Version 1 plays offline against bots; the first feel-test build on real phones is next. Showcase page live at /sahhaaab.', date: 'Sep 23, 2026', credit: null },
+      { title: 'Es-hab joins the portfolio — product 14', body: 'An original real-time duel game for the phone, set in Old Damascus: holster, wait for the buzz, draw, fire. Arabic first, Gulf first. Version 1 plays offline against bots; the first feel-test build on real phones is next. Showcase page live at /sahhaaab.', date: 'Sep 23, 2026', credit: null },
       { title: 'KURAS joins the portfolio — product 13', body: 'A parent-gated Arabic learning workbook for children aged 6 to 9: every question is approved by the parent first, from a hand-verified bank, and AI only rephrases wording. Web app built, admin console in progress, Android release planned. Showcase page live at /kuras.', date: 'Sep 15, 2026', credit: null },
       { title: 'Cliniq.one landing page — live', body: 'The public-facing landing page for Cliniq.one is now deployed. Patients can learn about the platform and doctors can request onboarding.', date: 'Jun 12, 2026', credit: null },
       { title: 'MomenCrafts & Co — brand alignment complete', body: 'The entire investor portal has been rebranded to reflect the & Co philosophy. Every section now speaks the co-builder language.', date: 'Jun 10, 2026', credit: null },
@@ -714,10 +714,10 @@ export const ar: typeof en = {
       link: 'عرض KURAS',
     },
     sahhaaab: {
-      name: 'SAHHAAAB · سحّاب',
+      name: 'ES-HAB · اسحب',
       tagline: 'لعبة مبارزة فردية لحظية على الجوال في دمشق القديمة. ضع الجوال على خصرك، انتظر الاهتزاز، اسحب، وأطلق.',
       tags: ['لعبة جوال', 'مبارزات لحظية', 'العربية أولًا', 'دمشق القديمة'],
-      link: 'عرض Sahhaaab',
+      link: 'عرض «اسحب»',
     },
     xhb: {
       name: 'XHB · مقر',
@@ -960,7 +960,7 @@ export const ar: typeof en = {
         revenue: 'مشتريات داخل التطبيق — مظاهر وطاقة، ولا دفع مقابل الفوز',
         status: 'قيد التطوير — محرك المبارزة وحزمة الرسوم ومشهد المبارزة مبنية، ونسخة اختبار الإحساس هي التالية',
         market: 'الخليج — السعودية والكويت أولًا',
-        demoLabel: 'عرض Sahhaaab',
+        demoLabel: 'عرض «اسحب»',
       },
     },
   },
@@ -1079,7 +1079,7 @@ export const ar: typeof en = {
     },
     creditPrefix: 'توثيق اند كو:',
     fallback: [
-      { title: 'سحّاب ينضم إلى المحفظة — المنتج ١٤', body: 'لعبة مبارزة لحظية أصيلة على الجوال تدور في دمشق القديمة: ضع الجوال على خصرك، انتظر الاهتزاز، اسحب، أطلق. العربية أولًا، والخليج أولًا. النسخة الأولى تُلعب دون اتصال ضد خصوم آليين، والتالي نسخة اختبار الإحساس على هواتف حقيقية. صفحة العرض متاحة الآن على /sahhaaab.', date: '٢٣ سبتمبر ٢٠٢٦', credit: null },
+      { title: '«اسحب» تنضم إلى المحفظة — المنتج ١٤', body: 'لعبة مبارزة لحظية أصيلة على الجوال تدور في دمشق القديمة: ضع الجوال على خصرك، انتظر الاهتزاز، اسحب، أطلق. العربية أولًا، والخليج أولًا. النسخة الأولى تُلعب دون اتصال ضد خصوم آليين، والتالي نسخة اختبار الإحساس على هواتف حقيقية. صفحة العرض متاحة الآن على /sahhaaab.', date: '٢٣ سبتمبر ٢٠٢٦', credit: null },
       { title: 'كُرّاس ينضم إلى المحفظة — المنتج ١٣', body: 'كُرّاس تعلّم عربي بإشراف الوالدين للأطفال من ٦ إلى ٩ سنوات: كل سؤال يعتمده الوالد أولًا من بنك مُراجَع يدويًا، والذكاء الاصطناعي يعيد الصياغة فقط. تطبيق الويب مبني، لوحة الإدارة قيد العمل، وإصدار أندرويد مخطَّط. صفحة العرض متاحة الآن على /kuras.', date: '١٥ سبتمبر ٢٠٢٦', credit: null },
       { title: 'صفحة Cliniq.one — تعمل الآن', body: 'تم نشر الصفحة التعريفية العامة لـ Cliniq.one. يمكن للمرضى التعرف على المنصة وللأطباء طلب الانضمام.', date: '١٢ يونيو ٢٠٢٦', credit: null },
       { title: 'مومن كرافتس اند كو — اكتمال توحيد الهوية', body: 'أُعيدت هوية بوابة المستثمرين بالكامل لتعكس فلسفة اند كو. كل قسم الآن يتحدث بلغة الشريك البنّاء.', date: '١٠ يونيو ٢٠٢٦', credit: null },

@@ -555,7 +555,7 @@ const INV_CARDS: {
   { id: 'dart',     name: 'DART',                cat: 'FPV · Esports Hardware', badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','tech','ipStatus'],        demoLink: '/dart/' },
   { id: 'edgetack', name: 'EDGE TACK',           cat: 'Mobile Gaming · Patent', badge: 'patent',   badgeClass: 'inv-badge-patent',    keys: ['sector','revenue','ipStatus','market'],       demoLink: '/edgetack' },
   { id: 'kuras',    name: 'KURAS',               cat: 'EdTech · Family',        badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','target'],         demoLink: '/kuras' },
-  { id: 'sahhaaab', name: 'SAHHAAAB',            cat: 'Mobile Gaming',          badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','market'],         demoLink: '/sahhaaab' },
+  { id: 'sahhaaab', name: 'ES-HAB',              cat: 'Mobile Gaming',          badge: 'dev',       badgeClass: 'inv-badge-dev',       keys: ['sector','revenue','status','market'],         demoLink: '/sahhaaab' },
 ]
 
 const DOWNLOAD_META = [
@@ -567,7 +567,7 @@ const DOWNLOAD_META = [
 ] as const
 
 const JOURNAL_META = [
-  { category: 'update',    product: 'Sahhaaab', pinned: true },
+  { category: 'update',    product: 'Es-hab', pinned: true },
   { category: 'update',    product: 'KURAS',    pinned: true },
   { category: 'launch',    product: 'Cliniq',   pinned: true },
   { category: 'update',    product: null,       pinned: true },
