@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import '@/styles/admin.css'
-import { XhbKeyGate, makeXhbApi, XhbProgressPanel, XhbActivityPanel, XhbUsersPanel } from '@/components/AdminXhbPanels'
+import { makeXhbApi, XhbProgressPanel, XhbActivityPanel, XhbUsersPanel } from '@/components/AdminXhbPanels'
 import { AdminTesterPanel } from '@/components/AdminTesterPanel'
 import { AdminProductsPanel } from '@/components/AdminProductsPanel'
 import { HqDashboard } from '@/components/hq/HqDashboard'
@@ -15,20 +15,18 @@ import {
 } from '@/services/adminSession'
 
 // Identity is decided server-side (supabase/functions/_shared/adminAuth.ts):
-//   jwt    — Google sign-in + authenticator code, email on the admin_users allowlist (D1, D3)
-//   legacy — the old shared key, accepted only until decision D2 is completed
+//   jwt — Google sign-in + authenticator code, email on the admin_users allowlist (D1, D3)
+// The old shared key is gone from this screen (admin audit, 23 Oct 2026); the server refuses it too
+// unless ADMIN_LEGACY_KEY_ENABLED is exactly "true".
 const SUPABASE_URL = 'https://isciigqmdfcozrtojqcm.supabase.co/functions/v1'
 const COFOUNDER_TYPES = new Set(['PERMANENT', 'STRATEGIC', 'COFOUNDER'])
 
-export type AdminAuth =
-  | { kind: 'jwt'; email: string }
-  | { kind: 'legacy'; key: string }
+export type AdminAuth = { kind: 'jwt'; email: string }
 
 /* ── API helper (top-level so all panels can use it) ── */
 function makeApi(auth: AdminAuth | null, onAuthError: (reason: string) => void) {
   return async (fn: string, body?: object) => {
     const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-    if (auth?.kind === 'legacy' && auth.key) headers['X-Admin-Key'] = auth.key
     if (auth?.kind === 'jwt') {
       const token = await getAccessToken()
       if (token) headers['Authorization'] = `Bearer ${token}`
@@ -66,7 +64,7 @@ function tokenStatus(t: any): 'active' | 'revoked' | 'expired' {
 /* ══════════════════════════════════════════════════════
    LOGIN
    ══════════════════════════════════════════════════════ */
-type LoginStep = AdminStepResult['step'] | 'loading' | 'legacy'
+type LoginStep = AdminStepResult['step'] | 'loading'
 
 /**
  * Google sign-in → authenticator code → panel.
@@ -79,7 +77,6 @@ function AdminLogin({ onLogin, notice }: { onLogin: (auth: AdminAuth) => void; n
   const [factorId, setFactorId] = useState('')
   const [enrol,    setEnrol]    = useState<{ qrCodeSvg: string; secret: string } | null>(null)
   const [code,     setCode]     = useState('')
-  const [pass,     setPass]     = useState('')
   const [err,      setErr]      = useState('')
   const [busy,     setBusy]     = useState(false)
   const enrolStarted = useRef(false)
@@ -124,21 +121,6 @@ function AdminLogin({ onLogin, notice }: { onLogin: (auth: AdminAuth) => void; n
     enrolStarted.current = false
     setEnrol(null); setCode(''); setStep('signed_out')
   }
-  // Transition only (D2): the shared key still opens the panel until ADMIN_LEGACY_KEY_ENABLED=false.
-  const legacy = async () => {
-    if (!pass.trim()) { flash('Enter the legacy key'); return }
-    setBusy(true)
-    try {
-      const res = await fetch(`${SUPABASE_URL}/admin-manage-token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': pass },
-        body: JSON.stringify({ action: 'list' }),
-      })
-      if (res.ok) onLogin({ kind: 'legacy', key: pass })
-      else flash('Invalid admin key')
-    } catch { flash('Network error') }
-    finally { setBusy(false) }
-  }
 
   const codeInput = (
     <input className="admin-login-input" inputMode="numeric" autoComplete="one-time-code"
@@ -158,7 +140,6 @@ function AdminLogin({ onLogin, notice }: { onLogin: (auth: AdminAuth) => void; n
 
         {step === 'signed_out' && (<>
           <button className="admin-login-btn" onClick={google} disabled={busy}>Sign in with Google →</button>
-          <button className="admin-login-link" onClick={() => setStep('legacy')}>use legacy key</button>
         </>)}
 
         {step === 'need_mfa_enrol' && (<>
@@ -180,15 +161,6 @@ function AdminLogin({ onLogin, notice }: { onLogin: (auth: AdminAuth) => void; n
           {codeInput}
           <button className="admin-login-btn" onClick={submitCode} disabled={busy}>Continue →</button>
           <button className="admin-login-link" onClick={back}>sign out</button>
-        </>)}
-
-        {step === 'legacy' && (<>
-          <p className="admin-login-hint">Transition only — the shared key stops working once Google sign-in is live (decision D2).</p>
-          <input type="password" className="admin-login-input" placeholder="Legacy admin key"
-            value={pass} onChange={e => setPass(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && legacy()} autoFocus />
-          <button className="admin-login-btn" onClick={legacy} disabled={busy}>Enter →</button>
-          <button className="admin-login-link" onClick={() => setStep('signed_out')}>back to Google sign-in</button>
         </>)}
 
         {err && <div className="admin-login-err">{err}</div>}
@@ -868,8 +840,6 @@ export default function AdminScreen() {
   const [tab,          setTab]          = useState<Tab>('hq')
   const [products,     setProducts]     = useState<Product[]>([])
   const [me,           setMe]           = useState<WhoAmI | null>(null)
-  const [showKeyModal, setShowKeyModal] = useState(false)
-  const [xhbKey,       setXhbKey]       = useState('')          // legacy XHB key — never persisted
 
   // The server said no: end the session first (otherwise the login screen would bounce straight back in).
   const onAuthError = useCallback(async (reason: string) => {
@@ -895,7 +865,7 @@ export default function AdminScreen() {
     return () => { cancelled = true }
   }, [auth, api])
 
-  const canExecute = me?.role === 'owner' || auth?.kind === 'legacy'
+  const canExecute = me?.role === 'owner'
 
   if (!auth) return <AdminLogin notice={loginNotice} onLogin={(a) => { setAuth(a); setLoginNotice('') }} />
 
@@ -913,9 +883,7 @@ export default function AdminScreen() {
       case 'xhbactivity':
       case 'xhbusers': {
         // Google session: the owner identity is enough for the XHB functions (checked server-side).
-        // Legacy shared-key session: the XHB key is still needed until D2 completes.
-        if (auth?.kind === 'legacy' && !xhbKey) return <XhbKeyGate onKey={setXhbKey} />
-        const x = makeXhbApi(xhbKey, auth?.kind === 'jwt' ? getAccessToken : undefined)
+        const x = makeXhbApi('', getAccessToken)
         if (tab === 'xhbprogress') return <XhbProgressPanel api={x} />
         if (tab === 'xhbactivity') return <XhbActivityPanel api={x} />
         return <XhbUsersPanel api={x} />
@@ -994,24 +962,7 @@ export default function AdminScreen() {
         </div>
         <TopStatsBar api={api} />
         <div className="admin-header-right">
-          {auth.kind === 'jwt' && (
-            <span className="admin-header-user" title="Signed in with Google + authenticator">{auth.email}</span>
-          )}
-          {auth.kind === 'legacy' && showKeyModal && (
-            <div className="admin-key-modal">
-              <input type="password" placeholder="New ADMIN_SECRET_KEY"
-                className="admin-login-input" defaultValue={auth.key}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    setAuth({ kind: 'legacy', key: (e.target as HTMLInputElement).value })
-                    setShowKeyModal(false)
-                  }
-                }} />
-            </div>
-          )}
-          {auth.kind === 'legacy' && (
-            <button className="admin-key-btn" onClick={() => setShowKeyModal(k => !k)} title="Change API Key">🔑 Key</button>
-          )}
+          <span className="admin-header-user" title="Signed in with Google + authenticator">{auth.email}</span>
           <button className="admin-logout-btn" onClick={logout}>Logout</button>
         </div>
       </header>

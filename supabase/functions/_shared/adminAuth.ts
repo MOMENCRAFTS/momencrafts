@@ -6,8 +6,9 @@
 //   1. A Supabase session (Authorization: Bearer <jwt>) that is GENUINE (auth.getUser verifies it),
 //      carries aal = "aal2" (authenticator code entered — D3), and whose email is an enabled row in
 //      public.admin_users (D1). Role comes from that row.
-//   2. TRANSITION ONLY (D2): the old shared X-Admin-Key. Accepted until the secret
-//      ADMIN_LEGACY_KEY_ENABLED is set to "false". Then the shared password is dead.
+//   2. TRANSITION ONLY (D2): the old shared X-Admin-Key. Since the admin audit of 23 Oct 2026 it is
+//      refused unless the secret ADMIN_LEGACY_KEY_ENABLED is exactly "true" (unset = refused; before,
+//      an unset secret left it open as owner). The sign-in screen no longer offers it.
 //
 // Every function calls requireAdmin() first and audit() for anything that changes data.
 // ═══════════════════════════════════════════════════════════
@@ -130,8 +131,9 @@ export async function requireAdmin(
     }
   }
 
-  // Legacy shared key — transition only (D2). Set ADMIN_LEGACY_KEY_ENABLED=false to switch it off.
-  if (Deno.env.get('ADMIN_LEGACY_KEY_ENABLED') !== 'false') {
+  // Legacy shared key — transition only (D2). Off unless ADMIN_LEGACY_KEY_ENABLED is exactly "true"
+  // (audit 23 Oct 2026: an unset secret used to leave it open).
+  if (Deno.env.get('ADMIN_LEGACY_KEY_ENABLED') === 'true') {
     const secret = Deno.env.get(opts.legacySecretEnv || 'ADMIN_SECRET_KEY') || ''
     const given = req.headers.get('X-Admin-Key') || ''
     if (secret && given && safeEqual(given, secret)) {
